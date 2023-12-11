@@ -1,4 +1,4 @@
-export type ExplanationModel = {
+export type IExplanationModel = {
     word: string,
     text: string
 }

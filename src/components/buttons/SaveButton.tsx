@@ -8,11 +8,7 @@ export interface ISaveButton {
 export default function SaveButton(props) {
     const dialogues = useDialogues();
 
-    const onClick = (event) => {
-        localStorage.setItem("Dialogues", JSON.stringify(dialogues));
-    }
-
     return (
-        <Button onClick={onClick} color="primary" sx={ { borderRadius: 28 } }>Save</Button>
+        <Button fullWidth={false} onClick={props.onClick} color="primary" sx={ { borderRadius: 28 } }>Save</Button>
     )
 }

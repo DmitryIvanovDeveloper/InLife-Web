@@ -3,7 +3,6 @@ import { atom, selectorFamily, useRecoilState, useRecoilValue } from 'recoil'
 import { IDialogueModel } from '../../Business/Models/IDialogueModel.ts'
 import IPhraseModel from '../../Business/Models/IPhraseModel.ts'
 import IAnswerModel from '../../Business/Models/IAnswerModel.ts'
-import IDialogueItemModel from '../../Business/Models/IDialogueItemModel.ts';
 
 export function useDialogues() {
     return useRecoilState(dialoguesAtom)
@@ -36,6 +35,11 @@ export type IAddAnswerItemInput = {
     readonly item: IAnswerModel
 }
 
+export type IPhraseAnswerItemInput = {
+    readonly dialogueId?: string
+    readonly itemId: string
+}
+
 
 export function usePhraseCrud(dialogueId: string, id: string) {
     var [dialogues, setDialogues] = useRecoilState(dialoguesAtom);
@@ -56,33 +60,12 @@ export function usePhraseCrud(dialogueId: string, id: string) {
             };
 
             var isAdded = AddPhrase(dialogue, addDialogueItemInput);
-
             if (!isAdded) {
                 return;
             }
 
             setDialogues(updatedDialogue);
         },
-
-        update: (item: IPhraseModel) => {
-            var updatedDialogue = JSON.parse(JSON.stringify(dialogues))
-
-            var dialogue = findDialogueById(updatedDialogue, dialogueId);
-            if (!dialogue) {
-                return;
-            }
-
-            const addDialogueItemInput: IUpdatePhraseItemInput = {
-                dialogueId: dialogue?.id,
-                itemId: id,
-                item: item
-            };
-
-            UpdatePhrase(dialogues, dialogue, addDialogueItemInput);
-
-            setDialogues(updatedDialogue);
-
-        }
     };
 }
 
@@ -112,9 +95,6 @@ export function useAnswerCrud(dialogueId: string, id: string) {
             setDialogues(updatedDialogue);
         },
 
-        update: () => {
-
-        }
     }
 }
 
@@ -168,33 +148,6 @@ const answerSelectorFamily = selectorFamily<IAnswerModel, IFindDialogueItemInput
     },
     dangerouslyAllowMutability: true,
 });
-
-//TODO: Refactor
-function UpdatePhrase(dialogues: IDialogueModel[], dialogue: IDialogueModel, addDialogueItemInput: IUpdatePhraseItemInput): void {
-    if (
-        !addDialogueItemInput.dialogueId ||
-        !addDialogueItemInput.itemId ||
-        !addDialogueItemInput.item
-    ) {
-        return;
-    }
-
-    var phrase: IPhraseModel = findDialogueItemById(dialogue, addDialogueItemInput.itemId);
-    var parent: IAnswerModel = findDialogueItemById(dialogue, phrase.parentId);
-    if (!parent) {
-        var root = dialogues.find(dialogue =>  dialogue.id == phrase.parentId);
-        var copy = JSON.parse(JSON.stringify(dialogue));
-        copy.phrase = addDialogueItemInput.item;
-        var index = dialogues.findIndex(dialogue => dialogue.id == root?.id);
-        dialogues.push(copy)
-    }
-    // console.log(phrase)
-    // console.log(root)
-    if (!phrase) {
-        return
-    }
-    return;
-}
 
 function AddPhrase(dialogue: IDialogueModel, addDialogueItemInput: IUpdatePhraseItemInput): boolean {
     if (!dialogue ||

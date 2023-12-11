@@ -16,38 +16,36 @@ export default function ControlledTreeView(props: IControlledTreeViewProps) {
 
     const [dialogues] = useDialogues();
     const [selection] = useSelection();
-    
-    const [expanded, setExpanded] = React.useState<string[]>([...selection]);
+
+    const [expanded, setExpanded] = React.useState<string[]>([selection]);
     const [selected, setSelected] = React.useState<string[]>([]);
-   
-  const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
-    setExpanded(nodeIds);
-  };
+
+    const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
+        setExpanded(nodeIds);
+    };
 
 
-  const handleExpandClick = () => {
-    setExpanded((oldExpanded) =>
-      oldExpanded.length === 0 ? ['1', '5', '6', '7'] : [],
-    );
-  };
+    const handleExpandClick = () => {
+        setExpanded((oldExpanded) =>
+            oldExpanded.length === 0 ? ['1', '5', '6', '7'] : [],
+        );
+    };
 
-  const handleSelectClick = () => {
-    setSelected((oldSelected) =>
-      oldSelected.length === 0 ? ['1', '2', '3', '4', '5', '6', '7', '8', '9'] : [],
-    );
-  };
-
-   
- 
+    const handleSelectClick = () => {
+        setSelected((oldSelected) =>
+            oldSelected.length === 0 ? ['1', '2', '3', '4', '5', '6', '7', '8', '9'] : [],
+        );
+    };
 
     useEffect(() => {
         setSelected(prev => ({
             ...prev,
             selection
-        }));
+        }))
     }, [selection]);
 
-    if(!dialogues) {
+
+    if (!dialogues) {
         return;
     }
     return (
@@ -58,20 +56,20 @@ export default function ControlledTreeView(props: IControlledTreeViewProps) {
                 </Button>
             </Box>
             <TreeView
-               aria-label="controlled"
-               defaultCollapseIcon={<ExpandMoreIcon />}
-               defaultExpandIcon={<ChevronRightIcon />}
-               expanded={expanded}
-               selected={selected}
-               onNodeToggle={handleToggle}
-               onNodeSelect={handleSelectClick}
-               multiSelect
+                aria-label="controlled"
+                defaultCollapseIcon={<ExpandMoreIcon />}
+                defaultExpandIcon={<ChevronRightIcon />}
+                expanded={expanded}
+                selected={selected}
+                onNodeToggle={handleToggle}
+                onNodeSelect={handleSelectClick}
+                multiSelect
             >
                 {dialogues.map(dialogue => (
                     <Phrase
                         dialogueId={dialogue.id}
                         id={dialogue.phrase.id}
-                 />
+                    />
                 ))}
             </TreeView>
         </Box>

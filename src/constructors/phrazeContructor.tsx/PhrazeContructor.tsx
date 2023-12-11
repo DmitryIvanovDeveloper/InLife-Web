@@ -1,34 +1,43 @@
-import { Box, Button, ButtonGroup, Input, TextField } from "@mui/material";
-import React, { useState } from "react";
+import { Alert, Box, Button, ButtonGroup, FormLabel, ImageListTypeMap, Input, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import TensesList from "../TensesList.tsx";
 import AddButton from "../../components/AddButton.tsx";
-import { useAnswerCrud, usePhraseCrud, usePhrase, useDialogueItemConstructor } from "../../Data/useDialogues.ts";
 import IPhraseModel from "../../../Business/Models/IPhraseModel.ts";
 import { v4 as uuidv4 } from 'uuid';
 import IAnswerModel from "../../../Business/Models/IAnswerModel.ts";
 import SaveButton from "../../components/buttons/SaveButton.tsx";
 import { useSelection } from "../../Data/useSelection.ts";
 import AnswerContructor from "../answerContructor/AnswerConstrutcor.tsx";
+import { useAnswerCrud, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues.ts";
+import Database from "../../Infrastructure/Database/Databse.ts";
 
 export interface IPhraseConstructor {
     dialogueId: string;
     id: string
+    prevConstructorId?: string
+}
+
+var a: IPhraseModel = {
+    parentId: "",
+    text: "",
+    answers: [],
+    tensesList: [],
+    comments: "",
+    id: ""
 }
 
 export default function PhraseContructor(props: IPhraseConstructor) {
 
     const answerCrud = useAnswerCrud(props.dialogueId, props.id);
-    const phraseCrud = usePhraseCrud(props.dialogueId, props.id);
     const [selection, setSelection] = useSelection();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    
+
     const phrase = usePhrase(props.dialogueId, props.id);
     const [phraseForm, setPhraseForm] = useState<IPhraseModel>(phrase);
-    
-   
+    const [isSaved, setIsSaved] = useState(true);
 
     function onAddButtonClick() {
-        var phrase: IAnswerModel = {
+        var newPhrase: IAnswerModel = {
             text: "New Answer",
             id: uuidv4(),
             tensesList: [],
@@ -38,37 +47,85 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             parentId: props.id,
         }
 
-        answerCrud.add(phrase);
+        answerCrud.add(newPhrase);
+    }
+
+
+    const onDelete = () => {
+        new Database().Remove(props.id)
+            .then(() => {
+                //TODO: Implement to open the previous <AnswerConstructor>
+            });
     }
 
     const onAnswerButtonClick = (event) => {
         setSelection(event.target.id);
-        setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={event.target.id} />);
+        setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={event.target.id} prevConstructorId={props.id} />);
     }
 
-    const onUpdate = (event) => {
-        // var updatePhraze = JSON.parse(JSON.stringify(phrase))
-        // updatePhraze.text = event.target.value;
-        //     console.log(updatePhraze.text)
-        // phraseCrud.update(phrase);
-    }
     const onChangeText = (event) => {
-        var updatePhraze = JSON.parse(JSON.stringify(phrase))
-            updatePhraze.text = event.target.value;
         setPhraseForm(prev => ({
-            ...prev, 
+            ...prev,
             text: event.target.value
         }));
-        
-        console.log(updatePhraze)
 
-        phraseCrud.update(updatePhraze);
+        setIsSaved(false);
     }
 
-    if(!phrase) {
+    const onCommentsChange = (event) => {
+        setPhraseForm(prev => ({
+            ...prev,
+            comments: event.target.value
+        }));
+        setIsSaved(false);
+    }
+
+    const onSave = () => {
+        new Database().Add(phraseForm)
+            .then(() => {
+                setIsSaved(true);
+                localStorage.removeItem(props.id);
+            });
+    }
+
+    const onSetTenses = (tenses: string[]) => {
+        setPhraseForm(prev => ({
+            ...prev,
+            tensesList: tenses
+        }));
+    }
+
+    useEffect(() => {
+        var data = localStorage.getItem(props.id);
+        if (data == null) {
+            setPhraseForm(phrase);
+            setIsSaved(true);
+            return;
+        }
+        setIsSaved(false);
+
+        setPhraseForm(JSON.parse(data));
+    }, []);
+
+    useEffect(() => {
+        if (isSaved) {
+            return;
+        }
+
+        localStorage.setItem(props.id, JSON.stringify(phraseForm));
+
+    }, [phraseForm]);
+
+    const reset = ()  => {
+        setPhraseForm(phrase);
+        setIsSaved(true);
+        localStorage.removeItem(props.id);
+    }
+
+    if (!phrase) {
         return;
     }
-    console.log(phrase);
+
     return (
         <Box
             component="form"
@@ -78,34 +135,45 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             noValidate
             autoComplete="off"
         >
-            <div>Phrase</div>
-            <TensesList tensesList={phraseForm.tensesList} />
+            <FormLabel>Phrase</FormLabel>
 
+            <Button
+                fullWidth={false}
+                onClick={onDelete}
+                variant="contained"
+            >
+                Delete
+            </Button>
+
+            <TensesList tensesList={phraseForm.tensesList} setTensesList={onSetTenses} />
             <TextField
-                defaultValue={phraseForm.text}
+                value={phraseForm.text}
                 id="outlined-basic"
-                label="Text"
+                label="Phrase"
                 variant="outlined"
                 onChange={onChangeText}
+                required={true}
+                placeholder="Phrase"
                 fullWidth
             />
             <TextField
-                defaultValue={phraseForm.comments}
+                value={phraseForm.comments}
                 id="outlined-basic"
                 label="Comments"
                 variant="outlined"
+                onChange={onCommentsChange}
                 fullWidth
             />
 
             <AddButton onCLick={onAddButtonClick} />
 
-            {phraseForm.answers?.length != 0
+            {phraseForm.answers.length != 0
                 ?
                 <Box>
                     <div>Next phrases</div>
                     <ButtonGroup
                     >
-                        {phrase.answers?.map(answer => (
+                        {phraseForm.answers.map(answer => (
                             <Button id={answer.id} onClick={onAnswerButtonClick} sx={{ p: 1, }}>{answer.text}</Button>
                         ))}
                     </ButtonGroup>
@@ -113,7 +181,16 @@ export default function PhraseContructor(props: IPhraseConstructor) {
                 : null
             }
 
-           <SaveButton />
+            <SaveButton onClick={onSave} />
+
+            
+            {!isSaved
+                ? <Box>
+                    <Alert severity="warning">The constructor has unsaved changes</Alert>
+                    <Button onClick={reset}>reset</Button>
+                 </Box>
+                : <Alert severity="success">The constructor is saved!</Alert>
+            }
         </Box>
     )
 }
