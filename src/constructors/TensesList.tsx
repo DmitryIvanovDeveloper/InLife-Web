@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tenseses } from '../Data/tenseses.ts';
 import { useState } from 'react';
-import { ButtonGroup, Button, createTheme } from '@mui/material';
+import { Button, createTheme, Box } from '@mui/material';
 
 
 export interface ITensesListProps {
@@ -10,56 +10,54 @@ export interface ITensesListProps {
 }
 
 export default function TensesList(props: ITensesListProps) {
-    const [clickedButtons, setClickedButtons]  = useState<string[]>([]);
-    const maxPossibleTenses = 1;
+    const [clickedButtons, setClickedButtons] = useState<string[]>([]);
 
-    function OnClick(event){
+    function OnClick(event) {
 
         var index = clickedButtons?.indexOf(event.target.value);
-        if(index <= -1 && clickedButtons.length <= maxPossibleTenses) {
+        if (index <= -1) {
             var newClickedButtons = [...clickedButtons, event.target.value];
             setClickedButtons(newClickedButtons);
             props.setTensesList(newClickedButtons);
             return;
         }
-        
-        var tensesList  = clickedButtons.filter(button => button !=  event.target.value)
+
+        var tensesList = clickedButtons.filter(button => button != event.target.value)
         setClickedButtons(tensesList);
         props.setTensesList(tensesList);
 
     }
 
-
-
     return (
-        <ButtonGroup  
-            disableElevation
-            variant="contained"
-            aria-label="Disabled elevation buttons"
-            size='small'
-        >
+        <Box >
             {Tenseses.map(tenses => (
-                <Button variant={!clickedButtons.find(button => button == tenses) ? "contained" : "outlined"}  style={{padding: "5px"}} value={tenses} onClick={OnClick}>{tenses}</Button>
+                <Button
+                    variant={!clickedButtons.find(button => button == tenses) ? "outlined" : "contained"} 
+                    style={{ margin: "5px", fontWeight: 700 }} 
+                    value={tenses} 
+                    onClick={OnClick}>{tenses}
+                </Button>
             ))}
-      </ButtonGroup>
+        </Box>
+
     );
 }
 
 const theme = createTheme({
     palette: {
-      primary: {
-        light: '#757ce8',
-        main: '#3f50b5',
-        dark: '#002884',
-        contrastText: '#fff',
-      },
-      secondary: {
-        light: '#ff7961',
-        main: '#f44336',
-        dark: '#ba000d',
-        contrastText: '#000',
-      },
+        primary: {
+            light: '#757ce8',
+            main: '#3f50b5',
+            dark: '#002884',
+            contrastText: '#fff',
+        },
+        secondary: {
+            light: '#ff7961',
+            main: '#f44336',
+            dark: '#ba000d',
+            contrastText: '#000',
+        },
     },
-  });
+});
 
 

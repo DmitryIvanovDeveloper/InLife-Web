@@ -1,4 +1,4 @@
-import { Alert, Box, Button, ButtonGroup, FormLabel, TextField } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, FormLabel, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TensesList from "../TensesList.tsx";
 import AddButton from "../../components/AddButton.tsx";
@@ -11,6 +11,7 @@ import { usePhraseCrud, useAnswer, useDialogueItemConstructor } from "../../Data
 import IAnswerModel from "../../../Business/Models/IAnswerModel.ts";
 import { IExplanationModel } from "../../../Business/Models/ExplanationModel.ts";
 import Database from "../../Infrastructure/Database/Databse.ts";
+import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -27,7 +28,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
     const [answerForm, setAnswerForm] = useState<IAnswerModel>(answer);
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    const [isSaved, setIsSaved] = useState(false);
+    const [isSaved, setIsSaved] = useState(true);
 
     function onAddButtonClick() {
         var phrase: IPhraseModel = {
@@ -43,9 +44,6 @@ export default function AnswerContructor(props: IAnswerContructor) {
     }
 
     const onChangeText = (event) => {
-        var updatePhraze = JSON.parse(JSON.stringify(answer))
-        updatePhraze.text = event.target.value;
-
         setAnswerForm(prev => ({
             ...prev,
             text: event.target.value
@@ -65,7 +63,6 @@ export default function AnswerContructor(props: IAnswerContructor) {
             wordsToUse: event.target.value
         }));
         setIsSaved(false);
-
     }
 
     const onExplanationChange = (event, index) => {
@@ -77,6 +74,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
         if (event.target.id == 'mistake explanation') {
             explanation[index].text = event.target.value;
         }
+
         setAnswerForm(prev => ({
             ...prev,
             explanations: explanation
@@ -96,8 +94,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 mistakeExplanation
             ]
         }));
-        setIsSaved(false);
 
+        setIsSaved(false);
     }
 
     const onDelete = () => {
@@ -117,6 +115,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
             ...prev,
             tensesList: tenses
         }));
+
+        setIsSaved(false)
     }
 
     useEffect(() => {
@@ -124,7 +124,6 @@ export default function AnswerContructor(props: IAnswerContructor) {
             return;
         }
 
-        console.log(answerForm)
         localStorage.setItem(props.id, JSON.stringify(answerForm));
     }, [answerForm]);
        
@@ -141,33 +140,42 @@ export default function AnswerContructor(props: IAnswerContructor) {
             component="form"
             sx={{
                 '& > :not(style)': { m: 1, width: '100%' },
+                p: 5
             }}
             noValidate
             autoComplete="off"
 
         >
-            <FormLabel>Answer</FormLabel>
+            <Box sx={{
+                width: "100%", 
+                height: "40px", 
+                backgroundColor: "#f0f0f0", 
+                borderRadius: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+            }} 
+                color="primary">
+                
+                <Typography  textAlign="center">Answer Constructor</Typography>
+            </Box>
 
-            <Button
-                fullWidth={false}
-                onClick={onDelete}
-                variant="contained"
-            >
-                Delete
-            </Button>
+            <DeleteButton onClick={onDelete} />
 
             <TensesList tensesList={answerForm.tensesList} setTensesList={onSetTenses} />
 
             <TextField
+                placeholder="Yes, today is a greate day"
                 value={answerForm.text}
                 id="outlined-basic"
-                label="Answer"
+                label="Text"
                 variant="outlined"
                 onChange={onChangeText}
                 fullWidth
             />
             <TextField
-                value={answer.wordsToUse}
+                value={answerForm.wordsToUse}
+                placeholder="Yes, Greate, Yes, Today, Day, Is, etc."
                 id="outlined-basic"
                 label="Words To Use"
                 variant="outlined"
@@ -195,14 +203,14 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 </Box>
             ))}
 
-            <Button onClick={onAddMistakeExplanation}>Add mistake explanation</Button>
+            <Button style={{backgroundColor: "darkgreen", color: "white"}} onClick={onAddMistakeExplanation}>Add mistake explanation</Button>
 
             <AddButton onCLick={onAddButtonClick} />
 
             {answerForm.phrases?.length != 0
                 ?
                 <Box>
-                    <div>Next phrases</div>
+                    <div>Next phrases to the answer</div>
                     <ButtonGroup
                     >
                         {answerForm.phrases?.map(answer => (

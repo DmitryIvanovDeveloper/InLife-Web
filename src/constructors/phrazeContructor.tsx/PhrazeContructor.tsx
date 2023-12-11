@@ -1,4 +1,4 @@
-import { Alert, Box, Button, ButtonGroup, FormLabel, ImageListTypeMap, Input, TextField } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, CardHeader, FormLabel, ImageListTypeMap, Input, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TensesList from "../TensesList.tsx";
 import AddButton from "../../components/AddButton.tsx";
@@ -10,6 +10,7 @@ import { useSelection } from "../../Data/useSelection.ts";
 import AnswerContructor from "../answerContructor/AnswerConstrutcor.tsx";
 import { useAnswerCrud, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues.ts";
 import Database from "../../Infrastructure/Database/Databse.ts";
+import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -131,21 +132,17 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             component="form"
             sx={{
                 '& > :not(style)': { m: 1, width: '100%' },
+                p: 5
             }}
-            noValidate
+            
             autoComplete="off"
         >
-            <FormLabel>Phrase</FormLabel>
+            <Typography>PHRASE</Typography>
 
-            <Button
-                fullWidth={false}
-                onClick={onDelete}
-                variant="contained"
-            >
-                Delete
-            </Button>
+            <DeleteButton onClick={onDelete} />
 
             <TensesList tensesList={phraseForm.tensesList} setTensesList={onSetTenses} />
+            
             <TextField
                 value={phraseForm.text}
                 id="outlined-basic"
@@ -170,7 +167,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             {phraseForm.answers.length != 0
                 ?
                 <Box>
-                    <div>Next phrases</div>
+                    <div>Answers to the phrase</div>
                     <ButtonGroup
                     >
                         {phraseForm.answers.map(answer => (

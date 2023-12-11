@@ -17,7 +17,7 @@ export default function ControlledTreeView(props: IControlledTreeViewProps) {
     const [dialogues] = useDialogues();
     const [selection] = useSelection();
 
-    const [expanded, setExpanded] = React.useState<string[]>([selection]);
+    const [expanded, setExpanded] = React.useState<string[]>(["7er9rere-54546-6767-"]);
     const [selected, setSelected] = React.useState<string[]>([]);
 
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
@@ -27,23 +27,15 @@ export default function ControlledTreeView(props: IControlledTreeViewProps) {
 
     const handleExpandClick = () => {
         setExpanded((oldExpanded) =>
-            oldExpanded.length === 0 ? ['1', '5', '6', '7'] : [],
+            oldExpanded.length === 0 ? [] : [],
         );
     };
 
     const handleSelectClick = () => {
         setSelected((oldSelected) =>
-            oldSelected.length === 0 ? ['1', '2', '3', '4', '5', '6', '7', '8', '9'] : [],
+            oldSelected.length === 0 ? [] : [],
         );
     };
-
-    useEffect(() => {
-        setSelected(prev => ({
-            ...prev,
-            selection
-        }))
-    }, [selection]);
-
 
     if (!dialogues) {
         return;
