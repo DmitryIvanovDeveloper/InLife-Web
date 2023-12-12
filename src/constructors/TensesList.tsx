@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Tenseses } from '../Data/tenseses.ts';
 import { useState } from 'react';
-import { Button, createTheme, Box } from '@mui/material';
+import { Button, Box } from '@mui/material';
 
 
 export interface ITensesListProps {
@@ -10,7 +10,7 @@ export interface ITensesListProps {
 }
 
 export default function TensesList(props: ITensesListProps) {
-    const [clickedButtons, setClickedButtons] = useState<string[]>([]);
+    const [clickedButtons, setClickedButtons] = useState<string[]>(props.tensesList);
 
     function OnClick(event) {
 
@@ -28,8 +28,14 @@ export default function TensesList(props: ITensesListProps) {
 
     }
 
+    React.useEffect(() => {
+        setClickedButtons(props.tensesList);
+    }, [props.tensesList]);
+
     return (
-        <Box >
+        // <Typography>Tenses</Typography>
+
+        <Box sx={{borderRadius: 2, paddingTop: "20px", paddingBottom: "20px", justifyContent: 'center'}}>
             {Tenseses.map(tenses => (
                 <Button
                     variant={!clickedButtons.find(button => button == tenses) ? "outlined" : "contained"} 
@@ -42,22 +48,5 @@ export default function TensesList(props: ITensesListProps) {
 
     );
 }
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            light: '#757ce8',
-            main: '#3f50b5',
-            dark: '#002884',
-            contrastText: '#fff',
-        },
-        secondary: {
-            light: '#ff7961',
-            main: '#f44336',
-            dark: '#ba000d',
-            contrastText: '#000',
-        },
-    },
-});
 
 

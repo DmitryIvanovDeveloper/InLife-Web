@@ -1,8 +1,8 @@
 import { dialoguesTemplate } from './DialogueData.ts';
 import { atom, selectorFamily, useRecoilState, useRecoilValue } from 'recoil'
-import { IDialogueModel } from '../../Business/Models/IDialogueModel.ts'
-import IPhraseModel from '../../Business/Models/IPhraseModel.ts'
-import IAnswerModel from '../../Business/Models/IAnswerModel.ts'
+import { IDialogueModel } from '../ThreGame.Business/Models/IDialogueModel.ts'
+import IPhraseModel from '../ThreGame.Business/Models/IPhraseModel.ts'
+import IAnswerModel from '../ThreGame.Business/Models/IAnswerModel.ts'
 
 export function useDialogues() {
     return useRecoilState(dialoguesAtom)
@@ -10,6 +10,10 @@ export function useDialogues() {
 
 export function useDialogueItemConstructor() {
     return useRecoilState(dialogueConstructorAtom);
+}
+
+export function useDialogue(id: string) {
+    return useRecoilValue(dialogueSelectorFamily(id));
 }
 
 const dialoguesAtom = atom<IDialogueModel[]>({

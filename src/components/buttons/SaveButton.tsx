@@ -3,7 +3,7 @@ import React from "react";
 import { useDialogues } from "../../Data/useDialogues.ts";
 
 export interface ISaveButton {
-    onClick: () => void;
+    onClick: () => {};
 }
 export default function SaveButton(props) {
     const dialogues = useDialogues();

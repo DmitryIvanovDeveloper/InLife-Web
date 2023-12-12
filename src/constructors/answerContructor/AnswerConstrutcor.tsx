@@ -1,17 +1,17 @@
 import { Alert, Box, Button, ButtonGroup, FormLabel, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TensesList from "../TensesList.tsx";
-import AddButton from "../../components/AddButton.tsx";
-import IPhraseModel from "../../../Business/Models/IPhraseModel.ts";
+import AddButton from "../../components/buttons/AddButton.tsx";
+import IPhraseModel from "../../ThreGame.Business/Models/IPhraseModel.ts";
 import { v4 as uuidv4 } from 'uuid';
 import SaveButton from "../../components/buttons/SaveButton.tsx";
 import { useSelection } from "../../Data/useSelection.ts";
 import PhraseContructor from "../phrazeContructor.tsx/PhrazeContructor.tsx";
 import { usePhraseCrud, useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues.ts";
-import IAnswerModel from "../../../Business/Models/IAnswerModel.ts";
-import { IExplanationModel } from "../../../Business/Models/ExplanationModel.ts";
-import Database from "../../Infrastructure/Database/Databse.ts";
+import IAnswerModel from "../../ThreGame.Business/Models/IAnswerModel.ts";
+import { IExplanationModel } from "../../ThreGame.Business/Models/ExplanationModel.ts";
 import DeleteButton from "../../components/buttons/DeleteButton.tsx";
+import ThereGameWebApi from "../../ThereGame.Api/ThereGameWebApi.ts";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -98,15 +98,28 @@ export default function AnswerContructor(props: IAnswerContructor) {
         setIsSaved(false);
     }
 
+    useEffect(() => {
+        var data = localStorage.getItem(props.id);
+        if (data == null) {
+            setAnswerForm(answer);
+            setIsSaved(true);
+            return;
+        }
+        setIsSaved(false);
+
+        setAnswerForm(JSON.parse(data));
+    }, []);
+
     const onDelete = () => {
-        new Database().Remove(props.id)
+        new ThereGameWebApi()
+            .Remove(props.id)
             .then(() => {
                 //TODO: Implement to open the previous <PhraseConstructor>
             });
     }
 
     const onSave = () => {
-        new Database().Add(answerForm)
+        new ThereGameWebApi().Add(answerForm)
             .then(() => setIsSaved(true));
     }
 
@@ -146,6 +159,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
             autoComplete="off"
 
         >
+            <DeleteButton onClick={onDelete} />
+
             <Box sx={{
                 width: "100%", 
                 height: "40px", 
@@ -160,7 +175,6 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 <Typography  textAlign="center">Answer Constructor</Typography>
             </Box>
 
-            <DeleteButton onClick={onDelete} />
 
             <TensesList tensesList={answerForm.tensesList} setTensesList={onSetTenses} />
 

@@ -9,6 +9,7 @@ export default function DialogueBuilder() {
 
     return (
         //@ts-ignore
+        
         <SplitPane split="vertical" minSize={250} defaultSize={200} maxSize={window.innerWidth / 2}>
             <ControlledTreeView />
             {dialogueItemConstructor}

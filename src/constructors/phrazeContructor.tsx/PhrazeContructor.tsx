@@ -1,16 +1,16 @@
 import { Alert, Box, Button, ButtonGroup, CardHeader, FormLabel, ImageListTypeMap, Input, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TensesList from "../TensesList.tsx";
-import AddButton from "../../components/AddButton.tsx";
-import IPhraseModel from "../../../Business/Models/IPhraseModel.ts";
+import AddButton from "../../components/buttons/AddButton.tsx";
+import IPhraseModel from "../../ThreGame.Business/Models/IPhraseModel.ts";
 import { v4 as uuidv4 } from 'uuid';
-import IAnswerModel from "../../../Business/Models/IAnswerModel.ts";
+import IAnswerModel from "../../ThreGame.Business/Models/IAnswerModel.ts";
 import SaveButton from "../../components/buttons/SaveButton.tsx";
 import { useSelection } from "../../Data/useSelection.ts";
 import AnswerContructor from "../answerContructor/AnswerConstrutcor.tsx";
 import { useAnswerCrud, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues.ts";
-import Database from "../../Infrastructure/Database/Databse.ts";
 import DeleteButton from "../../components/buttons/DeleteButton.tsx";
+import ThereGameWebApi from "../../ThereGame.Api/ThereGameWebApi.ts";
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -53,7 +53,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
 
 
     const onDelete = () => {
-        new Database().Remove(props.id)
+        new ThereGameWebApi().Remove(props.id)
             .then(() => {
                 //TODO: Implement to open the previous <AnswerConstructor>
             });
@@ -82,7 +82,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }
 
     const onSave = () => {
-        new Database().Add(phraseForm)
+        new ThereGameWebApi().Add(phraseForm)
             .then(() => {
                 setIsSaved(true);
                 localStorage.removeItem(props.id);
@@ -94,9 +94,12 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             ...prev,
             tensesList: tenses
         }));
+
+        setIsSaved(false);
     }
 
     useEffect(() => {
+
         var data = localStorage.getItem(props.id);
         if (data == null) {
             setPhraseForm(phrase);
@@ -109,6 +112,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }, []);
 
     useEffect(() => {
+
         if (isSaved) {
             return;
         }
@@ -137,9 +141,21 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             
             autoComplete="off"
         >
-            <Typography>PHRASE</Typography>
-
             <DeleteButton onClick={onDelete} />
+
+              <Box sx={{
+                width: "100%", 
+                height: "40px", 
+                backgroundColor: "#f0f0f0", 
+                borderRadius: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+            }} 
+                color="primary">
+                
+                <Typography  textAlign="center">Phrase Constructor</Typography>
+            </Box>
 
             <TensesList tensesList={phraseForm.tensesList} setTensesList={onSetTenses} />
             
@@ -168,12 +184,12 @@ export default function PhraseContructor(props: IPhraseConstructor) {
                 ?
                 <Box>
                     <div>Answers to the phrase</div>
-                    <ButtonGroup
-                    >
+                    
                         {phraseForm.answers.map(answer => (
-                            <Button id={answer.id} onClick={onAnswerButtonClick} sx={{ p: 1, }}>{answer.text}</Button>
+                            <Button id={answer.id} onClick={onAnswerButtonClick} sx={{ p: 1, }}>
+                                <Typography sx={{textDecoration: 'underline'}}>{answer.text}</Typography>
+                            </Button>
                         ))}
-                    </ButtonGroup>
                 </Box>
                 : null
             }

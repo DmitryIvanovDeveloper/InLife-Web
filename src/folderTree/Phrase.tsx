@@ -1,7 +1,7 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Answer from "./Answer.tsx";
-import { Box, Grid } from "@mui/material";
+import { Box, Chip, Grid } from "@mui/material";
 import TextButton from "../components/buttons/TextButton.tsx";
 import PhraseContructor from "../constructors/phrazeContructor.tsx/PhrazeContructor.tsx";
 import { useDialogueItemConstructor, usePhrase } from "../Data/useDialogues.ts";
@@ -16,13 +16,14 @@ export default function Phrase(props: IPhraseProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const phrase = usePhrase(props.dialogueId, props.id);
-
+    const [phraseNode, setPhraseNode] = useState(phrase);
     function OnClick(event) {
         event.stopPropagation();
         event.preventDefault();
 
         setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phrase.id}/>);
     }
+
     if (!phrase) {
         return;
     }
