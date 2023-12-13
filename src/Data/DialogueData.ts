@@ -19,7 +19,7 @@ export const dialoguesTemplate: IDialogueModel[] = [{
             tensesList: [
                 "Present Simple"
             ],
-            translates: [],
+            translate: 'Привет Джон',
             text: "Hello, John",
             wordsToUse: [],
             explanations: [],
@@ -31,7 +31,7 @@ export const dialoguesTemplate: IDialogueModel[] = [{
             tensesList: [
                 "Present Simple"
             ],
-            translates: [],
+            translate: 'Привет',
             text: "Hello",
             wordsToUse: [],
             explanations: [],

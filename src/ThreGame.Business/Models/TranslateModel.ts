@@ -1,4 +1,4 @@
-export default class ITranstate {
-    readonly Word: string
-    readonly Text: string
+export default interface ITranstateModel {
+    readonly language: LanguageType
+    readonly text: string;
 }

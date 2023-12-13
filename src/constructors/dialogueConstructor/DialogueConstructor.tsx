@@ -6,6 +6,7 @@ import { useDialogue } from "../../Data/useDialogues.ts";
 import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 import ThereGameWebApi from "../../ThereGame.Api/ThereGameWebApi.ts";
 import { IDialogueModel } from "../../ThreGame.Business/Models/IDialogueModel.ts";
+import { v4 as uuidv4 } from 'uuid';
 
 export interface IDialogueConstructor {
     id: string;
@@ -17,16 +18,17 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
     const [dialogueForm, setDialogueForm] = useState(dialogue);
 
     const save = async () => {
+        var id = uuidv4();
         var newDialogue: IDialogueModel = {
-            id: "650ew583-07b7-412a-98fe-8ce5c7a239e7",
+            id: id,
             name: "",
             phrase: {
-                parentId: "650ew583-07b7-412a-98fe-8ce5c7a239e7",
+                parentId: id,
                 text: "",
                 answers: [],
                 tensesList: [],
                 comments: "",
-                id: "650we583-07b7-412a-98fe-8ce5c5j789e7"
+                id: uuidv4(),
             }
         }
         await new ThereGameWebApi().CreateDialogue(newDialogue);

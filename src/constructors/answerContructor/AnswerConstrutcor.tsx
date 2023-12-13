@@ -1,4 +1,4 @@
-import { Alert, Box, Button, ButtonGroup, FormLabel, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, FormLabel, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TensesList from "../TensesList.tsx";
 import AddButton from "../../components/buttons/AddButton.tsx";
@@ -65,6 +65,14 @@ export default function AnswerContructor(props: IAnswerContructor) {
         setIsSaved(false);
     }
 
+    const onTranslateChange = (event) => {
+        setAnswerForm(prev => ({
+            ...prev,
+            translate: event.target.value
+        }));
+        setIsSaved(false);
+    }
+
     const onExplanationChange = (event, index) => {
         var explanation = [...answerForm.explanations];
 
@@ -84,7 +92,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
     const onAddMistakeExplanation = () => {
         const mistakeExplanation: IExplanationModel = {
             word: "",
-            text: ""
+            text: "",
+            id: uuidv4()
         }
 
         setAnswerForm(prev => ({
@@ -96,6 +105,19 @@ export default function AnswerContructor(props: IAnswerContructor) {
         }));
 
         setIsSaved(false);
+    }
+
+    const onDeleteMistakeExplanation = (id: string) => {
+        
+        var explanations = [...answerForm.explanations]
+            .filter(explanation => explanation.id != id);
+
+            console.log(id)
+            console.log(explanations)
+        setAnswerForm(prev => ({
+            ...prev,
+            explanations
+        }));
     }
 
     useEffect(() => {
@@ -140,12 +162,18 @@ export default function AnswerContructor(props: IAnswerContructor) {
         localStorage.setItem(props.id, JSON.stringify(answerForm));
     }, [answerForm]);
        
-
+    useEffect(() => {
+        console.log(answer);
+    }, []);
 
     const reset = () => {
         setAnswerForm(answer);
         setIsSaved(true);
         localStorage.removeItem(props.id);
+    }
+
+    if(!answer) {
+        return;
     }
 
     return (
@@ -179,7 +207,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
             <TensesList tensesList={answerForm.tensesList} setTensesList={onSetTenses} />
 
             <TextField
-                placeholder="Yes, today is a greate day"
+                InputLabelProps={{ shrink: true }}
+                placeholder="Yes, today is a greate day!"
                 value={answerForm.text}
                 id="outlined-basic"
                 label="Text"
@@ -187,7 +216,18 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 onChange={onChangeText}
                 fullWidth
             />
+             <TextField
+                InputLabelProps={{ shrink: true }}
+                value={answerForm.translate}
+                placeholder="Да, сегодня отличный день!"
+                id="outlined-basic"
+                label="Translate"
+                variant="outlined"
+                onChange={onTranslateChange}
+                fullWidth
+            />
             <TextField
+                InputLabelProps={{ shrink: true }}
                 value={answerForm.wordsToUse}
                 placeholder="Yes, Greate, Yes, Today, Day, Is, etc."
                 id="outlined-basic"
@@ -197,24 +237,33 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 fullWidth
             />
             {answerForm.explanations.map((explanation, id) => (
-                <Box>
+                <Grid
+                    display="flex"
+                    justifyContent="space-around"
+                    alignItems="center"
+                >
                     <TextField
+                        InputLabelProps={{ shrink: true }}
                         value={explanation.word}
                         id="word"
                         label="Word"
+                        placeholder="are"
                         variant="outlined"
                         onChange={(event) => onExplanationChange(event, id)}
                     />
                     <TextField
-                        sx={{ pl: 0.5 }}
+                        InputLabelProps={{ shrink: true }}
+                        sx={{ pl: 0.5, width: "74%" }}
                         value={explanation.text}
                         id="mistake explanation"
                         label="Mistake Explanation"
+                        placeholder="are - множественное число, день - используется в единственном числе"
                         variant="outlined"
                         onChange={(event) =>  onExplanationChange(event, id)}
-
+                        fullWidth
                     />
-                </Box>
+                     <Button onClick={() => onDeleteMistakeExplanation(explanation.id)}>Delete</Button>
+                </Grid>
             ))}
 
             <Button style={{backgroundColor: "darkgreen", color: "white"}} onClick={onAddMistakeExplanation}>Add mistake explanation</Button>

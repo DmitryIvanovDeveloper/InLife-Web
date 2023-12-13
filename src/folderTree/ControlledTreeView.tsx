@@ -82,7 +82,7 @@ export default function ControlledTreeView(props: IControlledTreeViewProps) {
         return;
     }
     return (
-        <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300 }}>
+        <Box sx={{ minHeight: 270, height:"400px", flexGrow: 1, maxWidth: 300, overflow: "auto"}} >
             <Box sx={{ mb: 1 }}>
                 <Button onClick={createNewDialogue}>
                     New Dialogue

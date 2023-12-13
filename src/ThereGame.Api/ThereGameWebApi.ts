@@ -19,7 +19,6 @@ export default class ThereGameWebApi {
 
     public async Add(item: IDialogueItemModel) {
 
-        
         try {
             await fetch('https://9c0e-212-58-103-245.ngrok-free.app/api/dialogues', {
                 method: 'POST',
@@ -36,15 +35,17 @@ export default class ThereGameWebApi {
 
     public async CreateDialogue(item: IDialogueModel) {
 
-        var dto = new DialogueMapping(item).mapToDtoRequest();
+        var data = new DialogueMapping(item).mapToDtoRequest();
         try {
-            await fetch('https://9c0e-212-58-103-245.ngrok-free.app/api/dialogues', {
+            const response = await fetch('https://9c0e-212-58-103-245.ngrok-free.app/api/dialogues', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(item)
+                body: JSON.stringify(data)
             })
+
+            console.log(await response.json())
         }
         catch (error) {
             console.log(error)

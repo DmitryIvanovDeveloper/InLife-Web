@@ -12,6 +12,10 @@ export interface ITensesListProps {
 export default function TensesList(props: ITensesListProps) {
     const [clickedButtons, setClickedButtons] = useState<string[]>(props.tensesList);
 
+    React.useEffect(() => {
+        console.log(props.tensesList)
+    }, [props.tensesList]);
+
     function OnClick(event) {
 
         var index = clickedButtons?.indexOf(event.target.value);

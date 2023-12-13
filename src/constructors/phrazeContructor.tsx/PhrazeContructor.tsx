@@ -33,8 +33,8 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     const [selection, setSelection] = useSelection();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
-    const phrase = usePhrase(props.dialogueId, props.id);
-    const [phraseForm, setPhraseForm] = useState<IPhraseModel>(phrase);
+    const phraseRecoil = usePhrase(props.dialogueId, props.id);
+    const [phraseForm, setPhraseForm] = useState<IPhraseModel>(phraseRecoil);
     const [isSaved, setIsSaved] = useState(true);
 
     function onAddButtonClick() {
@@ -46,11 +46,11 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             explanations: [],
             phrases: [],
             parentId: props.id,
+            translate: ""
         }
 
         answerCrud.add(newPhrase);
     }
-
 
     const onDelete = () => {
         new ThereGameWebApi().Remove(props.id)
@@ -59,9 +59,9 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             });
     }
 
-    const onAnswerButtonClick = (event) => {
-        setSelection(event.target.id);
-        setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={event.target.id} prevConstructorId={props.id} />);
+    const onAnswerButtonClick = (id: string) => {
+        setSelection(id);
+        setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={id} prevConstructorId={props.id} />);
     }
 
     const onChangeText = (event) => {
@@ -102,7 +102,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
 
         var data = localStorage.getItem(props.id);
         if (data == null) {
-            setPhraseForm(phrase);
+            setPhraseForm(phraseRecoil);
             setIsSaved(true);
             return;
         }
@@ -122,12 +122,12 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }, [phraseForm]);
 
     const reset = ()  => {
-        setPhraseForm(phrase);
+        setPhraseForm(phraseRecoil);
         setIsSaved(true);
         localStorage.removeItem(props.id);
     }
 
-    if (!phrase) {
+    if (!phraseRecoil) {
         return;
     }
 
@@ -186,7 +186,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
                     <div>Answers to the phrase</div>
                     
                         {phraseForm.answers.map(answer => (
-                            <Button id={answer.id} onClick={onAnswerButtonClick} sx={{ p: 1, }}>
+                            <Button id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
                                 <Typography sx={{textDecoration: 'underline'}}>{answer.text}</Typography>
                             </Button>
                         ))}

@@ -19,7 +19,6 @@ export default function Answer(props: IAnswerProps) {
     const onClick = (event) => {
         event.stopPropagation();
         event.preventDefault();
-
         setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={answerRecoil.id} />);
     }
 
