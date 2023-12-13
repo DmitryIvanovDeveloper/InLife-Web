@@ -16,7 +16,7 @@ export default function Phrase(props: IPhraseProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const phrase = usePhrase(props.dialogueId, props.id);
-    const [phraseNode, setPhraseNode] = useState(phrase);
+   
     function OnClick(event) {
         event.stopPropagation();
         event.preventDefault();

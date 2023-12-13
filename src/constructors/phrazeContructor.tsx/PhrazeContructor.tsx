@@ -36,13 +36,16 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const [phraseForm, setPhraseForm] = useState<IPhraseModel>(phraseRecoil);
     const [isSaved, setIsSaved] = useState(true);
+    const [errors, setErrors] = useState({
+        text: false
+    });
 
     function onAddButtonClick() {
         var newPhrase: IAnswerModel = {
             text: "New Answer",
             id: uuidv4(),
             tensesList: [],
-            wordsToUse: [],
+            wordsToUse: "",
             explanations: [],
             phrases: [],
             parentId: props.id,
@@ -69,6 +72,11 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             ...prev,
             text: event.target.value
         }));
+    
+        setErrors(prev => ({
+            ...prev,
+            text: false
+        }));
 
         setIsSaved(false);
     }
@@ -82,6 +90,15 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }
 
     const onSave = () => {
+        if (phraseForm.text == '') {
+            setErrors(prev => ({
+                ...prev,
+                text: true
+            }));
+
+            return;
+        }
+
         new ThereGameWebApi().Add(phraseForm)
             .then(() => {
                 setIsSaved(true);
@@ -99,7 +116,6 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }
 
     useEffect(() => {
-
         var data = localStorage.getItem(props.id);
         if (data == null) {
             setPhraseForm(phraseRecoil);
@@ -112,7 +128,6 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }, []);
 
     useEffect(() => {
-
         if (isSaved) {
             return;
         }
@@ -160,16 +175,20 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             <TensesList tensesList={phraseForm.tensesList} setTensesList={onSetTenses} />
             
             <TextField
+                InputLabelProps={{ shrink: true }}
+
                 value={phraseForm.text}
                 id="outlined-basic"
-                label="Phrase"
+                label="Text"
                 variant="outlined"
                 onChange={onChangeText}
                 required={true}
-                placeholder="Phrase"
+                placeholder="Hello, my name is John"
                 fullWidth
+                error={errors.text}
             />
             <TextField
+                InputLabelProps={{ shrink: true }}
                 value={phraseForm.comments}
                 id="outlined-basic"
                 label="Comments"

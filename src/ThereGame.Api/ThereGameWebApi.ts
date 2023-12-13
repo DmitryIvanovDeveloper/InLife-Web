@@ -35,17 +35,18 @@ export default class ThereGameWebApi {
 
     public async CreateDialogue(item: IDialogueModel) {
 
-        var data = new DialogueMapping(item).mapToDtoRequest();
+        var dto = new DialogueMapping(item).mapToDtoRequest();
         try {
             const response = await fetch('https://9c0e-212-58-103-245.ngrok-free.app/api/dialogues', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(dto)
             })
 
-            console.log(await response.json())
+            const data = await response.json();
+            return new DialogueMapping(data).mapToDtoResponse();
         }
         catch (error) {
             console.log(error)

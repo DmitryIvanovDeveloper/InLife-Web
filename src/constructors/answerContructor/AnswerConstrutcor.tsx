@@ -30,6 +30,17 @@ export default function AnswerContructor(props: IAnswerContructor) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isSaved, setIsSaved] = useState(true);
 
+    const [errors, setErrors] = useState({
+        text: false,
+        translate: false,
+        wordsToUse: false,
+        mistakeExplanations: [{
+            id: "",
+            word: false,
+            explanation: false,
+        }]
+    });
+
     function onAddButtonClick() {
         var phrase: IPhraseModel = {
             text: "New Phrase",
@@ -96,6 +107,15 @@ export default function AnswerContructor(props: IAnswerContructor) {
             id: uuidv4()
         }
 
+        setErrors(prev => ({
+            ...prev,
+            mistakeExplanations: [...prev.mistakeExplanations, {
+                id: mistakeExplanation.id,
+                word: false,
+                explanation: false
+            }]
+        }));
+
         setAnswerForm(prev => ({
             ...prev,
             explanations: [
@@ -109,14 +129,16 @@ export default function AnswerContructor(props: IAnswerContructor) {
 
     const onDeleteMistakeExplanation = (id: string) => {
         
-        var explanations = [...answerForm.explanations]
-            .filter(explanation => explanation.id != id);
+        setErrors(prev => ({
+            ...prev,
+            mistakeExplanations: [...prev.mistakeExplanations]
+                .filter(explanation => explanation.id != id)
+        }));
 
-            console.log(id)
-            console.log(explanations)
         setAnswerForm(prev => ({
             ...prev,
-            explanations
+            explanations: [...answerForm.explanations]
+            .filter(explanation => explanation.id != id)
         }));
     }
 
@@ -141,8 +163,63 @@ export default function AnswerContructor(props: IAnswerContructor) {
     }
 
     const onSave = () => {
+        if (checkErrors()) {
+           return;
+        }
+
         new ThereGameWebApi().Add(answerForm)
             .then(() => setIsSaved(true));
+    }
+
+    const checkErrors = () => {
+        if (answerForm.text == '' ) {
+            setErrors(prev => ({
+                ...prev,
+                text: true
+            }))
+        }
+        if (answerForm.wordsToUse == '' ) {
+            setErrors(prev => ({
+                ...prev,
+                wordsToUse: true
+            }))
+        }
+        if (answerForm.translate == '' ) {
+            setErrors(prev => ({
+                ...prev,
+                translate: true
+            }))
+        }
+
+        var explanationHasError = false;
+        answerForm.explanations.forEach(mistakeExplanation => {
+                if (mistakeExplanation.word == '' || 
+                    mistakeExplanation.text == '') {
+                        //TODO: Refactoring
+                        var errors = errors.mistakeExplanations.filter(explanation => explanation.id != mistakeExplanation.id)
+                        var error = {
+                            id: mistakeExplanation.id,
+                            word: mistakeExplanation.word == '',
+                            explanation: mistakeExplanation.text == ''
+                        }
+
+                        errors.push(error);
+
+                        setErrors(prev => ({
+                            ...prev,
+                            mistakeExplanations: errors
+                        }))
+                        explanationHasError = true;   
+                }
+        });
+
+        if (answerForm.text == '' || 
+            answerForm.text == '' ||
+            answerForm.translate == '' ||
+            explanationHasError
+        ) {
+            return true;
+        }
     }
 
     const onSetTenses = (tenses: string[]) => {
@@ -214,6 +291,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 label="Text"
                 variant="outlined"
                 onChange={onChangeText}
+                error={errors.text}
                 fullWidth
             />
              <TextField
@@ -224,6 +302,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 label="Translate"
                 variant="outlined"
                 onChange={onTranslateChange}
+                error={errors.translate}
                 fullWidth
             />
             <TextField
@@ -234,6 +313,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 label="Words To Use"
                 variant="outlined"
                 onChange={onWordsToUseChange}
+                error={errors.wordsToUse}
                 fullWidth
             />
             {answerForm.explanations.map((explanation, id) => (
@@ -250,6 +330,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
                         placeholder="are"
                         variant="outlined"
                         onChange={(event) => onExplanationChange(event, id)}
+                        error={errors.mistakeExplanations.find(e => e.id == explanation.id)?.word}
                     />
                     <TextField
                         InputLabelProps={{ shrink: true }}
@@ -260,6 +341,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
                         placeholder="are - множественное число, день - используется в единственном числе"
                         variant="outlined"
                         onChange={(event) =>  onExplanationChange(event, id)}
+                        error={errors.mistakeExplanations.find(e => e.id == explanation.id)?.explanation}
+
                         fullWidth
                     />
                      <Button onClick={() => onDeleteMistakeExplanation(explanation.id)}>Delete</Button>
