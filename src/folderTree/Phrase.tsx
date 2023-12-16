@@ -3,7 +3,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Answer from "./Answer.tsx";
 import { Box, Chip, Grid } from "@mui/material";
 import TextButton from "../components/buttons/TextButton.tsx";
-import PhraseContructor from "../constructors/phrazeContructor.tsx/PhrazeContructor.tsx";
+import PhraseContructor from "../constructors/phraseContructor.tsx/PhraseContructor.tsx";
 import { useDialogueItemConstructor, usePhrase } from "../Data/useDialogues.ts";
 
 export interface IPhraseProps {
@@ -21,8 +21,14 @@ export default function Phrase(props: IPhraseProps) {
         event.stopPropagation();
         event.preventDefault();
 
+
         setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phrase.id}/>);
     }
+
+    useEffect(() => {
+        console.log(phrase)
+    }, [phrase]);
+
 
     if (!phrase) {
         return;

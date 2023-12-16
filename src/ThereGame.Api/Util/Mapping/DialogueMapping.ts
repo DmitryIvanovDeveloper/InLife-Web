@@ -1,23 +1,54 @@
-import { IDialogueModel } from "../../../ThreGame.Business/Models/IDialogueModel";
-import { IDialogueDto } from "./DTO/IDialogueDto.ts";
+import { IDialogueModel } from "../../../ThereGame.Business/Models/IDialogueModel.ts";
+import { ICreateDialogueRequestDto, IDialogueRequestDto, IUpdateDialogueRequestDto } from "./RequestDtos/IDialogueRequestsDto.ts";
 import PhraseMapping from "./PhraseMapping.ts";
+import { IDialogueResponseDto } from "./ResponseDtos/IDialogueResponseDto.ts";
 
 export default class DialogueMapping {
-    constructor(private dialogue: any){}
 
-    public mapToDtoResponse(): IDialogueModel {
+    public response(dialogue: IDialogueResponseDto): IDialogueModel {
         return  {
-            id: this.dialogue.id,
-            name: this.dialogue.name,
-            phrase: new PhraseMapping(this.dialogue.phrase).mapToDtoResponse() 
+            isPublished: dialogue.isPublished,
+            id: dialogue.id,
+            name: dialogue.name,
+            phrase: new PhraseMapping().response(dialogue.phrase) 
         }
     }
 
-    public mapToDtoRequest(): IDialogueDto {
+    public responseAllDialogues(dialogues: IDialogueResponseDto[]): IDialogueModel[] {
+        return dialogues.map(dialogue => ({
+            isPublished: dialogue.isPublished,
+            id: dialogue.id,
+            name: dialogue.name,
+            phrase: new PhraseMapping().response(dialogue.phrase) 
+        }))
+    }
+
+    public request(dialogue: IDialogueModel): IDialogueRequestDto {
         return  {
-            id: this.dialogue.id,
-            name: this.dialogue.name,
-            phrase: new PhraseMapping(this.dialogue.phrase).mapToDtoRequest() 
+            id: dialogue.id,
+            name: dialogue.name,
+            phrase: new PhraseMapping().request(dialogue.phrase) 
+        }
+    }
+
+    public requestToCreateDialogue(dialogue: IDialogueModel): ICreateDialogueRequestDto {
+        return  {
+            id: dialogue.id,
+            name: dialogue.name,
+            phraseId: dialogue.phrase.id,
+            phrase: {
+                id:  dialogue.phrase.id,
+                text:  dialogue.phrase.text,
+                tensesList:  dialogue.phrase.tensesList,
+                comments: dialogue.phrase.comments,
+            }
+        }
+    }
+    public requestToUpdateDialogue(dialogue: IDialogueModel): IUpdateDialogueRequestDto {
+        return  {
+            id: dialogue.id,
+            name: dialogue.name,
+            phraseId: dialogue.phrase.id
         }
     }
 }

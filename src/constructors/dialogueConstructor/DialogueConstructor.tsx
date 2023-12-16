@@ -1,50 +1,76 @@
-import { Box, Button, TextField } from "@mui/material";
-import React from "react";
+import { Alert, Box, Button, TextField, Typography } from "@mui/material";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import SaveButton from "../../components/buttons/SaveButton.tsx";
-import { useDialogue } from "../../Data/useDialogues.ts";
+import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues.ts";
 import DeleteButton from "../../components/buttons/DeleteButton.tsx";
-import ThereGameWebApi from "../../ThereGame.Api/ThereGameWebApi.ts";
-import { IDialogueModel } from "../../ThreGame.Business/Models/IDialogueModel.ts";
-import { v4 as uuidv4 } from 'uuid';
+import PhraseContructor from "../phraseContructor.tsx/PhraseContructor.tsx";
+import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel.ts";
+import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi.ts";
 
 export interface IDialogueConstructor {
     id: string;
 }
 
 export default function DialogueConstructor(props: IDialogueConstructor) {
+
     const dialogue = useDialogue(props.id);
+    const [dialogueForm, setDialogueForm] = useState<IDialogueModel>(dialogue);
+    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+    const [isSaved, setIsSaved] = useState(true);
 
-    const [dialogueForm, setDialogueForm] = useState(dialogue);
-
+    const dialogieQueriesApi = useDialogieQueriesApi();
+    
     const save = async () => {
-        var id = uuidv4();
-        var newDialogue: IDialogueModel = {
-            id: id,
-            name: "",
-            phrase: {
-                parentId: id,
-                text: "",
-                answers: [],
-                tensesList: [],
-                comments: "",
-                id: uuidv4(),
-            }
-        }
-        await new ThereGameWebApi().CreateDialogue(newDialogue);
+        await dialogieQueriesApi.update(dialogueForm).then(() => {
+            setIsSaved(true);
+            reset();
+        });
     }
 
     const onChange = (event) => {
-
         setDialogueForm(prev => ({
             ...prev,
             name: event.target.value
         }));
+
+        setIsSaved(false);
     }
 
     const onDelete = async () => {
-        // await new Database.Remove(props.id)
+        await dialogieQueriesApi.delete(props.id);
     }
+
+    const onClickPhrase = (event) => {
+        event.stopPropagation();
+        event.preventDefault();
+
+        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.id} id={dialogueForm.phrase.id} />);
+    }
+
+    const publish = async () => {
+        setDialogueForm(prev => ({
+            ...prev,
+            isPublished: !prev.isPublished
+        }));
+
+        setIsSaved(false);
+    }
+
+    const reset = ()  => {
+        setDialogueForm(dialogue);
+        setIsSaved(true);
+        localStorage.removeItem(props.id);
+    }
+
+    useEffect(() => {
+        if (isSaved) {
+            return;
+        }
+
+        localStorage.setItem(props.id, JSON.stringify(dialogueForm));
+
+    }, [dialogueForm]);
 
     return (
         <Box 
@@ -55,6 +81,13 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
             }}
             autoComplete="off"
         >
+            <Button  
+                variant="contained"
+                onClick={publish}
+            >
+                {dialogueForm.isPublished ? "Unpublish" : "Publish"}
+            </Button>
+            
             <DeleteButton onClick={onDelete}/>
             <TextField 
                 onChange={onChange} 
@@ -65,7 +98,20 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
                 variant="outlined"
             ></TextField>
             <SaveButton onClick={save}/>
-            <Button onClick={save}>Save</Button>
+            <Box>
+                <Button 
+                    variant="contained" 
+                    onClick={onClickPhrase}>{dialogueForm.phrase.text}
+                </Button>
+            </Box>
+
+            {!isSaved
+                ? <Box>
+                    <Alert severity="warning">The constructor has unsaved changes</Alert>
+                    <Button onClick={reset}>reset</Button>
+                 </Box>
+                : <Alert severity="success">The constructor is saved!</Alert>
+            }
         </Box>
     )
 }

@@ -1,8 +1,8 @@
 import { dialoguesTemplate } from './DialogueData.ts';
 import { atom, selectorFamily, useRecoilState, useRecoilValue } from 'recoil'
-import { IDialogueModel } from '../ThreGame.Business/Models/IDialogueModel.ts'
-import IPhraseModel from '../ThreGame.Business/Models/IPhraseModel.ts'
-import IAnswerModel from '../ThreGame.Business/Models/IAnswerModel.ts'
+import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel.ts'
+import IPhraseModel from '../ThereGame.Business/Models/IPhraseModel.ts'
+import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel.ts'
 
 export function useDialogues() {
     return useRecoilState(dialoguesAtom)
@@ -16,6 +16,25 @@ export function useDialogue(id: string) {
     return useRecoilValue(dialogueSelectorFamily(id));
 }
 
+export function useUpdateDialogue() {
+    var [dialogues, setDialogues] = useRecoilState(dialoguesAtom);
+
+    return {
+        byId: (dialogue: IDialogueModel) => {
+            var updatedDialogue = dialogues
+                .filter(currentDialogue => currentDialogue.id != dialogue.id)
+            ;
+        
+            setDialogues([...updatedDialogue, dialogue]);
+        },
+
+        all: (dialogues: IDialogueModel[]) => {
+            setDialogues(dialogues);
+        }
+    }
+}
+
+
 const dialoguesAtom = atom<IDialogueModel[]>({
     key: 'dialoguesAtom',
     default: dialoguesTemplate,
@@ -23,7 +42,7 @@ const dialoguesAtom = atom<IDialogueModel[]>({
 
 const dialogueConstructorAtom = atom<Function>({
     key: 'dialogueConstructorAtom',
-    default: () => { },
+    default: () => {},
 })
 
 
@@ -109,6 +128,7 @@ export type IFindDialogueItemInput = {
 }
 
 export function usePhrase(dialogueId: string, phraseId: string): IPhraseModel {
+
     const findDialogueItemInput: IFindDialogueItemInput = {
         dialogueId,
         itemId: phraseId,
@@ -214,7 +234,6 @@ function findPhraseById(phrases: IPhraseModel[], targetId) {
 
     return null;
 }
-
 
 function findAnswerById2(answers: IAnswerModel[], targetId) {
     for (const answer of answers) {

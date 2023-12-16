@@ -3,7 +3,7 @@ import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Phrase from "./Phrase.tsx";
 import TextButton from "../components/buttons/TextButton.tsx";
 import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues.ts";
-import AnswerContructor from "../constructors/answerContructor/AnswerConstrutcor.tsx";
+import AnswerContructor from "../constructors/answerContructor/AnswerConstructor.tsx";
 
 export interface IAnswerProps {
     dialogueId: string,
@@ -19,6 +19,7 @@ export default function Answer(props: IAnswerProps) {
     const onClick = (event) => {
         event.stopPropagation();
         event.preventDefault();
+
         setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={answerRecoil.id} />);
     }
 

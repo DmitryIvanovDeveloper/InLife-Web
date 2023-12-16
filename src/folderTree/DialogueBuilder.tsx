@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ControlledTreeView from "./ControlledTreeView.tsx";
+import Dialogues from "./Dialogues.tsx";
 import SplitPane from "react-split-pane";
 import { useDialogueItemConstructor } from "../Data/useDialogues.ts";
 
@@ -11,7 +11,7 @@ export default function DialogueBuilder() {
         //@ts-ignore
         
         <SplitPane split="vertical" minSize={250} defaultSize={200} maxSize={window.innerWidth / 2}>
-            <ControlledTreeView />
+            <Dialogues />
             {dialogueItemConstructor}
         </SplitPane>
     )

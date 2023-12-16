@@ -1,28 +1,28 @@
-import IPhraseModel from "../../../ThreGame.Business/Models/IPhraseModel";
+import IPhraseModel from "../../../ThereGame.Business/Models/IPhraseModel.ts";
 import AnswerMapping from "./AnswerMapping.ts";
-import IPhraseDto from "./DTO/IPhraseDto.ts";
+import IPhraseRequestDto from "./RequestDtos/IPhraseRequestDto.ts";
+import IPhraseResponseDto from "./ResponseDtos/IPhraseResponseDto.ts";
 
 export default class PhraseMapping {
-    constructor(private phrase: any){}
     
-    public mapToDtoResponse(): IPhraseModel {
+    public response(phrase: IPhraseResponseDto): IPhraseModel {
         return {
-            parentId: this.phrase.parentAnswerId,
-            text: this.phrase.text,
-            answers: this.phrase.answers.map(answer => new AnswerMapping(answer).toDtoRequest()),
-            tensesList: this.phrase.tenses,
-            comments: this.phrase.comments,
-            id: this.phrase.id
+            parentId: phrase.parentAnswerId,
+            text: phrase.text,
+            answers: phrase.answers.map(answer => new AnswerMapping().response(answer)),
+            tensesList: phrase.tenseses,
+            comments: phrase.comments,
+            id: phrase.id
         }
     }
-    public mapToDtoRequest(): IPhraseDto {
+    public request(phrase: IPhraseModel): IPhraseRequestDto {
         return {
-            parentAnswerId: this.phrase.parentId,
-            text: this.phrase.text,
-            answers: this.phrase.answers.map(answer => new AnswerMapping(answer).toDtoRequest()),
-            tensesList: this.phrase.tensesList,
-            comments: this.phrase.comments,
-            id: this.phrase.id
+            parentAnswerId: phrase.parentId,
+            text: phrase.text,
+            answers: phrase.answers.map(answer => new AnswerMapping().request(answer)),
+            tensesList: phrase.tensesList,
+            comments: phrase.comments,
+            id: phrase.id
         }
     }
 }

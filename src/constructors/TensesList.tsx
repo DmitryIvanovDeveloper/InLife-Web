@@ -33,6 +33,7 @@ export default function TensesList(props: ITensesListProps) {
     }
 
     React.useEffect(() => {
+        console.log(props.tensesList);
         setClickedButtons(props.tensesList);
     }, [props.tensesList]);
 

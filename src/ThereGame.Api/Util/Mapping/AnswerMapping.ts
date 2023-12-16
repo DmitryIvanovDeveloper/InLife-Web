@@ -1,35 +1,40 @@
-import IAnswerModel from "../../../ThreGame.Business/Models/IAnswerModel";
-import IAnswerDto from "./DTO/IAnswerDto.ts";
+import IAnswerModel from "../../../ThereGame.Business/Models/IAnswerModel.ts";
 import PhraseMapping from "./PhraseMapping.ts";
+import IAnswerRequestDto from "./RequestDtos/IAnswerRequestDto.ts";
+import MistakeExplanationMapping from "./MistakeExplanationMapping.ts";
+import TranslateMapping from "./TranslateMapping.ts";
+import IAnswerResponseDto from "./ResponseDtos/IAnswerResponseDto.ts";
 
 export default class AnswerMapping {
 
-    constructor(private answer: any){}
-    
-    public toDtoResponse(): IAnswerModel {
-
+    public response(answer: IAnswerResponseDto): IAnswerModel {
+        
         return {
-            tensesList: this.answer.tenses,
-            text: this.answer.text,
-            wordsToUse: this.answer.wordsToUse,
-            explanations: this.answer.mistakeExplanations,
-            translates: this.answer.translates,
-            phrases: this.answer.phrases.map(phrase => new PhraseMapping(phrase).mapToDtoResponse()),
-            parentId: this.answer.parentPhraseId,
-            id: this.answer.id
+            tensesList: answer.tensesList,
+            text: answer.text,
+            wordsToUse: answer.wordsToUse,
+            mistakeExplanations: answer.explanations
+                .map(mistakeExplanation => new MistakeExplanationMapping().response(mistakeExplanation)),
+            translates: answer.translates
+                .map(translate => new TranslateMapping().response(translate)),
+            phrases: answer.phrases
+                .map(phrase => new PhraseMapping().response(phrase)),
+            parentId: answer.parentPhraseId,
+            id: answer.id
         }
     }
 
-    public toDtoRequest(): IAnswerDto {
+    public request(answer: IAnswerModel): IAnswerRequestDto {
         return {
-            tensesList: this.answer.tensesList,
-            text: this.answer.text,
-            wordsToUse: this.answer.wordsToUse,
-            explanations: this.answer.explanations,
-            translates: this.answer.translates,
-            phrases: this.answer.phrases.map(phrase => new PhraseMapping(phrase).mapToDtoRequest()),
-            parentPhraseId: this.answer.parentId,
-            id: this.answer.id
+            parentPhraseId: answer.parentId,
+            id: answer.id,
+            text: answer.text,
+            tensesList: answer.tensesList,
+            wordsToUse: answer.wordsToUse,
+            mistakeExplanations: answer.mistakeExplanations
+                .map(mistakeExplanation => new MistakeExplanationMapping().request(mistakeExplanation)),
+            translates: answer.translates
+                .map(translate => new TranslateMapping().request(translate)),
         }
     }
 }

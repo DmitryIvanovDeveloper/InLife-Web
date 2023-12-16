@@ -2,7 +2,6 @@
   "name": "theregameweb",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3000",
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
@@ -20,6 +19,7 @@
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
     "inversify": "^6.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -29,11 +29,12 @@
     "react-spring": "^9.7.3",
     "recoil": "^0.7.7",
     "reflect-metadata": "^0.1.14",
+    "ts-node": "^10.9.2",
     "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "CHOKIDAR_USEPOLLING=true react-scripts start",
+    "start": "CHOKIDAR_USEPOLLING=true react-scripts --max-http-header-size=1024  start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
