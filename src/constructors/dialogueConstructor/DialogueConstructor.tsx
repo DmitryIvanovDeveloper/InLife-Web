@@ -7,6 +7,8 @@ import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor.tsx";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel.ts";
 import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi.ts";
+import LocationCarousel from "../../components/LocationCarousel/LocationCarousel.js";
+import { Locations } from "../../Data/Locations.ts";
 
 export interface IDialogueConstructor {
     id: string;
@@ -72,6 +74,13 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
 
     }, [dialogueForm]);
 
+    const onSetLevel = (levelId: string) => {
+        setDialogueForm(prev => ({
+            ...prev,
+            levelId: levelId
+        }));
+    }
+
     return (
         <Box 
             component="form"
@@ -81,6 +90,19 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
             }}
             autoComplete="off"
         >
+            <Box style={{display: "flex", justifyContent: "space-between"}} >
+                <Box></Box>
+                <Typography>
+                    {
+                        Locations.find(location => location.id == dialogueForm.levelId)?.name
+                    }
+                </Typography>
+                <DeleteButton onClick={onDelete}/>
+            </Box>
+         
+
+            <LocationCarousel setLevel={onSetLevel}/>
+
             <Button  
                 variant="contained"
                 onClick={publish}
@@ -88,7 +110,6 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
                 {dialogueForm.isPublished ? "Unpublish" : "Publish"}
             </Button>
             
-            <DeleteButton onClick={onDelete}/>
             <TextField 
                 onChange={onChange} 
                 value={dialogueForm.name}
