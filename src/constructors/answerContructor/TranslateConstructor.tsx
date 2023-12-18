@@ -1,16 +1,60 @@
-import { Box, Grid, TextField, Button } from "@mui/material";
+import { Box, Grid, TextField, Button, FormControl } from "@mui/material";
 import React, { useState } from "react";
 import Translate from "./Translate.tsx";
 import ITranstateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
+import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
+import { LanguageType } from "../../Data/LanguageType.ts";
 
 export interface ITranslateConstructor {
     translates: ITranstateModel[];
-    onTranslateChange: (value: string) => void;
+    onTranslateChange: (translates: ITranslateModel[]) => void,
     onDeleteTranslate: (id: string) => void
     onAddTranslate: () => void;
 }
 
 export default function TranslateConstructor(props: ITranslateConstructor) {
+
+    const onTranslateLanguageChange = (event, id) => {
+        
+        var translate = props.translates.find(translate => translate.id == id);
+        if (!translate) {
+            return;
+        }
+
+        var updatedTranslate: ITranslateModel = {
+            parentId: translate.parentId,
+            id: translate.id,
+            language: event?.language,
+            text: translate.text,
+        }
+
+        var translates = props.translates.filter(translate => translate.id != id);
+
+        translates.push(updatedTranslate);
+
+        props.onTranslateChange(translates)
+    }
+
+    const onTranslateTextChange = (value: string, id: string) => {
+        var translate = props.translates.find(translate => translate.id == id);
+        if (!translate) {
+            return;
+        }
+
+        var updatedTranslate: ITranslateModel = {
+            parentId: translate.parentId,
+            id: translate.id,
+            language: translate.language,
+            text: value,
+        }
+
+        var translates = props.translates.filter(translate => translate.id != id);
+
+        translates.push(updatedTranslate);
+
+        props.onTranslateChange(translates)
+    }
+
     return (
         <Box sx={{ pt: 3, pb: 3 }}>
             {props.translates.map(translate => (
@@ -19,18 +63,20 @@ export default function TranslateConstructor(props: ITranslateConstructor) {
                     justifyContent="space-around"
                     alignItems="center"
                     sx={{ pt: 1 }}
+                    key={translate.id}
                 >
-                    <Translate />
+                    <Translate onTranslateChange={onTranslateLanguageChange} id={translate.id}/>
                     <TextField
+                        key={translate.id}
                         sx={{ pl: 1 }}
                         InputLabelProps={{ shrink: true }}
                         value={translate.text}
                         placeholder="Да, сегодня отличный день!"
-                        id="outlined-basic"
+                        id={translate.id}
                         label="Translate"
                         variant="outlined"
-                        onChange={event => props.onTranslateChange(event.target.value)}
                         required={true}
+                        onChange={(event) => onTranslateTextChange(event.target.value, translate.id)}
                         fullWidth
                     />
                     <Button onClick={() => props.onDeleteTranslate(translate.id)}>Delete</Button>
@@ -38,7 +84,7 @@ export default function TranslateConstructor(props: ITranslateConstructor) {
             ))}
 
 
-            <Box sx={{pt: 1}} style={{ display: "flex", justifyContent: "flex-end" }}>
+            <Box sx={{ pt: 1 }} style={{ display: "flex", justifyContent: "flex-end" }}>
                 <Button
                     style={{ backgroundColor: "darkgreen", color: "white" }}
                     onClick={() => props.onAddTranslate()}

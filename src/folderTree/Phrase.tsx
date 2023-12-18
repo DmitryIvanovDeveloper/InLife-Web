@@ -16,7 +16,8 @@ export default function Phrase(props: IPhraseProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const phrase = usePhrase(props.dialogueId, props.id);
-   
+    
+    console.log(phrase)
     function OnClick(event) {
         event.stopPropagation();
         event.preventDefault();
@@ -24,11 +25,6 @@ export default function Phrase(props: IPhraseProps) {
 
         setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phrase.id}/>);
     }
-
-    useEffect(() => {
-        console.log(phrase)
-    }, [phrase]);
-
 
     if (!phrase) {
         return;

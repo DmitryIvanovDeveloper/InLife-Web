@@ -47,7 +47,7 @@ export default function Dialogues(props: IDialoguesProps) {
     }
 
     useEffect(() => {
-        dialogueQueriesApi.get();
+        // dialogueQueriesApi.get();
     }, []);
 
     if (!dialogues) {

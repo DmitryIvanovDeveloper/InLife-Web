@@ -1,4 +1,4 @@
-import { LanguageType } from "../../../../ThereGame.Business/Models/LanguageType";
+import { LanguageType } from "../../../../Data/LanguageType";
 
 export default interface ITranslateResponseDto {
     answerParentId: string,

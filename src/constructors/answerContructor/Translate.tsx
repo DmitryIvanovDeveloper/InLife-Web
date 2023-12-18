@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Theme, useTheme } from '@mui/material/styles';
 import { Autocomplete, Box, TextField } from '@mui/material';
+import { Languages } from '../../Data/Languages.ts';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -13,23 +14,6 @@ const MenuProps = {
     },
 };
 
-const languages = [{
-    label: "Russian",
-    code: "RU"
-},
-{
-    label: "Deutsche",
-    code: "De"
-},
-{
-    label: "France",
-    code: "FR"
-},
-{
-    label: "Spain",
-    code: "SE"
-}];
-
 function getStyles(name: string, personName: readonly string[], theme: Theme) {
     return {
         fontWeight:
@@ -39,20 +23,25 @@ function getStyles(name: string, personName: readonly string[], theme: Theme) {
     };
 }
 
-export default function Translate() {
-    const theme = useTheme();
-    const [personName, setPersonName] = React.useState<string[]>([]);
+export interface ITranslate {
+    onTranslateChange: (value, index) => void;
+    id: string;
+}
 
+export default function Translate(props: ITranslate) {
+    const theme = useTheme();
+    const [personName, setPersonName] = React.useState<string>();
 
     return (
         <Autocomplete
             id="country-select-demo"
             sx={{ width: 180}}
-            options={languages}
+            options={Languages}
             autoHighlight
+            onChange={(event, value) => props.onTranslateChange(value, props.id)}
             getOptionLabel={(option) => option.label}
             renderOption={(props, option) => (
-                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                <Box id={option.code} component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                     <img
                         loading="lazy"
                         width="20"

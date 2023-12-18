@@ -2,23 +2,21 @@ import { Alert, Box, Button, ButtonGroup, FormLabel, Grid, TextField, Typography
 import React, { useEffect, useState } from "react";
 import TensesList from "../TensesList.tsx";
 import AddButton from "../../components/buttons/AddButton.tsx";
-import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel.ts";
 import { v4 as uuidv4 } from 'uuid';
 import SaveButton from "../../components/buttons/SaveButton.tsx";
 import { useSelection } from "../../Data/useSelection.ts";
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor.tsx";
-import { usePhraseCrud, useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues.ts";
+import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues.ts";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel.ts";
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel.ts";
 import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 import MistakeExplanationConstructor from "./MistakeExplanationsConstructor.tsx";
 import TranslateConstructor from "./TranslateConstructor.tsx";
 import IAnswerError from "../../Data/Errors/IAnswerError.tsx";
-import { appContainer } from "../../inversify.config.ts";
-import { TYPES } from "../../types.ts";
-import IThereGameDataService from "../../ThereGame.Business/Domain/Util/Services/IThereGameDataService.ts";
 import ITranstateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
-import { LanguageType } from "../../ThereGame.Business/Models/LanguageType.ts";
+import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi.ts";
+import { LanguageType } from "../../Data/LanguageType.ts";
+import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -27,25 +25,23 @@ export interface IAnswerContructor {
 }
 
 export default function AnswerContructor(props: IAnswerContructor) {
-    const thereGameDataService = appContainer.get<IThereGameDataService>(TYPES.ThereGameDataService);
 
-    const phraseCrud = usePhraseCrud(props.dialogueId, props.id);
-
-    const answer = useAnswer(props.dialogueId, props.id);
+    const answerRecoil = useAnswer(props.dialogueId, props.id);
+    const answerQueriesApi = useAnswerQueriesApi();
 
     const [selection, setSelection] = useSelection();
-    const [answerForm, setAnswerForm] = useState<IAnswerModel>(answer);
+    const [answer, setAnswer] = useState<IAnswerModel>(answerRecoil);
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isSaved, setIsSaved] = useState(true);
     const [errors, setErrors] = useState<IAnswerError>();
 
     function onAddButtonClick() {
-      
+        //TODO: To implement
     }
 
     const onChangeText = (event) => {
-        setAnswerForm(prev => ({
+        setAnswer(prev => ({
             ...prev,
             text: event.target.value
         }));
@@ -59,18 +55,17 @@ export default function AnswerContructor(props: IAnswerContructor) {
     }
 
     const onWordsToUseChange = (event) => {
-        setAnswerForm(prev => ({
+        setAnswer(prev => ({
             ...prev,
             wordsToUse: event.target.value
         }));
+
         setIsSaved(false);
     }
 
-   
-
     // Mistake Explanation
     const onExplanationChange = (event, index) => {
-        var explanation = [...answerForm.mistakeExplanations];
+        var explanation = [...answer.mistakeExplanations];
 
         if (event.target.id == 'word') {
             explanation[index].word = event.target.value;
@@ -79,7 +74,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
             explanation[index].text = event.target.value;
         }
 
-        setAnswerForm(prev => ({
+        setAnswer(prev => ({
             ...prev,
             mistakeExplanations: explanation
         }));
@@ -93,7 +88,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
             id: uuidv4()
         }
         
-        setAnswerForm(prev => ({
+        setAnswer(prev => ({
             ...prev,
             mistakeExplanations: [
                 ...prev.mistakeExplanations,
@@ -105,9 +100,9 @@ export default function AnswerContructor(props: IAnswerContructor) {
     }
 
     const onDeleteMistakeExplanation = (id: string) => {
-        setAnswerForm(prev => ({
+        setAnswer(prev => ({
             ...prev,
-            mistakeExplanations: [...answerForm.mistakeExplanations]
+            mistakeExplanations: [...answer.mistakeExplanations]
                 .filter(explanation => explanation.id != id)
         }));
     }
@@ -121,51 +116,48 @@ export default function AnswerContructor(props: IAnswerContructor) {
             text: ""
         }
 
-        setAnswerForm(prev => ({
+        setAnswer(prev => ({
             ...prev,
-            translates: [...answerForm.translates, translate]
+            translates: [...answer.translates, translate]
         }));
     }
     
     const onDeleteTranslate = (id: string) => {
-        setAnswerForm(prev => ({
+        setAnswer(prev => ({
             ...prev,
-            translates: [...answerForm.translates]
+            translates: [...answer.translates]
                 .filter(translate => translate.id != id)
         }));
     }
 
-    const onTranslateChange = (value: string) => {
-        setAnswerForm(prev => ({
+    const onTranslateChange = (translates: ITranslateModel[]) => {
+        setAnswer(prev => ({
             ...prev,
-            translate: value
+            translates: translates
         }));
+
         setIsSaved(false);
     }
 
     useEffect(() => {
-        console.log(answerForm.translates);
-    }, [answerForm]);
-
-    useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (data == null) {
-            setAnswerForm(answer);
+            setAnswer(answerRecoil);
             setIsSaved(true);
             return;
         }
         setIsSaved(false);
 
-        setAnswerForm(JSON.parse(data));
+        setAnswer(JSON.parse(data));
     }, []);
 
-    const onDelete = () => {
-       
+    const onDelete = async () => {
+        await answerQueriesApi.delete(props.id)
+            setIsSaved(true)
     }
 
-    const onSave = () => {
-       thereGameDataService.Add(answerForm)
-            .then(() => setIsSaved(true));
+    const onSave = async() => {
+        await answerQueriesApi.update(answer)
     }
 
 
@@ -181,10 +173,10 @@ export default function AnswerContructor(props: IAnswerContructor) {
             }]
         }
 
-        if (answerForm.text == '') {
+        if (answer.text == '') {
             currentErrors.text = true;
         }
-        if (answerForm.wordsToUse == '') {
+        if (answer.wordsToUse == '') {
             currentErrors.wordsToUse = true;
         }
 
@@ -210,7 +202,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
     }
 
     const onSetTenses = (tenses: string[]) => {
-        setAnswerForm(prev => ({
+        setAnswer(prev => ({
             ...prev,
             tensesList: tenses
         }));
@@ -218,21 +210,34 @@ export default function AnswerContructor(props: IAnswerContructor) {
         setIsSaved(false)
     }
 
+
+
     useEffect(() => {
         if (isSaved) {
             return;
         }
 
-        localStorage.setItem(props.id, JSON.stringify(answerForm));
-    }, [answerForm]);
+        localStorage.setItem(props.id, JSON.stringify(answer));
+    }, [answer]);
+
+    useEffect(() => {
+        var data = localStorage.getItem(props.id);
+        if(JSON.stringify(answerRecoil) !== data){
+            return;
+        }
+
+        localStorage.removeItem(props.id);
+        setIsSaved(true)
+    }, [answer]);
 
     const reset = () => {
-        setAnswerForm(answer);
+        setAnswer(answerRecoil);
         setIsSaved(true);
+
         localStorage.removeItem(props.id);
     }
 
-    if (!answer) {
+    if (!answerRecoil) {
         return;
     }
 
@@ -245,7 +250,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 mb: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 700,
+                height: 800,
                 overflow: "hidden",
                 overflowY: "scroll",
             }}
@@ -271,12 +276,12 @@ export default function AnswerContructor(props: IAnswerContructor) {
             </Box>
 
 
-            <TensesList tensesList={answerForm.tensesList} setTensesList={onSetTenses} />
+            <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} />
 
             <TextField
                 InputLabelProps={{ shrink: true }}
                 placeholder="Yes, today is a greate day!"
-                value={answerForm.text}
+                value={answer.text}
                 id="outlined-basic"
                 label="Text"
                 variant="outlined"
@@ -287,7 +292,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
 
             <TextField
                 InputLabelProps={{ shrink: true }}
-                value={answerForm.wordsToUse}
+                value={answer.wordsToUse}
                 placeholder="Yes, Greate, Yes, Today, Day, Is, etc."
                 id="outlined-basic"
                 label="Words To Use"
@@ -298,14 +303,14 @@ export default function AnswerContructor(props: IAnswerContructor) {
             />
 
             <TranslateConstructor 
-                translates={answerForm.translates} 
+                translates={answer.translates} 
                 onAddTranslate={onAddTranslate}
-                onTranslateChange={onTranslateChange} 
                 onDeleteTranslate={onDeleteTranslate}
+                onTranslateChange={onTranslateChange}
             />
 
            <MistakeExplanationConstructor 
-                explanations={answerForm.mistakeExplanations} 
+                explanations={answer.mistakeExplanations} 
                 onDeleteMistakeExplanation={onDeleteMistakeExplanation} 
                 onExplanationChange={onExplanationChange}
                 onAddMistakeExplanation={onAddMistakeExplanation}
@@ -313,13 +318,13 @@ export default function AnswerContructor(props: IAnswerContructor) {
 
             <AddButton onCLick={onAddButtonClick} />
 
-            {answerForm.phrases?.length != 0
+            {answer.phrases?.length != 0
                 ?
                 <Box>
                     <div>Next phrases to the answer</div>
                     <ButtonGroup
                     >
-                        {answerForm.phrases?.map(answer => (
+                        {answer.phrases?.map(answer => (
                             <Button id={answer.id} onClick={onPhraseButtonClick} sx={{ p: 1, }}>{answer.text}</Button>
                         ))}
                     </ButtonGroup>

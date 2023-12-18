@@ -1,4 +1,4 @@
-import { LanguageType } from "./LanguageType";
+import { LanguageType } from "../../Data/LanguageType";
 
 export default interface ITranstateModel {
     readonly parentId: string,

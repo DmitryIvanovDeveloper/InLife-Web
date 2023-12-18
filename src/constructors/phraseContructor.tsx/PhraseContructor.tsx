@@ -35,7 +35,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     const answerQueriesApi = useAnswerQueriesApi();
 
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
-    const [phraseForm, setPhraseForm] = useState<IPhraseModel>(phraseRecoil);
+    const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
     const [isSaved, setIsSaved] = useState(true);
     const [errors, setErrors] = useState({
         text: false
@@ -55,7 +55,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }
 
     const onChangeText = (event) => {
-        setPhraseForm(prev => ({
+        setPhrase(prev => ({
             ...prev,
             text: event.target.value
         }));
@@ -69,7 +69,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }
 
     const onCommentsChange = (event) => {
-        setPhraseForm(prev => ({
+        setPhrase(prev => ({
             ...prev,
             comments: event.target.value
         }));
@@ -77,7 +77,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }
 
     const onSave = async () => {
-        if (phraseForm.text == '') {
+        if (phrase.text == '') {
             setErrors(prev => ({
                 ...prev,
                 text: true
@@ -86,13 +86,13 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             return;
         }
 
-        await phraseQueriesApi.update(phraseForm);
+        await phraseQueriesApi.update(phrase);
         localStorage.removeItem(props.id);
         setIsSaved(true);
     }
 
     const onSetTenses = (tenses: string[]) => {
-        setPhraseForm(prev => ({
+        setPhrase(prev => ({
             ...prev,
             tensesList: tenses
         }));
@@ -103,13 +103,13 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
-            setPhraseForm(phraseRecoil);
+            setPhrase(phraseRecoil);
             setIsSaved(true);
             return;
         }
         setIsSaved(false);
 
-        setPhraseForm(JSON.parse(data));
+        setPhrase(JSON.parse(data));
     }, []);
 
     useEffect(() => {
@@ -117,12 +117,23 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             return;
         }
 
-        localStorage.setItem(props.id, JSON.stringify(phraseForm));
+        localStorage.setItem(props.id, JSON.stringify(phrase));
 
-    }, [phraseForm]);
+    }, [phrase]);
+
+
+    useEffect(() => {
+        var data = localStorage.getItem(props.id);
+        if(JSON.stringify(phraseRecoil) !== data){
+            return;
+        }
+
+        localStorage.removeItem(props.id);
+        setIsSaved(true)
+    }, [phrase]);
 
     const reset = ()  => {
-        setPhraseForm(phraseRecoil);
+        setPhrase(phraseRecoil);
         setIsSaved(true);
         localStorage.removeItem(props.id);
     }
@@ -158,12 +169,12 @@ export default function PhraseContructor(props: IPhraseConstructor) {
                 <Typography  textAlign="center">Phrase Constructor</Typography>
             </Box>
 
-            <TensesList tensesList={phraseForm.tensesList} setTensesList={onSetTenses} />
+            <TensesList tensesList={phrase.tensesList} setTensesList={onSetTenses} />
             
             <TextField
                 InputLabelProps={{ shrink: true }}
 
-                value={phraseForm.text}
+                value={phrase.text}
                 id="outlined-basic"
                 label="Text"
                 variant="outlined"
@@ -175,7 +186,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             />
             <TextField
                 InputLabelProps={{ shrink: true }}
-                value={phraseForm.comments}
+                value={phrase.comments}
                 id="outlined-basic"
                 label="Comments"
                 variant="outlined"
@@ -185,12 +196,12 @@ export default function PhraseContructor(props: IPhraseConstructor) {
 
             <AddButton onCLick={onAddButtonClick} />
 
-            {phraseForm.answers.length != 0
+            {phrase.answers.length != 0
                 ?
                 <Box>
                     <div>Answers to the phrase</div>
                     
-                        {phraseForm.answers.map(answer => (
+                        {phrase.answers.map(answer => (
                             <Button id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
                                 <Typography sx={{textDecoration: 'underline'}}>{answer.text}</Typography>
                             </Button>

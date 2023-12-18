@@ -14,9 +14,10 @@ export default function useDialogieQueriesApi() {
 
     const get = async () => {
         var response = await dialogueService.Get();
+        console.log(response)
 
         if (response?.status != Status.OK) {
-            return;
+            return null;
         }
         return new DialogueMapping().responseAllDialogues(response?.data);
     }
@@ -24,9 +25,11 @@ export default function useDialogieQueriesApi() {
     return {
         get: async () => {
             var dialogues = await get();
-            if(!dialogues){
+            if(!dialogues?.length){
                 return;
             }
+
+            console.log(dialogues)
 
             updateDialogue.all(dialogues);
         },
@@ -55,6 +58,7 @@ export default function useDialogieQueriesApi() {
 
             const dialogue: IDialogueModel = {
                 isPublished: false,
+                levelId: process.env.REACT_APP_LOCATION_BUS_STATION,
                 id: uuidv4(),
                 name: 'New Dialogue',
                 phrase: phrase

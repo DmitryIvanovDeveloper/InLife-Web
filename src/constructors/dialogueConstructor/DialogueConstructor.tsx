@@ -16,22 +16,21 @@ export interface IDialogueConstructor {
 
 export default function DialogueConstructor(props: IDialogueConstructor) {
 
-    const dialogue = useDialogue(props.id);
-    const [dialogueForm, setDialogueForm] = useState<IDialogueModel>(dialogue);
+    const dialogueRecoil = useDialogue(props.id);
+    const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isSaved, setIsSaved] = useState(true);
 
     const dialogieQueriesApi = useDialogieQueriesApi();
     
     const save = async () => {
-        await dialogieQueriesApi.update(dialogueForm).then(() => {
-            setIsSaved(true);
-            reset();
-        });
+        await dialogieQueriesApi.update(dialogue)
+        setIsSaved(true);
+        reset();
     }
 
     const onChange = (event) => {
-        setDialogueForm(prev => ({
+        setDialogue(prev => ({
             ...prev,
             name: event.target.value
         }));
@@ -47,11 +46,11 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         event.stopPropagation();
         event.preventDefault();
 
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.id} id={dialogueForm.phrase.id} />);
+        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.id} id={dialogue.phrase.id} />);
     }
 
     const publish = async () => {
-        setDialogueForm(prev => ({
+        setDialogue(prev => ({
             ...prev,
             isPublished: !prev.isPublished
         }));
@@ -60,25 +59,51 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
     }
 
     const reset = ()  => {
-        setDialogueForm(dialogue);
+        setDialogue(dialogueRecoil);
         setIsSaved(true);
+
         localStorage.removeItem(props.id);
     }
+
+    useEffect(() => {
+        var data = localStorage.getItem(props.id);
+        if (!data) {
+            setDialogue(dialogueRecoil);
+            setIsSaved(true);
+            return;
+        }
+
+        setIsSaved(false);
+
+        setDialogue(JSON.parse(data));
+    }, []);
 
     useEffect(() => {
         if (isSaved) {
             return;
         }
 
-        localStorage.setItem(props.id, JSON.stringify(dialogueForm));
+        localStorage.setItem(props.id, JSON.stringify(dialogue));
 
-    }, [dialogueForm]);
+    }, [dialogue]);
+
+    useEffect(() => {
+        var data = localStorage.getItem(props.id);
+        if(JSON.stringify(dialogueRecoil) !== data){
+            return;
+        }
+
+        localStorage.removeItem(props.id);
+        setIsSaved(true)
+    }, [dialogue]);
 
     const onSetLevel = (levelId: string) => {
-        setDialogueForm(prev => ({
+        setDialogue(prev => ({
             ...prev,
             levelId: levelId
         }));
+
+        setIsSaved(false);
     }
 
     return (
@@ -94,7 +119,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
                 <Box></Box>
                 <Typography>
                     {
-                        Locations.find(location => location.id == dialogueForm.levelId)?.name
+                        Locations.find(location => location.id == dialogue.levelId)?.name
                     }
                 </Typography>
                 <DeleteButton onClick={onDelete}/>
@@ -107,12 +132,12 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
                 variant="contained"
                 onClick={publish}
             >
-                {dialogueForm.isPublished ? "Unpublish" : "Publish"}
+                {dialogue.isPublished ? "Unpublish" : "Publish"}
             </Button>
             
             <TextField 
                 onChange={onChange} 
-                value={dialogueForm.name}
+                value={dialogue.name}
                 required={true}
                 id="outlined-basic"
                 label="Name"
@@ -122,7 +147,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
             <Box>
                 <Button 
                     variant="contained" 
-                    onClick={onClickPhrase}>{dialogueForm.phrase.text}
+                    onClick={onClickPhrase}>{dialogue.phrase.text}
                 </Button>
             </Box>
 
