@@ -8,7 +8,6 @@ import { useSelection } from "../../Data/useSelection.ts";
 import AnswerContructor from "../answerContructor/AnswerConstructor.tsx";
 import { useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues.ts";
 import DeleteButton from "../../components/buttons/DeleteButton.tsx";
-
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi.ts";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi.ts";
 
@@ -16,15 +15,6 @@ export interface IPhraseConstructor {
     dialogueId: string;
     id: string
     prevConstructorId?: string
-}
-
-var a: IPhraseModel = {
-    parentId: "",
-    text: "",
-    answers: [],
-    tensesList: [],
-    comments: "",
-    id: ""
 }
 
 export default function PhraseContructor(props: IPhraseConstructor) {
@@ -100,6 +90,8 @@ export default function PhraseContructor(props: IPhraseConstructor) {
         setIsSaved(false);
     }
 
+
+    // UseEffects
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
@@ -138,7 +130,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
         localStorage.removeItem(props.id);
     }
 
-    if (!phraseRecoil) {
+    if (!phrase) {
         return;
     }
 

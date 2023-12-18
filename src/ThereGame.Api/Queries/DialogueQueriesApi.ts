@@ -1,5 +1,5 @@
 import { Status } from './../../ThereGame.Infrastructure/Statuses/Status.ts';
-import { useUpdateDialogue } from "../../Data/useDialogues.ts";
+import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues.ts";
 import IDialogueService from "../../ThereGame.Business/Domain/Util/Services/IDialogueService.ts";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel.ts";
 import { appContainer } from "../../inversify.config.ts";
@@ -11,25 +11,25 @@ import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel.ts';
 export default function useDialogieQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);
     var updateDialogue =  useUpdateDialogue();
+    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
-    const get = async () => {
+    async function get(): Promise<IDialogueModel[]> {
         var response = await dialogueService.Get();
-        console.log(response)
-
-        if (response?.status != Status.OK) {
-            return null;
+        if (response?.status != Status.OK ) {
+            return [];
         }
+
         return new DialogueMapping().responseAllDialogues(response?.data);
     }
 
     return {
         get: async () => {
             var dialogues = await get();
-            if(!dialogues?.length){
+
+            if(!dialogues){
                 return;
             }
 
-            console.log(dialogues)
 
             updateDialogue.all(dialogues);
         },
@@ -58,11 +58,12 @@ export default function useDialogieQueriesApi() {
 
             const dialogue: IDialogueModel = {
                 isPublished: false,
-                levelId: process.env.REACT_APP_LOCATION_BUS_STATION,
+                levelId: process.env.REACT_APP_LOCATION_BUS_STATION ?? "",
                 id: uuidv4(),
                 name: 'New Dialogue',
                 phrase: phrase
             }
+
 
             var requestData = new DialogueMapping().requestToCreateDialogue(dialogue);
 
@@ -101,9 +102,7 @@ export default function useDialogieQueriesApi() {
             }
 
             var dialogues = await get();
-            if(!dialogues){
-                return;
-            }
+            setDialogueItemConstructor(() => null);
 
             updateDialogue.all(dialogues);
         }

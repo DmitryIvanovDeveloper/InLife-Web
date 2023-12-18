@@ -1,4 +1,4 @@
-import {useUpdateDialogue } from "../../Data/useDialogues.ts";
+import {useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues.ts";
 import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhraseService.ts";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel.ts";
 import { appContainer } from "../../inversify.config.ts";
@@ -14,6 +14,7 @@ export default function usePhraseQueriesApi() {
     const phraseService = appContainer.get<IPhraseService>(TYPES.PhraseService);
     var updateDialogue =  useUpdateDialogue();
     var dialogieQueriesApi = useDialogieQueriesApi();
+    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     
     return {
         getById: async (id: string) => {
@@ -51,6 +52,7 @@ export default function usePhraseQueriesApi() {
             if (response?.status != Status.OK) {
                 return;
             }
+            setDialogueItemConstructor(() => null);
 
             dialogieQueriesApi.get();
         },

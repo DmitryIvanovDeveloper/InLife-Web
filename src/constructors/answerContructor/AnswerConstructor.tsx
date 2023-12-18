@@ -237,9 +237,11 @@ export default function AnswerContructor(props: IAnswerContructor) {
         localStorage.removeItem(props.id);
     }
 
-    if (!answerRecoil) {
+    if (!answer) {
         return;
     }
+
+    console.log("Answer")
 
     return (
         <Box

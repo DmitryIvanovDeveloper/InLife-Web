@@ -10,6 +10,7 @@ export interface ICreateDialogueRequestDto {
     id: string;
     name: string,
     phraseId: string;
+    levelId: string;
     phrase: {
         id:  string,
         text:  string,

@@ -40,6 +40,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
 
     const onDelete = async () => {
         await dialogieQueriesApi.delete(props.id);
+        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.id} id={dialogue.phrase.id} />);
     }
 
     const onClickPhrase = (event) => {
@@ -65,6 +66,17 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         localStorage.removeItem(props.id);
     }
 
+    const onSetLevel = (levelId: string) => {
+        setDialogue(prev => ({
+            ...prev,
+            levelId: levelId
+        }));
+
+        setIsSaved(false);
+    }
+
+    // UseEffects
+
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
@@ -83,13 +95,8 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
             return;
         }
 
-        localStorage.setItem(props.id, JSON.stringify(dialogue));
-
-    }, [dialogue]);
-
-    useEffect(() => {
-        var data = localStorage.getItem(props.id);
-        if(JSON.stringify(dialogueRecoil) !== data){
+        if(JSON.stringify(dialogueRecoil) !== JSON.stringify(dialogue)){
+            localStorage.setItem(props.id, JSON.stringify(dialogue));
             return;
         }
 
@@ -97,15 +104,10 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         setIsSaved(true)
     }, [dialogue]);
 
-    const onSetLevel = (levelId: string) => {
-        setDialogue(prev => ({
-            ...prev,
-            levelId: levelId
-        }));
-
-        setIsSaved(false);
+    if (!dialogue) {
+        return;
     }
-
+    
     return (
         <Box 
             component="form"
@@ -122,6 +124,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
                         Locations.find(location => location.id == dialogue.levelId)?.name
                     }
                 </Typography>
+
                 <DeleteButton onClick={onDelete}/>
             </Box>
          
@@ -129,10 +132,10 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
             <LocationCarousel setLevel={onSetLevel}/>
 
             <Button  
-                variant="contained"
                 onClick={publish}
+                variant={dialogue.isPublished ? "contained" : "outlined"}
             >
-                {dialogue.isPublished ? "Unpublish" : "Publish"}
+                {dialogue.isPublished ? "Publish" : "Not publish"}
             </Button>
             
             <TextField 
@@ -143,7 +146,9 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
                 label="Name"
                 variant="outlined"
             ></TextField>
+
             <SaveButton onClick={save}/>
+            
             <Box>
                 <Button 
                     variant="contained" 

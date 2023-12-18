@@ -62,13 +62,15 @@ export function useUpdateDialogue() {
         },
 
         all: (dialogues: IDialogueModel[]) => {
+            if (!dialogues.length) {
+            }
+
             setDialogues(dialogues);
         }
     }
 }
 
 export function usePhrase(dialogueId: string, phraseId: string): IPhraseModel {
-
     const findDialogueItemInput: IFindDialogueItemInput = {
         dialogueId,
         itemId: phraseId,
@@ -113,10 +115,12 @@ const answerSelectorFamily = selectorFamily<IAnswerModel, IFindDialogueItemInput
 
 
 function findDialogueById(dialogues: IDialogueModel[], dialogueId: string): IDialogueModel | undefined {
-    return dialogues?.find(dialogue => dialogue.id == dialogueId);
+    return dialogues?.find(dialogue => dialogue?.id == dialogueId);
 }
 function findDialogueItemById(dialogue: IDialogueModel, itemId: string): any | null {
-    console.log(dialogue.phrase)
+    if (!dialogue?.phrase) {
+        return null;
+    }
 
     if (dialogue.phrase.id == itemId) {
         return dialogue.phrase

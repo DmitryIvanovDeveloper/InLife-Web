@@ -1,4 +1,4 @@
-import { useUpdateDialogue } from "../../Data/useDialogues.ts";
+import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues.ts";
 import IAnswerService from "../../ThereGame.Business/Domain/Util/Services/IAnswerService.ts";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel.ts";
 import { appContainer } from "../../inversify.config.ts";
@@ -13,6 +13,8 @@ export default function useAnswerQueriesApi() {
     const answerService = appContainer.get<IAnswerService>(TYPES.AnswerService);
     var updateDialogue =  useUpdateDialogue();
     var dialogieQueriesApi = useDialogieQueriesApi();
+    
+    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     return {
         getById: async (id: string) => {
@@ -62,6 +64,8 @@ export default function useAnswerQueriesApi() {
             if (response?.status != Status.OK) {
                 return;
             }
+
+            setDialogueItemConstructor(() => null);
 
             dialogieQueriesApi.get();
         }

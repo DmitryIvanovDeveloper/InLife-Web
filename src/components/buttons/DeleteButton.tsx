@@ -1,15 +1,24 @@
 import { Box, Button } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
+import ConfirmToDeleteModalScreen from "../ConfirmToDeleteModalScreen.tsx";
 
 export interface IDeleteButton {
     onClick: () => void;
 }
 
 export default function DeleteButton(props: IDeleteButton) {
+    const [isOpen, setIsOpen] = useState(false);
+    
+    const confirm = (isConfirm: boolean) => {
+        setIsOpen(false);
+        props.onClick();
+        
+    }
     return (
         <Box style={{display: "flex", justifyContent: "flex-end"}}>
+            <ConfirmToDeleteModalScreen isOpen={isOpen} confirm={confirm}/>
             <Button
-                onClick={props.onClick}
+                onClick={() => setIsOpen(true)}
                 variant="contained"
                 sx={{
                     position: "relative",

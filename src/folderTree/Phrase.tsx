@@ -12,19 +12,21 @@ export interface IPhraseProps {
 }
 
 export default function Phrase(props: IPhraseProps) {
-
+    const phraseRecoil = usePhrase(props.dialogueId, props.id);
+    const [phrase, setPhrase] = useState(phraseRecoil);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-
-    const phrase = usePhrase(props.dialogueId, props.id);
     
-    console.log(phrase)
     function OnClick(event) {
         event.stopPropagation();
         event.preventDefault();
 
 
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phrase.id}/>);
+        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phraseRecoil.id}/>);
     }
+
+    useEffect(() => {
+        setPhrase(phraseRecoil)
+    }, [phraseRecoil]);
 
     if (!phrase) {
         return;

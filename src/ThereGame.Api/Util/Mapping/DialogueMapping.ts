@@ -7,6 +7,7 @@ export default class DialogueMapping {
 
     public response(dialogue: IDialogueResponseDto): IDialogueModel {
         return  {
+            levelId: dialogue.levelId,
             isPublished: dialogue.isPublished,
             id: dialogue.id,
             name: dialogue.name,
@@ -18,6 +19,7 @@ export default class DialogueMapping {
         return dialogues.map(dialogue => ({
             isPublished: dialogue.isPublished,
             id: dialogue.id,
+            levelId: dialogue.levelId,
             name: dialogue.name,
             phrase: new PhraseMapping().response(dialogue.phrase) 
         }))
@@ -36,6 +38,7 @@ export default class DialogueMapping {
             id: dialogue.id,
             name: dialogue.name,
             phraseId: dialogue.phrase.id,
+            levelId: dialogue.levelId,
             phrase: {
                 id:  dialogue.phrase.id,
                 text:  dialogue.phrase.text,

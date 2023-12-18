@@ -45,7 +45,7 @@ export default class DialogueService implements IDialogueService {
  
     public async Update(item: IUpdateDialogueRequestDto): Promise<TypedResult<Status>> {
         try {
-            await fetch(Routes.answers, {
+            await fetch(Routes.dialogues, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -76,7 +76,7 @@ export default class DialogueService implements IDialogueService {
 
     public async Create(item: ICreateDialogueRequestDto): Promise<TypedResult<Status>> {
         try {
-            await fetch(Routes.answers, {
+            await fetch(Routes.dialogues, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -11,20 +11,21 @@ import { Typography } from '@mui/material';
 import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor.tsx';
 import { useEffect, useState } from 'react';
 import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi.ts';
+import CircularProgressCustom from '../components/CircularProgress.tsx';
 
-export interface IDialoguesProps {
-}
+export interface IDialoguesProps {}
 
 export default function Dialogues(props: IDialoguesProps) {
     const dialogueQueriesApi = useDialogieQueriesApi();
 
-    const [dialogues, setDialogues] = useDialogues();
+    const [dialoguesRecoil, setDialoguesRecoil] = useDialogues();
     const [selection] = useSelection();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const [expanded, setExpanded] = React.useState<string[]>([]);
     const [selected, setSelected] = React.useState<string[]>([]);
-    const [dialoguesTree, setDialoguesTree] = useState(dialogues);
+    const [dialogues, setDialogues] = useState(dialoguesRecoil);
+    const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
 
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
         setExpanded(nodeIds);
@@ -35,35 +36,45 @@ export default function Dialogues(props: IDialoguesProps) {
     };
 
     const createNewDialogue = async () => {
+        setIsNewDialogueCreating(true)
         await dialogueQueriesApi.create();
+        setIsNewDialogueCreating(false)
     }
 
     useEffect(() => {
-        setDialoguesTree(dialogues);
-    }, [dialogues]);
+        setDialogues(dialoguesRecoil);
+    }, [dialoguesRecoil]);
 
     const onclick = (id: string) => {
         setDialogueItemConstructor(() => <DialogueConstructor id={id} />);
     }
 
     useEffect(() => {
-        // dialogueQueriesApi.get();
+        setIsNewDialogueCreating(true);
+
+        dialogueQueriesApi.get()
+            .then(() => {
+                setIsNewDialogueCreating(false);
+            });
     }, []);
 
-    if (!dialogues) {
-        return;
-    }
+
     return (
         <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300, overflow: "auto" }} >
             <Box sx={{ mb: 1 }}>
-                <Button onClick={createNewDialogue}>
-                    New Dialogue
-                </Button>
+                {
+                    isNewDialogueCreating
+                        ? <CircularProgressCustom />
+                        : <Button onClick={createNewDialogue}>
+                            New Dialogue
+                        </Button>
+                }
+
                 {/* <Button onClick={handleExpandClick}>
                     {expanded.length === 0 ? 'Expand all' : 'Collapse all'}
                 </Button> */}
             </Box>
-            
+
             <TreeView
                 aria-label="controlled"
                 defaultCollapseIcon={<ExpandMoreIcon />}
@@ -74,7 +85,7 @@ export default function Dialogues(props: IDialoguesProps) {
                 onNodeSelect={handleSelect}
                 multiSelect
             >
-                {dialoguesTree.map(dialogue => (
+                {dialogues.map(dialogue => (
                     <Box>
                         <Button onClick={() => onclick(dialogue.id)}>
                             <Typography sx={{ textDecoration: 'underline' }}>{dialogue.name}</Typography>
