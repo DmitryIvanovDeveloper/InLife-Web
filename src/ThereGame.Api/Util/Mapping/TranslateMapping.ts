@@ -1,9 +1,9 @@
 import ITranslateModel from "../../../ThereGame.Business/Models/ITranslateModel";
-import ITranslateResponseDto from "./ResponseDtos/ITranslateResponseDto";
+import ITranslateDto from "./ITranslateDto";
 
 export default class TranslateMapping {
 
-    public response(translate: ITranslateResponseDto): ITranslateModel {
+    public response(translate: ITranslateDto): ITranslateModel {
         return {
             parentId: translate.answerParentId,
             id: translate.id,
@@ -12,7 +12,7 @@ export default class TranslateMapping {
         }
     }
 
-    public request(translate: ITranslateModel): ITranslateResponseDto {
+    public request(translate: ITranslateModel): ITranslateDto {
         return {
             answerParentId: translate.parentId,
             id: translate.id,

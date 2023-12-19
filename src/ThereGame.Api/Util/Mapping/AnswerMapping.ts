@@ -8,12 +8,11 @@ import IAnswerResponseDto from "./ResponseDtos/IAnswerResponseDto.ts";
 export default class AnswerMapping {
 
     public response(answer: IAnswerResponseDto): IAnswerModel {
-        
         return {
             tensesList: answer.tensesList,
             text: answer.text,
             wordsToUse: answer.wordsToUse,
-            mistakeExplanations: answer.explanations
+            mistakeExplanations: answer.mistakeExplanations
                 .map(mistakeExplanation => new MistakeExplanationMapping().response(mistakeExplanation)),
             translates: answer.translates
                 .map(translate => new TranslateMapping().response(translate)),

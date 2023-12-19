@@ -1,6 +1,5 @@
-import IMistakeExplanationResponseDto from '../ResponseDtos/IExplanationResponseDto';
-import IPhraseResponseDto from '../ResponseDtos/IPhraseResponseDto';
-import ITranslateResponseDto from '../ResponseDtos/ITranslateResponseDto';
+import IMistakeExplanationDto from '../ResponseDtos/IMistakeExplanationDto';
+import ITranslateDto from '../ITranslateDto';
 
 export default interface IAnswerRequestDto {
     readonly parentPhraseId: string;
@@ -8,6 +7,6 @@ export default interface IAnswerRequestDto {
     readonly text: string;
     readonly tensesList: string[];
     readonly wordsToUse: string;
-    readonly mistakeExplanations: IMistakeExplanationResponseDto[];
-    readonly translates: ITranslateResponseDto[];
+    readonly mistakeExplanations: IMistakeExplanationDto[];
+    readonly translates: ITranslateDto[];
 }

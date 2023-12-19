@@ -7,8 +7,9 @@ import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor.tsx";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel.ts";
 import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi.ts";
-import LocationCarousel from "../../components/LocationCarousel/LocationCarousel.js";
+import LocationCarousel from "../../components/LocationCarousel/LocationCarousel.tsx";
 import { Locations } from "../../Data/Locations.ts";
+import AppBarCustom from "../../components/AppBarCustom.tsx";
 
 export interface IDialogueConstructor {
     id: string;
@@ -20,12 +21,16 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isSaved, setIsSaved] = useState(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const dialogieQueriesApi = useDialogieQueriesApi();
-    
+
     const save = async () => {
+        setIsLoading(true)
         await dialogieQueriesApi.update(dialogue)
+        setIsLoading(false)
         setIsSaved(true);
+
         reset();
     }
 
@@ -40,7 +45,6 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
 
     const onDelete = async () => {
         await dialogieQueriesApi.delete(props.id);
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.id} id={dialogue.phrase.id} />);
     }
 
     const onClickPhrase = (event) => {
@@ -59,10 +63,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         setIsSaved(false);
     }
 
-    const reset = ()  => {
-        setDialogue(dialogueRecoil);
-        setIsSaved(true);
-
+    const reset = () => {
         localStorage.removeItem(props.id);
     }
 
@@ -76,6 +77,9 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
     }
 
     // UseEffects
+    useEffect(() => {
+        setDialogue(dialogueRecoil);
+    }, [dialogueRecoil]);
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -95,7 +99,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
             return;
         }
 
-        if(JSON.stringify(dialogueRecoil) !== JSON.stringify(dialogue)){
+        if (JSON.stringify(dialogueRecoil) !== JSON.stringify(dialogue)) {
             localStorage.setItem(props.id, JSON.stringify(dialogue));
             return;
         }
@@ -104,12 +108,14 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         setIsSaved(true)
     }, [dialogue]);
 
+
+
     if (!dialogue) {
         return;
     }
-    
+
     return (
-        <Box 
+        <Box
             component="form"
             sx={{
                 '& > :not(style)': { m: 1, width: '100%' },
@@ -117,29 +123,22 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
             }}
             autoComplete="off"
         >
-            <Box style={{display: "flex", justifyContent: "space-between"}} >
-                <Box></Box>
-                <Typography>
-                    {
-                        Locations.find(location => location.id == dialogue.levelId)?.name
-                    }
-                </Typography>
+            <AppBarCustom
+                name={Locations.find(location => location.id == dialogue.levelId)?.name ?? ""}
+                onDelete={onDelete}
+            />
 
-                <DeleteButton onClick={onDelete}/>
-            </Box>
-         
+            <LocationCarousel setLevel={onSetLevel} id={dialogue.levelId} />
 
-            <LocationCarousel setLevel={onSetLevel}/>
-
-            <Button  
+            <Button
                 onClick={publish}
                 variant={dialogue.isPublished ? "contained" : "outlined"}
             >
                 {dialogue.isPublished ? "Publish" : "Not publish"}
             </Button>
-            
-            <TextField 
-                onChange={onChange} 
+
+            <TextField
+                onChange={onChange}
                 value={dialogue.name}
                 required={true}
                 id="outlined-basic"
@@ -147,11 +146,11 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
                 variant="outlined"
             ></TextField>
 
-            <SaveButton onClick={save}/>
-            
+            <SaveButton onClick={save} isLoading={isLoading} />
+
             <Box>
-                <Button 
-                    variant="contained" 
+                <Button
+                    variant="contained"
                     onClick={onClickPhrase}>{dialogue.phrase.text}
                 </Button>
             </Box>
@@ -160,7 +159,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={reset}>reset</Button>
-                 </Box>
+                </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
         </Box>

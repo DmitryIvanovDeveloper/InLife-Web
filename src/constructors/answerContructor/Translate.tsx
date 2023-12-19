@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Theme, useTheme } from '@mui/material/styles';
 import { Autocomplete, Box, TextField } from '@mui/material';
 import { Languages } from '../../Data/Languages.ts';
+import { LanguageType } from '../../Data/LanguageType.ts';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -14,18 +15,10 @@ const MenuProps = {
     },
 };
 
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-    return {
-        fontWeight:
-            personName.indexOf(name) === -1
-                ? theme.typography.fontWeightRegular
-                : theme.typography.fontWeightMedium,
-    };
-}
-
 export interface ITranslate {
     onTranslateChange: (value, index) => void;
     id: string;
+    language: LanguageType
 }
 
 export default function Translate(props: ITranslate) {
@@ -38,6 +31,7 @@ export default function Translate(props: ITranslate) {
             sx={{ width: 180}}
             options={Languages}
             autoHighlight
+            value={Languages.find(current => current.language == props.language)}
             onChange={(event, value) => props.onTranslateChange(value, props.id)}
             getOptionLabel={(option) => option.label}
             renderOption={(props, option) => (

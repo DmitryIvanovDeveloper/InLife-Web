@@ -10,7 +10,7 @@ export default class PhraseMapping {
             parentId: phrase.parentAnswerId,
             text: phrase.text,
             answers: phrase.answers.map(answer => new AnswerMapping().response(answer)),
-            tensesList: phrase.tenseses,
+            tensesList: phrase.tensesList,
             comments: phrase.comments,
             id: phrase.id
         }

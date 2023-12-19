@@ -29,6 +29,8 @@ export default class DialogueMapping {
         return  {
             id: dialogue.id,
             name: dialogue.name,
+            levelId: dialogue.levelId,
+            isPublished: dialogue.isPublished,
             phrase: new PhraseMapping().request(dialogue.phrase) 
         }
     }
@@ -39,6 +41,7 @@ export default class DialogueMapping {
             name: dialogue.name,
             phraseId: dialogue.phrase.id,
             levelId: dialogue.levelId,
+            isPublished: dialogue.isPublished,
             phrase: {
                 id:  dialogue.phrase.id,
                 text:  dialogue.phrase.text,
@@ -51,6 +54,8 @@ export default class DialogueMapping {
         return  {
             id: dialogue.id,
             name: dialogue.name,
+            levelId: dialogue.levelId,
+            isPublished: dialogue.isPublished,
             phraseId: dialogue.phrase.id
         }
     }

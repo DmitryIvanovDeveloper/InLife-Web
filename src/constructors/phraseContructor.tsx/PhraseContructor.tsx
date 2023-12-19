@@ -10,6 +10,7 @@ import { useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues.t
 import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi.ts";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi.ts";
+import AppBarCustom from "../../components/AppBarCustom.tsx";
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -18,15 +19,17 @@ export interface IPhraseConstructor {
 }
 
 export default function PhraseContructor(props: IPhraseConstructor) {
-
     const [selection, setSelection] = useSelection();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const phraseQueriesApi = usePhraseQueriesApi();
     const answerQueriesApi = useAnswerQueriesApi();
 
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
+
     const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
     const [isSaved, setIsSaved] = useState(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const [errors, setErrors] = useState({
         text: false
     });
@@ -35,9 +38,35 @@ export default function PhraseContructor(props: IPhraseConstructor) {
         await answerQueriesApi.create(props.id);
     }
 
+    // QueryApi
+    const onSave = async () => {
+        if (phrase.text == '') {
+            setErrors(prev => ({
+                ...prev,
+                text: true
+            }));
+
+            return;
+        }
+
+        setIsLoading(true);
+        await phraseQueriesApi.update(phrase);
+        setIsLoading(false);
+
+        localStorage.removeItem(props.id);
+        setIsSaved(true);
+    }
+
     const onDelete = async () => {
         await phraseQueriesApi.delete(props.id);
     }
+
+    const reset = ()  => {
+        setPhrase(phraseRecoil);
+        setIsSaved(true);
+        localStorage.removeItem(props.id);
+    }
+
 
     const onAnswerButtonClick = (id: string) => {
         setSelection(id);
@@ -66,20 +95,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
         setIsSaved(false);
     }
 
-    const onSave = async () => {
-        if (phrase.text == '') {
-            setErrors(prev => ({
-                ...prev,
-                text: true
-            }));
-
-            return;
-        }
-
-        await phraseQueriesApi.update(phrase);
-        localStorage.removeItem(props.id);
-        setIsSaved(true);
-    }
+    
 
     const onSetTenses = (tenses: string[]) => {
         setPhrase(prev => ({
@@ -92,6 +108,11 @@ export default function PhraseContructor(props: IPhraseConstructor) {
 
 
     // UseEffects
+
+    useEffect(() => {
+        setPhrase(phraseRecoil);
+    }, [phraseRecoil])
+
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
@@ -124,12 +145,6 @@ export default function PhraseContructor(props: IPhraseConstructor) {
         setIsSaved(true)
     }, [phrase]);
 
-    const reset = ()  => {
-        setPhrase(phraseRecoil);
-        setIsSaved(true);
-        localStorage.removeItem(props.id);
-    }
-
     if (!phrase) {
         return;
     }
@@ -145,21 +160,10 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             style={{height:"1000px", overflow: "auto"}}
             autoComplete="off"
         >
-            <DeleteButton onClick={onDelete} />
-
-              <Box sx={{
-                width: "100%", 
-                height: "40px", 
-                backgroundColor: "#f0f0f0", 
-                borderRadius: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-            }} 
-                color="primary">
-                
-                <Typography  textAlign="center">Phrase Constructor</Typography>
-            </Box>
+            <AppBarCustom
+                name='Answer Constructor'
+                onDelete={onDelete}
+            />
 
             <TensesList tensesList={phrase.tensesList} setTensesList={onSetTenses} />
             
@@ -202,8 +206,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
                 : null
             }
 
-            <SaveButton onClick={onSave} />
-
+            <SaveButton onClick={onSave} isLoading={isLoading}/>
             
             {!isSaved
                 ? <Box>

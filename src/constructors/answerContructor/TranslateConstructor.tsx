@@ -1,5 +1,5 @@
 import { Box, Grid, TextField, Button, FormControl } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Translate from "./Translate.tsx";
 import ITranstateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
@@ -65,7 +65,11 @@ export default function TranslateConstructor(props: ITranslateConstructor) {
                     sx={{ pt: 1 }}
                     key={translate.id}
                 >
-                    <Translate onTranslateChange={onTranslateLanguageChange} id={translate.id}/>
+                    <Translate 
+                        onTranslateChange={onTranslateLanguageChange} 
+                        id={translate.id} 
+                        language={translate.language} 
+                    />
                     <TextField
                         key={translate.id}
                         sx={{ pl: 1 }}

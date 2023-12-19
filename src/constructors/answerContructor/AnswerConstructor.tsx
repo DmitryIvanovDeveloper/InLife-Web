@@ -9,7 +9,6 @@ import PhraseContructor from "../phraseContructor.tsx/PhraseContructor.tsx";
 import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues.ts";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel.ts";
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel.ts";
-import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 import MistakeExplanationConstructor from "./MistakeExplanationsConstructor.tsx";
 import TranslateConstructor from "./TranslateConstructor.tsx";
 import IAnswerError from "../../Data/Errors/IAnswerError.tsx";
@@ -17,6 +16,7 @@ import ITranstateModel from "../../ThereGame.Business/Models/ITranslateModel.ts"
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi.ts";
 import { LanguageType } from "../../Data/LanguageType.ts";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
+import AppBarCustom from "../../components/AppBarCustom.tsx";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -34,6 +34,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isSaved, setIsSaved] = useState(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const [errors, setErrors] = useState<IAnswerError>();
 
     function onAddButtonClick() {
@@ -71,7 +73,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
             explanation[index].word = event.target.value;
         }
         if (event.target.id == 'mistake explanation') {
-            explanation[index].text = event.target.value;
+            explanation[index].explanation = event.target.value;
         }
 
         setAnswer(prev => ({
@@ -82,9 +84,9 @@ export default function AnswerContructor(props: IAnswerContructor) {
 
     const onAddMistakeExplanation = () => {
         const mistakeExplanation: IMistakeExplanationModel = {
-            parentId:  props.id,
+            parentId: props.id,
             word: "",
-            text: "",
+            explanation: "",
             id: uuidv4()
         }
         
@@ -105,6 +107,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
             mistakeExplanations: [...answer.mistakeExplanations]
                 .filter(explanation => explanation.id != id)
         }));
+
+        setIsSaved(false);
     }
 
     // Translate
@@ -120,6 +124,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
             ...prev,
             translates: [...answer.translates, translate]
         }));
+
+        setIsSaved(false);
     }
     
     const onDeleteTranslate = (id: string) => {
@@ -128,6 +134,8 @@ export default function AnswerContructor(props: IAnswerContructor) {
             translates: [...answer.translates]
                 .filter(translate => translate.id != id)
         }));
+
+        setIsSaved(false);
     }
 
     const onTranslateChange = (translates: ITranslateModel[]) => {
@@ -139,28 +147,29 @@ export default function AnswerContructor(props: IAnswerContructor) {
         setIsSaved(false);
     }
 
-    useEffect(() => {
-        var data = localStorage.getItem(props.id);
-        if (data == null) {
-            setAnswer(answerRecoil);
-            setIsSaved(true);
-            return;
-        }
-        setIsSaved(false);
+    const onSetTenses = (tenses: string[]) => {
+        setAnswer(prev => ({
+            ...prev,
+            tensesList: tenses
+        }));
 
-        setAnswer(JSON.parse(data));
-    }, []);
+        setIsSaved(false)
+    }
 
-    const onDelete = async () => {
+
+     // QueriesApi
+     const onDelete = async () => {
         await answerQueriesApi.delete(props.id)
             setIsSaved(true)
     }
 
     const onSave = async() => {
+        setIsLoading(true);
         await answerQueriesApi.update(answer)
+        setIsLoading(false);
     }
 
-
+    // Errors
     const checkErrors = () => {
         var currentErrors = {
             text: false,
@@ -197,20 +206,24 @@ export default function AnswerContructor(props: IAnswerContructor) {
         //         explanationHasError = true;
         //     }
         // });
-
-       
     }
 
-    const onSetTenses = (tenses: string[]) => {
-        setAnswer(prev => ({
-            ...prev,
-            tensesList: tenses
-        }));
+    // UseEffects
+    useEffect(() => {
+        setAnswer(answerRecoil);
+    }, [answerRecoil]);
 
-        setIsSaved(false)
-    }
+    useEffect(() => {
+        var data = localStorage.getItem(props.id);
+        if (data == null) {
+            setAnswer(answerRecoil);
+            setIsSaved(true);
+            return;
+        }
+        setIsSaved(false);
 
-
+        setAnswer(JSON.parse(data));
+    }, []);
 
     useEffect(() => {
         if (isSaved) {
@@ -241,8 +254,6 @@ export default function AnswerContructor(props: IAnswerContructor) {
         return;
     }
 
-    console.log("Answer")
-
     return (
         <Box
             component="form"
@@ -261,7 +272,10 @@ export default function AnswerContructor(props: IAnswerContructor) {
 
 
         >
-            <DeleteButton onClick={onDelete} />
+            <AppBarCustom
+                name='Answer Constructor'
+                onDelete={onDelete}
+            />
 
             <Box sx={{
                 width: "100%",
@@ -274,7 +288,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
             }}
                 color="primary">
 
-                <Typography textAlign="center">Answer Constructor</Typography>
+                <Typography textAlign="center">r</Typography>
             </Box>
 
 
@@ -343,7 +357,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
 
-            <SaveButton onClick={onSave} />
+            <SaveButton onClick={onSave} isLoading={isLoading} />
         </Box>
     )
 }

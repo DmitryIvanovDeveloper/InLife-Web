@@ -10,10 +10,12 @@ export default function DeleteButton(props: IDeleteButton) {
     const [isOpen, setIsOpen] = useState(false);
     
     const confirm = (isConfirm: boolean) => {
+        if (isConfirm) {
+            props.onClick();
+        }
         setIsOpen(false);
-        props.onClick();
-        
     }
+    
     return (
         <Box style={{display: "flex", justifyContent: "flex-end"}}>
             <ConfirmToDeleteModalScreen isOpen={isOpen} confirm={confirm}/>
@@ -22,8 +24,6 @@ export default function DeleteButton(props: IDeleteButton) {
                 variant="contained"
                 sx={{
                     position: "relative",
-                    backgroundColor: "#b71c1c",
-                    font: "",
                     fontWeight: 700,
                 }}
                 

@@ -30,7 +30,7 @@ export default class AnswerService implements IAnswerService {
     public async Update(item: IAnswerRequestDto): Promise<TypedResult<Status>> {
         try {
             await fetch(Routes.answers, {
-                method: 'UPDATE',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },

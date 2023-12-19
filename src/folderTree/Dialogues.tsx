@@ -6,20 +6,18 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import Phrase from './Phrase.tsx';
 import { useDialogueItemConstructor, useDialogues } from '../Data/useDialogues.ts';
-import { useSelection as useSelection } from '../Data/useSelection.ts';
-import { Typography } from '@mui/material';
 import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor.tsx';
 import { useEffect, useState } from 'react';
 import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi.ts';
 import CircularProgressCustom from '../components/CircularProgress.tsx';
+import { TreeItem } from '@mui/x-tree-view/TreeItem';
 
-export interface IDialoguesProps {}
+export interface IDialoguesProps { }
 
 export default function Dialogues(props: IDialoguesProps) {
     const dialogueQueriesApi = useDialogieQueriesApi();
 
     const [dialoguesRecoil, setDialoguesRecoil] = useDialogues();
-    const [selection] = useSelection();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const [expanded, setExpanded] = React.useState<string[]>([]);
@@ -87,13 +85,17 @@ export default function Dialogues(props: IDialoguesProps) {
             >
                 {dialogues.map(dialogue => (
                     <Box>
-                        <Button onClick={() => onclick(dialogue.id)}>
-                            <Typography sx={{ textDecoration: 'underline' }}>{dialogue.name}</Typography>
-                        </Button>
-                        <Phrase
-                            dialogueId={dialogue.id}
-                            id={dialogue.phrase.id}
-                        />
+                        <TreeItem
+                            onClick={() => onclick(dialogue.id)}
+                            key={dialogue.id}
+                            nodeId={dialogue.id}
+                            label={`${dialogue.name} [D]`}
+                        >
+                            <Phrase
+                                dialogueId={dialogue.id}
+                                id={dialogue.phrase.id}
+                            />
+                        </TreeItem>
                     </Box>
                 ))}
             </TreeView>

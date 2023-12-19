@@ -43,7 +43,7 @@ export default function MistakeExplanationConstructor(props: IMistakeExplanation
                     <TextField
                         InputLabelProps={{ shrink: true }}
                         sx={{ pl: 0.5 }}
-                        value={explanation.text}
+                        value={explanation.explanation}
                         id="mistake explanation"
                         label="Mistake Explanation"
                         placeholder="are - множественное число, день - используется в единственном числе"

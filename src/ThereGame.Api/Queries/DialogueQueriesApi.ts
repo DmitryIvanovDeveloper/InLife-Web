@@ -25,11 +25,9 @@ export default function useDialogieQueriesApi() {
     return {
         get: async () => {
             var dialogues = await get();
-
             if(!dialogues){
                 return;
             }
-
 
             updateDialogue.all(dialogues);
         },

@@ -1,4 +1,8 @@
-export default interface ITranlsateDto {
-    readonly Word: string;
-    readonly Text: string;
+import { LanguageType } from "../../../Data/LanguageType";
+
+export default interface ITranslateDto {
+    answerParentId: string,
+    id: string;
+    language: LanguageType;
+    text: string;
 }

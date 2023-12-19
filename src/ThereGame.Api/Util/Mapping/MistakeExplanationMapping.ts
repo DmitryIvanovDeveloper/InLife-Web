@@ -1,23 +1,23 @@
 import { IMistakeExplanationModel } from '../../../ThereGame.Business/Models/IExplanationModel';
-import IMistakeExplanationResponseDto from './ResponseDtos/IExplanationResponseDto';
+import IMistakeExplanationeDto from './IMistakeExplanationDto.ts';
 
 export default class MistakeExplanationMapping {
 
-    public response(mistakeExplanation: IMistakeExplanationResponseDto): IMistakeExplanationModel {
+    public response(mistakeExplanation: IMistakeExplanationeDto): IMistakeExplanationModel {
         return {
             parentId: mistakeExplanation.answerParentId,
             id: mistakeExplanation.id,
             word: mistakeExplanation.word,
-            text: mistakeExplanation.text,
+            explanation: mistakeExplanation.explanation,
         }
     }
 
-    public request(mistakeExplanation: IMistakeExplanationModel): IMistakeExplanationResponseDto {
+    public request(mistakeExplanation: IMistakeExplanationModel): IMistakeExplanationeDto {
         return {
             answerParentId: mistakeExplanation.parentId,
             id: mistakeExplanation.id,
             word: mistakeExplanation.word,
-            text: mistakeExplanation.text,
+            explanation: mistakeExplanation.explanation,
         }
     } 
 }

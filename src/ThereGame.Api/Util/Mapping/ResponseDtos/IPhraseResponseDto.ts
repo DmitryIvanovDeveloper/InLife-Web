@@ -5,6 +5,6 @@ export default interface IPhraseResponseDto {
     readonly id: string
     readonly text: string;
     readonly answers: IAnswerResponseDto[];
-    readonly tenseses: string[];
+    readonly tensesList: string[];
     readonly comments: string;
 }
