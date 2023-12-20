@@ -1,0 +1,66 @@
+{
+  "name": "theregameweb",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/lab": "^4.0.0-alpha.61",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/material": "^5.14.20",
+    "@mui/x-data-grid": "^6.18.3",
+    "@mui/x-tree-view": "^6.17.0",
+    "@react-spring/web": "^9.7.3",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/react": "^18.2.42",
+    "@types/react-dom": "^18.2.17",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "inversify": "^6.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-elastic-carousel": "^0.11.5",
+    "react-folder-tree": "^5.1.1",
+    "react-scripts": "5.0.1",
+    "react-split-pane": "^0.1.92",
+    "react-spring": "^9.7.3",
+    "recoil": "^0.7.7",
+    "reflect-metadata": "^0.1.14",
+    "styled-components": "^6.1.1",
+    "ts-node": "^10.9.2",
+    "uuid": "^9.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "CHOKIDAR_USEPOLLING=true react-scripts --max-http-header-size=1024  start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "case-sensitive-paths-webpack-plugin": "^2.4.0",
+    "file-loader": "^6.2.0"
+  }
+}

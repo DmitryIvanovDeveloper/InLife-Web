@@ -1,0 +1,159 @@
+import { dialoguesTemplate } from './DialogueData.ts';
+import { atom, selectorFamily, useRecoilState, useRecoilValue } from 'recoil'
+import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel.ts'
+import IPhraseModel from '../ThereGame.Business/Models/IPhraseModel.ts'
+import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel.ts'
+
+export type IUpdatePhraseItemInput = {
+    readonly dialogueId?: string
+    readonly itemId: string
+    readonly item: IPhraseModel
+}
+
+export type IAddAnswerItemInput = {
+    readonly dialogueId?: string
+    readonly itemId: string
+    readonly item: IAnswerModel
+}
+
+export type IPhraseAnswerItemInput = {
+    readonly dialogueId?: string
+    readonly itemId: string
+}
+
+export type IFindDialogueItemInput = {
+    readonly dialogueId: string
+    readonly itemId: string
+}
+
+const dialoguesAtom = atom<IDialogueModel[]>({
+    key: 'dialoguesAtom',
+    default: dialoguesTemplate,
+})
+
+const dialogueConstructorAtom = atom<Function>({
+    key: 'dialogueConstructorAtom',
+    default: () => {},
+})
+
+
+export function useDialogues() {
+    return useRecoilState(dialoguesAtom)
+}
+
+export function useDialogueItemConstructor() {
+    return useRecoilState(dialogueConstructorAtom);
+}
+
+export function useDialogue(id: string) {
+    return useRecoilValue(dialogueSelectorFamily(id));
+}
+
+export function useUpdateDialogue() {
+    var [dialogues, setDialogues] = useRecoilState(dialoguesAtom);
+
+    return {
+        byId: (dialogue: IDialogueModel) => {
+            var updatedDialogue = dialogues
+                .filter(currentDialogue => currentDialogue.id != dialogue.id)
+            ;
+        
+            setDialogues([...updatedDialogue, dialogue]);
+        },
+
+        all: (dialogues: IDialogueModel[]) => {
+            if (!dialogues.length) {
+            }
+
+            setDialogues(dialogues);
+        }
+    }
+}
+
+export function usePhrase(dialogueId: string, phraseId: string): IPhraseModel {
+    const findDialogueItemInput: IFindDialogueItemInput = {
+        dialogueId,
+        itemId: phraseId,
+    }
+    return useRecoilValue(phraseSelectorFamily(findDialogueItemInput))
+}
+
+export function useAnswer(dialogueId: string, answerId: string): IAnswerModel {
+    const findDialogueItemInput: IFindDialogueItemInput = {
+        dialogueId,
+        itemId: answerId,
+    }
+    return useRecoilValue(answerSelectorFamily(findDialogueItemInput))
+}
+
+const dialogueSelectorFamily = selectorFamily<IDialogueModel, string>({
+    key: 'dialogueSelectorFamily',
+    get: (dialogueId: string) => ({ get }) => {
+        const dialogues = get(dialoguesAtom)
+        return findDialogueById(dialogues, dialogueId) as IDialogueModel;
+    },
+    dangerouslyAllowMutability: true,
+});
+
+const phraseSelectorFamily = selectorFamily<IPhraseModel, IFindDialogueItemInput>({
+    key: 'phraseSelectorFamily',
+    get: (findDialogueItemInput: IFindDialogueItemInput) => ({ get }) => {
+        const dialog = get(dialogueSelectorFamily(findDialogueItemInput.dialogueId))
+        return findDialogueItemById(dialog, findDialogueItemInput.itemId);
+    },
+    dangerouslyAllowMutability: true,
+});
+
+const answerSelectorFamily = selectorFamily<IAnswerModel, IFindDialogueItemInput>({
+    key: 'answerSelectorFamily',
+    get: (findDialogueItemInput: IFindDialogueItemInput) => ({ get }) => {
+        const dialog = get(dialogueSelectorFamily(findDialogueItemInput.dialogueId));
+        return findDialogueItemById(dialog, findDialogueItemInput.itemId) as IAnswerModel;
+    },
+    dangerouslyAllowMutability: true,
+});
+
+
+function findDialogueById(dialogues: IDialogueModel[], dialogueId: string): IDialogueModel | undefined {
+    return dialogues?.find(dialogue => dialogue?.id == dialogueId);
+}
+function findDialogueItemById(dialogue: IDialogueModel, itemId: string): any | null {
+    if (!dialogue?.phrase) {
+        return null;
+    }
+
+    if (dialogue.phrase.id == itemId) {
+        return dialogue.phrase
+    }
+
+    const foundDialogueItem = findAnswerById(dialogue.phrase.answers, itemId);
+    return foundDialogueItem
+}
+function findAnswerById(answers: IAnswerModel[], targetId) {
+    for (const answer of answers) {
+        if (answer.id === targetId) {
+            return answer;
+        }
+
+        const foundInAnswers = findPhraseById(answer.phrases, targetId);
+        if (foundInAnswers) {
+            return foundInAnswers;
+        }
+    }
+
+    return null;
+}
+function findPhraseById(phrases: IPhraseModel[], targetId) {
+    for (const phrase of phrases) {
+        if (phrase.id === targetId) {
+            return phrase;
+        }
+
+        const foundInAnswers = findAnswerById(phrase.answers, targetId);
+        if (foundInAnswers) {
+            return foundInAnswers;
+        }
+    }
+
+    return null;
+}
