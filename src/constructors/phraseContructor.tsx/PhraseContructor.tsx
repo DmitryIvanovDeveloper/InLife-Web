@@ -110,10 +110,6 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     // UseEffects
 
     useEffect(() => {
-        setPhrase(phraseRecoil);
-    }, [phraseRecoil])
-
-    useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
             setPhrase(phraseRecoil);
@@ -123,6 +119,10 @@ export default function PhraseContructor(props: IPhraseConstructor) {
         setIsSaved(false);
 
         setPhrase(JSON.parse(data));
+    }, [phraseRecoil])
+
+    useEffect(() => {
+       
     }, []);
 
     useEffect(() => {
@@ -161,7 +161,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
             autoComplete="off"
         >
             <AppBarCustom
-                name='Answer Constructor'
+                name='Phrase Constructor'
                 onDelete={onDelete}
             />
 

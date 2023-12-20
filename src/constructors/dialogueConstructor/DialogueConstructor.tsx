@@ -7,7 +7,7 @@ import DeleteButton from "../../components/buttons/DeleteButton.tsx";
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor.tsx";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel.ts";
 import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi.ts";
-import LocationCarousel from "../../components/LocationCarousel/LocationCarousel.tsx";
+import LocationCarousel from "../../components/LocationCarousel.tsx";
 import { Locations } from "../../Data/Locations.ts";
 import AppBarCustom from "../../components/AppBarCustom.tsx";
 
@@ -34,17 +34,17 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         reset();
     }
 
-    const onChange = (event) => {
+    const onDelete = async () => {
+        await dialogieQueriesApi.delete(props.id);
+    }
+
+    const onChangeName = (event) => {
         setDialogue(prev => ({
             ...prev,
             name: event.target.value
         }));
 
         setIsSaved(false);
-    }
-
-    const onDelete = async () => {
-        await dialogieQueriesApi.delete(props.id);
     }
 
     const onClickPhrase = (event) => {
@@ -76,7 +76,8 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         setIsSaved(false);
     }
 
-    // UseEffects
+    //// UseEffects
+
     useEffect(() => {
         setDialogue(dialogueRecoil);
     }, [dialogueRecoil]);
@@ -108,8 +109,6 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         setIsSaved(true)
     }, [dialogue]);
 
-
-
     if (!dialogue) {
         return;
     }
@@ -138,7 +137,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
             </Button>
 
             <TextField
-                onChange={onChange}
+                onChange={onChangeName}
                 value={dialogue.name}
                 required={true}
                 id="outlined-basic"

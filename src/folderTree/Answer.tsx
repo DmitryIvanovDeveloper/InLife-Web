@@ -29,7 +29,11 @@ export default function Answer(props: IAnswerProps) {
 
     return (
         <TextButton onClick={onClick}>
-            <TreeItem style={{color: "darkgreen"}} key={answerRecoil.id} nodeId={answerRecoil.id} label={`${answerRecoil.text}`}>
+            <TreeItem 
+                style={{color: "darkgreen"}} 
+                key={answerRecoil.id} 
+                nodeId={answerRecoil.id} 
+                label={`${answerRecoil.text} [A]`}>
                 {answerRecoil.phrases.map(phrase => {
                     return (
                         <Phrase key={phrase.id} dialogueId={props.dialogueId} id={phrase.id} />

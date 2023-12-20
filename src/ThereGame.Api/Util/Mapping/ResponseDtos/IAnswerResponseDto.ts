@@ -1,6 +1,6 @@
-import IMistakeExplanationDto from './IMistakeExplanationDto';
 import IPhraseResponseDto from './IPhraseResponseDto';
 import ITranslateDto from '../ITranslateDto';
+import IMistakeExplanationDto from '../IMistakeExplanationDto';
 
 export default interface IAnswerResponseDto {
     readonly tensesList: string[];

@@ -4,6 +4,7 @@ import Answer from "./Answer.tsx";
 import { Box, Grid } from "@mui/material";
 import PhraseContructor from "../constructors/phraseContructor.tsx/PhraseContructor.tsx";
 import { useDialogueItemConstructor, usePhrase } from "../Data/useDialogues.ts";
+import TextButton from "../components/buttons/TextButton.tsx";
 
 export interface IPhraseProps {
     dialogueId: string;
@@ -13,32 +14,33 @@ export interface IPhraseProps {
 export default function Phrase(props: IPhraseProps) {
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    
+
     function OnClick(event) {
         event.stopPropagation();
         event.preventDefault();
 
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phraseRecoil.id}/>);
+        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phraseRecoil.id} />);
     }
 
     if (!phraseRecoil) {
         return;
     }
-   
+
     return (
         <Box display="flex">
-                <TreeItem 
-                    onClick={OnClick} 
-                    key={phraseRecoil.id} 
-                    nodeId={phraseRecoil.id} 
+            <TextButton onClick={OnClick}>
+                <TreeItem
+                    key={phraseRecoil.id}
+                    nodeId={phraseRecoil.id}
                     itemType="Phrase"
-                    label={`${phraseRecoil.text} [A]`}
+                    label={`${phraseRecoil.text} [P]`}
+                    style={{color: "#9c27b0"}} 
                 >
-                    <Grid 
-                        sx={{ 
+                    <Grid
+                        sx={{
                             display: "flex",
-                            justifyContent: "flex-start", 
-                            flexDirection: "column" 
+                            justifyContent: "flex-start",
+                            flexDirection: "column"
                         }}
 
                     >
@@ -47,6 +49,8 @@ export default function Phrase(props: IPhraseProps) {
                         ))}
                     </Grid>
                 </TreeItem>
+            </TextButton>
+
         </Box>
     )
 }

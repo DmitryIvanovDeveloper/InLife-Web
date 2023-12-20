@@ -210,12 +210,20 @@ export default function AnswerContructor(props: IAnswerContructor) {
 
     // UseEffects
     useEffect(() => {
-        setAnswer(answerRecoil);
+        var data = localStorage.getItem(props.id);
+        if (!data) {
+            setAnswer(answerRecoil);
+            setIsSaved(true);
+            return;
+        }
+        setIsSaved(false);
+
+        setAnswer(JSON.parse(data));
     }, [answerRecoil]);
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
-        if (data == null) {
+        if (!data) {
             setAnswer(answerRecoil);
             setIsSaved(true);
             return;
@@ -269,28 +277,11 @@ export default function AnswerContructor(props: IAnswerContructor) {
             }}
             noValidate
             autoComplete="off"
-
-
         >
             <AppBarCustom
                 name='Answer Constructor'
                 onDelete={onDelete}
             />
-
-            <Box sx={{
-                width: "100%",
-                height: "40px",
-                backgroundColor: "#f0f0f0",
-                borderRadius: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center"
-            }}
-                color="primary">
-
-                <Typography textAlign="center">r</Typography>
-            </Box>
-
 
             <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} />
 

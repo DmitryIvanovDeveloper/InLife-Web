@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi.ts';
 import CircularProgressCustom from '../components/CircularProgress.tsx';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
+import TextButton from '../components/buttons/TextButton.tsx';
 
 export interface IDialoguesProps { }
 
@@ -43,7 +44,7 @@ export default function Dialogues(props: IDialoguesProps) {
         setDialogues(dialoguesRecoil);
     }, [dialoguesRecoil]);
 
-    const onclick = (id: string) => {
+    const onClick = (id: string) => {
         setDialogueItemConstructor(() => <DialogueConstructor id={id} />);
     }
 
@@ -85,8 +86,8 @@ export default function Dialogues(props: IDialoguesProps) {
             >
                 {dialogues.map(dialogue => (
                     <Box>
+                        <TextButton onClick={() => onClick(dialogue.id)}>
                         <TreeItem
-                            onClick={() => onclick(dialogue.id)}
                             key={dialogue.id}
                             nodeId={dialogue.id}
                             label={`${dialogue.name} [D]`}
@@ -96,6 +97,8 @@ export default function Dialogues(props: IDialoguesProps) {
                                 id={dialogue.phrase.id}
                             />
                         </TreeItem>
+                        </TextButton>
+                       
                     </Box>
                 ))}
             </TreeView>
