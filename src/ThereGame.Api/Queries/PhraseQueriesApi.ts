@@ -1,13 +1,13 @@
-import {useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues.ts";
-import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhraseService.ts";
-import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel.ts";
-import { appContainer } from "../../inversify.config.ts";
-import { TYPES } from "../../types.ts";
-import DialogueMapping from "../Util/Mapping/DialogueMapping.ts";
+import {useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues";
+import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhraseService";
+import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
+import { appContainer } from "../../inversify.config";
+import { TYPES } from "../../types";
+import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
-import PhraseMapping from "../Util/Mapping/PhraseMapping.ts";
-import { Status } from "../../ThereGame.Infrastructure/Statuses/Status.ts";
-import useDialogieQueriesApi from "./DialogueQueriesApi.ts";
+import PhraseMapping from "../Util/Mapping/PhraseMapping";
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
+import useDialogieQueriesApi from "./DialogueQueriesApi";
 
 export default function usePhraseQueriesApi() {
 

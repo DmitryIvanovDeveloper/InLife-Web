@@ -1,6 +1,6 @@
 import React from "react";
 import Carousel from "react-elastic-carousel";
-import { Locations } from "../Data/Locations.ts";
+import { Locations } from "../Data/Locations";
 
 const breakPoints = [
     { width: 1, itemsToShow: 1 },
@@ -13,7 +13,7 @@ export interface ILevelCarouselProps {
 
 export default function LevelCarousel(props: ILevelCarouselProps) {
 
-    const onCurrentChange = (event) => {
+    const onCurrentChange = (event: any) => {
         props.setLevel(event.item.id);
     }
     

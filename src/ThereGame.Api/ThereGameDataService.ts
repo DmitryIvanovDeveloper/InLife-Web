@@ -1,13 +1,12 @@
-import DialogueMapping from "./Util/Mapping/DialogueMapping.ts";
-import IDialogueItemModel from "../ThereGame.Business/Models/IDialogueItemModel.ts";
-import { IDialogueModel } from "../ThereGame.Business/Models/IDialogueModel.ts";
-import IThereGameDataService from "../ThereGame.Business/Domain/Util/Services/IThereGameDataService.ts"
+import DialogueMapping from "./Util/Mapping/DialogueMapping";
+import IDialogueItemModel from "../ThereGame.Business/Models/IDialogueItemModel";
+import { IDialogueModel } from "../ThereGame.Business/Models/IDialogueModel";
+import IThereGameDataService from "../ThereGame.Business/Domain/Util/Services/IThereGameDataService"
 import { injectable } from "inversify";
-import IAnswerRequestDto from "./Util/Mapping/RequestDtos/IAnswerRequestDto.ts";
-import { ICreateDialogueRequestDto, IDialogueRequestDto } from "./Util/Mapping/RequestDtos/IDialogueRequestsDto.ts";
+import IAnswerRequestDto from "./Util/Mapping/RequestDtos/IAnswerRequestDto";
+import { ICreateDialogueRequestDto, IDialogueRequestDto } from "./Util/Mapping/RequestDtos/IDialogueRequestsDto";
 import 'reflect-metadata';
 
-//@ts-ignore
 @injectable()
 export default class ThereGameDataService implements IThereGameDataService {
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import DialogueBuilder from './folderTree/DialogueBuilder.tsx';
+import DialogueBuilder from './folderTree/DialogueBuilder';
 import { RecoilRoot } from 'recoil';
 
 export function App() {

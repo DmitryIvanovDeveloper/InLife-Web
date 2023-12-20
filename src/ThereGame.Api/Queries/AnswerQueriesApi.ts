@@ -1,13 +1,13 @@
-import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues.ts";
-import IAnswerService from "../../ThereGame.Business/Domain/Util/Services/IAnswerService.ts";
-import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel.ts";
-import { appContainer } from "../../inversify.config.ts";
-import { TYPES } from "../../types.ts";
-import AnswerMapping from "../Util/Mapping/AnswerMapping.ts";
-import DialogueMapping from "../Util/Mapping/DialogueMapping.ts";
+import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues";
+import IAnswerService from "../../ThereGame.Business/Domain/Util/Services/IAnswerService";
+import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
+import { appContainer } from "../../inversify.config";
+import { TYPES } from "../../types";
+import AnswerMapping from "../Util/Mapping/AnswerMapping";
+import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
-import useDialogieQueriesApi from "./DialogueQueriesApi.ts";
-import { Status } from "../../ThereGame.Infrastructure/Statuses/Status.ts";
+import useDialogieQueriesApi from "./DialogueQueriesApi";
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 
 export default function useAnswerQueriesApi() {
     const answerService = appContainer.get<IAnswerService>(TYPES.AnswerService);

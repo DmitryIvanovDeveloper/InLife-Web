@@ -1,13 +1,13 @@
 import { Container } from "inversify";
 import IThereGameDataService from "./ThereGame.Business/Domain/Util/Services/IThereGameDataService";
-import ThereGameDataService from "./ThereGame.Api/ThereGameDataService.ts";
-import { TYPES } from "./types.ts";
-import IDialogueService from "./ThereGame.Business/Domain/Util/Services/IDialogueService.ts";
-import IPhraseService from "./ThereGame.Business/Domain/Util/Services/IPhraseService.ts";
-import DialogueService from "./ThereGame.Infrastructure/Services/Dialogue/DialogueService.ts";
-import PhraseService from "./ThereGame.Infrastructure/Services/Dialogue/PhraseService.ts";
-import IAnswerService from "./ThereGame.Business/Domain/Util/Services/IAnswerService.ts";
-import AnswerService from "./ThereGame.Infrastructure/Services/Dialogue/AnswerService.ts";
+import ThereGameDataService from "./ThereGame.Api/ThereGameDataService";
+import { TYPES } from "./types";
+import IDialogueService from "./ThereGame.Business/Domain/Util/Services/IDialogueService";
+import IPhraseService from "./ThereGame.Business/Domain/Util/Services/IPhraseService";
+import DialogueService from "./ThereGame.Infrastructure/Services/Dialogue/DialogueService";
+import PhraseService from "./ThereGame.Infrastructure/Services/Dialogue/PhraseService";
+import IAnswerService from "./ThereGame.Business/Domain/Util/Services/IAnswerService";
+import AnswerService from "./ThereGame.Infrastructure/Services/Dialogue/AnswerService";
 
 export const appContainer = new Container();
 

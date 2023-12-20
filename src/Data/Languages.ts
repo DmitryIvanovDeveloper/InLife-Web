@@ -1,4 +1,4 @@
-import { LanguageType } from "./LanguageType.ts";
+import { LanguageType } from "./LanguageType";
 
 export const Languages = [{
     language: LanguageType.Russian,

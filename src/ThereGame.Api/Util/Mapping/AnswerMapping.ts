@@ -1,9 +1,9 @@
-import IAnswerModel from "../../../ThereGame.Business/Models/IAnswerModel.ts";
-import PhraseMapping from "./PhraseMapping.ts";
-import IAnswerRequestDto from "./RequestDtos/IAnswerRequestDto.ts";
-import MistakeExplanationMapping from "./MistakeExplanationMapping.ts";
-import TranslateMapping from "./TranslateMapping.ts";
-import IAnswerResponseDto from "./ResponseDtos/IAnswerResponseDto.ts";
+import IAnswerModel from "../../../ThereGame.Business/Models/IAnswerModel";
+import PhraseMapping from "./PhraseMapping";
+import IAnswerRequestDto from "./RequestDtos/IAnswerRequestDto";
+import MistakeExplanationMapping from "./MistakeExplanationMapping";
+import TranslateMapping from "./TranslateMapping";
+import IAnswerResponseDto from "./ResponseDtos/IAnswerResponseDto";
 
 export default class AnswerMapping {
 

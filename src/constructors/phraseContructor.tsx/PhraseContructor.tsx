@@ -1,16 +1,16 @@
-import { Alert, Box, Button, ButtonGroup, CardHeader, FormLabel, ImageListTypeMap, Input, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import TensesList from "../TensesList.tsx";
-import AddButton from "../../components/buttons/AddButton.tsx";
-import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel.ts";
-import SaveButton from "../../components/buttons/SaveButton.tsx";
-import { useSelection } from "../../Data/useSelection.ts";
-import AnswerContructor from "../answerContructor/AnswerConstructor.tsx";
-import { useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues.ts";
-import DeleteButton from "../../components/buttons/DeleteButton.tsx";
-import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi.ts";
-import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi.ts";
-import AppBarCustom from "../../components/AppBarCustom.tsx";
+import { useState, useEffect } from "react";
+import { useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
+import { useSelection } from "../../Data/useSelection";
+import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
+import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
+import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
+import AppBarCustom from "../../components/AppBarCustom";
+import AddButton from "../../components/buttons/AddButton";
+import SaveButton from "../../components/buttons/SaveButton";
+import TensesList from "../TensesList";
+import AnswerContructor from "../answerContructor/AnswerConstructor";
+import { Box, TextField, Button, Typography, Alert } from "@mui/material";
+
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -18,7 +18,7 @@ export interface IPhraseConstructor {
     prevConstructorId?: string
 }
 
-export default function PhraseContructor(props: IPhraseConstructor) {
+export default function PhraseContructor(props: IPhraseConstructor): JSX.Element | null {
     const [selection, setSelection] = useSelection();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const phraseQueriesApi = usePhraseQueriesApi();
@@ -73,7 +73,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
         setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={id} prevConstructorId={props.id} />);
     }
 
-    const onChangeText = (event) => {
+    const onChangeText = (event: any) => {
         setPhrase(prev => ({
             ...prev,
             text: event.target.value
@@ -87,7 +87,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
         setIsSaved(false);
     }
 
-    const onCommentsChange = (event) => {
+    const onCommentsChange = (event: any) => {
         setPhrase(prev => ({
             ...prev,
             comments: event.target.value
@@ -146,7 +146,7 @@ export default function PhraseContructor(props: IPhraseConstructor) {
     }, [phrase]);
 
     if (!phrase) {
-        return;
+        return null;
     }
 
     return (

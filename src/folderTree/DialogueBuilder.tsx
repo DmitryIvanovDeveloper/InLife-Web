@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Dialogues from "./Dialogues.tsx";
+import Dialogues from "./Dialogues";
 import SplitPane from "react-split-pane";
-import { useDialogueItemConstructor } from "../Data/useDialogues.ts";
+import { useDialogueItemConstructor } from "../Data/useDialogues";
 
 export default function DialogueBuilder() {
 

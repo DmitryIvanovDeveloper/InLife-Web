@@ -1,8 +1,9 @@
-import { dialoguesTemplate } from './DialogueData.ts';
+import { dialoguesTemplate } from './DialogueData';
 import { atom, selectorFamily, useRecoilState, useRecoilValue } from 'recoil'
-import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel.ts'
-import IPhraseModel from '../ThereGame.Business/Models/IPhraseModel.ts'
-import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel.ts'
+import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel'
+import IPhraseModel from '../ThereGame.Business/Models/IPhraseModel'
+import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel'
+import IDialogueItemModel from '../ThereGame.Business/Models/IDialogueItemModel';
 
 export type IUpdatePhraseItemInput = {
     readonly dialogueId?: string
@@ -99,7 +100,7 @@ const phraseSelectorFamily = selectorFamily<IPhraseModel, IFindDialogueItemInput
     key: 'phraseSelectorFamily',
     get: (findDialogueItemInput: IFindDialogueItemInput) => ({ get }) => {
         const dialog = get(dialogueSelectorFamily(findDialogueItemInput.dialogueId))
-        return findDialogueItemById(dialog, findDialogueItemInput.itemId);
+        return findDialogueItemById(dialog, findDialogueItemInput.itemId) as IPhraseModel;
     },
     dangerouslyAllowMutability: true,
 });
@@ -117,7 +118,7 @@ const answerSelectorFamily = selectorFamily<IAnswerModel, IFindDialogueItemInput
 function findDialogueById(dialogues: IDialogueModel[], dialogueId: string): IDialogueModel | undefined {
     return dialogues?.find(dialogue => dialogue?.id == dialogueId);
 }
-function findDialogueItemById(dialogue: IDialogueModel, itemId: string): any | null {
+function findDialogueItemById(dialogue: IDialogueModel, itemId: string): IDialogueItemModel | null {
     if (!dialogue?.phrase) {
         return null;
     }
@@ -129,7 +130,7 @@ function findDialogueItemById(dialogue: IDialogueModel, itemId: string): any | n
     const foundDialogueItem = findAnswerById(dialogue.phrase.answers, itemId);
     return foundDialogueItem
 }
-function findAnswerById(answers: IAnswerModel[], targetId) {
+function findAnswerById(answers: IAnswerModel[], targetId: string): IDialogueItemModel | null {
     for (const answer of answers) {
         if (answer.id === targetId) {
             return answer;
@@ -143,7 +144,7 @@ function findAnswerById(answers: IAnswerModel[], targetId) {
 
     return null;
 }
-function findPhraseById(phrases: IPhraseModel[], targetId) {
+function findPhraseById(phrases: IPhraseModel[], targetId: string): IDialogueItemModel | null {
     for (const phrase of phrases) {
         if (phrase.id === targetId) {
             return phrase;

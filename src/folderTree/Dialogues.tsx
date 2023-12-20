@@ -4,18 +4,18 @@ import Button from '@mui/material/Button';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
-import Phrase from './Phrase.tsx';
-import { useDialogueItemConstructor, useDialogues } from '../Data/useDialogues.ts';
-import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor.tsx';
+import Phrase from './Phrase';
+import { useDialogueItemConstructor, useDialogues } from '../Data/useDialogues';
+import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
 import { useEffect, useState } from 'react';
-import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi.ts';
-import CircularProgressCustom from '../components/CircularProgress.tsx';
+import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
+import CircularProgressCustom from '../components/CircularProgress';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import TextButton from '../components/buttons/TextButton.tsx';
+import TextButton from '../components/buttons/TextButton';
 
 export interface IDialoguesProps { }
 
-export default function Dialogues(props: IDialoguesProps) {
+export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const dialogueQueriesApi = useDialogieQueriesApi();
 
     const [dialoguesRecoil, setDialoguesRecoil] = useDialogues();

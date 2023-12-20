@@ -1,22 +1,21 @@
 import { Alert, Box, Button, ButtonGroup, FormLabel, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import TensesList from "../TensesList.tsx";
-import AddButton from "../../components/buttons/AddButton.tsx";
+import TensesList from "../TensesList";
+import AddButton from "../../components/buttons/AddButton";
+import SaveButton from "../../components/buttons/SaveButton";
+import { useSelection } from "../../Data/useSelection";
+import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
+import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
+import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
+import MistakeExplanationConstructor from "./MistakeExplanationsConstructor";
+import TranslateConstructor from "./TranslateConstructor";
+import IAnswerError from "../../Data/Errors/IAnswerError";
+import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
+import { LanguageType } from "../../Data/LanguageType";
+import AppBarCustom from "../../components/AppBarCustom";
 import { v4 as uuidv4 } from 'uuid';
-import SaveButton from "../../components/buttons/SaveButton.tsx";
-import { useSelection } from "../../Data/useSelection.ts";
-import PhraseContructor from "../phraseContructor.tsx/PhraseContructor.tsx";
-import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues.ts";
-import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel.ts";
-import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel.ts";
-import MistakeExplanationConstructor from "./MistakeExplanationsConstructor.tsx";
-import TranslateConstructor from "./TranslateConstructor.tsx";
-import IAnswerError from "../../Data/Errors/IAnswerError.tsx";
-import ITranstateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
-import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi.ts";
-import { LanguageType } from "../../Data/LanguageType.ts";
-import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel.ts";
-import AppBarCustom from "../../components/AppBarCustom.tsx";
+import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
+import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -24,7 +23,7 @@ export interface IAnswerContructor {
     prevConstructorId?: string
 }
 
-export default function AnswerContructor(props: IAnswerContructor) {
+export default function AnswerContructor(props: IAnswerContructor): JSX.Element | null {
 
     const answerRecoil = useAnswer(props.dialogueId, props.id);
     const answerQueriesApi = useAnswerQueriesApi();
@@ -42,7 +41,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
         //TODO: To implement
     }
 
-    const onChangeText = (event) => {
+    const onChangeText = (event: any) => {
         setAnswer(prev => ({
             ...prev,
             text: event.target.value
@@ -51,12 +50,12 @@ export default function AnswerContructor(props: IAnswerContructor) {
         setIsSaved(false);
     }
 
-    const onPhraseButtonClick = (event) => {
+    const onPhraseButtonClick = (event: any) => {
         setSelection(event.target.id);
         setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={event.target.id} prevConstructorId={props.prevConstructorId} />);
     }
 
-    const onWordsToUseChange = (event) => {
+    const onWordsToUseChange = (event: any) => {
         setAnswer(prev => ({
             ...prev,
             wordsToUse: event.target.value
@@ -66,7 +65,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
     }
 
     // Mistake Explanation
-    const onExplanationChange = (event, index) => {
+    const onExplanationChange = (event: any, index: number) => {
         var explanation = [...answer.mistakeExplanations];
 
         if (event.target.id == 'word') {
@@ -113,7 +112,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
 
     // Translate
     const onAddTranslate = () => {
-        var translate: ITranstateModel = {
+        var translate: ITranslateModel = {
             parentId: props.id,
             id: uuidv4(),
             language: LanguageType.Russian,
@@ -259,7 +258,7 @@ export default function AnswerContructor(props: IAnswerContructor) {
     }
 
     if (!answer) {
-        return;
+        return null;
     }
 
     return (

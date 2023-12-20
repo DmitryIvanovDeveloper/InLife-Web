@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import IPhraseRequestDto from "../../../ThereGame.Api/Util/Mapping/RequestDtos/IPhraseRequestDto";
 import IPhraseService from "../../../ThereGame.Business/Domain/Util/Services/IPhraseService";
-import TypedResult from "../../Statuses/Result.ts";
-import { Status } from "../../Statuses/Status.ts";
-import { Routes } from "../../../Routes.ts";
+import TypedResult from "../../Statuses/Result";
+import { Status } from "../../Statuses/Status";
+import { Routes } from "../../../Routes";
 
 //@ts-ignore
 @injectable()

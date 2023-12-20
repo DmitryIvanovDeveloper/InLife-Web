@@ -1,21 +1,20 @@
 import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import SaveButton from "../../components/buttons/SaveButton.tsx";
-import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues.ts";
-import DeleteButton from "../../components/buttons/DeleteButton.tsx";
-import PhraseContructor from "../phraseContructor.tsx/PhraseContructor.tsx";
-import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel.ts";
-import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi.ts";
-import LocationCarousel from "../../components/LocationCarousel.tsx";
-import { Locations } from "../../Data/Locations.ts";
-import AppBarCustom from "../../components/AppBarCustom.tsx";
+import SaveButton from "../../components/buttons/SaveButton";
+import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
+import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
+import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
+import LocationCarousel from "../../components/LocationCarousel";
+import { Locations } from "../../Data/Locations";
+import AppBarCustom from "../../components/AppBarCustom";
+import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
 
 export interface IDialogueConstructor {
     id: string;
 }
 
-export default function DialogueConstructor(props: IDialogueConstructor) {
+export default function DialogueConstructor(props: IDialogueConstructor): JSX.Element | null {
 
     const dialogueRecoil = useDialogue(props.id);
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
@@ -38,7 +37,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         await dialogieQueriesApi.delete(props.id);
     }
 
-    const onChangeName = (event) => {
+    const onChangeName = (event: any) => {
         setDialogue(prev => ({
             ...prev,
             name: event.target.value
@@ -47,7 +46,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
         setIsSaved(false);
     }
 
-    const onClickPhrase = (event) => {
+    const onClickPhrase = (event: any) => {
         event.stopPropagation();
         event.preventDefault();
 
@@ -110,7 +109,7 @@ export default function DialogueConstructor(props: IDialogueConstructor) {
     }, [dialogue]);
 
     if (!dialogue) {
-        return;
+        return null;
     }
 
     return (

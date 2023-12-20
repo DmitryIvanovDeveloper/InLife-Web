@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import IDialogueService from "../../../ThereGame.Business/Domain/Util/Services/IDialogueService";
 import { ICreateDialogueRequestDto, IUpdateDialogueRequestDto } from "../../../ThereGame.Api/Util/Mapping/RequestDtos/IDialogueRequestsDto";
-import TypedResult from "../../Statuses/Result.ts";
-import { Status } from "../../Statuses/Status.ts";
-import { Routes } from "../../../Routes.ts";
+import TypedResult from "../../Statuses/Result";
+import { Status } from "../../Statuses/Status";
+import { Routes } from "../../../Routes";
 
 //@ts-ignore
 @injectable()

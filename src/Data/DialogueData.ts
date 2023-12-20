@@ -1,8 +1,7 @@
 import { id } from 'inversify';
-import { v4 as uuidv4 } from 'uuid';
-import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel.ts';
-import { LanguageType } from './LanguageType.ts';
-import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel.ts';
+import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
+import { LanguageType } from './LanguageType';
+import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel';
 
 export const dialoguesTemplate: IDialogueModel[] = [];
 

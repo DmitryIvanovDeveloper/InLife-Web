@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tenseses } from '../Data/tenseses.ts';
+import { Tenseses } from '../Data/tenseses';
 import { useEffect, useState } from 'react';
 import { Button, Box } from '@mui/material';
 
@@ -12,7 +12,7 @@ export interface ITensesListProps {
 export default function TensesList(props: ITensesListProps) {
     const [clickedButtons, setClickedButtons] = useState<string[]>(props.tensesList);
 
-    function OnClick(event) {
+    function OnClick(event: any) {
 
         var index = clickedButtons?.indexOf(event.target.value);
         if (index <= -1) {

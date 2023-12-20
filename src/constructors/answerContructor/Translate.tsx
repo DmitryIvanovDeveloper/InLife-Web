@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Theme, useTheme } from '@mui/material/styles';
 import { Autocomplete, Box, TextField } from '@mui/material';
-import { Languages } from '../../Data/Languages.ts';
-import { LanguageType } from '../../Data/LanguageType.ts';
+import { Languages } from '../../Data/Languages';
+import { LanguageType } from '../../Data/LanguageType';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -16,7 +16,7 @@ const MenuProps = {
 };
 
 export interface ITranslate {
-    onTranslateChange: (value, index) => void;
+    onTranslateChange: (value: any, index: string) => void;
     id: string;
     language: LanguageType
 }

@@ -1,7 +1,7 @@
-import IPhraseModel from "../../../ThereGame.Business/Models/IPhraseModel.ts";
-import AnswerMapping from "./AnswerMapping.ts";
-import IPhraseRequestDto from "./RequestDtos/IPhraseRequestDto.ts";
-import IPhraseResponseDto from "./ResponseDtos/IPhraseResponseDto.ts";
+import IPhraseModel from "../../../ThereGame.Business/Models/IPhraseModel";
+import AnswerMapping from "./AnswerMapping";
+import IPhraseRequestDto from "./RequestDtos/IPhraseRequestDto";
+import IPhraseResponseDto from "./ResponseDtos/IPhraseResponseDto";
 
 export default class PhraseMapping {
     

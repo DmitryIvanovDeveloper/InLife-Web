@@ -1,6 +1,6 @@
 import { LanguageType } from "../../Data/LanguageType";
 
-export default interface ITranstateModel {
+export default interface ITranslateModel {
     readonly parentId: string,
     readonly id: string
     readonly language: LanguageType

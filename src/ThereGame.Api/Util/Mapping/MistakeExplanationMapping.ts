@@ -1,5 +1,5 @@
 import { IMistakeExplanationModel } from '../../../ThereGame.Business/Models/IExplanationModel';
-import IMistakeExplanationeDto from './IMistakeExplanationDto.ts';
+import IMistakeExplanationeDto from './IMistakeExplanationDto';
 
 export default class MistakeExplanationMapping {
 

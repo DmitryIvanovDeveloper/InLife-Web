@@ -1,12 +1,12 @@
-import { Status } from './../../ThereGame.Infrastructure/Statuses/Status.ts';
-import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues.ts";
-import IDialogueService from "../../ThereGame.Business/Domain/Util/Services/IDialogueService.ts";
-import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel.ts";
-import { appContainer } from "../../inversify.config.ts";
-import { TYPES } from "../../types.ts";
-import DialogueMapping from "../Util/Mapping/DialogueMapping.ts";
+import { Status } from './../../ThereGame.Infrastructure/Statuses/Status';
+import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues";
+import IDialogueService from "../../ThereGame.Business/Domain/Util/Services/IDialogueService";
+import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
+import { appContainer } from "../../inversify.config";
+import { TYPES } from "../../types";
+import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
-import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel.ts';
+import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel';
 
 export default function useDialogieQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);

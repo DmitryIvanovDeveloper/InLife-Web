@@ -3,7 +3,7 @@ import { Button } from "@mui/material";
 
 interface ITextButtonProps {
   children: any;
-  onClick: (event) => void;
+  onClick: (event: any) => void;
 }
 
 export default function TextButton(props: ITextButtonProps) {

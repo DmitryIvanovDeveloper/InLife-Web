@@ -1,6 +1,6 @@
 import { Grid, TextField, Button, Box } from "@mui/material"
 import React, { useState } from "react"
-import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel.ts";
+import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
 
 export interface IMistakeExplanationConstructor {
     explanations: IMistakeExplanationModel[]
@@ -37,7 +37,7 @@ export default function MistakeExplanationConstructor(props: IMistakeExplanation
                         placeholder="are"
                         required={true}
                         variant="outlined"
-                        onChange={(event) => props.onExplanationChange(event.target.value, id)}
+                        onChange={(event: any) => props.onExplanationChange(event.target.value, id)}
                         // error={errors.mistakeExplanations.find(e => e.id == explanation.id)?.word}
                     />
                     <TextField
@@ -49,7 +49,7 @@ export default function MistakeExplanationConstructor(props: IMistakeExplanation
                         placeholder="are - множественное число, день - используется в единственном числе"
                         variant="outlined"
                         required={true}
-                        onChange={(event) => props.onExplanationChange(event.target.value, id)}
+                        onChange={(event: any) => props.onExplanationChange(event.target.value, id)}
                         // error={errors.mistakeExplanations.find(e => e.id == explanation.id)?.explanation}
 
                         fullWidth

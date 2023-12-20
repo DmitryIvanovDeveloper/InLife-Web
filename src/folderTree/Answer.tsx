@@ -1,22 +1,22 @@
 import React from "react"
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import Phrase from "./Phrase.tsx";
-import TextButton from "../components/buttons/TextButton.tsx";
-import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues.ts";
-import AnswerContructor from "../constructors/answerContructor/AnswerConstructor.tsx";
+import Phrase from "./Phrase";
+import TextButton from "../components/buttons/TextButton";
+import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues";
+import AnswerContructor from "../constructors/answerContructor/AnswerConstructor";
 
 export interface IAnswerProps {
     dialogueId: string,
     id: string,
 }
 
-export default function Answer(props: IAnswerProps) {
+export default function Answer(props: IAnswerProps): JSX.Element | null {
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const answerRecoil = useAnswer(props.dialogueId, props.id);
 
-    const onClick = (event) => {
+    const onClick = (event: any) => {
         event.stopPropagation();
         event.preventDefault();
 
@@ -24,7 +24,7 @@ export default function Answer(props: IAnswerProps) {
     }
 
     if (!answerRecoil){
-        return;
+        return null;
     }
 
     return (
