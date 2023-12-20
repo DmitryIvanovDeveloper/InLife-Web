@@ -1,4 +1,4 @@
-import IMistakeExplanationDto from '../ResponseDtos/IMistakeExplanationDto';
+import IMistakeExplanationDto from '../IMistakeExplanationDto';
 import ITranslateDto from '../ITranslateDto';
 
 export default interface IAnswerRequestDto {
