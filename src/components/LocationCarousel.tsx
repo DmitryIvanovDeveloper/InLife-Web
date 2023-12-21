@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Carousel from "react-elastic-carousel";
 import { Locations } from "../Data/Locations";
 
@@ -23,10 +23,9 @@ export default function LevelCarousel(props: ILevelCarouselProps) {
             <div className="carousel-wrapper">
                 { //@ts-ignore 
                     <Carousel
-                        initialFirstItem={1}
+                        initialActiveIndex={Locations.findIndex(location => location.id == props.id)}
                         onNextEnd={onCurrentChange}
                         onPrevEnd={onCurrentChange}
-
                         breakPoints={breakPoints}>
                         {Locations.map((location) => (
                             <img id={location.id} key={location.id} src={location.image} width="750" height="250" />
