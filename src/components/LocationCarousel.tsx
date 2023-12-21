@@ -12,10 +12,14 @@ export interface ILevelCarouselProps {
 }
 
 export default function LevelCarousel(props: ILevelCarouselProps) {
-
+    const [id, setId] = useState<number>()
     const onCurrentChange = (event: any) => {
         props.setLevel(event.item.id);
     }
+
+    useEffect(() => {
+       console.log(props.id)
+    }, [props.id]);
     
     return (
         <div className="App">
@@ -23,9 +27,10 @@ export default function LevelCarousel(props: ILevelCarouselProps) {
             <div className="carousel-wrapper">
                 { //@ts-ignore 
                     <Carousel
-                        initialActiveIndex={Locations.findIndex(location => location.id == props.id)}
+                        initialFirstItem={Locations.findIndex(location => location.id == props.id)}
                         onNextEnd={onCurrentChange}
                         onPrevEnd={onCurrentChange}
+
                         breakPoints={breakPoints}>
                         {Locations.map((location) => (
                             <img id={location.id} key={location.id} src={location.image} width="750" height="250" />

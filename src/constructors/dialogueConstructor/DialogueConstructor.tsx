@@ -78,10 +78,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     //// UseEffects
 
     useEffect(() => {
-        setDialogue(dialogueRecoil);
-    }, [dialogueRecoil]);
-
-    useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
             setDialogue(dialogueRecoil);
@@ -92,7 +88,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         setIsSaved(false);
 
         setDialogue(JSON.parse(data));
-    }, []);
+    }, [dialogueRecoil]);
 
     useEffect(() => {
         if (isSaved) {
