@@ -9,6 +9,7 @@ import LocationCarousel from "../../components/LocationCarousel";
 import { Locations } from "../../Data/Locations";
 import AppBarCustom from "../../components/AppBarCustom";
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
+import VoiceList from "../../components/voiceList/VoiceList";
 
 export interface IDialogueConstructor {
     id: string;
@@ -124,6 +125,8 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
             <LocationCarousel setLevel={onSetLevel} id={dialogue.levelId} />
 
+            <VoiceList />
+            
             <Button
                 onClick={publish}
                 variant={dialogue.isPublished ? "contained" : "outlined"}

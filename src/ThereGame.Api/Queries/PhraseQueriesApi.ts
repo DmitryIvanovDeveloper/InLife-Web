@@ -1,4 +1,4 @@
-import {useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues";
+import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues";
 import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhraseService";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { appContainer } from "../../inversify.config";

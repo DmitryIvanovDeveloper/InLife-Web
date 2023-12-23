@@ -12,9 +12,8 @@ export interface ILevelCarouselProps {
 }
 
 export default function LevelCarousel(props: ILevelCarouselProps) {
-    const [id, setId] = useState<number>()
     const onCurrentChange = (event: any) => {
-        props.setLevel(event.item.id);
+        props.setLevel(event.item);
     }
 
     useEffect(() => {

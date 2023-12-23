@@ -16,6 +16,7 @@ import AppBarCustom from "../../components/AppBarCustom";
 import { v4 as uuidv4 } from 'uuid';
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
+import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -27,6 +28,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
     const answerRecoil = useAnswer(props.dialogueId, props.id);
     const answerQueriesApi = useAnswerQueriesApi();
+    const phraseQueriesApi = usePhraseQueriesApi();
 
     const [selection, setSelection] = useSelection();
     const [answer, setAnswer] = useState<IAnswerModel>(answerRecoil);
@@ -38,7 +40,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const [errors, setErrors] = useState<IAnswerError>();
 
     function onAddButtonClick() {
-        //TODO: To implement
+        phraseQueriesApi.create(props.id);
     }
 
     const onChangeText = (event: any) => {

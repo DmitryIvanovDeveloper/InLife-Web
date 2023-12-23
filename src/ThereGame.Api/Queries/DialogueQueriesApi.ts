@@ -10,7 +10,7 @@ import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel';
 
 export default function useDialogieQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);
-    var updateDialogue =  useUpdateDialogue();
+    var updateDialogue = useUpdateDialogue();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     async function get(): Promise<IDialogueModel[]> {
@@ -44,7 +44,6 @@ export default function useDialogieQueriesApi() {
         },
 
         create: async () => {
-
             var phrase: IPhraseModel = {
                 parentId: null,
                 text: 'New Phrase',
