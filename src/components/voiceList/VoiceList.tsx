@@ -18,7 +18,7 @@ export default function VoiceList(props: IVoiceListProps) {
     const [voices, setVoices] = useState<IVoiceModel[]>([]);
     const [voiceOption, setVoiceOption] = useState<IVoiceOption>();
     const [voice, setVoice] = useState<IVoiceModel>();
-
+    const [isPlay, setIsPlay] = useState<boolean>(false)
     const handleChangeVoicesType = (event: any) => {
         var selectedVoiceOptionType = VoicesOptions.find(v => v.type == event.target.value);
         if (!selectedVoiceOptionType) {
@@ -67,6 +67,7 @@ export default function VoiceList(props: IVoiceListProps) {
         }
 
         props.setIsVoiceSelected(true);
+        // setIsPlay(true)
 
         localStorage.setItem(`[DeepVoice] - ${props.dialogueId}`, JSON.stringify({ name: voice.name, type: voiceOption.type }));
     }, [voiceOption, voice]);
@@ -110,7 +111,7 @@ export default function VoiceList(props: IVoiceListProps) {
 
             </Grid>
             <AudioPlayer
-                autoPlay
+                autoPlay={false}
                 src={`${voice?.path}/${voice?.name}.wav`}
             />
         </Box>
