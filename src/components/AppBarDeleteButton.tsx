@@ -2,10 +2,11 @@ import { Box, AppBar, Toolbar, IconButton, Typography, Button } from "@mui/mater
 import React from "react";
 import DeleteButton from "./buttons/DeleteButton";
 
-export interface IAppBarCustomProps{
+export interface IAppBarDeleteButtonProps{
     name: string;
+    onDelete: () => void
 }
-export default function AppBarCustom(props: IAppBarCustomProps) {
+export default function AppBarDeleteButton(props: IAppBarDeleteButtonProps) {
     return (
         <Box sx={{ flexGrow: 1, display: "flex" }}>
             <AppBar position="static" sx={{ borderRadius: 1 }}>
@@ -21,6 +22,7 @@ export default function AppBarCustom(props: IAppBarCustomProps) {
                     <Typography align="center" variant="h6" component="div" sx={{ flexGrow: 1}}>
                         {props.name}
                     </Typography>
+                    <DeleteButton onClick={(props.onDelete)}/>
                 </Toolbar>
             </AppBar>
         </Box>

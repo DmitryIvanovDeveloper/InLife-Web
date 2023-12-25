@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid';
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
+import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -279,7 +280,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             noValidate
             autoComplete="off"
         >
-            <AppBarCustom
+            <AppBarDeleteButton
                 name='Answer Constructor'
                 onDelete={onDelete}
             />

@@ -40,7 +40,7 @@ export const VoicesOptions: IVoiceOption[] = [{
 },
 {
     id: uuidv4(),
-    type: "Standart",
+    type: "Standard",
     voices: voiceOptionsStandartType.map(type => {
         return {
             id: uuidv4(),
@@ -51,7 +51,7 @@ export const VoicesOptions: IVoiceOption[] = [{
 },
 {
     id: uuidv4(),
-    type: "MonoMulty",
+    type: "MonoMulti",
     voices: voiceOptionsMonoMultyType.map(type => {
         return {
             id: uuidv4(),

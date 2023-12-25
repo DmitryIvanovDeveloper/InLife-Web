@@ -10,7 +10,7 @@ export default function DialogueBuilder() {
     return (
         //@ts-ignore
         
-        <SplitPane split="vertical" minSize={250} defaultSize={200} maxSize={window.innerWidth / 2}>
+        <SplitPane split="vertical" minSize={250} defaultSize={window.innerWidth / 2} maxSize={window.innerWidth / 2}>
             <Dialogues />
             {dialogueItemConstructor}
         </SplitPane>

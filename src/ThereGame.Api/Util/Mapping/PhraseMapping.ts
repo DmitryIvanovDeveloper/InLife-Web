@@ -12,7 +12,8 @@ export default class PhraseMapping {
             answers: phrase.answers.map(answer => new AnswerMapping().response(answer)),
             tensesList: phrase.tensesList,
             comments: phrase.comments,
-            id: phrase.id
+            id: phrase.id,
+            audioGenerationSettings: phrase.audioGenerationSettings,
         }
     }
     public request(phrase: IPhraseModel): IPhraseRequestDto {
@@ -22,7 +23,8 @@ export default class PhraseMapping {
             answers: phrase.answers.map(answer => new AnswerMapping().request(answer)),
             tensesList: phrase.tensesList,
             comments: phrase.comments,
-            id: phrase.id
+            id: phrase.id,
+            audioGenerationSettings: phrase.audioGenerationSettings,
         }
     }
 }

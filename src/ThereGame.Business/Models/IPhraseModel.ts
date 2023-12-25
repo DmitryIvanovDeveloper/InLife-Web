@@ -7,4 +7,5 @@ export default interface IPhraseModel extends IDialogueItemModel {
     readonly answers: IAnswerModel[];
     readonly tensesList: string[];
     readonly comments: string;
+    readonly audioGenerationSettings: string;
 }

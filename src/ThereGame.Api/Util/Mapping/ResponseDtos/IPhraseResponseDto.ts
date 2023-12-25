@@ -7,4 +7,5 @@ export default interface IPhraseResponseDto {
     readonly answers: IAnswerResponseDto[];
     readonly tensesList: string[];
     readonly comments: string;
+    readonly audioGenerationSettings: string;
 }
