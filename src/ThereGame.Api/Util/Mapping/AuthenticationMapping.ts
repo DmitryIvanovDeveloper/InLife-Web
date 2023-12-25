@@ -1,6 +1,8 @@
 import ISignInModel from "../../../ThereGame.Business/Models/ISignInModel";
 import ISignUpModel from "../../../ThereGame.Business/Models/ISignUpModel";
+import IUserModel from "../../../ThereGame.Business/Models/IUserModel";
 import ISignInRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInRequestDto";
+import ISignInResponseDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInResponseDto";
 import ISignUpRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignUpRequestDto";
 
 export default class AuthenticationMapping {
@@ -13,8 +15,19 @@ export default class AuthenticationMapping {
 
     requestSignUp(data: ISignUpModel): ISignUpRequestDto {
         return {
+            id: data.id,
             name: data.name,
+            lastName: data.lastName,
             password: data.password,
+            email: data.email,
+        }
+    }
+
+    responseSignUp(data: ISignInResponseDto): IUserModel {
+        return {
+            id: data.id,
+            name: data.name,
+            lastName: data.lastName,
             email: data.email,
         }
     }

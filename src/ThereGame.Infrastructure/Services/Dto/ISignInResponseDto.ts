@@ -1,7 +1,6 @@
-export default interface ISignUpRequestDto {
+export default interface ISignInResponseDto {
     id: string,
     name: string,
     lastName: string,
-    password: string,
     email: string,
 }

@@ -7,12 +7,15 @@ import { TYPES } from "../../types";
 import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
 import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel';
+import { useUser } from '../../Data/useUser';
 
 export default function useDialogieQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);
     var updateDialogue = useUpdateDialogue();
+    
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-
+    const [user, setUser] = useUser();
+    
     async function get(): Promise<IDialogueModel[]> {
         var response = await dialogueService.Get();
         if (response?.status != Status.OK ) {
@@ -44,6 +47,10 @@ export default function useDialogieQueriesApi() {
         },
 
         create: async (id: string) => {
+            if (!user) {
+                return;
+            }
+
             var phrase: IPhraseModel = {
                 parentId: null,
                 text: 'New Phrase',
@@ -60,9 +67,9 @@ export default function useDialogieQueriesApi() {
                 levelId: id,
                 id: uuidv4(),
                 name: 'New Dialogue',
-                phrase: phrase
+                phrase: phrase,
+                userId: user?.id,
             }
-
 
             var requestData = new DialogueMapping().requestToCreateDialogue(dialogue);
             

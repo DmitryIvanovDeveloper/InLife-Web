@@ -1,20 +1,27 @@
-import React from 'react';
-import './App.css';
+import React, { useEffect } from 'react';
 import DialogueBuilder from './folderTree/DialogueBuilder';
-import { RecoilRoot } from 'recoil';
+import { Routes, Route } from 'react-router-dom';
+import SignIn from './components/Authentication/SignIn';
+import SignUp from './components/Authentication/SignUp';
+import useUserQuerisApi from './ThereGame.Api/Queries/UserQueriesApi';
+import './App.css';
 
 export function App() {
 
+    var userQuerisApi = useUserQuerisApi();
+
+    useEffect(() => {
+        userQuerisApi.getById();
+    }, []);
+
     return (
-        <RecoilRoot>
-            <div className="App">
-                <header className="App-header">
-                    <div style={{ padding: "10px" }}>
-                        <DialogueBuilder />
-                    </div>
-                </header>
-            </div>
-        </RecoilRoot>
+        <React.StrictMode>
+            <Routes>
+                <Route path="/sign-in" element={<SignIn />} />
+                <Route path="/sign-up" element={<SignUp />} />
+                <Route path="/builder" element={<DialogueBuilder />} />
+            </Routes>
+        </React.StrictMode>
 
     );
 }

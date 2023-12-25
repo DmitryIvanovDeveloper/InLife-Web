@@ -13,8 +13,9 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ISignUpModel from "../../ThereGame.Business/Models/ISignUpModel";
-import useAuthenticationQuerisApi from "../../ThereGame.Api/Queries/AuthenticationQueriesApi";
+import useAuthenticationQueriesApi from "../../ThereGame.Api/Queries/AuthenticationQueriesApi";
 import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 function Copyright(props: any) {
     return (
@@ -39,18 +40,18 @@ const theme = createTheme();
 export default function SignUp() {
 
     const [data, setData] = useState<ISignUpModel>({
+        id: uuidv4(),
         name: "",
         lastName: "",
         email: "",
         password: ""
     });
     
-    const authenticationQueriesApi = useAuthenticationQuerisApi();
+    const authenticationQueriesApi = useAuthenticationQueriesApi();
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
 
-        console.log(data)
         authenticationQueriesApi.signUp(data);
     };
 

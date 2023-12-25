@@ -6,11 +6,12 @@ import { IDialogueResponseDto } from "./ResponseDtos/IDialogueResponseDto";
 export default class DialogueMapping {
 
     public response(dialogue: IDialogueResponseDto): IDialogueModel {
-        return  {
+        return {
             isVoiceSelected: dialogue.isVoiceSelected,
             levelId: dialogue.levelId,
             isPublished: dialogue.isPublished,
             id: dialogue.id,
+            userId: dialogue.userId,
             name: dialogue.name,
             phrase: new PhraseMapping().response(dialogue.phrase) 
         }
@@ -22,39 +23,44 @@ export default class DialogueMapping {
             isPublished: dialogue.isPublished,
             id: dialogue.id,
             levelId: dialogue.levelId,
+            userId: dialogue.userId,
             name: dialogue.name,
             phrase: new PhraseMapping().response(dialogue.phrase) 
         }))
     }
 
     public request(dialogue: IDialogueModel): IDialogueRequestDto {
-        return  {
+        return {
             isVoiceSelected: dialogue.isVoiceSelected,
             id: dialogue.id,
             name: dialogue.name,
             levelId: dialogue.levelId,
+            userId: dialogue.userId,
             isPublished: dialogue.isPublished,
             phrase: new PhraseMapping().request(dialogue.phrase) 
         }
     }
 
     public requestToCreateDialogue(dialogue: IDialogueModel): ICreateDialogueRequestDto {
-        return  {
+        return {
             id: dialogue.id,
             name: dialogue.name,
             phraseId: dialogue.phrase.id,
             levelId: dialogue.levelId,
+            userId: dialogue.userId,
             isPublished: dialogue.isPublished,
             isVoiceSelected: dialogue.isVoiceSelected,
             phrase: new PhraseMapping().request(dialogue.phrase)
         }
     }
+    
     public requestToUpdateDialogue(dialogue: IDialogueModel): IUpdateDialogueRequestDto {
-        return  {
+        return {
             isVoiceSelected: dialogue.isVoiceSelected,
             id: dialogue.id,
             name: dialogue.name,
             levelId: dialogue.levelId,
+            userId: dialogue.userId,
             isPublished: dialogue.isPublished,
             phraseId: dialogue.phrase.id,
         }

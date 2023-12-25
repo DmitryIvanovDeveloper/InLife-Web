@@ -1,21 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
-import SignIn from './components/Authentication/SignIn';
-import SignUp from './components/Authentication/SignUp';
+import App from './App';
+import './index.css';
+import { RecoilRoot } from 'recoil';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+    <RecoilRoot>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </RecoilRoot>
 );
 
 // If you want to start measuring performance in your app, pass a function

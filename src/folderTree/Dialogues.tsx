@@ -24,7 +24,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     const [npcId, setNpcId] = useState<string>("");
 
-
     const [expanded, setExpanded] = React.useState<string[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
     const [dialogues, setDialogues] = useState(dialoguesRecoil);
@@ -48,10 +47,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         setNpcId(Locations[0].id ?? '');
         setDialogues(dialoguesRecoil);
     }, [dialoguesRecoil]);
-
-    const onClick = (id: string) => {
-        setDialogueItemConstructor(() => <DialogueConstructor id={id} />);
-    }
 
     useEffect(() => {
         setIsNewDialogueCreating(true);
