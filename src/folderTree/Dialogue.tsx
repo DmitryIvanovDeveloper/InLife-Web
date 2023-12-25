@@ -4,6 +4,7 @@ import TextButton from "../components/buttons/TextButton";
 import Phrase from "./Phrase";
 import { useDialogue, useDialogueItemConstructor } from "../Data/useDialogues";
 import DialogueConstructor from "../constructors/dialogueConstructor/DialogueConstructor";
+import { useEffect } from "react";
 
 export interface IDialogueProps {
     id: string,
@@ -16,6 +17,10 @@ export default function Dialogue(props: IDialogueProps) {
 
     const onClick = (id: string) => {
         setDialogueItemConstructor(() => <DialogueConstructor id={id} />);
+    }
+
+    if (!dialogueRecoil) {
+        return
     }
 
     return (
