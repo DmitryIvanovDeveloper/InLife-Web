@@ -1,10 +1,9 @@
 import { Box } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import TextButton from "../components/buttons/TextButton";
-import Phrase from "./Phrase";
 import { useDialogue, useDialogueItemConstructor } from "../Data/useDialogues";
 import DialogueConstructor from "../constructors/dialogueConstructor/DialogueConstructor";
-import { useEffect } from "react";
+import Phrase from "./Phrase";
 
 export interface IDialogueProps {
     id: string,

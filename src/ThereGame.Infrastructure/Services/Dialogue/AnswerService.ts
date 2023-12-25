@@ -4,7 +4,7 @@ import IAnswerService from "../../../ThereGame.Business/Domain/Util/Services/IAn
 import TypedResult from "../../Statuses/Result";
 import { Status } from "../../Statuses/Status";
 import { Routes } from "../../../Routes";
-
+import "reflect-metadata";
 
 //@ts-ignore
 @injectable()
