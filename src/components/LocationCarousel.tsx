@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Carousel from "react-elastic-carousel";
 import { Locations } from "../Data/Locations";
+import { VoiceOptionsNeuralType } from "../Data/VoiceList/VoiceOptionsNeuralType";
+import { GenderType } from "../Data/GenderType";
 
 const breakPoints = [
     { width: 1, itemsToShow: 1 },
@@ -12,22 +14,18 @@ export interface ILevelCarouselProps {
 }
 
 export default function LevelCarousel(props: ILevelCarouselProps) {
-    const [id, setId] = useState<number>()
+
     const onCurrentChange = (event: any) => {
         props.setLevel(event.item.id);
     }
-
-    useEffect(() => {
-       console.log(props.id)
-    }, [props.id]);
-    
+   
     return (
         <div className="App">
             <hr className="seperator" />
             <div className="carousel-wrapper">
                 { //@ts-ignore 
                     <Carousel
-                        initialFirstItem={Locations.findIndex(location => location.id == props.id)}
+                        initialFirstItem={Locations.findIndex(location => location.id == props.id) ?? [0]}
                         onNextEnd={onCurrentChange}
                         onPrevEnd={onCurrentChange}
 

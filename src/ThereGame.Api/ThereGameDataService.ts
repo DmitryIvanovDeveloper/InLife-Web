@@ -31,8 +31,8 @@ export default class ThereGameDataService implements IThereGameDataService {
     
     public async GetDialogueById(id: string): Promise<IDialogueModel | null> {
         try {
-            var response = await fetch(`${process.env.REACT_APP_SERVER}/api/dialogues/${id}`);
-            console.log(response)
+            var response = await fetch(`${process.env.REACT_APP_SERVER}/api/dialogues/${id}`)
+            
             var data = await response.json();
             return new DialogueMapping().response(data);
         }

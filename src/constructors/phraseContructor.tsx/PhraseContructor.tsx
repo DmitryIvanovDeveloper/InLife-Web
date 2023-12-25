@@ -4,12 +4,13 @@ import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
-import AppBarCustom from "../../components/AppBarCustom";
 import AddButton from "../../components/buttons/AddButton";
 import SaveButton from "../../components/buttons/SaveButton";
 import TensesList from "../TensesList";
 import AnswerContructor from "../answerContructor/AnswerConstructor";
 import { Box, TextField, Button, Typography, Alert } from "@mui/material";
+import GetSettings from "../../ThereGame.Infrastructure/Helpers/PhraseAudioGegerationSettingsBuilder";
+import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 
 
 export interface IPhraseConstructor {
@@ -49,8 +50,12 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             return;
         }
 
+        const updatedPhrase = JSON.parse(JSON.stringify(phrase));
+
+        updatedPhrase.audioGenerationSettings = getSettings();
+
         setIsLoading(true);
-        await phraseQueriesApi.update(phrase);
+        await phraseQueriesApi.update(updatedPhrase);
         setIsLoading(false);
 
         localStorage.removeItem(props.id);
@@ -66,7 +71,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsSaved(true);
         localStorage.removeItem(props.id);
     }
-
 
     const onAnswerButtonClick = (id: string) => {
         setSelection(id);
@@ -95,8 +99,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsSaved(false);
     }
 
-    
-
     const onSetTenses = (tenses: string[]) => {
         setPhrase(prev => ({
             ...prev,
@@ -106,8 +108,23 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsSaved(false);
     }
 
-
+    
     // UseEffects
+
+    const getSettings = () => {
+
+        var data = localStorage.getItem(`[DeepVoice] - ${props.dialogueId}`);
+        if (!data)
+        {
+            return phrase.audioGenerationSettings;
+        }
+
+        var parsedData = JSON.parse(data);
+
+        var settings = GetSettings(parsedData.type, parsedData.name, phrase.text);
+      
+        return settings;
+    }
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -120,10 +137,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
         setPhrase(JSON.parse(data));
     }, [phraseRecoil])
-
-    useEffect(() => {
-       
-    }, []);
 
     useEffect(() => {
         if (isSaved) {
@@ -160,7 +173,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             style={{height:"1000px", overflow: "auto"}}
             autoComplete="off"
         >
-            <AppBarCustom
+            <AppBarDeleteButton
                 name='Phrase Constructor'
                 onDelete={onDelete}
             />

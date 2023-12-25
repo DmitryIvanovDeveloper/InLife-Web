@@ -5,19 +5,18 @@ import SaveButton from "../../components/buttons/SaveButton";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
-import LocationCarousel from "../../components/LocationCarousel";
-import { Locations } from "../../Data/Locations";
-import AppBarCustom from "../../components/AppBarCustom";
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
+import VoiceList from "../../components/voiceList/VoiceList";
+import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 
 export interface IDialogueConstructor {
     id: string;
 }
 
 export default function DialogueConstructor(props: IDialogueConstructor): JSX.Element | null {
-
     const dialogueRecoil = useDialogue(props.id);
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
+    const [isVoiceSelected, setIsVoiceSelected] = useState<boolean>(dialogueRecoil.isVoiceSelected);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isSaved, setIsSaved] = useState(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -66,17 +65,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         localStorage.removeItem(props.id);
     }
 
-    const onSetLevel = (levelId: string) => {
-        setDialogue(prev => ({
-            ...prev,
-            levelId: levelId
-        }));
-
-        setIsSaved(false);
-    }
-
-    //// UseEffects
-
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
@@ -99,10 +87,18 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             localStorage.setItem(props.id, JSON.stringify(dialogue));
             return;
         }
-
+        
         localStorage.removeItem(props.id);
         setIsSaved(true)
     }, [dialogue]);
+
+    useEffect(() => {
+        setDialogue(prev => ({
+            ...prev,
+            isVoiceSelected
+        }))
+    }, [isVoiceSelected]);
+    
 
     if (!dialogue) {
         return null;
@@ -117,13 +113,17 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             }}
             autoComplete="off"
         >
-            <AppBarCustom
-                name={Locations.find(location => location.id == dialogue.levelId)?.name ?? ""}
+            <AppBarDeleteButton
+                name={`"${dialogue.name}" Settings`}
                 onDelete={onDelete}
             />
 
-            <LocationCarousel setLevel={onSetLevel} id={dialogue.levelId} />
-
+            <VoiceList 
+                dialogueId={props.id} 
+                setIsVoiceSelected={setIsVoiceSelected} 
+                isVoiceSelected={dialogueRecoil.isVoiceSelected}
+            />
+            
             <Button
                 onClick={publish}
                 variant={dialogue.isPublished ? "contained" : "outlined"}
@@ -138,12 +138,13 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 id="outlined-basic"
                 label="Name"
                 variant="outlined"
-            ></TextField>
+            />
 
             <SaveButton onClick={save} isLoading={isLoading} />
-
+            
             <Box>
                 <Button
+                    disabled={!dialogueRecoil.isVoiceSelected}
                     variant="contained"
                     onClick={onClickPhrase}>{dialogue.phrase.text}
                 </Button>

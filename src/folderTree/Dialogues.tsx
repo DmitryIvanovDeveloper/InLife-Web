@@ -12,6 +12,10 @@ import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import CircularProgressCustom from '../components/CircularProgress';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import TextButton from '../components/buttons/TextButton';
+import LocationCarousel from '../components/LocationCarousel';
+import { Locations } from '../Data/Locations';
+import AppBarCustom from '../components/AppBarCustom';
+import Dialogue from './Dialogue';
 
 export interface IDialoguesProps { }
 
@@ -21,8 +25,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [dialoguesRecoil, setDialoguesRecoil] = useDialogues();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
+    const [npcId, setNpcId] = useState<string>("");
+
+
     const [expanded, setExpanded] = React.useState<string[]>([]);
-    const [selected, setSelected] = React.useState<string[]>([]);
+    const [selected, setSelected] = useState<string[]>([]);
     const [dialogues, setDialogues] = useState(dialoguesRecoil);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
 
@@ -36,11 +43,12 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     const createNewDialogue = async () => {
         setIsNewDialogueCreating(true)
-        await dialogueQueriesApi.create();
+        await dialogueQueriesApi.create(npcId);
         setIsNewDialogueCreating(false)
     }
 
     useEffect(() => {
+        setNpcId(Locations[0].id ?? '');
         setDialogues(dialoguesRecoil);
     }, [dialoguesRecoil]);
 
@@ -57,9 +65,25 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             });
     }, []);
 
+    if (!npcId) {
+        return null;
+    }
+
 
     return (
-        <Box sx={{ minHeight: 270, flexGrow: 1, maxWidth: 300, overflow: "auto" }} >
+        <Box component="form"
+            sx={{
+                '& > :not(style)': { m: 1, width: '100%' },
+                p: 5
+            }}
+
+            autoComplete="off" >
+            <AppBarCustom
+                name={Locations.find(l => l.id == npcId)?.name ?? ''}
+            />
+
+            <LocationCarousel setLevel={setNpcId} id={npcId} />
+
             <Box sx={{ mb: 1 }}>
                 {
                     isNewDialogueCreating
@@ -84,23 +108,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 onNodeSelect={handleSelect}
                 multiSelect
             >
-                {dialogues.map(dialogue => (
-                    <Box>
-                        <TextButton onClick={() => onClick(dialogue.id)}>
-                        <TreeItem
-                            key={dialogue.id}
-                            nodeId={dialogue.id}
-                            label={`${dialogue.name} [D]`}
-                        >
-                            <Phrase
-                                dialogueId={dialogue.id}
-                                id={dialogue.phrase.id}
-                            />
-                        </TreeItem>
-                        </TextButton>
-                       
-                    </Box>
-                ))}
+                {dialogues
+                    .filter(d => d.levelId == npcId)
+                    .map(dialogue => (
+                       <Dialogue id={dialogue.id}/>
+                    ))}
             </TreeView>
         </Box>
     );

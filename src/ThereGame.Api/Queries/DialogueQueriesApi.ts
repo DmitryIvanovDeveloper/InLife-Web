@@ -10,7 +10,7 @@ import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel';
 
 export default function useDialogieQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);
-    var updateDialogue =  useUpdateDialogue();
+    var updateDialogue = useUpdateDialogue();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     async function get(): Promise<IDialogueModel[]> {
@@ -43,20 +43,21 @@ export default function useDialogieQueriesApi() {
             updateDialogue.byId(dialogueModel);
         },
 
-        create: async () => {
-
+        create: async (id: string) => {
             var phrase: IPhraseModel = {
                 parentId: null,
                 text: 'New Phrase',
                 answers: [],
                 tensesList: [],
                 comments: '',
-                id: uuidv4()
+                id: uuidv4(),
+                audioGenerationSettings: ''
             }
 
             const dialogue: IDialogueModel = {
+                isVoiceSelected: false,
                 isPublished: false,
-                levelId: process.env.REACT_APP_LOCATION_BUS_STATION ?? "",
+                levelId: id,
                 id: uuidv4(),
                 name: 'New Dialogue',
                 phrase: phrase
@@ -64,7 +65,7 @@ export default function useDialogieQueriesApi() {
 
 
             var requestData = new DialogueMapping().requestToCreateDialogue(dialogue);
-
+            
             var response = await dialogueService.Create(requestData);
             if (response?.status != Status.OK) {
                 return;
@@ -80,6 +81,7 @@ export default function useDialogieQueriesApi() {
 
         update: async (dialugueModel: IDialogueModel) => {
             var requestData = new DialogueMapping().requestToUpdateDialogue(dialugueModel);
+
             var response = await dialogueService.Update(requestData);
             if (response?.status != Status.OK) {
                 return;
@@ -106,3 +108,4 @@ export default function useDialogieQueriesApi() {
         }
     }
 }
+

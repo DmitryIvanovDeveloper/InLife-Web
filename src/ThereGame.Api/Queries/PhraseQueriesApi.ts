@@ -1,4 +1,4 @@
-import {useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues";
+import { useDialogueItemConstructor, useDialogues, useUpdateDialogue } from "../../Data/useDialogues";
 import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhraseService";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { appContainer } from "../../inversify.config";
@@ -34,7 +34,8 @@ export default function usePhraseQueriesApi() {
                 answers: [],
                 tensesList: [],
                 comments: "",
-                id: uuidv4()
+                id: uuidv4(),
+                audioGenerationSettings: ""
             }
 
             var requestData = new PhraseMapping().request(phrase);
@@ -59,7 +60,6 @@ export default function usePhraseQueriesApi() {
 
         update: async (phrase: IPhraseModel) => {
             var requestData = new PhraseMapping().request(phrase);
-
             var response = await phraseService.Update(requestData);
             if (response?.status != Status.OK) {
                 return;

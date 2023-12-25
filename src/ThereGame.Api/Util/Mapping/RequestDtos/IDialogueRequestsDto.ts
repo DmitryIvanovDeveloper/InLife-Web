@@ -5,6 +5,7 @@ export interface IDialogueRequestDto {
     levelId: string,
     isPublished: boolean,
     name: string,
+    isVoiceSelected: boolean,
     phrase: IPhraseRequestDto;
 }
 
@@ -14,6 +15,7 @@ export interface ICreateDialogueRequestDto {
     phraseId: string;
     levelId: string;
     isPublished: boolean,
+    isVoiceSelected: boolean,
     phrase: {
         id:  string,
         text:  string,
@@ -23,6 +25,7 @@ export interface ICreateDialogueRequestDto {
 }
 
 export interface IUpdateDialogueRequestDto {
+    isVoiceSelected: boolean,
     id: string;
     name: string,
     levelId: string;

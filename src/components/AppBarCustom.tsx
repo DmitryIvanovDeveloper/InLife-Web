@@ -4,7 +4,6 @@ import DeleteButton from "./buttons/DeleteButton";
 
 export interface IAppBarCustomProps{
     name: string;
-    onDelete: () => void;
 }
 export default function AppBarCustom(props: IAppBarCustomProps) {
     return (
@@ -22,7 +21,6 @@ export default function AppBarCustom(props: IAppBarCustomProps) {
                     <Typography align="center" variant="h6" component="div" sx={{ flexGrow: 1}}>
                         {props.name}
                     </Typography>
-                    <DeleteButton onClick={(props.onDelete)}/>
                 </Toolbar>
             </AppBar>
         </Box>
