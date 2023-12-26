@@ -4,6 +4,7 @@ import IUserModel from "../../../ThereGame.Business/Models/IUserModel";
 import ISignInRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInRequestDto";
 import ISignInResponseDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInResponseDto";
 import ISignUpRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignUpRequestDto";
+import DialogueMapping from "./DialogueMapping";
 
 export default class AuthenticationMapping {
     requestSignIn(data: ISignInModel): ISignInRequestDto {
@@ -29,6 +30,7 @@ export default class AuthenticationMapping {
             name: data.name,
             lastName: data.lastName,
             email: data.email,
+            dialogues: new DialogueMapping().responseAllDialogues(data.dialogues)
         }
     }
 }

@@ -3,12 +3,12 @@ import DialogueBuilder from './folderTree/DialogueBuilder';
 import { Routes, Route } from 'react-router-dom';
 import SignIn from './components/Authentication/SignIn';
 import SignUp from './components/Authentication/SignUp';
-import useUserQuerisApi from './ThereGame.Api/Queries/UserQueriesApi';
+import useUserQueriesApi from './ThereGame.Api/Queries/UserQueriesApi';
 import './App.css';
 
 export function App() {
 
-    var userQuerisApi = useUserQuerisApi();
+    var userQuerisApi = useUserQueriesApi();
 
     useEffect(() => {
         userQuerisApi.getById();

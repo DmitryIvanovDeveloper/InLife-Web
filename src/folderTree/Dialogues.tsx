@@ -5,7 +5,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { useDialogueItemConstructor, useDialogues } from '../Data/useDialogues';
-import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
 import { useEffect, useState } from 'react';
 import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import CircularProgressCustom from '../components/CircularProgress';
@@ -13,6 +12,8 @@ import LocationCarousel from '../components/LocationCarousel';
 import { Locations } from '../Data/Locations';
 import AppBarCustom from '../components/AppBarCustom';
 import Dialogue from './Dialogue';
+import { useUser } from '../Data/useUser';
+import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 
 export interface IDialoguesProps { }
 
@@ -20,13 +21,14 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const dialogueQueriesApi = useDialogieQueriesApi();
 
     const [dialoguesRecoil, setDialoguesRecoil] = useDialogues();
+    const [user, setUser] = useUser();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const [npcId, setNpcId] = useState<string>("");
 
     const [expanded, setExpanded] = React.useState<string[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
-    const [dialogues, setDialogues] = useState(dialoguesRecoil);
+    const [dialogues, setDialogues] = useState<IDialogueModel[]>(user?.dialogues ?? []);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
 
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
@@ -45,8 +47,8 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     useEffect(() => {
         setNpcId(Locations[0].id ?? '');
-        setDialogues(dialoguesRecoil);
-    }, [dialoguesRecoil]);
+        setDialogues(user?.dialogues ?? []);
+    }, [user]);
 
     useEffect(() => {
         setIsNewDialogueCreating(true);

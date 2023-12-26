@@ -1,3 +1,4 @@
+import { useDialogues } from "../../Data/useDialogues";
 import { useUser } from "../../Data/useUser";
 import IUserService from "../../ThereGame.Business/Domain/Util/Services/IUserService";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
@@ -6,12 +7,13 @@ import { TYPES } from "../../types";
 import AuthenticationMapping from "../Util/Mapping/AuthenticationMapping";
 import { useNavigate } from "react-router-dom";
 
-export default function useUserQuerisApi() {
+export default function useUserQueriesApi() {
 
     const userService = appContainer.get<IUserService>(TYPES.UserService);
     const navigate = useNavigate();
 
     const [_, setUser] = useUser();
+    const [dialogue, setDialogues] = useDialogues();
     
     return {
         getById: async () => {
@@ -30,7 +32,8 @@ export default function useUserQuerisApi() {
 
             var user = new AuthenticationMapping().responseSignUp(response.data);
             setUser(user);
-    
+            setDialogues(user.dialogues);
+            console.log(user);
             localStorage.setItem("Id", user.id);
     
             navigate("/builder");

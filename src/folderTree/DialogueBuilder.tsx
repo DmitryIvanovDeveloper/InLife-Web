@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Dialogues from "./Dialogues";
 import SplitPane from "react-split-pane";
 import { useDialogueItemConstructor } from "../Data/useDialogues";
-import useUserQuerisApi from "../ThereGame.Api/Queries/UserQueriesApi";
+import useUserQueriesApi from "../ThereGame.Api/Queries/UserQueriesApi";
 
 export default function DialogueBuilder() {
 

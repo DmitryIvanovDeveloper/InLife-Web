@@ -1,8 +1,8 @@
+import { useDialogues } from "../../Data/useDialogues";
 import { useUser } from "../../Data/useUser";
 import IAuthenticationService from "../../ThereGame.Business/Domain/Util/Services/IAuthenticationService";
 import ISignInModel from "../../ThereGame.Business/Models/ISignInModel";
 import ISignUpModel from "../../ThereGame.Business/Models/ISignUpModel";
-import ISignInResponseDto from "../../ThereGame.Infrastructure/Services/Dto/ISignInResponseDto";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
@@ -15,6 +15,7 @@ export default function useAuthenticationQueriesApi() {
     const navigate = useNavigate();
 
     const [_, setUser] = useUser();
+    const [dialogues, setDialogues] = useDialogues();
     
     return {
         signIn: async (data: ISignInModel) => {
@@ -27,8 +28,10 @@ export default function useAuthenticationQueriesApi() {
             }
 
             var user = new AuthenticationMapping().responseSignUp(response.data);
-            setUser(user);
 
+            setUser(user);
+            setDialogues(user.dialogues);
+            console.log(user)
             localStorage.setItem("Id", user.id);
 
             navigate("/builder");

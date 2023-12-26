@@ -1,5 +1,5 @@
 import { Status } from './../../ThereGame.Infrastructure/Statuses/Status';
-import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues";
+import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import IDialogueService from "../../ThereGame.Business/Domain/Util/Services/IDialogueService";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { appContainer } from "../../inversify.config";
@@ -8,10 +8,11 @@ import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
 import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel';
 import { useUser } from '../../Data/useUser';
+import useUserQueriesApi from './UserQueriesApi';
 
 export default function useDialogieQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);
-    var updateDialogue = useUpdateDialogue();
+    var userQueriesApi = useUserQueriesApi();
     
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [user, setUser] = useUser();
@@ -32,18 +33,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            updateDialogue.all(dialogues);
-        },
-
-        getById: async (id: string) => {
-            var response = await dialogueService.GetById(id);
-            if (response?.status != Status.OK) {
-                return;
-            }
-
-            var dialogueModel = new DialogueMapping().response(response?.data);
-
-            updateDialogue.byId(dialogueModel);
+            userQueriesApi.getById();
         },
 
         create: async (id: string) => {
@@ -78,12 +68,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            var dialogues = await get();
-            if(!dialogues){
-                return;
-            }
-
-            updateDialogue.all(dialogues);
+            userQueriesApi.getById();
         },
 
         update: async (dialugueModel: IDialogueModel) => {
@@ -94,12 +79,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            var dialogues = await get();
-            if(!dialogues){
-                return;
-            }
-
-            updateDialogue.all(dialogues);
+            userQueriesApi.getById();
         },
 
         delete: async (id: string) => {
@@ -108,10 +88,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            var dialogues = await get();
-            setDialogueItemConstructor(() => null);
-
-            updateDialogue.all(dialogues);
+            userQueriesApi.getById();
         }
     }
 }
