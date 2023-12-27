@@ -20,7 +20,7 @@ export default function useUserQueriesApi() {
             var id = localStorage.getItem("Id");
             if (!id)
             {
-                navigate("/sign-in");
+                // navigate("/sign-in/teacher");
                 return;
             }
 

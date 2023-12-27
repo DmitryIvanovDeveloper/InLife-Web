@@ -37,14 +37,15 @@ function Copyright(props: any) {
 
 const theme = createTheme();
 
-export default function SignUp() {
+export default function SignUpStudent() {
 
     const [data, setData] = useState<ISignUpModel>({
         id: uuidv4(),
         name: "",
         lastName: "",
         email: "",
-        password: ""
+        password: "",
+        teacherId: "36f58932-bce2-4aaf-b184-10029e35c43e"
     });
     
     const authenticationQueriesApi = useAuthenticationQueriesApi();
@@ -52,7 +53,7 @@ export default function SignUp() {
     const handleSubmit = (event: any) => {
         event.preventDefault();
 
-        authenticationQueriesApi.signUp(data);
+        authenticationQueriesApi.signUpStudent(data);
     };
 
     return (

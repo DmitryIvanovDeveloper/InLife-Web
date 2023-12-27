@@ -10,9 +10,10 @@ import "reflect-metadata";
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
     
-    async signIn(request: ISignInRequestDto): Promise<TypedResult<Status>> {
+    
+    async signInTeacher(request: ISignInRequestDto): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(Routes.authSignIn, {
+            var response = await fetch(Routes.authSignInTeacher, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,9 +30,43 @@ export default class AuthenticationService implements IAuthenticationService {
         }
     }
 
-    async signUp(request: ISignUpRequestDto): Promise<TypedResult<Status>> {
+    async signUpTeacher(request: ISignUpRequestDto): Promise<TypedResult<Status>> {
         try {
-            await fetch(Routes.authSignUp, {
+            await fetch(Routes.authSignUpTeacher, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            })
+            return new TypedResult<Status>(Status.OK);
+        }
+        catch (error) {
+            return new TypedResult<Status>(Status.InternalServerError);
+        }
+    }
+
+    async signInStudent(request: ISignInRequestDto): Promise<TypedResult<Status>> {
+        try {
+            var response = await fetch(Routes.authSignInStudent, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request)
+            })
+
+            var data = await response.json();
+           
+            return new TypedResult<Status>(Status.OK, data);
+        }
+        catch (error) {
+            return new TypedResult<Status>(Status.InternalServerError);
+        }
+    }
+    async signUpStudent(request: ISignUpRequestDto): Promise<TypedResult<Status>> {
+        try {
+            await fetch(Routes.authSignUpStudent, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

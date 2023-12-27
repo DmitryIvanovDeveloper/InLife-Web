@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import DialogueBuilder from './folderTree/DialogueBuilder';
 import { Routes, Route } from 'react-router-dom';
-import SignIn from './components/Authentication/SignIn';
-import SignUp from './components/Authentication/SignUp';
+import SignInTeacher from './components/Authentication/SignInTeacher';
+import SignUp from './components/Authentication/SignUpTeacher';
 import useUserQueriesApi from './ThereGame.Api/Queries/UserQueriesApi';
 import './App.css';
+import SignUpStudent from './components/Authentication/SignUpStudent';
+import SignUpTeacher from './components/Authentication/SignUpTeacher';
 
 export function App() {
 
@@ -17,8 +19,9 @@ export function App() {
     return (
         <React.StrictMode>
             <Routes>
-                <Route path="/sign-in" element={<SignIn />} />
-                <Route path="/sign-up" element={<SignUp />} />
+                <Route path="/sign-in/teacher" element={<SignInTeacher />} />
+                <Route path="/sign-up/teacher" element={<SignUpTeacher />} />
+                <Route path="/sign-up/student" element={<SignUpStudent />} />
                 <Route path="/builder" element={<DialogueBuilder />} />
             </Routes>
         </React.StrictMode>

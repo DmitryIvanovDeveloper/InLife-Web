@@ -18,7 +18,7 @@ import { useState } from 'react';
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function SignInTeacher() {
     const authenticationQueriesApi = useAuthenticationQueriesApi();
 
     const [data, setData] = useState<ISignInModel>({
@@ -29,7 +29,7 @@ export default function SignIn() {
     const handleSubmit = (event: any) => {
         event.preventDefault();
         
-        authenticationQueriesApi.signIn(data);
+        authenticationQueriesApi.signInTeacher(data);
     };
 
     return (

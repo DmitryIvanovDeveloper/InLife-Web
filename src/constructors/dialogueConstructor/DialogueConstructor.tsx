@@ -97,6 +97,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     }, [dialogue]);
 
     useEffect(() => {
+        console.log(isVoiceSelected)
         setDialogue(prev => ({
             ...prev,
             isVoiceSelected
@@ -143,7 +144,11 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 variant="outlined"
             />
 
-            <SaveButton onClick={save} isLoading={isLoading} />
+            <SaveButton 
+                onClick={save} 
+                isLoading={isLoading} 
+                isDisabled={!isVoiceSelected}
+            />
             
             <Box>
                 <Button

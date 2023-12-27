@@ -9,7 +9,7 @@ import "reflect-metadata";
 export default class UserService implements IUserService {
     async getById(id: string) {
         try {
-            var response = await fetch(Routes.usersMe, {
+            var response = await fetch(Routes.teachersMe, {
                 method: 'GET',
                 headers: {
                     'X-THEREGAME-AUTH': `${id}`

@@ -18,10 +18,10 @@ export default function useAuthenticationQueriesApi() {
     const [dialogues, setDialogues] = useDialogues();
     
     return {
-        signIn: async (data: ISignInModel) => {
+        signInTeacher: async (data: ISignInModel) => {
             var request = new AuthenticationMapping().requestSignIn(data);
             
-            var response = await authenticationService.signIn(request);
+            var response = await authenticationService.signInTeacher(request);
             if (response.status != Status.OK)
             {
                 return;
@@ -31,16 +31,41 @@ export default function useAuthenticationQueriesApi() {
 
             setUser(user);
             setDialogues(user.dialogues);
-            console.log(user)
+            
             localStorage.setItem("Id", user.id);
 
             navigate("/builder");
         },
 
-        signUp: async (data: ISignUpModel) => {
+        signUpTeacher: async (data: ISignUpModel) => {
             var request = new AuthenticationMapping().requestSignUp(data);
 
-            authenticationService.signUp(request);
-        }
+            authenticationService.signUpTeacher(request);
+        },
+
+        signInStudent: async (data: ISignInModel) => {
+            var request = new AuthenticationMapping().requestSignIn(data);
+            
+            var response = await authenticationService.signInStudent(request);
+            if (response.status != Status.OK)
+            {
+                return;
+            }
+
+            var user = new AuthenticationMapping().responseSignUp(response.data);
+
+            setUser(user);
+            setDialogues(user.dialogues);
+
+            localStorage.setItem("Id", user.id);
+
+            // navigate("/builder");
+        },
+
+        signUpStudent: async (data: ISignUpModel) => {
+            var request = new AuthenticationMapping().requestSignUp(data);
+
+            authenticationService.signUpStudent(request);
+        },
     }
 }

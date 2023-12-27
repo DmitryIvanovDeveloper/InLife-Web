@@ -9,7 +9,8 @@ import { useEffect } from 'react';
 
 export interface ISaveButtonProps {
     onClick: () => void;
-    isLoading: boolean
+    isLoading: boolean;
+    isDisabled: boolean;
 }
 export default function SaveButton(props: ISaveButtonProps) {
 
@@ -41,6 +42,7 @@ export default function SaveButton(props: ISaveButtonProps) {
                     color="primary"
                     sx={buttonSx}
                     onClick={() => props.onClick()}
+                    disabled={props.isDisabled}
                 >
                     {props.isLoading ? <CheckIcon /> : <SaveIcon />}
                 </Fab>

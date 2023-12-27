@@ -4,6 +4,8 @@ import TypedResult from "../../../../ThereGame.Infrastructure/Statuses/Result";
 import { Status } from "../../../../ThereGame.Infrastructure/Statuses/Status";
 
 export default interface IAuthenticationService {
-    signIn(data: ISignInRequestDto): Promise<TypedResult<Status>>;
-    signUp(data: ISignUpRequestDto): Promise<TypedResult<Status>>;
+    signInTeacher(data: ISignInRequestDto): Promise<TypedResult<Status>>;
+    signUpTeacher(data: ISignUpRequestDto): Promise<TypedResult<Status>>;
+    signInStudent(data: ISignInRequestDto): Promise<TypedResult<Status>>;
+    signUpStudent(data: ISignUpRequestDto): Promise<TypedResult<Status>>;
 }

@@ -37,7 +37,7 @@ export default function MistakeExplanationConstructor(props: IMistakeExplanation
                         placeholder="are"
                         required={true}
                         variant="outlined"
-                        onChange={(event: any) => props.onExplanationChange(event.target.value, id)}
+                        onChange={(event: any) => props.onExplanationChange(event, id)}
                         // error={errors.mistakeExplanations.find(e => e.id == explanation.id)?.word}
                     />
                     <TextField
@@ -49,7 +49,7 @@ export default function MistakeExplanationConstructor(props: IMistakeExplanation
                         placeholder="are - множественное число, день - используется в единственном числе"
                         variant="outlined"
                         required={true}
-                        onChange={(event: any) => props.onExplanationChange(event.target.value, id)}
+                        onChange={(event: any) => props.onExplanationChange(event, id)}
                         // error={errors.mistakeExplanations.find(e => e.id == explanation.id)?.explanation}
 
                         fullWidth

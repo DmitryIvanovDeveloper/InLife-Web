@@ -21,6 +21,7 @@ export default class AuthenticationMapping {
             lastName: data.lastName,
             password: data.password,
             email: data.email,
+            teacherId: data?.teacherId
         }
     }
 

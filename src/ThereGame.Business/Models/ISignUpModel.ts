@@ -5,4 +5,5 @@ export default interface ISignUpModel {
     readonly lastName: string,
     readonly password: string,
     readonly email: string,
+    readonly teacherId?: string,
 }

@@ -12,7 +12,6 @@ import TranslateConstructor from "./TranslateConstructor";
 import IAnswerError from "../../Data/Errors/IAnswerError";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import { LanguageType } from "../../Data/LanguageType";
-import AppBarCustom from "../../components/AppBarCustom";
 import { v4 as uuidv4 } from 'uuid';
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
@@ -169,6 +168,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsLoading(true);
         await answerQueriesApi.update(answer)
         setIsLoading(false);
+        localStorage.removeItem(props.id)
     }
 
     // Errors
@@ -350,7 +350,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
 
-            <SaveButton onClick={onSave} isLoading={isLoading} />
+            <SaveButton onClick={onSave} isLoading={isLoading} isDisabled={false}/>
         </Box>
     )
 }
