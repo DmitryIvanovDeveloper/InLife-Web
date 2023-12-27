@@ -17,8 +17,8 @@ export default function VoiceList(props: IVoiceListProps) {
 
     const [voices, setVoices] = useState<IVoiceModel[]>([]);
     const [voiceOption, setVoiceOption] = useState<IVoiceOption>();
-    const [voice, setVoice] = useState<IVoiceModel>();
-    const [isPlay, setIsPlay] = useState<boolean>(false)
+    const [voice, setVoice] = useState<IVoiceModel | null>();
+
     const handleChangeVoicesType = (event: any) => {
         var selectedVoiceOptionType = VoicesOptions.find(v => v.type == event.target.value);
         if (!selectedVoiceOptionType) {
@@ -26,6 +26,7 @@ export default function VoiceList(props: IVoiceListProps) {
         }
 
         setVoiceOption(selectedVoiceOptionType);
+        setVoice(null);
     }
 
     const handleChangeVoices = (event: any) => {

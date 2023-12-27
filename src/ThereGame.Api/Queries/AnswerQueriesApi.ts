@@ -1,4 +1,4 @@
-import { useDialogueItemConstructor, useUpdateDialogue } from "../../Data/useDialogues";
+import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import IAnswerService from "../../ThereGame.Business/Domain/Util/Services/IAnswerService";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { appContainer } from "../../inversify.config";
@@ -6,13 +6,12 @@ import { TYPES } from "../../types";
 import AnswerMapping from "../Util/Mapping/AnswerMapping";
 import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
-import useDialogieQueriesApi from "./DialogueQueriesApi";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
+import useUserQueriesApi from "./UserQueriesApi";
 
 export default function useAnswerQueriesApi() {
     const answerService = appContainer.get<IAnswerService>(TYPES.AnswerService);
-    var updateDialogue =  useUpdateDialogue();
-    var dialogieQueriesApi = useDialogieQueriesApi();
+    var userQueriesApi = useUserQueriesApi();
     
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
@@ -25,7 +24,8 @@ export default function useAnswerQueriesApi() {
 
             var dialogueModel = new DialogueMapping().response(response.data);
 
-            updateDialogue.byId(dialogueModel);
+            
+            userQueriesApi.getById();
         },
 
         create: async (parentPhraseId: string) => {
@@ -46,7 +46,8 @@ export default function useAnswerQueriesApi() {
                 return;
             }
 
-            dialogieQueriesApi.get();
+            userQueriesApi.getById();
+
         },
 
         update: async (dialugueModel: IAnswerModel) => {
@@ -56,7 +57,8 @@ export default function useAnswerQueriesApi() {
                 return;
             }
 
-            dialogieQueriesApi.get();
+            userQueriesApi.getById();
+
         },
 
         delete: async (id: string) => {
@@ -67,7 +69,7 @@ export default function useAnswerQueriesApi() {
 
             setDialogueItemConstructor(() => null);
 
-            dialogieQueriesApi.get();
+            userQueriesApi.getById();
         }
     }
 }

@@ -219,7 +219,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 : null
             }
 
-            <SaveButton onClick={onSave} isLoading={isLoading}/>
+            <SaveButton onClick={onSave} isLoading={isLoading} isDisabled={false}/>
             
             {!isSaved
                 ? <Box>

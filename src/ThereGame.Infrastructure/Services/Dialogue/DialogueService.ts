@@ -4,8 +4,8 @@ import { ICreateDialogueRequestDto, IUpdateDialogueRequestDto } from "../../../T
 import TypedResult from "../../Statuses/Result";
 import { Status } from "../../Statuses/Status";
 import { Routes } from "../../../Routes";
+import "reflect-metadata";
 
-//@ts-ignore
 @injectable()
 export default class DialogueService implements IDialogueService {
     

@@ -29,7 +29,7 @@ export type IFindDialogueItemInput = {
 
 const dialoguesAtom = atom<IDialogueModel[]>({
     key: 'dialoguesAtom',
-    default: dialoguesTemplate,
+    default: [],
 })
 
 const dialogueConstructorAtom = atom<Function>({
@@ -48,27 +48,6 @@ export function useDialogueItemConstructor() {
 
 export function useDialogue(id: string) {
     return useRecoilValue(dialogueSelectorFamily(id));
-}
-
-export function useUpdateDialogue() {
-    var [dialogues, setDialogues] = useRecoilState(dialoguesAtom);
-
-    return {
-        byId: (dialogue: IDialogueModel) => {
-            var updatedDialogue = dialogues
-                .filter(currentDialogue => currentDialogue.id != dialogue.id)
-            ;
-        
-            setDialogues([...updatedDialogue, dialogue]);
-        },
-
-        all: (dialogues: IDialogueModel[]) => {
-            if (!dialogues.length) {
-            }
-
-            setDialogues(dialogues);
-        }
-    }
 }
 
 export function usePhrase(dialogueId: string, phraseId: string): IPhraseModel {

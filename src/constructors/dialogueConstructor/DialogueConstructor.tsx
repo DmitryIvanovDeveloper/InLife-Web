@@ -1,4 +1,4 @@
-import { Alert, Box, Button, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, TextField } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import SaveButton from "../../components/buttons/SaveButton";
@@ -15,17 +15,19 @@ export interface IDialogueConstructor {
 
 export default function DialogueConstructor(props: IDialogueConstructor): JSX.Element | null {
     const dialogueRecoil = useDialogue(props.id);
+
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
-    const [isVoiceSelected, setIsVoiceSelected] = useState<boolean>(dialogueRecoil.isVoiceSelected);
+
+    const [isVoiceSelected, setIsVoiceSelected] = useState<boolean>(false);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isSaved, setIsSaved] = useState(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const dialogieQueriesApi = useDialogieQueriesApi();
+    const dialogueQueriesApi = useDialogieQueriesApi();
 
     const save = async () => {
         setIsLoading(true)
-        await dialogieQueriesApi.update(dialogue)
+        await dialogueQueriesApi.update(dialogue)
         setIsLoading(false)
         setIsSaved(true);
 
@@ -33,7 +35,9 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     }
 
     const onDelete = async () => {
-        await dialogieQueriesApi.delete(props.id);
+        await dialogueQueriesApi.delete(props.id);
+        localStorage.removeItem(`[DeepVoice] - ${props.id}`)
+        localStorage.removeItem(props.id)
     }
 
     const onChangeName = (event: any) => {
@@ -93,13 +97,13 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     }, [dialogue]);
 
     useEffect(() => {
+        console.log(isVoiceSelected)
         setDialogue(prev => ({
             ...prev,
             isVoiceSelected
         }))
     }, [isVoiceSelected]);
     
-
     if (!dialogue) {
         return null;
     }
@@ -121,7 +125,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             <VoiceList 
                 dialogueId={props.id} 
                 setIsVoiceSelected={setIsVoiceSelected} 
-                isVoiceSelected={dialogueRecoil.isVoiceSelected}
+                isVoiceSelected={dialogueRecoil?.isVoiceSelected} // Don't change to Dialogue
             />
             
             <Button
@@ -140,11 +144,15 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 variant="outlined"
             />
 
-            <SaveButton onClick={save} isLoading={isLoading} />
+            <SaveButton 
+                onClick={save} 
+                isLoading={isLoading} 
+                isDisabled={!isVoiceSelected}
+            />
             
             <Box>
                 <Button
-                    disabled={!dialogueRecoil.isVoiceSelected}
+                    disabled={!dialogueRecoil?.isVoiceSelected} // Don't change to Dialogue
                     variant="contained"
                     onClick={onClickPhrase}>{dialogue.phrase.text}
                 </Button>

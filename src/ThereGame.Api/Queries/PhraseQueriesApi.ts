@@ -1,4 +1,4 @@
-import { useDialogueItemConstructor, useDialogues, useUpdateDialogue } from "../../Data/useDialogues";
+import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhraseService";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { appContainer } from "../../inversify.config";
@@ -8,23 +8,18 @@ import { v4 as uuidv4 } from 'uuid';
 import PhraseMapping from "../Util/Mapping/PhraseMapping";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import useDialogieQueriesApi from "./DialogueQueriesApi";
+import useUserQueriesApi from "./UserQueriesApi";
 
 export default function usePhraseQueriesApi() {
 
     const phraseService = appContainer.get<IPhraseService>(TYPES.PhraseService);
-    var updateDialogue =  useUpdateDialogue();
-    var dialogieQueriesApi = useDialogieQueriesApi();
+    var userQueriesApi = useUserQueriesApi();
+
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     
     return {
         getById: async (id: string) => {
-            var response = await phraseService.GetById(id);
-            if (response?.status != Status.OK) {
-                return;
-            }
-            var dialogueModel = new DialogueMapping().response(response.data);
-
-            updateDialogue.byId(dialogueModel);
+          
         },
 
         create: async (parentAnswerId: string) => {
@@ -45,7 +40,7 @@ export default function usePhraseQueriesApi() {
                 return;
             }
 
-            dialogieQueriesApi.get();
+            userQueriesApi.getById();
         },
 
         delete: async (id: string) => {
@@ -53,9 +48,10 @@ export default function usePhraseQueriesApi() {
             if (response?.status != Status.OK) {
                 return;
             }
+
             setDialogueItemConstructor(() => null);
 
-            dialogieQueriesApi.get();
+            userQueriesApi.getById();
         },
 
         update: async (phrase: IPhraseModel) => {
@@ -65,7 +61,7 @@ export default function usePhraseQueriesApi() {
                 return;
             }
 
-            dialogieQueriesApi.get();
+            userQueriesApi.getById();
         }
     }
 }
