@@ -1,0 +1,4 @@
+[[redirects]]
+from = "/sign-in/teacher"
+to = "/sign-in/teacher"
+status = 200
