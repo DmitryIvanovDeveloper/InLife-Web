@@ -32,14 +32,17 @@ export default class AuthenticationService implements IAuthenticationService {
 
     async signUpTeacher(request: ISignUpRequestDto): Promise<TypedResult<Status>> {
         try {
-            await fetch(Routes.authSignUpTeacher, {
+            var response = await fetch(Routes.authSignUpTeacher, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(request)
             })
-            return new TypedResult<Status>(Status.OK);
+
+            var data = await response.json();
+
+            return new TypedResult<Status>(Status.OK, data);
         }
         catch (error) {
             return new TypedResult<Status>(Status.InternalServerError);
@@ -66,14 +69,17 @@ export default class AuthenticationService implements IAuthenticationService {
     }
     async signUpStudent(request: ISignUpRequestDto): Promise<TypedResult<Status>> {
         try {
-            await fetch(Routes.authSignUpStudent, {
+            var response = await fetch(Routes.authSignUpStudent, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(request)
             })
-            return new TypedResult<Status>(Status.OK);
+
+            var data = await response.json();
+
+            return new TypedResult<Status>(Status.OK, data);
         }
         catch (error) {
             return new TypedResult<Status>(Status.InternalServerError);

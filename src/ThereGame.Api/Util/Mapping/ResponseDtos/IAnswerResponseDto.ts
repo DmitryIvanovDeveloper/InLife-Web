@@ -4,7 +4,7 @@ import IMistakeExplanationDto from '../IMistakeExplanationDto';
 
 export default interface IAnswerResponseDto {
     readonly tensesList: string[];
-    readonly text: string;
+    readonly texts: string[];
     readonly wordsToUse: string;
     readonly mistakeExplanations: IMistakeExplanationDto[];
     readonly translates: ITranslateDto[];

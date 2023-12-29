@@ -212,7 +212,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                     
                         {phrase.answers.map(answer => (
                             <Button id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
-                                <Typography sx={{textDecoration: 'underline'}}>{answer.text}</Typography>
+                                <Typography sx={{textDecoration: 'underline'}}>{answer.texts.join()}</Typography>
                             </Button>
                         ))}
                 </Box>

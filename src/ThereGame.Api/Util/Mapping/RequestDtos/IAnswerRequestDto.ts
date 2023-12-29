@@ -4,7 +4,7 @@ import ITranslateDto from '../ITranslateDto';
 export default interface IAnswerRequestDto {
     readonly parentPhraseId: string;
     readonly id: string;
-    readonly text: string;
+    readonly texts: string[];
     readonly tensesList: string[];
     readonly wordsToUse: string;
     readonly mistakeExplanations: IMistakeExplanationDto[];

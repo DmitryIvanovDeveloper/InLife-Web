@@ -50,15 +50,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         setDialogues(user?.dialogues ?? []);
     }, [user]);
 
-    useEffect(() => {
-        setIsNewDialogueCreating(true);
-
-        dialogueQueriesApi.get()
-            .then(() => {
-                setIsNewDialogueCreating(false);
-            });
-    }, []);
-
     if (!npcId) {
         return null;
     }

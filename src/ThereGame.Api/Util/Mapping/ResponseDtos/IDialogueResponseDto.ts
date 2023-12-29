@@ -1,3 +1,4 @@
+import IStudentModel from "../../../../ThereGame.Business/Models/IStudentModel";
 import IPhraseResponseDto from "./IPhraseResponseDto";
 
 export interface IDialogueResponseDto {
@@ -8,4 +9,5 @@ export interface IDialogueResponseDto {
     id: string;
     name: string;
     phrase: IPhraseResponseDto;
+    students: IStudentModel[];
 }

@@ -13,20 +13,13 @@ export default class DialogueMapping {
             id: dialogue.id,
             userId: dialogue.userId,
             name: dialogue.name,
-            phrase: new PhraseMapping().response(dialogue.phrase) 
+            phrase: new PhraseMapping().response(dialogue.phrase),
+            students: dialogue.students
         }
     }
 
     public responseAllDialogues(dialogues: IDialogueResponseDto[]): IDialogueModel[] {
-        return dialogues.map(dialogue => ({
-            isVoiceSelected: dialogue.isVoiceSelected,
-            isPublished: dialogue.isPublished,
-            id: dialogue.id,
-            levelId: dialogue.levelId,
-            userId: dialogue.userId,
-            name: dialogue.name,
-            phrase: new PhraseMapping().response(dialogue.phrase) 
-        }))
+        return dialogues.map(dialogue => this.response(dialogue))
     }
 
     public request(dialogue: IDialogueModel): IDialogueRequestDto {
@@ -37,7 +30,8 @@ export default class DialogueMapping {
             levelId: dialogue.levelId,
             userId: dialogue.userId,
             isPublished: dialogue.isPublished,
-            phrase: new PhraseMapping().request(dialogue.phrase) 
+            phrase: new PhraseMapping().request(dialogue.phrase),
+            students: dialogue.students
         }
     }
 
@@ -50,7 +44,8 @@ export default class DialogueMapping {
             userId: dialogue.userId,
             isPublished: dialogue.isPublished,
             isVoiceSelected: dialogue.isVoiceSelected,
-            phrase: new PhraseMapping().request(dialogue.phrase)
+            phrase: new PhraseMapping().request(dialogue.phrase),
+            students: dialogue.students
         }
     }
     
@@ -63,6 +58,7 @@ export default class DialogueMapping {
             userId: dialogue.userId,
             isPublished: dialogue.isPublished,
             phraseId: dialogue.phrase.id,
+            students: dialogue.students
         }
     }
 }

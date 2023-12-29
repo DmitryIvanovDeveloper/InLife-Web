@@ -3,4 +3,5 @@ export enum Status {
     NoContent,
     BadRequest,
     InternalServerError,
+    Unauthorized,
 }

@@ -3,11 +3,9 @@ import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhras
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
-import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
 import PhraseMapping from "../Util/Mapping/PhraseMapping";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
-import useDialogieQueriesApi from "./DialogueQueriesApi";
 import useUserQueriesApi from "./UserQueriesApi";
 
 export default function usePhraseQueriesApi() {

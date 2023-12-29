@@ -45,7 +45,7 @@ export default function SignUpStudent() {
         lastName: "",
         email: "",
         password: "",
-        teacherId: "36f58932-bce2-4aaf-b184-10029e35c43e"
+        teacherId: "7682f75e-c796-435f-927f-9e1128122050"
     });
     
     const authenticationQueriesApi = useAuthenticationQueriesApi();

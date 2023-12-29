@@ -1,5 +1,4 @@
 import { Status } from './../../ThereGame.Infrastructure/Statuses/Status';
-import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import IDialogueService from "../../ThereGame.Business/Domain/Util/Services/IDialogueService";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { appContainer } from "../../inversify.config";
@@ -14,8 +13,7 @@ export default function useDialogieQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);
     var userQueriesApi = useUserQueriesApi();
     
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    const [user, setUser] = useUser();
+    const [user, _] = useUser();
     
     async function get(): Promise<IDialogueModel[]> {
         var response = await dialogueService.Get();
@@ -59,6 +57,7 @@ export default function useDialogieQueriesApi() {
                 name: 'New Dialogue',
                 phrase: phrase,
                 userId: user?.id,
+                students: user.students,
             }
 
             var requestData = new DialogueMapping().requestToCreateDialogue(dialogue);
