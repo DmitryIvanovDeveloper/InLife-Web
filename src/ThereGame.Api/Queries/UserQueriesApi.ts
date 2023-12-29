@@ -36,8 +36,9 @@ export default function useUserQueriesApi() {
             setUser(user);
             setDialogues(user.dialogues);
             setStudents(user.students)
-    
-            navigate("/builder");
+            
+         
+            navigate("/teacher");
         },
     }
 }

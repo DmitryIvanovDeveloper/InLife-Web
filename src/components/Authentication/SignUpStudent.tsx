@@ -14,8 +14,9 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ISignUpModel from "../../ThereGame.Business/Models/ISignUpModel";
 import useAuthenticationQueriesApi from "../../ThereGame.Api/Queries/AuthenticationQueriesApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { useSearchParams } from "react-router-dom";
 
 function Copyright(props: any) {
     return (
@@ -38,6 +39,7 @@ function Copyright(props: any) {
 const theme = createTheme();
 
 export default function SignUpStudent() {
+    const [searchParams] = useSearchParams();
 
     const [data, setData] = useState<ISignUpModel>({
         id: uuidv4(),
@@ -45,7 +47,7 @@ export default function SignUpStudent() {
         lastName: "",
         email: "",
         password: "",
-        teacherId: "7682f75e-c796-435f-927f-9e1128122050"
+        teacherId: searchParams.get('id') ?? "",
     });
     
     const authenticationQueriesApi = useAuthenticationQueriesApi();

@@ -24,7 +24,7 @@ export default function useAuthenticationQueriesApi() {
 
             localStorage.setItem("[Teacher] - Token", response.data);
 
-            navigate("/builder");
+            navigate("/teacher");
         },
 
         signUpTeacher: async (data: ISignUpModel) => {
@@ -38,7 +38,7 @@ export default function useAuthenticationQueriesApi() {
 
             localStorage.setItem("[Teacher] - Token", response.data);
 
-            navigate("/builder");
+            navigate("/teacher");
         },
 
         signInStudent: async (data: ISignInModel) => {
@@ -51,8 +51,6 @@ export default function useAuthenticationQueriesApi() {
             }
 
             localStorage.setItem("[Student] - Token", response.data);
-
-            navigate("/builder");
         },
 
         signUpStudent: async (data: ISignUpModel) => {
@@ -65,8 +63,6 @@ export default function useAuthenticationQueriesApi() {
             }
 
             localStorage.setItem("[Student] - Token", response.data);
-
-            navigate("/builder");;
         },
     }
 }
