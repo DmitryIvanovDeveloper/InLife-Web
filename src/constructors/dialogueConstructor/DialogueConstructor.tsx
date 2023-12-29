@@ -8,6 +8,8 @@ import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesAp
 import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
 import VoiceList from "../../components/voiceList/VoiceList";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
+import StudentList from "../../components/StudentList";
+import IStudentModel from "../../ThereGame.Business/Models/IStudentModel";
 
 export interface IDialogueConstructor {
     id: string;
@@ -65,6 +67,15 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         setIsSaved(false);
     }
 
+    const setStudentList = (students: IStudentModel[]) => {
+        setDialogue(prev => ({
+            ...prev,
+            students: students
+        }));
+
+        setIsSaved(false);
+    }
+
     const reset = () => {
         localStorage.removeItem(props.id);
     }
@@ -91,19 +102,18 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             localStorage.setItem(props.id, JSON.stringify(dialogue));
             return;
         }
-        
+
         localStorage.removeItem(props.id);
         setIsSaved(true)
     }, [dialogue]);
 
     useEffect(() => {
-        console.log(isVoiceSelected)
         setDialogue(prev => ({
             ...prev,
             isVoiceSelected
         }))
     }, [isVoiceSelected]);
-    
+
     if (!dialogue) {
         return null;
     }
@@ -122,12 +132,12 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 onDelete={onDelete}
             />
 
-            <VoiceList 
-                dialogueId={props.id} 
-                setIsVoiceSelected={setIsVoiceSelected} 
+            <VoiceList
+                dialogueId={props.id}
+                setIsVoiceSelected={setIsVoiceSelected}
                 isVoiceSelected={dialogueRecoil?.isVoiceSelected} // Don't change to Dialogue
             />
-            
+
             <Button
                 onClick={publish}
                 variant={dialogue.isPublished ? "contained" : "outlined"}
@@ -144,12 +154,17 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 variant="outlined"
             />
 
-            <SaveButton 
-                onClick={save} 
-                isLoading={isLoading} 
+            <StudentList
+                studentList={dialogue.students}
+                setStudentList={setStudentList}
+            />
+
+            <SaveButton
+                onClick={save}
+                isLoading={isLoading}
                 isDisabled={!isVoiceSelected}
             />
-            
+
             <Box>
                 <Button
                     disabled={!dialogueRecoil?.isVoiceSelected} // Don't change to Dialogue

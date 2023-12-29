@@ -5,7 +5,7 @@ import ITranslateModel from './ITranslateModel';
 
 export default interface IAnswerModel extends IDialogueItemModel {
     readonly tensesList: string[];
-    readonly text: string;
+    readonly texts: string[];
     readonly wordsToUse: string;
     readonly mistakeExplanations: IMistakeExplanationModel[];
     readonly translates: ITranslateModel[];

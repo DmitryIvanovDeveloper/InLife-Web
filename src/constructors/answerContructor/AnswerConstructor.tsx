@@ -17,6 +17,7 @@ import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
+import EquivalentTextConstructor from "./EquivalentTextConstructor";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -171,6 +172,30 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         localStorage.removeItem(props.id)
     }
 
+    const onChangeEquivalentAnswer = (value: string, index: number) => {
+        var texts = [...answer.texts];
+        texts[index] = value;
+
+        setAnswer(prev => ({
+            ...prev,
+            texts: texts
+        }))
+    }
+    const onAddEquivalentAnswer = () => {
+        setAnswer(prev => ({
+            ...prev,
+            texts: [...prev.texts, ""]
+        }))
+    }
+
+    const onRemoveEquivalentAnswer = (value: string) => {
+        setAnswer(prev => ({
+            ...prev,
+            texts: prev.texts.filter(text => text != value)
+        }));
+    }
+
+
     // Errors
     const checkErrors = () => {
         var currentErrors = {
@@ -184,9 +209,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             }]
         }
 
-        if (answer.text == '') {
-            currentErrors.text = true;
-        }
+       
         if (answer.wordsToUse == '') {
             currentErrors.wordsToUse = true;
         }
@@ -260,6 +283,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         localStorage.removeItem(props.id);
     }
 
+  
     if (!answer) {
         return null;
     }
@@ -287,30 +311,13 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
             <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} />
 
-            <TextField
-                InputLabelProps={{ shrink: true }}
-                placeholder="Yes, today is a greate day!"
-                value={answer.text}
-                id="outlined-basic"
-                label="Text"
-                variant="outlined"
-                onChange={onChangeText}
-                required={true}
-                fullWidth
+            <EquivalentTextConstructor 
+                onChangeEquivalentAnswer={onChangeEquivalentAnswer}
+                onAddEquivalentAnswer={onAddEquivalentAnswer}
+                onRemoveEquivalentAnswer={onRemoveEquivalentAnswer}
+                texts={answer.texts} 
             />
-
-            <TextField
-                InputLabelProps={{ shrink: true }}
-                value={answer.wordsToUse}
-                placeholder="Yes, Greate, Yes, Today, Day, Is, etc."
-                id="outlined-basic"
-                label="Words To Use"
-                variant="outlined"
-                onChange={onWordsToUseChange}
-                required={true}
-                fullWidth
-            />
-
+         
             <TranslateConstructor 
                 translates={answer.translates} 
                 onAddTranslate={onAddTranslate}

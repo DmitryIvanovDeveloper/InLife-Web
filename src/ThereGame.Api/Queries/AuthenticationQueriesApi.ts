@@ -1,5 +1,3 @@
-import { useDialogues } from "../../Data/useDialogues";
-import { useUser } from "../../Data/useUser";
 import IAuthenticationService from "../../ThereGame.Business/Domain/Util/Services/IAuthenticationService";
 import ISignInModel from "../../ThereGame.Business/Models/ISignInModel";
 import ISignUpModel from "../../ThereGame.Business/Models/ISignUpModel";
@@ -13,9 +11,6 @@ export default function useAuthenticationQueriesApi() {
 
     const authenticationService = appContainer.get<IAuthenticationService>(TYPES.AuthenticationService);
     const navigate = useNavigate();
-
-    const [_, setUser] = useUser();
-    const [dialogues, setDialogues] = useDialogues();
     
     return {
         signInTeacher: async (data: ISignInModel) => {
@@ -27,12 +22,7 @@ export default function useAuthenticationQueriesApi() {
                 return;
             }
 
-            var user = new AuthenticationMapping().responseSignUp(response.data);
-
-            setUser(user);
-            setDialogues(user.dialogues);
-            
-            localStorage.setItem("Id", user.id);
+            localStorage.setItem("[Teacher] - Token", response.data);
 
             navigate("/builder");
         },
@@ -40,7 +30,15 @@ export default function useAuthenticationQueriesApi() {
         signUpTeacher: async (data: ISignUpModel) => {
             var request = new AuthenticationMapping().requestSignUp(data);
 
-            authenticationService.signUpTeacher(request);
+            var response = await authenticationService.signUpTeacher(request);
+            if (response.status != Status.OK)
+            {
+                return;
+            }
+
+            localStorage.setItem("[Teacher] - Token", response.data);
+
+            navigate("/builder");
         },
 
         signInStudent: async (data: ISignInModel) => {
@@ -52,20 +50,23 @@ export default function useAuthenticationQueriesApi() {
                 return;
             }
 
-            var user = new AuthenticationMapping().responseSignUp(response.data);
+            localStorage.setItem("[Student] - Token", response.data);
 
-            setUser(user);
-            setDialogues(user.dialogues);
-
-            localStorage.setItem("Id", user.id);
-
-            // navigate("/builder");
+            navigate("/builder");
         },
 
         signUpStudent: async (data: ISignUpModel) => {
             var request = new AuthenticationMapping().requestSignUp(data);
 
-            authenticationService.signUpStudent(request);
+            var response = await authenticationService.signUpStudent(request);
+            if (response.status != Status.OK)
+            {
+                return;
+            }
+
+            localStorage.setItem("[Student] - Token", response.data);
+
+            navigate("/builder");;
         },
     }
 }

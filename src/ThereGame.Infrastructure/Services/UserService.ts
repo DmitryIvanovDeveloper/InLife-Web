@@ -4,6 +4,7 @@ import IUserService from "../../ThereGame.Business/Domain/Util/Services/IUserSer
 import TypedResult from "../Statuses/Result";
 import { Status } from "../Statuses/Status";
 import "reflect-metadata";
+import { ResultType } from "@remix-run/router/dist/utils";
 
 @injectable()
 export default class UserService implements IUserService {

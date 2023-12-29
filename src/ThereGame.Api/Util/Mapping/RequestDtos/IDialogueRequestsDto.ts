@@ -1,3 +1,4 @@
+import IStudentModel from "../../../../ThereGame.Business/Models/IStudentModel";
 import IPhraseRequestDto from "./IPhraseRequestDto";
 
 export interface IDialogueRequestDto {
@@ -8,6 +9,7 @@ export interface IDialogueRequestDto {
     name: string,
     isVoiceSelected: boolean,
     phrase: IPhraseRequestDto;
+    students: IStudentModel[],
 }
 
 export interface ICreateDialogueRequestDto {
@@ -18,6 +20,7 @@ export interface ICreateDialogueRequestDto {
     userId: string;
     isPublished: boolean,
     isVoiceSelected: boolean,
+    students: IStudentModel[],
     phrase: {
         id:  string,
         text:  string,
@@ -34,4 +37,5 @@ export interface IUpdateDialogueRequestDto {
     userId: string;
     isPublished: boolean,
     phraseId: string;
+    students: IStudentModel[],
 }

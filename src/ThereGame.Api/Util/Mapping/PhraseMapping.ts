@@ -6,6 +6,7 @@ import IPhraseResponseDto from "./ResponseDtos/IPhraseResponseDto";
 export default class PhraseMapping {
     
     public response(phrase: IPhraseResponseDto): IPhraseModel {
+
         return {
             parentId: phrase.parentAnswerId,
             text: phrase.text,

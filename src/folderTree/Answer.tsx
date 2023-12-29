@@ -33,7 +33,7 @@ export default function Answer(props: IAnswerProps): JSX.Element | null {
                 style={{color: "darkgreen"}} 
                 key={answerRecoil.id} 
                 nodeId={answerRecoil.id} 
-                label={`${answerRecoil.text} [A]`}>
+                label={`${answerRecoil.texts.join()} [A]`}>
                 {answerRecoil.phrases.map(phrase => {
                     return (
                         <Phrase key={phrase.id} dialogueId={props.dialogueId} id={phrase.id} />
