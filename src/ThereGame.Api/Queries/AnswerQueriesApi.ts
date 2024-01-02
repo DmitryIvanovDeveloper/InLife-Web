@@ -16,19 +16,18 @@ export default function useAnswerQueriesApi() {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     return {
-        getById: async (id: string) => {
+        getById: async (id: string): Promise<Status> => {
             var response = await answerService.GetById(id);
-            if (response?.status != Status.OK) {
-                return;
-            }
             
             await userQueriesApi.getById();
+
+            return response.status;
         },
 
-        create: async (parentPhraseId: string) => {
+        create: async (parentPhraseId: string): Promise<Status> => {
             const dialogue: IAnswerModel = {
                 tensesList: [],
-                texts: ["New Phrase"],
+                texts: ["New Answer"],
                 wordsToUse: "",
                 mistakeExplanations: [],
                 translates: [],
@@ -39,30 +38,26 @@ export default function useAnswerQueriesApi() {
             var requestData = new AnswerMapping().request(dialogue);
 
             var response = await answerService.Create(requestData);
-            if (response?.status != Status.OK) {
-                return;
-            }
 
             await userQueriesApi.getById();
+
+            return response.status;
         },
 
-        update: async (dialugueModel: IAnswerModel) => {
+        update: async (dialugueModel: IAnswerModel): Promise<Status> => {
             var requestData = new AnswerMapping().request(dialugueModel);
             var response = await answerService.Update(requestData);
-            if (response?.status != Status.OK) {
-                return;
-            }
+           
 
             await userQueriesApi.getById();
+            return response.status;
         },
 
-        delete: async (id: string) => {
+        delete: async (id: string): Promise<Status> => {
             var response = await answerService.Delete(id);
-            if (response?.status != Status.OK) {
-                return;
-            }
 
             await userQueriesApi.getById();
+            return response.status;
         }
     }
 }

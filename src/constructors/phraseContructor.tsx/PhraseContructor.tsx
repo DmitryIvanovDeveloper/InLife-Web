@@ -14,6 +14,7 @@ import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 import LinarProgressCustom from "../../components/CircularProgress";
 import DevidedLabel from "../../components/Headers/DevidedLabel";
 import { useTreeState } from "../../Data/useTreeState";
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 
 
 export interface IPhraseConstructor {
@@ -36,48 +37,42 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const [isSaved, setIsSaved] = useState(true);
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [isCreating, setIsCreating] = useState<boolean>(false);
-
-    const [errors, setErrors] = useState({
-        text: false
-    });
+    const [status, setStatus] = useState<Status>(Status.OK);
 
     const onAddAnswerButtonClick = async () => {
         setIsCreating(true)
-        await answerQueriesApi.create(props.id);
+        var status = await answerQueriesApi.create(props.id);
+        setStatus(status);
         setIsCreating(false)
     }
 
     // QueryApi
     const onSave = async () => {
-        if (phrase.text == '') {
-            setErrors(prev => ({
-                ...prev,
-                text: true
-            }));
-
-            return;
-        }
-
         const updatedPhrase = JSON.parse(JSON.stringify(phrase));
 
         updatedPhrase.audioGenerationSettings = getSettings();
 
         setIsSaving(true);
-        await phraseQueriesApi.update(updatedPhrase);
+        var status = await phraseQueriesApi.update(updatedPhrase);
+        setStatus(status);
         setIsSaving(false);
-
-        localStorage.removeItem(props.id);
+        if (status == Status.OK) {
+            localStorage.removeItem(props.id);
+        }
         setIsSaved(true);
     }
 
     const onDelete = async () => {
-        await phraseQueriesApi.delete(props.id);
+        var status = await phraseQueriesApi.delete(props.id);
+        setStatus(status);
         localStorage.removeItem(props.id);
     }
 
     const reset = () => {
+
         setPhrase(phraseRecoil);
         setIsSaved(true);
+        setStatus(Status.OK);
         localStorage.removeItem(props.id);
     }
 
@@ -101,11 +96,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setPhrase(prev => ({
             ...prev,
             text: event.target.value
-        }));
-
-        setErrors(prev => ({
-            ...prev,
-            text: false
         }));
 
         setIsSaved(false);
@@ -168,6 +158,8 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
 
     useEffect(() => {
+        console.log(phraseRecoil)
+
         var data = localStorage.getItem(props.id);
         if (JSON.stringify(phraseRecoil) !== data) {
             return;
@@ -214,7 +206,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 required={true}
                 placeholder="Hello, my name is John"
                 fullWidth
-                error={errors.text}
             />
 
             <Divider variant="fullWidth" />
@@ -231,15 +222,30 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
             <Divider variant="fullWidth" />
 
-            <SaveButton onClick={onSave} isLoading={isSaving} isDisabled={false} />
+            <SaveButton 
+                onClick={onSave} 
+                isLoading={isSaving} 
+                isDisabled={false} 
+            />
 
-            {!isSaved
+            {!isSaved || status != Status.OK
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={reset}>reset</Button>
                 </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
+            
+            {status != Status.OK
+                ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
+                : null
+            }
+             {!phrase.audioData
+                ? <Alert severity="error">The phrase is not generated to audio!</Alert>
+                : null
+            }
+
+
 
             <DevidedLabel name="Linked answers"/>
 

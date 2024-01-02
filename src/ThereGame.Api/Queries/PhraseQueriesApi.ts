@@ -18,7 +18,7 @@ export default function usePhraseQueriesApi() {
           
         },
 
-        create: async (parentAnswerId: string) => {
+        create: async (parentAnswerId: string): Promise<Status> => {
             const phrase: IPhraseModel = {
                 parentId: parentAnswerId,
                 text: "New Phrase",
@@ -26,36 +26,33 @@ export default function usePhraseQueriesApi() {
                 tensesList: [],
                 comments: "",
                 id: uuidv4(),
-                audioGenerationSettings: ""
+                audioGenerationSettings: "",
             }
 
             var requestData = new PhraseMapping().request(phrase);
 
             var response = await phraseService.Create(requestData);
-            if (response?.status != Status.OK) {
-                return;
-            }
 
             await userQueriesApi.getById();
+
+            return response.status;
         },
 
-        delete: async (id: string) => {
+        delete: async (id: string): Promise<Status> => {
             var response = await phraseService.Delete(id);
-            if (response?.status != Status.OK) {
-                return;
-            }
 
             userQueriesApi.getById();
+            
+            return response.status;
         },
 
-        update: async (phrase: IPhraseModel) => {
+        update: async (phrase: IPhraseModel): Promise<Status> => {
             var requestData = new PhraseMapping().request(phrase);
             var response = await phraseService.Update(requestData);
-            if (response?.status != Status.OK) {
-                return;
-            }
-
+            
             userQueriesApi.getById();
+
+            return response.status;
         }
     }
 }

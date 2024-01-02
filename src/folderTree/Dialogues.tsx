@@ -24,7 +24,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     const [user] = useUser();
 
-    const [npcId, setNpcId] = useState<string>("");
+    const [npcId, setNpcId] = useState<string>(Locations[0].id ?? '');
 
     const [dialogues, setDialogues] = useState<IDialogueModel[]>(user?.dialogues ?? []);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
@@ -50,9 +50,12 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     }
 
     useEffect(() => {
-        setNpcId(Locations[0].id ?? '');
-        setDialogues(user?.dialogues ?? []);
-    }, [user]);
+        if (!npcId) {
+            return;
+        }
+
+        setDialogues(user?.dialogues.filter(d => d.levelId == npcId) ?? []);
+    }, [npcId, user]);
 
     if (!npcId) {
         return null;
@@ -103,7 +106,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 multiSelect
             >
                 {dialogues
-                    .filter(d => d.levelId == npcId)
+                    
                     .map(dialogue => (
                         <Dialogue id={dialogue.id} />
                     ))}

@@ -30,13 +30,18 @@ export default class PhraseService implements IPhraseService {
     public async Update(item: IPhraseRequestDto): Promise<TypedResult<Status>> {
        
         try {
-            await fetch(Routes.phrases, {
+            var response = await fetch(Routes.phrases, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(item)
             });
+
+            if (response.status == 500) {
+                return new TypedResult<Status>(Status.InternalServerError);
+            }
+            
 
             return new TypedResult<Status>(Status.OK);
         }

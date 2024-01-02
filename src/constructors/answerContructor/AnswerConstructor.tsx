@@ -20,6 +20,7 @@ import LinarProgressCustom from "../../components/CircularProgress";
 import DevidedLabel from "../../components/Headers/DevidedLabel";
 import TensesList from "../TensesList";
 import { useTreeState } from "../../Data/useTreeState";
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -41,6 +42,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const [answer, setAnswer] = useState<IAnswerModel>(answerRecoil);
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+    const [status, setStatus] = useState<Status>(Status.OK);
 
     const [isSaved, setIsSaved] = useState(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,7 +51,8 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
     const onAddPhraseButtonClick = async () => {
         setIsCreating(true)
-        await phraseQueriesApi.create(props.id);
+        var status = await phraseQueriesApi.create(props.id);
+        setStatus(status);
         setIsCreating(false)
 
     }
@@ -223,43 +226,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         console.log(isCreating);
     }, [isCreating]);
 
-    // Errors
-    const checkErrors = () => {
-        var currentErrors = {
-            text: false,
-            translate: false,
-            wordsToUse: false,
-            mistakeExplanations: [{
-                id: "",
-                word: false,
-                explanation: false,
-            }]
-        }
-
-
-        if (answer.wordsToUse == '') {
-            currentErrors.wordsToUse = true;
-        }
-
-        var explanationHasError = false;
-        // answerForm.explanations.forEach(mistakeExplanation => {
-
-        //     if (mistakeExplanation.word == '' ||
-        //         mistakeExplanation.text == '') {
-
-        //         var error = {
-        //             id: mistakeExplanation.id,
-        //             word: mistakeExplanation.word == '',
-        //             explanation: mistakeExplanation.text == ''
-        //         }
-
-        //         currentErrors.mistakeExplanations.push(error);
-
-        //         explanationHasError = true;
-        //     }
-        // });
-    }
-
     // UseEffects
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -340,6 +306,8 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 ? <LinarProgressCustom name="Deleting"/>
                 : null
             }
+
+
             
             {/* <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} /> */}
 

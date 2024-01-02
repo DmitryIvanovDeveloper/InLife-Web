@@ -8,4 +8,5 @@ export default interface IPhraseModel extends IDialogueItemModel {
     readonly tensesList: string[];
     readonly comments: string;
     readonly audioGenerationSettings: string;
+    readonly audioData?: string;
 }

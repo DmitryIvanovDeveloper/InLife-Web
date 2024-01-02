@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { Box, Button, Chip, Divider, Grid, Stack, TextField, Typography } from "@mui/material"
 import DevidedLabel from "../../components/Headers/DevidedLabel";
 import { useState } from "react";
@@ -60,7 +59,7 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
                 <Button
                     disabled={!selectedTextId.text}
                     style={{ backgroundColor: "darkgreen", color: "white", }}
-                    onClick={onSave}>{!isUpdate ? "Save" : "Update"}</Button>
+                    onClick={onSave}>{!isUpdate ? "Add" : "Update"}</Button>
             </Box>
             <Stack
                 spacing={1}

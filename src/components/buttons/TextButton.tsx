@@ -8,6 +8,7 @@ interface ITextButtonProps {
 
 export default function TextButton(props: ITextButtonProps) {
   return <Button
+    disableRipple
     variant="text"
     onClick={props.onClick}
     sx={{
