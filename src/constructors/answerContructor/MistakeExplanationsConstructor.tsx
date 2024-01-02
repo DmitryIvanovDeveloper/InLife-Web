@@ -1,6 +1,7 @@
 import { Grid, TextField, Button, Box } from "@mui/material"
 import React, { useState } from "react"
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
+import DevidedLabel from "../../components/Headers/DevidedLabel";
 
 export interface IMistakeExplanationConstructor {
     explanations: IMistakeExplanationModel[]
@@ -22,6 +23,8 @@ export default function MistakeExplanationConstructor(props: IMistakeExplanation
 
     return (
         <Box>
+            <DevidedLabel name="Specific words explanation"/>
+
              {props.explanations.map((explanation, id) => (
                 <Grid
                     display="flex"

@@ -31,7 +31,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            userQueriesApi.getById();
+            await userQueriesApi.getById();
         },
 
         create: async (id: string) => {
@@ -67,7 +67,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            userQueriesApi.getById();
+            await userQueriesApi.getById();
         },
 
         update: async (dialugueModel: IDialogueModel) => {
@@ -78,7 +78,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            userQueriesApi.getById();
+            await userQueriesApi.getById();
         },
 
         delete: async (id: string) => {
@@ -87,7 +87,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            userQueriesApi.getById();
+            await userQueriesApi.getById();
         }
     }
 }

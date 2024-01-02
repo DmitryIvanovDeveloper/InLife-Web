@@ -2,6 +2,7 @@ import { Box, Grid, TextField, Button, FormControl } from "@mui/material";
 import React  from "react";
 import Translate from "./Translate";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
+import DevidedLabel from "../../components/Headers/DevidedLabel";
 
 export interface ITranslateConstructor {
     translates: ITranslateModel[];
@@ -55,6 +56,9 @@ export default function TranslateConstructor(props: ITranslateConstructor) {
 
     return (
         <Box sx={{ pt: 3, pb: 3 }}>
+            
+            <DevidedLabel name="Translates Hints"/>
+
             {props.translates.map(translate => (
                 <Grid
                     display="flex"

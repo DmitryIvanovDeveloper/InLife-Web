@@ -10,35 +10,33 @@ import { useNavigate } from "react-router-dom";
 export default function useAuthenticationQueriesApi() {
 
     const authenticationService = appContainer.get<IAuthenticationService>(TYPES.AuthenticationService);
-    const navigate = useNavigate();
     
     return {
-        signInTeacher: async (data: ISignInModel) => {
+        signInTeacher: async (data: ISignInModel): Promise<boolean> => {
             var request = new AuthenticationMapping().requestSignIn(data);
             
             var response = await authenticationService.signInTeacher(request);
             if (response.status != Status.OK)
             {
-                return;
+                return false;
             }
 
             localStorage.setItem("[Teacher] - Token", response.data);
-
-            navigate("/teacher");
+            return true;
         },
 
-        signUpTeacher: async (data: ISignUpModel) => {
+        signUpTeacher: async (data: ISignUpModel): Promise<boolean> => {
             var request = new AuthenticationMapping().requestSignUp(data);
 
             var response = await authenticationService.signUpTeacher(request);
             if (response.status != Status.OK)
             {
-                return;
+                return false;
             }
 
             localStorage.setItem("[Teacher] - Token", response.data);
 
-            navigate("/teacher");
+            return true;
         },
 
         signInStudent: async (data: ISignInModel) => {

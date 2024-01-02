@@ -1,7 +1,7 @@
 // IMPORTS
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import { Grid, Link } from "@mui/material";
+import { Grid } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import Badge from "@mui/material/Badge";
@@ -10,6 +10,8 @@ import React from "react";
 import { useUser } from "../../Data/useUser";
 import { useNavigate } from "react-router-dom";
 import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboard";
+import Student from "../Student/Student";
+import MenuAppBar from "../AppBars/MenuAppBar";
 
 // STYLES
 const styles = {
@@ -31,6 +33,8 @@ export default function Teacher(props: any) {
 
     return (
         <Card variant="outlined">
+            <MenuAppBar />
+
             <Grid item style={styles.details} sx={{ width: "100%" }}>
                 <Button
                     variant="contained"
@@ -78,26 +82,27 @@ export default function Teacher(props: any) {
 
                 <CopyToClipboardButton link={`http://localhost:3000/auth/sign-up/student?id=${user?.id}`} />
 
+                <Typography style={styles.value}>Students [{user?.students.length}]</Typography>
                 <Grid container>
-                    <Typography style={styles.value}>Students</Typography>
-                    <Grid >
+                    <Grid
+                        display='flex'
+                        justifyContent='space-between'
+                    >
                         {user?.students.map(student => (
-                            <Button>{student.email}</Button>
+                            <Student student={student} />
                         ))}
                     </Grid>
                 </Grid>
 
+                <Typography style={styles.value}>Dialogues [{user?.dialogues.length}]</Typography>
+
                 <Grid container>
-                    <Typography style={styles.value}>Dialogues</Typography>
 
                     <Grid item xs={6}>
                         {user?.dialogues.map(dialogue => (
-                            <Button>{dialogue.name}</Button>
+                            <Typography>{dialogue.name}</Typography>
                         ))}
-
                     </Grid>
-                    <Grid item xs={6} sx={{ textAlign: "end" }} />
-
                 </Grid>
 
             </Grid>

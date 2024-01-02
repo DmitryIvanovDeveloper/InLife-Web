@@ -10,6 +10,7 @@ import VoiceList from "../../components/voiceList/VoiceList";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 import StudentList from "../../components/StudentList";
 import IStudentModel from "../../ThereGame.Business/Models/IStudentModel";
+import { useTreeState } from "../../Data/useTreeState";
 
 export interface IDialogueConstructor {
     id: string;
@@ -24,6 +25,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isSaved, setIsSaved] = useState(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [treeState, setTreeState] = useTreeState();
 
     const dialogueQueriesApi = useDialogieQueriesApi();
 
@@ -55,7 +57,16 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         event.stopPropagation();
         event.preventDefault();
 
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.id} id={dialogue.phrase.id} />);
+        setTreeState(prev => ({
+            expanded: [...prev.expanded, dialogue.id, dialogue.phrase.id], 
+            selected: [dialogue.phrase.id]
+        }));
+
+        setDialogueItemConstructor(() => <PhraseContructor 
+            dialogueId={props.id} 
+            id={dialogue.phrase.id} 
+            parentId={""} 
+        />);
     }
 
     const publish = async () => {
@@ -154,10 +165,10 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 variant="outlined"
             />
 
-            <StudentList
+            {/* <StudentList
                 studentList={dialogue.students}
                 setStudentList={setStudentList}
-            />
+            /> */}
 
             <SaveButton
                 onClick={save}

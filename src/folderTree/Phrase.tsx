@@ -7,6 +7,7 @@ import PhraseContructor from "../constructors/phraseContructor.tsx/PhraseContruc
 
 export interface IPhraseProps {
     dialogueId: string;
+    parentId: string
     id: string;
 }
 
@@ -18,7 +19,11 @@ export default function Phrase(props: IPhraseProps): JSX.Element | null {
         event.stopPropagation();
         event.preventDefault();
 
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phraseRecoil.id} />);
+        setDialogueItemConstructor(() => <PhraseContructor 
+            dialogueId={props.dialogueId} 
+            id={phraseRecoil.id}
+            parentId={props.parentId}
+        />);
     }
 
     if (!phraseRecoil) {
@@ -44,7 +49,7 @@ export default function Phrase(props: IPhraseProps): JSX.Element | null {
 
                     >
                         {phraseRecoil.answers.map(answer => (
-                            <Answer key={answer.id} dialogueId={props.dialogueId} id={answer.id} />
+                            <Answer key={answer.id} dialogueId={props.dialogueId} id={answer.id} parentId={props.id}/>
                         ))}
                     </Grid>
                 </TreeItem>

@@ -8,7 +8,7 @@ export interface IAppBarDeleteButtonProps{
 }
 export default function AppBarDeleteButton(props: IAppBarDeleteButtonProps) {
     return (
-        <Box sx={{ flexGrow: 1, display: "flex" }}>
+        <Box sx={{ flexGrow: 1, display: "flex", maxHeight: "60px" }}>
             <AppBar position="static" sx={{ borderRadius: 1 }}>
                 <Toolbar>
                     <IconButton

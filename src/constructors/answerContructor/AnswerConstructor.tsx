@@ -1,6 +1,5 @@
-import { Alert, Box, Button, ButtonGroup, FormLabel, Grid, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Divider, FormLabel, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import TensesList from "../TensesList";
 import AddButton from "../../components/buttons/AddButton";
 import SaveButton from "../../components/buttons/SaveButton";
 import { useSelection } from "../../Data/useSelection";
@@ -9,7 +8,6 @@ import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
 import MistakeExplanationConstructor from "./MistakeExplanationsConstructor";
 import TranslateConstructor from "./TranslateConstructor";
-import IAnswerError from "../../Data/Errors/IAnswerError";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import { LanguageType } from "../../Data/LanguageType";
 import { v4 as uuidv4 } from 'uuid';
@@ -18,12 +16,18 @@ import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 import EquivalentTextConstructor from "./EquivalentTextConstructor";
+import LinarProgressCustom from "../../components/CircularProgress";
+import DevidedLabel from "../../components/Headers/DevidedLabel";
+import TensesList from "../TensesList";
+import { useTreeState } from "../../Data/useTreeState";
 
 export interface IAnswerContructor {
     dialogueId: string,
     id: string,
-    prevConstructorId?: string
+    parentId: string,
 }
+
+
 
 export default function AnswerContructor(props: IAnswerContructor): JSX.Element | null {
 
@@ -31,17 +35,23 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const answerQueriesApi = useAnswerQueriesApi();
     const phraseQueriesApi = usePhraseQueriesApi();
 
+    const [treeState, setTreeState] = useTreeState();
     const [selection, setSelection] = useSelection();
+
     const [answer, setAnswer] = useState<IAnswerModel>(answerRecoil);
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+
     const [isSaved, setIsSaved] = useState(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isCreating, setIsCreating] = useState<boolean>(false);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-    const [errors, setErrors] = useState<IAnswerError>();
+    const onAddPhraseButtonClick = async () => {
+        setIsCreating(true)
+        await phraseQueriesApi.create(props.id);
+        setIsCreating(false)
 
-    function onAddButtonClick() {
-        phraseQueriesApi.create(props.id);
     }
 
     const onChangeText = (event: any) => {
@@ -55,7 +65,13 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
     const onPhraseButtonClick = (event: any) => {
         setSelection(event.target.id);
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={event.target.id} prevConstructorId={props.prevConstructorId} />);
+
+        setTreeState(prev => ({
+            expanded: [...prev.expanded, event.target.id], 
+            selected: event.target.id
+        }));
+
+        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={event.target.id} parentId={props.parentId} />);
     }
 
     const onWordsToUseChange = (event: any) => {
@@ -91,7 +107,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             explanation: "",
             id: uuidv4()
         }
-        
+
         setAnswer(prev => ({
             ...prev,
             mistakeExplanations: [
@@ -129,7 +145,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
         setIsSaved(false);
     }
-    
+
     const onDeleteTranslate = (id: string) => {
         setAnswer(prev => ({
             ...prev,
@@ -159,13 +175,15 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }
 
 
-     // QueriesApi
-     const onDelete = async () => {
+    // QueriesApi
+    const onDelete = async () => {
+        setIsDeleting(true);
         await answerQueriesApi.delete(props.id)
-            setIsSaved(true)
+        setIsDeleting(false);
+        setIsSaved(true)
     }
 
-    const onSave = async() => {
+    const onSave = async () => {
         setIsLoading(true);
         await answerQueriesApi.update(answer)
         setIsLoading(false);
@@ -175,17 +193,21 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const onChangeEquivalentAnswer = (value: string, index: number) => {
         var texts = [...answer.texts];
         texts[index] = value;
-
+        console.log(texts);
         setAnswer(prev => ({
             ...prev,
             texts: texts
         }))
+
+        setIsSaved(false);
     }
-    const onAddEquivalentAnswer = () => {
+    const onAddEquivalentAnswer = (value: string) => {
         setAnswer(prev => ({
             ...prev,
-            texts: [...prev.texts, ""]
+            texts: [...prev.texts, value]
         }))
+
+        setIsSaved(false);
     }
 
     const onRemoveEquivalentAnswer = (value: string) => {
@@ -193,8 +215,13 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             ...prev,
             texts: prev.texts.filter(text => text != value)
         }));
+
+        setIsSaved(false);
     }
 
+    useEffect(() => {
+        console.log(isCreating);
+    }, [isCreating]);
 
     // Errors
     const checkErrors = () => {
@@ -209,7 +236,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             }]
         }
 
-       
+
         if (answer.wordsToUse == '') {
             currentErrors.wordsToUse = true;
         }
@@ -268,7 +295,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
-        if(JSON.stringify(answerRecoil) !== data){
+        if (JSON.stringify(answerRecoil) !== data) {
             return;
         }
 
@@ -283,7 +310,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         localStorage.removeItem(props.id);
     }
 
-  
+
     if (!answer) {
         return null;
     }
@@ -309,45 +336,52 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 onDelete={onDelete}
             />
 
-            <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} />
+            {isDeleting 
+                ? <LinarProgressCustom name="Deleting"/>
+                : null
+            }
+            
+            {/* <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} /> */}
 
-            <EquivalentTextConstructor 
+            <EquivalentTextConstructor
                 onChangeEquivalentAnswer={onChangeEquivalentAnswer}
                 onAddEquivalentAnswer={onAddEquivalentAnswer}
                 onRemoveEquivalentAnswer={onRemoveEquivalentAnswer}
-                texts={answer.texts} 
+                texts={answer.texts}
             />
-         
-            <TranslateConstructor 
-                translates={answer.translates} 
+
+            <DevidedLabel name="Words Hints"/>
+
+            <TextField
+                InputLabelProps={{ shrink: true }}
+                placeholder="Hello, You, Meet, etc."
+                value={answer.wordsToUse}
+                id="outlined-basic"
+                label="Words to use"
+                variant="outlined"
+                onChange={onWordsToUseChange}
+                required={true}
+                fullWidth
+            ></TextField>
+
+
+            <TranslateConstructor
+                translates={answer.translates}
                 onAddTranslate={onAddTranslate}
                 onDeleteTranslate={onDeleteTranslate}
                 onTranslateChange={onTranslateChange}
             />
 
-           <MistakeExplanationConstructor 
-                explanations={answer.mistakeExplanations} 
-                onDeleteMistakeExplanation={onDeleteMistakeExplanation} 
+            <Divider variant="fullWidth" />
+
+            {/* <MistakeExplanationConstructor
+                explanations={answer.mistakeExplanations}
+                onDeleteMistakeExplanation={onDeleteMistakeExplanation}
                 onExplanationChange={onExplanationChange}
                 onAddMistakeExplanation={onAddMistakeExplanation}
-            />
-
-            <AddButton onCLick={onAddButtonClick} />
-
-            {answer.phrases?.length != 0
-                ?
-                <Box>
-                    <div>Next phrases to the answer</div>
-                    <ButtonGroup
-                    >
-                        {answer.phrases?.map(answer => (
-                            <Button id={answer.id} onClick={onPhraseButtonClick} sx={{ p: 1, }}>{answer.text}</Button>
-                        ))}
-                    </ButtonGroup>
-                </Box>
-                : null
-            }
-
+            /> */}
+            
+            <Divider variant="fullWidth" />
 
             {!isSaved
                 ? <Box>
@@ -357,7 +391,34 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
 
-            <SaveButton onClick={onSave} isLoading={isLoading} isDisabled={false}/>
+            <SaveButton 
+                onClick={onSave} 
+                isLoading={isLoading} 
+                isDisabled={false} 
+            />
+
+            <DevidedLabel name="Linked phrases" />
+
+            {isCreating
+                ? <LinarProgressCustom name="Creating"/>
+                : <AddButton onClick={onAddPhraseButtonClick} name="Create Phrase" />
+            }
+
+            {answer.phrases?.length != 0
+                ?
+                <Box>
+                    <ButtonGroup
+                    >
+                        {answer.phrases?.map(phrase => (
+                            <Button 
+                                id={phrase.id} 
+                                onClick={onPhraseButtonClick} 
+                                sx={{ m: 1, }}>{phrase.text}</Button>
+                        ))}
+                    </ButtonGroup>
+                </Box>
+                : null
+            }
         </Box>
     )
 }

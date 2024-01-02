@@ -15,21 +15,29 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ISignInModel from '../../ThereGame.Business/Models/ISignInModel';
 import useAuthenticationQueriesApi from '../../ThereGame.Api/Queries/AuthenticationQueriesApi';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
 export default function SignInTeacher() {
     const authenticationQueriesApi = useAuthenticationQueriesApi();
+    const navigate = useNavigate();
 
     const [data, setData] = useState<ISignInModel>({
         email: "",
         password: ""
     });
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
         
-        authenticationQueriesApi.signInTeacher(data);
+        var isSignedIn = await authenticationQueriesApi.signInTeacher(data);
+        if (!isSignedIn)
+        {
+            return;
+        }
+
+        navigate("/teacher");
     };
 
     return (

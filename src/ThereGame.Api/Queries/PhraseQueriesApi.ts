@@ -13,8 +13,6 @@ export default function usePhraseQueriesApi() {
     const phraseService = appContainer.get<IPhraseService>(TYPES.PhraseService);
     var userQueriesApi = useUserQueriesApi();
 
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    
     return {
         getById: async (id: string) => {
           
@@ -38,7 +36,7 @@ export default function usePhraseQueriesApi() {
                 return;
             }
 
-            userQueriesApi.getById();
+            await userQueriesApi.getById();
         },
 
         delete: async (id: string) => {
@@ -46,8 +44,6 @@ export default function usePhraseQueriesApi() {
             if (response?.status != Status.OK) {
                 return;
             }
-
-            setDialogueItemConstructor(() => null);
 
             userQueriesApi.getById();
         },

@@ -6,6 +6,7 @@ export default class IStudentMapping {
         return {
             id: student.id,
             name: student.name,
+            lastName: student.lastName,
             email: student.email,
             avatar: student.avatar,
         }
@@ -15,6 +16,7 @@ export default class IStudentMapping {
         return {
             id: student.id,
             name: student.name,
+            lastName: student.lastName,
             email: student.email,
             avatar: student.avatar,
         }

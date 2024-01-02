@@ -7,7 +7,7 @@ export interface IAppBarCustomProps{
 }
 export default function AppBarCustom(props: IAppBarCustomProps) {
     return (
-        <Box sx={{ flexGrow: 1, display: "flex" }}>
+        <Box sx={{ flexGrow: 1, display: "flex", maxHeight: "60px" }}>
             <AppBar position="static" sx={{ borderRadius: 1 }}>
                 <Toolbar>
                     <IconButton

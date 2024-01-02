@@ -21,11 +21,8 @@ export default function useAnswerQueriesApi() {
             if (response?.status != Status.OK) {
                 return;
             }
-
-            var dialogueModel = new DialogueMapping().response(response.data);
-
             
-            userQueriesApi.getById();
+            await userQueriesApi.getById();
         },
 
         create: async (parentPhraseId: string) => {
@@ -46,8 +43,7 @@ export default function useAnswerQueriesApi() {
                 return;
             }
 
-            userQueriesApi.getById();
-
+            await userQueriesApi.getById();
         },
 
         update: async (dialugueModel: IAnswerModel) => {
@@ -57,8 +53,7 @@ export default function useAnswerQueriesApi() {
                 return;
             }
 
-            userQueriesApi.getById();
-
+            await userQueriesApi.getById();
         },
 
         delete: async (id: string) => {
@@ -67,9 +62,7 @@ export default function useAnswerQueriesApi() {
                 return;
             }
 
-            setDialogueItemConstructor(() => null);
-
-            userQueriesApi.getById();
+            await userQueriesApi.getById();
         }
     }
 }

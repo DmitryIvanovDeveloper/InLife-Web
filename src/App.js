@@ -2,19 +2,29 @@ import React, { useEffect } from 'react';
 import DialogueBuilder from './folderTree/DialogueBuilder';
 import { Routes, Route } from 'react-router-dom';
 import SignInTeacher from './components/Authentication/SignInTeacher';
-import SignUp from './components/Authentication/SignUpTeacher';
 import useUserQueriesApi from './ThereGame.Api/Queries/UserQueriesApi';
-import './App.css';
 import SignUpStudent from './components/Authentication/SignUpStudent';
 import SignUpTeacher from './components/Authentication/SignUpTeacher';
 import Teacher from './components/Teacher/Teacher';
+import { useNavigate } from "react-router-dom";
+import './App.css';
+import { AppBar } from '@mui/material';
 
 export function App() {
 
     var userQuerisApi = useUserQueriesApi();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        userQuerisApi.getById();
+        userQuerisApi.getById()
+        .then(result => {
+            if (!result)
+            {
+                navigate('/auth/sign-in/teacher')
+                return;
+            }
+            navigate('/teacher')
+        });
     }, []);
 
     return (

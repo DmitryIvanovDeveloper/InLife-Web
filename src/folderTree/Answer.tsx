@@ -7,6 +7,7 @@ import AnswerContructor from "../constructors/answerContructor/AnswerConstructor
 
 export interface IAnswerProps {
     dialogueId: string,
+    parentId: string
     id: string,
 }
 
@@ -20,7 +21,11 @@ export default function Answer(props: IAnswerProps): JSX.Element | null {
         event.stopPropagation();
         event.preventDefault();
 
-        setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={answerRecoil.id} />);
+        setDialogueItemConstructor(() => <AnswerContructor 
+            dialogueId={props.dialogueId} 
+            id={props.id} 
+            parentId={props.parentId} 
+        />);
     }
 
     if (!answerRecoil){
@@ -33,12 +38,15 @@ export default function Answer(props: IAnswerProps): JSX.Element | null {
                 style={{color: "darkgreen"}} 
                 key={answerRecoil.id} 
                 nodeId={answerRecoil.id} 
-                label={`${answerRecoil.texts.join()} [A]`}>
-                {answerRecoil.phrases.map(phrase => {
-                    return (
-                        <Phrase key={phrase.id} dialogueId={props.dialogueId} id={phrase.id} />
-                    );
-                })}
+                label={`${answerRecoil.texts[0]} [A]`}>
+                {answerRecoil.phrases.map(phrase => (
+                        <Phrase 
+                            key={phrase.id} 
+                            dialogueId={props.dialogueId} 
+                            id={phrase.id} 
+                            parentId={props.parentId}
+                        />
+                    ))}
             </TreeItem>
         </TextButton>
     )

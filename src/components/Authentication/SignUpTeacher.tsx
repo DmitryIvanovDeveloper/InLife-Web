@@ -16,6 +16,7 @@ import ISignUpModel from "../../ThereGame.Business/Models/ISignUpModel";
 import useAuthenticationQueriesApi from "../../ThereGame.Api/Queries/AuthenticationQueriesApi";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props: any) {
     return (
@@ -46,13 +47,21 @@ export default function SignUpTeacher() {
         email: "",
         password: ""
     });
+
+    const navigate = useNavigate();
+
     
     const authenticationQueriesApi = useAuthenticationQueriesApi();
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
 
-        authenticationQueriesApi.signUpTeacher(data);
+        var isSignedUp = await authenticationQueriesApi.signUpTeacher(data);
+        if (!isSignedUp) {
+            return;
+        }
+
+        navigate("/teacher");
     };
 
     return (
