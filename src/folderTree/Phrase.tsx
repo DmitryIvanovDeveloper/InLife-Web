@@ -4,6 +4,9 @@ import { useDialogueItemConstructor, usePhrase } from "../Data/useDialogues";
 import TextButton from "../components/buttons/TextButton";
 import Answer from "./Answer";
 import PhraseContructor from "../constructors/phraseContructor.tsx/PhraseContructor";
+import { useState } from "react";
+import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
+import WarningIcon from '@material-ui/icons/Warning';
 
 export interface IPhraseProps {
     dialogueId: string;
@@ -14,6 +17,7 @@ export interface IPhraseProps {
 export default function Phrase(props: IPhraseProps): JSX.Element | null {
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+    const [states, setStates] = useState<DialogueItemStateType[]>([DialogueItemStateType.NoErrors]);
 
     function OnClick(event: any) {
         event.stopPropagation();
@@ -23,6 +27,7 @@ export default function Phrase(props: IPhraseProps): JSX.Element | null {
             dialogueId={props.dialogueId} 
             id={phraseRecoil.id}
             parentId={props.parentId}
+            setStates={setStates}
         />);
     }
 
@@ -33,12 +38,13 @@ export default function Phrase(props: IPhraseProps): JSX.Element | null {
     return (
         <Box display="flex">
             <TextButton onClick={OnClick}>
+                
                 <TreeItem
                     key={phraseRecoil.id}
                     nodeId={phraseRecoil.id}
                     itemType="Phrase"
                     label={`${phraseRecoil.text} [P]`}
-                    style={{color: "#9c27b0"}} 
+                    style={{color: states[0] == DialogueItemStateType.UnsavedChanges ? "#e65100":  "#9c27b0"}} 
                 >
                     <Grid
                         sx={{

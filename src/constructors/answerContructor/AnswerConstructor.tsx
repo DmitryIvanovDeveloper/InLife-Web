@@ -21,11 +21,13 @@ import DevidedLabel from "../../components/Headers/DevidedLabel";
 import TensesList from "../TensesList";
 import { useTreeState } from "../../Data/useTreeState";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
+import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 
 export interface IAnswerContructor {
     dialogueId: string,
     id: string,
     parentId: string,
+    setStates?: (states: DialogueItemStateType[]) => void;
 }
 
 
@@ -177,6 +179,12 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsSaved(false)
     }
 
+    const reset = () => {
+        setAnswer(answerRecoil);
+        setIsSaved(true);
+
+        localStorage.removeItem(props.id);
+    }
 
     // QueriesApi
     const onDelete = async () => {
@@ -222,10 +230,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsSaved(false);
     }
 
-    useEffect(() => {
-        console.log(isCreating);
-    }, [isCreating]);
-
     // UseEffects
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -269,13 +273,19 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsSaved(true)
     }, [answer]);
 
-    const reset = () => {
-        setAnswer(answerRecoil);
-        setIsSaved(true);
+    useEffect(() => {
+        if (!props.setStates) {
+            return;
+        }
 
-        localStorage.removeItem(props.id);
-    }
 
+        if (isSaved) {
+            props.setStates([DialogueItemStateType.NoErrors])
+            return;
+        }
+
+        props.setStates([DialogueItemStateType.UnsavedChanges])
+    }, [isSaved]);
 
     if (!answer) {
         return null;

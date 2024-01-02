@@ -3,8 +3,8 @@ import IPhraseRequestDto from "../../../ThereGame.Api/Util/Mapping/RequestDtos/I
 import IPhraseService from "../../../ThereGame.Business/Domain/Util/Services/IPhraseService";
 import TypedResult from "../../Statuses/Result";
 import { Status } from "../../Statuses/Status";
-import { Routes } from "../../../Routes";
 import "reflect-metadata";
+import { RoutesAPI } from "../../../Routes";
 
 //@ts-ignore
 @injectable()
@@ -12,7 +12,7 @@ export default class PhraseService implements IPhraseService {
     
     public async GetById(id: string): Promise<TypedResult<Status>>  {
         try {
-            var response = await fetch(`${Routes.phrases}${id}`);
+            var response = await fetch(`${RoutesAPI.phrases}${id}`);
             if (response.status == 204)
             {
                 return new TypedResult<Status>(Status.NoContent);
@@ -30,7 +30,7 @@ export default class PhraseService implements IPhraseService {
     public async Update(item: IPhraseRequestDto): Promise<TypedResult<Status>> {
        
         try {
-            var response = await fetch(Routes.phrases, {
+            var response = await fetch(RoutesAPI.phrases, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export default class PhraseService implements IPhraseService {
 
     public async Delete(id: string): Promise<TypedResult<Status>> {
         try {
-            await fetch(`${Routes.phrases}${id}`, {
+            await fetch(`${RoutesAPI.phrases}${id}`, {
                 method: 'DELETE',
             })
 
@@ -66,7 +66,7 @@ export default class PhraseService implements IPhraseService {
     public async Create(item: IPhraseRequestDto): Promise<TypedResult<Status>>  {
 
         try {
-            await fetch(Routes.phrases, {
+            await fetch(RoutesAPI.phrases, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

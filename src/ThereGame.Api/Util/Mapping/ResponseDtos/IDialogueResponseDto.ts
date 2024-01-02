@@ -5,7 +5,7 @@ export interface IDialogueResponseDto {
     isVoiceSelected: boolean,
     isPublished: boolean;
     levelId: string;
-    userId: string;
+    teacherId: string;
     id: string;
     name: string;
     phrase: IPhraseResponseDto;

@@ -6,14 +6,14 @@ import { TYPES } from "../../types";
 import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
 import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel';
-import { useUser } from '../../Data/useUser';
-import useUserQueriesApi from './UserQueriesApi';
+import { useTeacher } from '../../Data/useTeacher';
+import useTeacherQueriesApi from './TeacherQueriesApi';
 
 export default function useDialogieQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);
-    var userQueriesApi = useUserQueriesApi();
+    var teacherQueriesApi = useTeacherQueriesApi();
     
-    const [user, _] = useUser();
+    const [teacher, _] = useTeacher();
     
     async function get(): Promise<IDialogueModel[]> {
         var response = await dialogueService.Get();
@@ -31,11 +31,11 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            await userQueriesApi.getById();
+            await teacherQueriesApi.getById();
         },
 
         create: async (id: string) => {
-            if (!user) {
+            if (!teacher) {
                 return;
             }
 
@@ -56,8 +56,8 @@ export default function useDialogieQueriesApi() {
                 id: uuidv4(),
                 name: 'New Dialogue',
                 phrase: phrase,
-                userId: user?.id,
-                students: user.students,
+                teacherId: teacher?.id,
+                students: teacher.students,
             }
 
             var requestData = new DialogueMapping().requestToCreateDialogue(dialogue);
@@ -67,7 +67,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            await userQueriesApi.getById();
+            await teacherQueriesApi.getById();
         },
 
         update: async (dialugueModel: IDialogueModel) => {
@@ -78,7 +78,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            await userQueriesApi.getById();
+            await teacherQueriesApi.getById();
         },
 
         delete: async (id: string) => {
@@ -87,7 +87,7 @@ export default function useDialogieQueriesApi() {
                 return;
             }
 
-            await userQueriesApi.getById();
+            await teacherQueriesApi.getById();
         }
     }
 }

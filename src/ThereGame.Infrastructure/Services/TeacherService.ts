@@ -1,24 +1,28 @@
 import { injectable } from "inversify";
-import { Routes } from "../../Routes";
-import IUserService from "../../ThereGame.Business/Domain/Util/Services/IUserService";
+import { RoutesAPI } from "../../Routes";
+import ITeacherService from "../../ThereGame.Business/Domain/Util/Services/ITeacherService";
 import TypedResult from "../Statuses/Result";
 import { Status } from "../Statuses/Status";
 import "reflect-metadata";
-import { ResultType } from "@remix-run/router/dist/utils";
 
 @injectable()
-export default class UserService implements IUserService {
-    async getById(id: string) {
+export default class TeacherService implements ITeacherService {
+    
+    async getById(id: string): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(Routes.teachersMe, {
+            var response = await fetch(RoutesAPI.teachersMe, {
                 method: 'GET',
                 headers: {
                     'X-THEREGAME-AUTH': `${id}`
                 },
             })
 
+            if (response.status == 401) {
+                return new TypedResult<Status>(Status.Unauthorized);
+            }
+
             var data = await response.json();
-           
+          
             return new TypedResult<Status>(Status.OK, data);
         }
         catch (error) {

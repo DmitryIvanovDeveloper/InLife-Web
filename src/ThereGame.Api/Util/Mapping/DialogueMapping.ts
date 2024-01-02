@@ -11,7 +11,7 @@ export default class DialogueMapping {
             levelId: dialogue.levelId,
             isPublished: dialogue.isPublished,
             id: dialogue.id,
-            userId: dialogue.userId,
+            teacherId: dialogue.teacherId,
             name: dialogue.name,
             phrase: new PhraseMapping().response(dialogue.phrase),
             students: dialogue.students
@@ -28,7 +28,7 @@ export default class DialogueMapping {
             id: dialogue.id,
             name: dialogue.name,
             levelId: dialogue.levelId,
-            userId: dialogue.userId,
+            teacherId: dialogue.teacherId,
             isPublished: dialogue.isPublished,
             phrase: new PhraseMapping().request(dialogue.phrase),
             students: dialogue.students
@@ -41,7 +41,7 @@ export default class DialogueMapping {
             name: dialogue.name,
             phraseId: dialogue.phrase.id,
             levelId: dialogue.levelId,
-            userId: dialogue.userId,
+            teacherId: dialogue.teacherId,
             isPublished: dialogue.isPublished,
             isVoiceSelected: dialogue.isVoiceSelected,
             phrase: new PhraseMapping().request(dialogue.phrase),
@@ -55,7 +55,7 @@ export default class DialogueMapping {
             id: dialogue.id,
             name: dialogue.name,
             levelId: dialogue.levelId,
-            userId: dialogue.userId,
+            teacherId: dialogue.teacherId,
             isPublished: dialogue.isPublished,
             phraseId: dialogue.phrase.id,
             students: dialogue.students

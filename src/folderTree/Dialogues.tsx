@@ -12,7 +12,7 @@ import LocationCarousel from '../components/LocationCarousel';
 import { Locations } from '../Data/Locations';
 import AppBarCustom from '../components/AppBarCustom';
 import Dialogue from './Dialogue';
-import { useUser } from '../Data/useUser';
+import { useTeacher } from '../Data/useTeacher';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import { useTreeState } from '../Data/useTreeState';
 
@@ -22,11 +22,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const dialogueQueriesApi = useDialogieQueriesApi();
     const [treeState, setTreeState] = useTreeState();
 
-    const [user] = useUser();
+    const [teacher] = useTeacher();
 
     const [npcId, setNpcId] = useState<string>(Locations[0].id ?? '');
 
-    const [dialogues, setDialogues] = useState<IDialogueModel[]>(user?.dialogues ?? []);
+    const [dialogues, setDialogues] = useState<IDialogueModel[]>(teacher?.dialogues ?? []);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
 
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
@@ -54,8 +54,8 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             return;
         }
 
-        setDialogues(user?.dialogues.filter(d => d.levelId == npcId) ?? []);
-    }, [npcId, user]);
+        setDialogues(teacher?.dialogues.filter(d => d.levelId == npcId) ?? []);
+    }, [npcId, teacher]);
 
     if (!npcId) {
         return null;

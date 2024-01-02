@@ -4,7 +4,7 @@ import IPhraseRequestDto from "./IPhraseRequestDto";
 export interface IDialogueRequestDto {
     id: string;
     levelId: string,
-    userId: string,
+    teacherId: string,
     isPublished: boolean,
     name: string,
     isVoiceSelected: boolean,
@@ -17,7 +17,7 @@ export interface ICreateDialogueRequestDto {
     name: string,
     phraseId: string;
     levelId: string;
-    userId: string;
+    teacherId: string;
     isPublished: boolean,
     isVoiceSelected: boolean,
     students: IStudentModel[],
@@ -34,7 +34,7 @@ export interface IUpdateDialogueRequestDto {
     id: string;
     name: string,
     levelId: string;
-    userId: string;
+    teacherId: string;
     isPublished: boolean,
     phraseId: string;
     students: IStudentModel[],

@@ -1,17 +1,19 @@
 // IMPORTS
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import { Grid } from "@mui/material";
+import { Box, CircularProgress, Grid, LinearProgress } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
-import React from "react";
-import { useUser } from "../../Data/useUser";
+import React, { useEffect, useState } from "react";
+import { useTeacher } from "../../Data/useTeacher";
 import { useNavigate } from "react-router-dom";
 import CopyToClipboardButton from "../CopyToClipboard/CopyToClipboard";
 import Student from "../Student/Student";
 import MenuAppBar from "../AppBars/MenuAppBar";
+import { Routes } from "../../Routes";
+import useTeacherQueriesApi from "../../ThereGame.Api/Queries/TeacherQueriesApi";
 
 // STYLES
 const styles = {
@@ -26,11 +28,29 @@ const styles = {
     }
 };
 
-//APP
-export default function Teacher(props: any) {
-    const [user] = useUser();
+export default function TeacherProfile(props: any) {
+    const [teacher] = useTeacher();
     const navigate = useNavigate();
+    const teacherQueriesApi = useTeacherQueriesApi();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
+    useEffect(() => {
+        setIsLoading(true);
+        teacherQueriesApi.getById()
+            .then(status => {
+                setIsLoading(false);
+            });
+    }, []);
+    
+    if (isLoading) {
+        return <Box 
+            display='flex' 
+            justifyContent='center'
+        >
+            <LinearProgress />
+        </Box>
+    }
+    
     return (
         <Card variant="outlined">
             <MenuAppBar />
@@ -40,7 +60,7 @@ export default function Teacher(props: any) {
                     variant="contained"
                     color="secondary"
                     sx={{ width: "99%", p: 1, my: 2 }}
-                    onClick={() => navigate("/builder")}
+                    onClick={() => navigate(Routes.dialoguesBuilder)}
                 >
                     Dialogues Buider
                 </Button>
@@ -75,31 +95,31 @@ export default function Teacher(props: any) {
                     </Badge>
 
                     <Typography variant="h6">
-                        {user?.name}&nbsp;{user?.lastName}
+                        {teacher?.name}&nbsp;{teacher?.lastName}
                     </Typography>
-                    <Typography color="text.secondary">{user?.email}</Typography>
+                    <Typography color="text.secondary">{teacher?.email}</Typography>
                 </Grid>
 
-                <CopyToClipboardButton link={`http://localhost:3000/auth/sign-up/student?id=${user?.id}`} />
+                <CopyToClipboardButton link={`http://localhost:3000/auth/sign-up/student?id=${teacher?.id}`} />
 
-                <Typography style={styles.value}>Students [{user?.students.length}]</Typography>
+                <Typography style={styles.value}>Students [{teacher?.students.length}]</Typography>
                 <Grid container>
                     <Grid
                         display='flex'
                         justifyContent='space-between'
                     >
-                        {user?.students.map(student => (
+                        {teacher?.students.map(student => (
                             <Student student={student} />
                         ))}
                     </Grid>
                 </Grid>
 
-                <Typography style={styles.value}>Dialogues [{user?.dialogues.length}]</Typography>
+                <Typography style={styles.value}>Dialogues [{teacher?.dialogues.length}]</Typography>
 
                 <Grid container>
 
                     <Grid item xs={6}>
-                        {user?.dialogues.map(dialogue => (
+                        {teacher?.dialogues.map(dialogue => (
                             <Typography>{dialogue.name}</Typography>
                         ))}
                     </Grid>

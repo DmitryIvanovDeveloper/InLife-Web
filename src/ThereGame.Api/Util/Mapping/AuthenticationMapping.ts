@@ -1,6 +1,6 @@
 import ISignInModel from "../../../ThereGame.Business/Models/ISignInModel";
 import ISignUpModel from "../../../ThereGame.Business/Models/ISignUpModel";
-import IUserModel from "../../../ThereGame.Business/Models/IUserModel";
+import ITeacherModel from "../../../ThereGame.Business/Models/ITeacherModel";
 import ISignInRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInRequestDto";
 import ISignUpRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignUpRequestDto";
 

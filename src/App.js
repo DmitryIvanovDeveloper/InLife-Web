@@ -1,40 +1,46 @@
 import React, { useEffect } from 'react';
 import DialogueBuilder from './folderTree/DialogueBuilder';
-import { Routes, Route } from 'react-router-dom';
 import SignInTeacher from './components/Authentication/SignInTeacher';
-import useUserQueriesApi from './ThereGame.Api/Queries/UserQueriesApi';
+import useTeacherQueriesApi from './ThereGame.Api/Queries/TeacherQueriesApi';
 import SignUpStudent from './components/Authentication/SignUpStudent';
 import SignUpTeacher from './components/Authentication/SignUpTeacher';
-import Teacher from './components/Teacher/Teacher';
-import { useNavigate } from "react-router-dom";
+import TeacherProfile from './components/Teacher/TeacherProfile';
+import { useNavigate, Routes, Route } from "react-router-dom";
+import { Status } from './ThereGame.Infrastructure/Statuses/Status';
+import { Routes as LocalRoutes} from './Routes';
 import './App.css';
-import { AppBar } from '@mui/material';
 
 export function App() {
 
-    var userQuerisApi = useUserQueriesApi();
+    var teacherQuerisApi = useTeacherQueriesApi();
     const navigate = useNavigate();
 
     useEffect(() => {
-        userQuerisApi.getById()
-        .then(result => {
-            if (!result)
+        teacherQuerisApi.getById()
+        .then(status => {
+            if (status == Status.Unauthorized)
             {
-                navigate('/auth/sign-in/teacher')
+                navigate(LocalRoutes.SignInTeacher)
                 return;
             }
-            navigate('/teacher')
+
+            console.log(status);
+            if (status == Status.OK)
+            {
+                navigate(LocalRoutes.teacherProfile)
+                return;
+            }
         });
     }, []);
 
     return (
         <React.StrictMode>
             <Routes>
-                <Route path="/auth/sign-in/teacher" element={<SignInTeacher />} />
-                <Route path="/auth/sign-up/teacher" element={<SignUpTeacher />} />
-                <Route path="/auth/sign-up/student" element={<SignUpStudent />} />
-                <Route path="/teacher" element={<Teacher />} />
-                <Route path="/builder" element={<DialogueBuilder />} />
+                <Route path={LocalRoutes.signInTeacher} element={<SignInTeacher />} />
+                <Route path={LocalRoutes.signUpTeacher} element={<SignUpTeacher />} />
+                <Route path={LocalRoutes.signUpStudent} element={<SignUpStudent />} />
+                <Route path={LocalRoutes.teacherProfile} element={<TeacherProfile />} />
+                <Route path={LocalRoutes.dialoguesBuilder} element={<DialogueBuilder />} />
             </Routes>
         </React.StrictMode>
 

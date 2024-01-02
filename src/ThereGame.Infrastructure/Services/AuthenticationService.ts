@@ -1,19 +1,18 @@
 import { injectable } from "inversify";
-import { Routes } from "../../Routes";
 import IAuthenticationService from "../../ThereGame.Business/Domain/Util/Services/IAuthenticationService";
 import TypedResult from "../Statuses/Result";
 import { Status } from "../Statuses/Status";
 import ISignInRequestDto from "./Dto/ISignInRequestDto";
 import ISignUpRequestDto from "./Dto/ISignUpRequestDto";
 import "reflect-metadata";
+import { RoutesAPI } from "../../Routes";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
     
-    
     async signInTeacher(request: ISignInRequestDto): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(Routes.authSignInTeacher, {
+            var response = await fetch(RoutesAPI.authSignInTeacher, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -21,6 +20,10 @@ export default class AuthenticationService implements IAuthenticationService {
                 body: JSON.stringify(request)
             })
 
+            if (response.status == 401) {
+                return new TypedResult<Status>(Status.Unauthorized);
+            }
+            
             var data = await response.json();
            
             return new TypedResult<Status>(Status.OK, data);
@@ -32,13 +35,17 @@ export default class AuthenticationService implements IAuthenticationService {
 
     async signUpTeacher(request: ISignUpRequestDto): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(Routes.authSignUpTeacher, {
+            var response = await fetch(RoutesAPI.authSignUpTeacher, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(request)
             })
+
+            if (response.status == 409) {
+                return new TypedResult<Status>(Status.Conflict);
+            }
 
             var data = await response.json();
 
@@ -51,7 +58,7 @@ export default class AuthenticationService implements IAuthenticationService {
 
     async signInStudent(request: ISignInRequestDto): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(Routes.authSignInStudent, {
+            var response = await fetch(RoutesAPI.authSignInStudent, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +76,7 @@ export default class AuthenticationService implements IAuthenticationService {
     }
     async signUpStudent(request: ISignUpRequestDto): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(Routes.authSignUpStudent, {
+            var response = await fetch(RoutesAPI.authSignUpStudent, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

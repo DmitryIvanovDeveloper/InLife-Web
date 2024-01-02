@@ -1,11 +1,11 @@
-import IUserModel from "../../../ThereGame.Business/Models/IUserModel";
+import ITeacherModel from "../../../ThereGame.Business/Models/ITeacherModel";
 import ITeacherResponseDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInResponseDto";
 import DialogueMapping from "./DialogueMapping";
 import StudentMapping from "./StudentMapping";
 
 export default class TeacherMapping {
     
-    response(data: ITeacherResponseDto): IUserModel {
+    response(data: ITeacherResponseDto): ITeacherModel {
         return {
             id: data.id,
             name: data.name,

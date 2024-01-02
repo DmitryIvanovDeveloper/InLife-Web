@@ -15,12 +15,14 @@ import LinarProgressCustom from "../../components/CircularProgress";
 import DevidedLabel from "../../components/Headers/DevidedLabel";
 import { useTreeState } from "../../Data/useTreeState";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
+import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 
 
 export interface IPhraseConstructor {
     dialogueId: string;
     id: string
     parentId: string
+    setStates?: (states: DialogueItemStateType[]) => void;
 }
 
 export default function PhraseContructor(props: IPhraseConstructor): JSX.Element | null {
@@ -156,10 +158,21 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
     }, [phrase]);
 
+    useEffect(() => {
+        if (!props.setStates) {
+            return;
+        }
+
+        if (isSaved) {
+            props.setStates([DialogueItemStateType.NoErrors])
+            return;
+        }
+
+        props.setStates([DialogueItemStateType.UnsavedChanges])
+    }, [isSaved]);
+
 
     useEffect(() => {
-        console.log(phraseRecoil)
-
         var data = localStorage.getItem(props.id);
         if (JSON.stringify(phraseRecoil) !== data) {
             return;

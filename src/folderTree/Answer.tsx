@@ -1,9 +1,10 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Phrase from "./Phrase";
 import TextButton from "../components/buttons/TextButton";
 import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues";
 import AnswerContructor from "../constructors/answerContructor/AnswerConstructor";
+import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
 
 export interface IAnswerProps {
     dialogueId: string,
@@ -16,6 +17,7 @@ export default function Answer(props: IAnswerProps): JSX.Element | null {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const answerRecoil = useAnswer(props.dialogueId, props.id);
+    const [states, setStates] = useState<DialogueItemStateType[]>([DialogueItemStateType.NoErrors]);
 
     const onClick = (event: any) => {
         event.stopPropagation();
@@ -25,6 +27,7 @@ export default function Answer(props: IAnswerProps): JSX.Element | null {
             dialogueId={props.dialogueId} 
             id={props.id} 
             parentId={props.parentId} 
+            setStates={setStates}
         />);
     }
 
@@ -35,7 +38,7 @@ export default function Answer(props: IAnswerProps): JSX.Element | null {
     return (
         <TextButton onClick={onClick}>
             <TreeItem 
-                style={{color: "darkgreen"}} 
+                style={{color: states[0] == DialogueItemStateType.UnsavedChanges ? "#e65100":  "darkgreen"}} 
                 key={answerRecoil.id} 
                 nodeId={answerRecoil.id} 
                 label={`${answerRecoil.texts[0]} [A]`}>

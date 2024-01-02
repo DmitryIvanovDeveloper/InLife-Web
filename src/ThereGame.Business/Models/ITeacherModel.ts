@@ -1,7 +1,7 @@
 import { IDialogueModel } from "./IDialogueModel";
 import IStudentModel from "./IStudentModel";
 
-export default interface IUserModel {
+export default interface ITeacherModel {
     id: string,
     name: string;
     lastName: string;

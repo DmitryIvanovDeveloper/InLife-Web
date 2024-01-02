@@ -12,55 +12,53 @@ export default function useAuthenticationQueriesApi() {
     const authenticationService = appContainer.get<IAuthenticationService>(TYPES.AuthenticationService);
     
     return {
-        signInTeacher: async (data: ISignInModel): Promise<boolean> => {
+        signInTeacher: async (data: ISignInModel): Promise<Status> => {
             var request = new AuthenticationMapping().requestSignIn(data);
             
             var response = await authenticationService.signInTeacher(request);
-            if (response.status != Status.OK)
+            if (response.status == Status.OK)
             {
-                return false;
+                localStorage.setItem("[Teacher] - Token", response.data);
             }
 
-            localStorage.setItem("[Teacher] - Token", response.data);
-            return true;
+            return response.status;
         },
 
-        signUpTeacher: async (data: ISignUpModel): Promise<boolean> => {
+        signUpTeacher: async (data: ISignUpModel): Promise<Status> => {
             var request = new AuthenticationMapping().requestSignUp(data);
 
             var response = await authenticationService.signUpTeacher(request);
-            if (response.status != Status.OK)
+            if (response.status == Status.OK)
             {
-                return false;
+                localStorage.setItem("[Teacher] - Token", response.data);
             }
 
-            localStorage.setItem("[Teacher] - Token", response.data);
 
-            return true;
+            return response.status;
         },
 
-        signInStudent: async (data: ISignInModel) => {
+        signInStudent: async (data: ISignInModel): Promise<Status> => {
             var request = new AuthenticationMapping().requestSignIn(data);
             
             var response = await authenticationService.signInStudent(request);
-            if (response.status != Status.OK)
+            if (response.status == Status.OK)
             {
-                return;
+                localStorage.setItem("[Student] - Token", response.data);
             }
 
-            localStorage.setItem("[Student] - Token", response.data);
+            return response.status;
         },
 
-        signUpStudent: async (data: ISignUpModel) => {
+        signUpStudent: async (data: ISignUpModel): Promise<Status> => {
             var request = new AuthenticationMapping().requestSignUp(data);
 
             var response = await authenticationService.signUpStudent(request);
-            if (response.status != Status.OK)
+            if (response.status == Status.OK)
             {
-                return;
+                localStorage.setItem("[Student] - Token", response.data);
             }
 
-            localStorage.setItem("[Student] - Token", response.data);
+            return response.status;
         },
     }
 }

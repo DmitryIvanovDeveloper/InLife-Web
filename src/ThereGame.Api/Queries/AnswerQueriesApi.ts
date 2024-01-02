@@ -7,11 +7,11 @@ import AnswerMapping from "../Util/Mapping/AnswerMapping";
 import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
-import useUserQueriesApi from "./UserQueriesApi";
+import useTeacherQueriesApi from "./TeacherQueriesApi";
 
 export default function useAnswerQueriesApi() {
     const answerService = appContainer.get<IAnswerService>(TYPES.AnswerService);
-    var userQueriesApi = useUserQueriesApi();
+    var teacherQueriesApi = useTeacherQueriesApi();
     
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
@@ -19,7 +19,7 @@ export default function useAnswerQueriesApi() {
         getById: async (id: string): Promise<Status> => {
             var response = await answerService.GetById(id);
             
-            await userQueriesApi.getById();
+            await teacherQueriesApi.getById();
 
             return response.status;
         },
@@ -39,7 +39,7 @@ export default function useAnswerQueriesApi() {
 
             var response = await answerService.Create(requestData);
 
-            await userQueriesApi.getById();
+            await teacherQueriesApi.getById();
 
             return response.status;
         },
@@ -49,14 +49,14 @@ export default function useAnswerQueriesApi() {
             var response = await answerService.Update(requestData);
            
 
-            await userQueriesApi.getById();
+            await teacherQueriesApi.getById();
             return response.status;
         },
 
         delete: async (id: string): Promise<Status> => {
             var response = await answerService.Delete(id);
 
-            await userQueriesApi.getById();
+            await teacherQueriesApi.getById();
             return response.status;
         }
     }
