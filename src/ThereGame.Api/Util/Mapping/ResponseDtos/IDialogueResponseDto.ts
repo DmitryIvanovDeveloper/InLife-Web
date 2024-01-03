@@ -9,5 +9,5 @@ export interface IDialogueResponseDto {
     id: string;
     name: string;
     phrase: IPhraseResponseDto;
-    students: IStudentModel[];
+    studentsId: string[];
 }

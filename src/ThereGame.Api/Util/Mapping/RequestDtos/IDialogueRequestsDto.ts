@@ -9,7 +9,7 @@ export interface IDialogueRequestDto {
     name: string,
     isVoiceSelected: boolean,
     phrase: IPhraseRequestDto;
-    students: IStudentModel[],
+    studentsId: string[],
 }
 
 export interface ICreateDialogueRequestDto {
@@ -20,7 +20,7 @@ export interface ICreateDialogueRequestDto {
     teacherId: string;
     isPublished: boolean,
     isVoiceSelected: boolean,
-    students: IStudentModel[],
+    studentsId: string[],
     phrase: {
         id:  string,
         text:  string,
@@ -37,5 +37,5 @@ export interface IUpdateDialogueRequestDto {
     teacherId: string;
     isPublished: boolean,
     phraseId: string;
-    students: IStudentModel[],
+    studentsId: string[],
 }

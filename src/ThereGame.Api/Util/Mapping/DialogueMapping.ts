@@ -14,7 +14,7 @@ export default class DialogueMapping {
             teacherId: dialogue.teacherId,
             name: dialogue.name,
             phrase: new PhraseMapping().response(dialogue.phrase),
-            students: dialogue.students
+            studentsId: dialogue.studentsId
         }
     }
 
@@ -31,7 +31,7 @@ export default class DialogueMapping {
             teacherId: dialogue.teacherId,
             isPublished: dialogue.isPublished,
             phrase: new PhraseMapping().request(dialogue.phrase),
-            students: dialogue.students
+            studentsId: dialogue.studentsId
         }
     }
 
@@ -45,11 +45,12 @@ export default class DialogueMapping {
             isPublished: dialogue.isPublished,
             isVoiceSelected: dialogue.isVoiceSelected,
             phrase: new PhraseMapping().request(dialogue.phrase),
-            students: dialogue.students
+            studentsId: dialogue.studentsId
         }
     }
     
     public requestToUpdateDialogue(dialogue: IDialogueModel): IUpdateDialogueRequestDto {
+        console.log(dialogue.studentsId)
         return {
             isVoiceSelected: dialogue.isVoiceSelected,
             id: dialogue.id,
@@ -58,7 +59,7 @@ export default class DialogueMapping {
             teacherId: dialogue.teacherId,
             isPublished: dialogue.isPublished,
             phraseId: dialogue.phrase.id,
-            students: dialogue.students
+            studentsId: dialogue.studentsId
         }
     }
 }

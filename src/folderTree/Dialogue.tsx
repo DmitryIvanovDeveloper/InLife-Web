@@ -4,7 +4,6 @@ import TextButton from "../components/buttons/TextButton";
 import { useDialogue, useDialogueItemConstructor } from "../Data/useDialogues";
 import DialogueConstructor from "../constructors/dialogueConstructor/DialogueConstructor";
 import Phrase from "./Phrase";
-import { useTreeState } from "../Data/useTreeState";
 
 export interface IDialogueProps {
     id: string,
@@ -30,16 +29,15 @@ export default function Dialogue(props: IDialogueProps) {
                     key={props.id}
                     nodeId={dialogueRecoil.id}
                     label={`${dialogueRecoil.name} [D]`}
-                >
-                    {
-                        dialogueRecoil.isVoiceSelected
-                            ?  <Phrase
-                                dialogueId={dialogueRecoil.id}
-                                id={dialogueRecoil.phrase.id}
-                                parentId={dialogueRecoil.id}
-                            />
-                            : null
-                    }
+                >{
+                    dialogueRecoil.isVoiceSelected
+                        ?  <Phrase
+                            dialogueId={dialogueRecoil.id}
+                            id={dialogueRecoil.phrase.id}
+                            parentId={dialogueRecoil.id}
+                        />
+                        : null
+                }
                   
                 </TreeItem>
             </TextButton>

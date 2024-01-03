@@ -9,7 +9,6 @@ import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
 import VoiceList from "../../components/voiceList/VoiceList";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 import StudentList from "../../components/StudentList";
-import IStudentModel from "../../ThereGame.Business/Models/IStudentModel";
 import { useTreeState } from "../../Data/useTreeState";
 
 export interface IDialogueConstructor {
@@ -78,10 +77,10 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         setIsSaved(false);
     }
 
-    const setStudentList = (students: IStudentModel[]) => {
+    const setStudentList = (studentsId: string[]) => {
         setDialogue(prev => ({
             ...prev,
-            students: students
+            studentsId: studentsId
         }));
 
         setIsSaved(false);
@@ -165,10 +164,10 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 variant="outlined"
             />
 
-            {/* <StudentList
-                studentList={dialogue.students}
+            <StudentList
+                studentList={dialogue.studentsId}
                 setStudentList={setStudentList}
-            /> */}
+            />
 
             <SaveButton
                 onClick={save}
