@@ -71,11 +71,8 @@ export default function useDialogieQueriesApi() {
         },
 
         update: async (dialugueModel: IDialogueModel) => {
-            console.log(dialugueModel)
-
             var requestData = new DialogueMapping().requestToUpdateDialogue(dialugueModel);
 
-            console.log(requestData)
             var response = await dialogueService.Update(requestData);
             if (response?.status != Status.OK) {
                 return;

@@ -50,7 +50,6 @@ export default class DialogueMapping {
     }
     
     public requestToUpdateDialogue(dialogue: IDialogueModel): IUpdateDialogueRequestDto {
-        console.log(dialogue.studentsId)
         return {
             isVoiceSelected: dialogue.isVoiceSelected,
             id: dialogue.id,
