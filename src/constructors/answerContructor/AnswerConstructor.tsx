@@ -204,7 +204,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const onChangeEquivalentAnswer = (value: string, index: number) => {
         var texts = [...answer.texts];
         texts[index] = value;
-        console.log(texts);
+        
         setAnswer(prev => ({
             ...prev,
             texts: texts

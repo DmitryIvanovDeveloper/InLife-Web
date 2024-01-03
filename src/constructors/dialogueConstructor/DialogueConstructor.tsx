@@ -20,9 +20,9 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
 
-    const [isVoiceSelected, setIsVoiceSelected] = useState<boolean>(false);
+    const [isVoiceSelected, setIsSelected] = useState<boolean>(dialogueRecoil.isVoiceSelected);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    const [isSaved, setIsSaved] = useState(true);
+    const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [treeState, setTreeState] = useTreeState();
 
@@ -32,9 +32,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         setIsLoading(true)
         await dialogueQueriesApi.update(dialogue)
         setIsLoading(false)
-        setIsSaved(true);
-
-        reset();
+        setIsEdited(true);
     }
 
     const onDelete = async () => {
@@ -49,7 +47,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             name: event.target.value
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onClickPhrase = (event: any) => {
@@ -68,13 +66,22 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         />);
     }
 
+    const setIsVoiceSelected = (isSelected: boolean) => {
+        setIsSelected(isSelected);
+        setDialogue(prev => ({
+            ...prev,
+            isVoiceSelected
+        }))
+
+        setIsEdited(false);
+    }
     const publish = async () => {
         setDialogue(prev => ({
             ...prev,
             isPublished: !prev.isPublished
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const setStudentList = (studentsId: string[]) => {
@@ -83,10 +90,11 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             studentsId: studentsId
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const reset = () => {
+        setDialogue(dialogueRecoil);
         localStorage.removeItem(props.id);
     }
 
@@ -94,18 +102,18 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         var data = localStorage.getItem(props.id);
         if (!data) {
             setDialogue(dialogueRecoil);
-            setIsSaved(true);
+            setIsEdited(true);
             return;
         }
 
-        setIsSaved(false);
+        setIsEdited(false);
 
         setDialogue(JSON.parse(data));
     }, [dialogueRecoil]);
 
     useEffect(() => {
-        if (isSaved) {
-            return;
+        if (isEdited) {
+            reset();
         }
 
         if (JSON.stringify(dialogueRecoil) !== JSON.stringify(dialogue)) {
@@ -114,15 +122,8 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         }
 
         localStorage.removeItem(props.id);
-        setIsSaved(true)
+        setIsEdited(true)
     }, [dialogue]);
-
-    useEffect(() => {
-        setDialogue(prev => ({
-            ...prev,
-            isVoiceSelected
-        }))
-    }, [isVoiceSelected]);
 
     if (!dialogue) {
         return null;
@@ -183,7 +184,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 </Button>
             </Box>
 
-            {!isSaved
+            {!isEdited
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={reset}>reset</Button>

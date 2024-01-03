@@ -51,7 +51,6 @@ export default function DialoguesSelect(props: IDialoguesSelectProps) {
     const [dialogues] = useDialogues();
 
     const handleChange = (event: any) => {
-        console.log(event)
     };
 
     return (

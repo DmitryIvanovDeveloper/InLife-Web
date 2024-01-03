@@ -62,6 +62,7 @@ export default function VoiceList(props: IVoiceListProps) {
     }, [voiceOption]);
 
     useEffect(() => {
+
         if (!voiceOption || !voice) {
             props.setIsVoiceSelected(false);
             return;

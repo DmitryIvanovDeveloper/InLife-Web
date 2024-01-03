@@ -64,7 +64,6 @@ export default function SignUpTeacher() {
         setIsLoading(true);
         var status = await authenticationQueriesApi.signUpTeacher(data);
 
-        console.log(status)
         if (status == Status.OK) {
             navigate(Routes.teacherProfile);
         }

@@ -24,7 +24,6 @@ export function App() {
                 return;
             }
 
-            console.log(status);
             if (status == Status.OK)
             {
                 navigate(LocalRoutes.teacherProfile)

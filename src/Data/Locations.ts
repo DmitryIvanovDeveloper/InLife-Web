@@ -4,11 +4,12 @@ import BusStation from '../Images/Locations/BusStation.png';
 import FitnessTraier from '../Images/Locations/FitnessTrainer.png';
 //@ts-ignore
 import Walker from '../Images/Locations/Walker.png';
+import FountainOldMan from '../Images/Locations/FountainOldMan.png';
 import { GenderType } from './GenderType';
 
 export const Locations = [{
     id: process.env.REACT_APP_LOCATION_BUS_STATION,
-    name: "Street: Bus Station",
+    name: "Street: Bus station",
     gender: GenderType.Female,
     image: BusStation
 },
@@ -23,7 +24,13 @@ export const Locations = [{
     name: "Street: Walker",
     gender: GenderType.Male,
     image: Walker
-}
+},
+{
+    id: process.env.REACT_APP_LOCATION_FOUNTAIN_OLDMAN,
+    name: "Fountain: Old man",
+    gender: GenderType.Male,
+    image: FountainOldMan
+},
 ]
 
 
