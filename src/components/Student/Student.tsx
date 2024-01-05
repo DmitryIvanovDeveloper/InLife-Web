@@ -1,18 +1,22 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, Typography } from "@mui/material";
 import IStudentModel from "../../ThereGame.Business/Models/IStudentModel";
 
-export interface IStudentProps {
+export interface IStudentCardProps {
     student: IStudentModel;
 }
-export default function Student(props: IStudentProps) {
+export default function StudentCard(props: IStudentCardProps) {
     return (
-        <Box
-            display='flex'
-            alignItems='center'
-            flexDirection='column'
-        >
-            <Typography color="text.secondary">{props.student?.name}&nbsp;{props.student?.lastName}</Typography>
-            <Button>{props.student.email}</Button>
-        </Box>
+        <Card 
+            sx={{p: 2}}
+            style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                flexDirection: 'column', 
+                alignItems: 'center',
+            }}>
+            <Avatar sx={{m: 1}} src={props.student.avatar} />
+            <Typography>{props.student?.name}&nbsp;{props.student?.lastName}</Typography>
+            <Typography>{props.student.email}</Typography>
+        </Card>
     )
 }

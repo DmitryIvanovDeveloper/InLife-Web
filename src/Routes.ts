@@ -17,6 +17,7 @@ const Routes = {
    signUpStudent: "/auth/sign-up/student",
    dialoguesBuilder: "/teacher/builder",
    teacherProfile: "/teacher/profile",
+   teacherProfileEditor: "/teacher/profile/editor",
 }
 
 export { RoutesAPI, Routes }

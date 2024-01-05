@@ -3,6 +3,7 @@ import { IDialogueResponseDto } from "../../../ThereGame.Api/Util/Mapping/Respon
 
 export default interface ITeacherResponseDto {
     id: string,
+    avatar: string,
     name: string,
     lastName: string,
     email: string,

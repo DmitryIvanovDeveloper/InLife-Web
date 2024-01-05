@@ -20,7 +20,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
 
-    const [isVoiceSelected, setIsSelected] = useState<boolean>(dialogueRecoil.isVoiceSelected);
+    const [isVoiceSelected, setIsSelected] = useState<boolean>(false);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);

@@ -16,7 +16,7 @@ export interface IVoiceListProps {
 export default function VoiceList(props: IVoiceListProps) {
 
     const [voices, setVoices] = useState<IVoiceModel[]>([]);
-    const [voiceOption, setVoiceOption] = useState<IVoiceOption>();
+    const [voiceOption, setVoiceOption] = useState<IVoiceOption | null>();
     const [voice, setVoice] = useState<IVoiceModel | null>();
 
     const handleChangeVoicesType = (event: any) => {
@@ -40,7 +40,10 @@ export default function VoiceList(props: IVoiceListProps) {
 
     useEffect(() => {
         var data = localStorage.getItem(`[DeepVoice] - ${props.dialogueId}`);
+        
         if (!data) {
+            setVoiceOption(null);
+            setVoice(null)
             return;
         }
 
@@ -51,7 +54,7 @@ export default function VoiceList(props: IVoiceListProps) {
 
         setVoiceOption(selectedVoiceOption);
         setVoice(selectedVoice);
-    }, []);
+    }, [props.dialogueId]);
 
     useEffect(() => {
         if (!voiceOption) {
@@ -62,7 +65,6 @@ export default function VoiceList(props: IVoiceListProps) {
     }, [voiceOption]);
 
     useEffect(() => {
-
         if (!voiceOption || !voice) {
             props.setIsVoiceSelected(false);
             return;
@@ -85,7 +87,7 @@ export default function VoiceList(props: IVoiceListProps) {
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="Age"
+                    label="Voice Option"
                     value={`${voiceOption?.type}`}
                     onChange={handleChangeVoicesType}
                     fullWidth

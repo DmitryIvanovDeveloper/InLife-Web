@@ -2,7 +2,9 @@ import { useDialogues } from "../../Data/useDialogues";
 import { useStudents } from "../../Data/useStudents";
 import { useTeacher } from "../../Data/useTeacher";
 import ITeacherService from "../../ThereGame.Business/Domain/Util/Services/ITeacherService";
+import ITeacherModel from "../../ThereGame.Business/Models/ITeacherModel";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
+import { ITeacherBio } from "../../components/Profile/ProfileEditor";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
 import TeacherMapping from "../Util/Mapping/TeacherMapping";
@@ -34,5 +36,12 @@ export default function useTeacherQueriesApi() {
          
             return response.status;
         },
+
+        update: async (data: ITeacherBio, id: string): Promise<Status> => {
+            
+            var request = new TeacherMapping().request(data);
+            var response = await teacherService.update(request, id);
+            return response.status;
+        }
     }
 }
