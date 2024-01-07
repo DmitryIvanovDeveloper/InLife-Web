@@ -5,7 +5,7 @@ import { useDialogue, useDialogueItemConstructor } from "../Data/useDialogues";
 import DialogueConstructor from "../constructors/dialogueConstructor/DialogueConstructor";
 import Phrase from "./Phrase";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export interface IDialogueProps {
     id: string,
