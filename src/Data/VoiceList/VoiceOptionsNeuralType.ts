@@ -1,7 +1,7 @@
 export enum VoiceOptionsNeuralType {
     Amy = "Amy",
     Aria = "Aria",
-    // Arthur = "Arthur",
+    Arthur = "Arthur",
     Ayanda = "Ayanda",
     Brian = "Brian",
     Emma = "Emma",

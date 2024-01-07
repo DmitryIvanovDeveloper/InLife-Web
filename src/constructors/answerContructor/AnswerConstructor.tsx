@@ -1,7 +1,7 @@
 import { Alert, Box, Button, ButtonGroup, Divider, FormLabel, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AddButton from "../../components/buttons/AddButton";
-import SaveButton from "../../components/buttons/SaveButton";
+import AddButton from "../../components/Buttons/AddButton";
+import SaveButton from "../../components/Buttons/SaveButton";
 import { useSelection } from "../../Data/useSelection";
 import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
@@ -192,6 +192,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         await answerQueriesApi.delete(props.id)
         setIsDeleting(false);
         setIsSaved(true)
+        setDialogueItemConstructor(() => null);
     }
 
     const onSave = async () => {
@@ -278,7 +279,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             return;
         }
 
-
         if (isSaved) {
             props.setStates([DialogueItemStateType.NoErrors])
             return;
@@ -319,7 +319,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
 
             
-            {/* <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} /> */}
+            <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} />
 
             <EquivalentTextConstructor
                 onChangeEquivalentAnswer={onChangeEquivalentAnswer}

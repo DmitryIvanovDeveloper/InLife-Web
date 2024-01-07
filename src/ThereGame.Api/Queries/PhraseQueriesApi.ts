@@ -21,7 +21,7 @@ export default function usePhraseQueriesApi() {
         create: async (parentAnswerId: string): Promise<Status> => {
             const phrase: IPhraseModel = {
                 parentId: parentAnswerId,
-                text: "New Phrase",
+                text: "",
                 answers: [],
                 tensesList: [],
                 comments: "",

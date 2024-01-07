@@ -1,12 +1,11 @@
 import { Box, Grid } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useDialogueItemConstructor, usePhrase } from "../Data/useDialogues";
-import TextButton from "../components/buttons/TextButton";
+import TextButton from "../components/Buttons/TextButton";
 import Answer from "./Answer";
 import PhraseContructor from "../constructors/phraseContructor.tsx/PhraseContructor";
 import { useState } from "react";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
-import WarningIcon from '@material-ui/icons/Warning';
 
 export interface IPhraseProps {
     dialogueId: string;
@@ -43,7 +42,7 @@ export default function Phrase(props: IPhraseProps): JSX.Element | null {
                     key={phraseRecoil.id}
                     nodeId={phraseRecoil.id}
                     itemType="Phrase"
-                    label={`${phraseRecoil.text} [P]`}
+                    label={`${!phraseRecoil.text ? "New Phrase" : phraseRecoil.text} [P]`}
                     style={{color: states[0] == DialogueItemStateType.UnsavedChanges ? "#e65100":  "#9c27b0"}} 
                 >
                     <Grid

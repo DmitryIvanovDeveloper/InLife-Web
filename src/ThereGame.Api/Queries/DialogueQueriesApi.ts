@@ -41,7 +41,7 @@ export default function useDialogieQueriesApi() {
 
             var phrase: IPhraseModel = {
                 parentId: null,
-                text: 'New Phrase',
+                text: '',
                 answers: [],
                 tensesList: [],
                 comments: '',
@@ -54,7 +54,7 @@ export default function useDialogieQueriesApi() {
                 isPublished: false,
                 levelId: id,
                 id: uuidv4(),
-                name: 'New Dialogue',
+                name: '',
                 phrase: phrase,
                 teacherId: teacher?.id,
                 studentsId: teacher.students.map(student => student.id),

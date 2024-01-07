@@ -27,7 +27,7 @@ export default function useAnswerQueriesApi() {
         create: async (parentPhraseId: string): Promise<Status> => {
             const dialogue: IAnswerModel = {
                 tensesList: [],
-                texts: ["New Answer"],
+                texts: [],
                 wordsToUse: "",
                 mistakeExplanations: [],
                 translates: [],

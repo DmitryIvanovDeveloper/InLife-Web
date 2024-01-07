@@ -89,7 +89,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                         fullWidth
                         variant='contained'
                         onClick={createNewDialogue}>
-                        New Dialogue
+                        Create New Dialogue
                     </Button>
                 }
             </Box>
@@ -106,7 +106,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 multiSelect
             >
                 {dialogues
-                    
                     .map(dialogue => (
                         <Dialogue id={dialogue.id} />
                     ))}

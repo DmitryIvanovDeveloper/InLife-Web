@@ -4,8 +4,8 @@ import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
-import AddButton from "../../components/buttons/AddButton";
-import SaveButton from "../../components/buttons/SaveButton";
+import AddButton from "../../components/Buttons/AddButton";
+import SaveButton from "../../components/Buttons/SaveButton";
 import TensesList from "../TensesList";
 import AnswerContructor from "../answerContructor/AnswerConstructor";
 import { Box, TextField, Button, Typography, Alert, Divider } from "@mui/material";
@@ -36,7 +36,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const [treeState, setTreeState] = useTreeState();
 
     const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
-    const [isSaved, setIsSaved] = useState(true);
+    const [isEdited, setIsEdited] = useState(true);
     const [isSaving, setIsSaving] = useState<boolean>(false);
     const [isCreating, setIsCreating] = useState<boolean>(false);
     const [status, setStatus] = useState<Status>(Status.OK);
@@ -61,19 +61,20 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         if (status == Status.OK) {
             localStorage.removeItem(props.id);
         }
-        setIsSaved(true);
+        setIsEdited(true);
     }
 
     const onDelete = async () => {
         var status = await phraseQueriesApi.delete(props.id);
         setStatus(status);
         localStorage.removeItem(props.id);
+        setDialogueItemConstructor(() => null);
     }
 
     const reset = () => {
 
         setPhrase(phraseRecoil);
-        setIsSaved(true);
+        setIsEdited(true);
         setStatus(Status.OK);
         localStorage.removeItem(props.id);
     }
@@ -100,7 +101,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             text: event.target.value
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onCommentsChange = (event: any) => {
@@ -108,7 +109,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             ...prev,
             comments: event.target.value
         }));
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onSetTenses = (tenses: string[]) => {
@@ -117,7 +118,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             tensesList: tenses
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
 
@@ -141,16 +142,16 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         var data = localStorage.getItem(props.id);
         if (!data) {
             setPhrase(phraseRecoil);
-            setIsSaved(true);
+            setIsEdited(true);
             return;
         }
-        setIsSaved(false);
+        setIsEdited(false);
 
         setPhrase(JSON.parse(data));
     }, [phraseRecoil])
 
     useEffect(() => {
-        if (isSaved) {
+        if (isEdited) {
             return;
         }
 
@@ -163,13 +164,13 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             return;
         }
 
-        if (isSaved) {
+        if (isEdited) {
             props.setStates([DialogueItemStateType.NoErrors])
             return;
         }
 
         props.setStates([DialogueItemStateType.UnsavedChanges])
-    }, [isSaved]);
+    }, [isEdited]);
 
 
     useEffect(() => {
@@ -179,7 +180,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         }
 
         localStorage.removeItem(props.id);
-        setIsSaved(true)
+        setIsEdited(true)
     }, [phrase]);
 
     if (!phrase) {
@@ -241,7 +242,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 isDisabled={false} 
             />
 
-            {!isSaved || status != Status.OK
+            {!isEdited || status != Status.OK
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={reset}>reset</Button>
@@ -253,7 +254,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
                 : null
             }
-             {!phrase.audioData
+             {!phrase.audioData && !!phraseRecoil.text 
                 ? <Alert severity="error">The phrase is not generated to audio!</Alert>
                 : null
             }
@@ -277,7 +278,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                             sx={{p: 1}}
                         >
                             <Button variant='outlined' id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
-                                <Typography sx={{ textDecoration: 'underline' }}>{answer.texts[0]}</Typography>
+                                <Typography sx={{ textDecoration: 'underline' }}>{!answer.texts.length ? "New Phrase" : answer.texts[0]}</Typography>
                             </Button>
                         </Box>
 

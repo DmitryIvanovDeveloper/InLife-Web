@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Phrase from "./Phrase";
-import TextButton from "../components/buttons/TextButton";
+import TextButton from "../components/Buttons/TextButton";
 import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues";
 import AnswerContructor from "../constructors/answerContructor/AnswerConstructor";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
@@ -41,7 +41,7 @@ export default function Answer(props: IAnswerProps): JSX.Element | null {
                 style={{color: states[0] == DialogueItemStateType.UnsavedChanges ? "#e65100":  "darkgreen"}} 
                 key={answerRecoil.id} 
                 nodeId={answerRecoil.id} 
-                label={`${answerRecoil.texts[0]} [A]`}>
+                label={`${!answerRecoil.texts.length ? "New Answer" : answerRecoil.texts[0]} [A]`}>
                 {answerRecoil.phrases.map(phrase => (
                         <Phrase 
                             key={phrase.id} 
