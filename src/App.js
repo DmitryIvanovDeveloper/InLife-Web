@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import DialogueBuilder from './folderTree/DialogueBuilder';
+import DialogueBuilder from './DialogueTree/DialogueBuilder';
 import SignInTeacher from './components/Authentication/SignInTeacher';
 import useTeacherQueriesApi from './ThereGame.Api/Queries/TeacherQueriesApi';
 import SignUpStudent from './components/Authentication/SignUpStudent';

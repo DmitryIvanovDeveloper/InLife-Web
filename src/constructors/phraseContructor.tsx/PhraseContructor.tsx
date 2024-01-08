@@ -186,7 +186,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsEdited(true)
     }, [phrase]);
 
-    console.log(phrase.audioSettings?.audioData)
     if (!phrase) {
         return null;
     }
