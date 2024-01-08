@@ -16,6 +16,8 @@ import DevidedLabel from "../../components/Headers/DevidedLabel";
 import { useTreeState } from "../../Data/useTreeState";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
+import IAudioSettings from "../../ThereGame.Business/Models/IAudioSettings";
+import { v4 as uuidv4 } from 'uuid';
 
 
 export interface IPhraseConstructor {
@@ -52,7 +54,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const onSave = async () => {
         const updatedPhrase = JSON.parse(JSON.stringify(phrase));
 
-        updatedPhrase.audioGenerationSettings = getSettings();
+        updatedPhrase.audioSettings = getSettings();
 
         setIsSaving(true);
         var status = await phraseQueriesApi.update(updatedPhrase);
@@ -72,7 +74,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     }
 
     const reset = () => {
-
         setPhrase(phraseRecoil);
         setIsEdited(true);
         setStatus(Status.OK);
@@ -125,17 +126,19 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     // UseEffects
 
     const getSettings = () => {
-
         var data = localStorage.getItem(`[DeepVoice] - ${props.dialogueId}`);
         if (!data) {
-            return phrase.audioGenerationSettings;
+            return phrase.audioSettings;
         }
 
         var parsedData = JSON.parse(data);
 
-        var settings = GetSettings(parsedData.type, parsedData.name, phrase.text);
+        var newAudioSettings: IAudioSettings = {
+            id: uuidv4(),
+            generationSettings: GetSettings(parsedData.type, parsedData.name, phrase.text)
+        }
 
-        return settings;
+        return newAudioSettings;
     }
 
     useEffect(() => {
@@ -183,6 +186,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsEdited(true)
     }, [phrase]);
 
+    console.log(phrase.audioSettings?.audioData)
     if (!phrase) {
         return null;
     }
@@ -254,7 +258,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
                 : null
             }
-             {!phrase.audioData && !!phraseRecoil.text 
+            {!phrase.audioSettings?.audioData && !!phraseRecoil.text 
                 ? <Alert severity="error">The phrase is not generated to audio!</Alert>
                 : null
             }

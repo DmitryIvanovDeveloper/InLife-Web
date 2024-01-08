@@ -13,8 +13,7 @@ export default class PhraseMapping {
             tensesList: phrase.tensesList,
             comments: phrase.comments,
             id: phrase.id,
-            audioGenerationSettings: phrase.audioGenerationSettings,
-            audioData: phrase.audioData,
+            audioSettings: phrase.audioSettings,
         }
     }
     public request(phrase: IPhraseModel): IPhraseRequestDto {
@@ -25,7 +24,7 @@ export default class PhraseMapping {
             tensesList: phrase.tensesList,
             comments: phrase.comments,
             id: phrase.id,
-            audioGenerationSettings: phrase.audioGenerationSettings,
+            audioSettings: phrase.audioSettings,
         }
     }
 }

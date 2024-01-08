@@ -1,4 +1,3 @@
-import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhraseService";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { appContainer } from "../../inversify.config";
@@ -14,11 +13,8 @@ export default function usePhraseQueriesApi() {
     var teacherQueriesApi = useTeacherQueriesApi();
 
     return {
-        getById: async (id: string) => {
-          
-        },
-
         create: async (parentAnswerId: string): Promise<Status> => {
+            
             const phrase: IPhraseModel = {
                 parentId: parentAnswerId,
                 text: "",
@@ -26,7 +22,10 @@ export default function usePhraseQueriesApi() {
                 tensesList: [],
                 comments: "",
                 id: uuidv4(),
-                audioGenerationSettings: "",
+                audioSettings: {
+                    id: uuidv4(),
+                    generationSettings: ""
+                },
             }
 
             var requestData = new PhraseMapping().request(phrase);

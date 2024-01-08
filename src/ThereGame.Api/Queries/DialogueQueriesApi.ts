@@ -46,7 +46,10 @@ export default function useDialogieQueriesApi() {
                 tensesList: [],
                 comments: '',
                 id: uuidv4(),
-                audioGenerationSettings: ''
+                audioSettings: {
+                    id: uuidv4(),
+                    generationSettings: ''
+                }
             }
 
             const dialogue: IDialogueModel = {

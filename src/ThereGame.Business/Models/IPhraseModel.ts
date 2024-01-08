@@ -1,5 +1,6 @@
 import { DialogueItemStateType } from "../Util/DialogueItemStateType";
 import IAnswerModel from "./IAnswerModel";
+import IAudioSettings from "./IAudioSettings";
 import IDialogueItemModel from "./IDialogueItemModel";
 
 export default interface IPhraseModel extends IDialogueItemModel {
@@ -8,7 +9,7 @@ export default interface IPhraseModel extends IDialogueItemModel {
     readonly answers: IAnswerModel[];
     readonly tensesList: string[];
     readonly comments: string;
-    readonly audioGenerationSettings: string;
-    readonly audioData?: string;
+    readonly audioSettings: IAudioSettings;
+    
     readonly states?: DialogueItemStateType[];
 }
