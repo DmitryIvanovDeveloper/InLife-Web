@@ -2,6 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "target": "es5",
+    "noImplicitAny": false,
     "lib": [
       "dom",
       "dom.iterable",
