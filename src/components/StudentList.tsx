@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, Box, Grid, Card, Switch, Avatar, Typography } from '@mui/material';
 import { useStudents } from '../Data/useStudents';
 import DevidedLabel from './Headers/DevidedLabel';
-import Switcher from './Buttons/Switcher';
+import Switcher from './Button/Switcher';
 import StudentCard from './Student/Student';
 
 

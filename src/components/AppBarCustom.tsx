@@ -1,6 +1,6 @@
 import { Box, AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
 import React from "react";
-import DeleteButton from "./Buttons/DeleteButton";
+import DeleteButton from "./Button/DeleteButton";
 
 export interface IAppBarCustomProps{
     name: string;

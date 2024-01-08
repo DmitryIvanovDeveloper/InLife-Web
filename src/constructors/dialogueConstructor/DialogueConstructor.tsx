@@ -1,7 +1,7 @@
 import { Alert, Box, Button, TextField } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import SaveButton from "../../components/Buttons/SaveButton";
+import SaveButton from "../../components/Button/SaveButton";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
@@ -11,7 +11,7 @@ import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 import StudentList from "../../components/StudentList";
 import { useTreeState } from "../../Data/useTreeState";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import Switcher from "../../components/Buttons/Switcher";
+import Switcher from "../../components/Button/Switcher";
 import DevidedLabel from "../../components/Headers/DevidedLabel";
 
 export interface IDialogueConstructor {

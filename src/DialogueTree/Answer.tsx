@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 import Phrase from "./Phrase";
-import TextButton from "../components/Buttons/TextButton";
+import TextButton from "../components/Button/TextButton";
 import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues";
 import AnswerContructor from "../constructors/answerContructor/AnswerConstructor";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";

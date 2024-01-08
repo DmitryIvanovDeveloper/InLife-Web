@@ -1,7 +1,7 @@
 import { Alert, Box, Button, ButtonGroup, Divider, FormLabel, Grid, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AddButton from "../../components/Buttons/AddButton";
-import SaveButton from "../../components/Buttons/SaveButton";
+import AddButton from "../../components/Button/AddButton";
+import SaveButton from "../../components/Button/SaveButton";
 import { useSelection } from "../../Data/useSelection";
 import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";

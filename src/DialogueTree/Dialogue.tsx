@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
-import TextButton from "../components/Buttons/TextButton";
+import TextButton from "../components/Button/TextButton";
 import { useDialogue, useDialogueItemConstructor } from "../Data/useDialogues";
 import DialogueConstructor from "../constructors/dialogueConstructor/DialogueConstructor";
 import Phrase from "./Phrase";
