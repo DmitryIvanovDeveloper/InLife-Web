@@ -1,5 +1,5 @@
 import { Box, Grid, MenuItem, Select } from "@mui/material";
-import { VoicesOptions } from "../../Data/VoiceList";
+import { VoicesOptions } from "../../Data/VoiceList/VoiceList";
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 // import 'react-h5-audio-player/lib/styles.less';
@@ -16,7 +16,7 @@ export interface IVoiceListProps {
 export default function VoiceList(props: IVoiceListProps) {
 
     const [voices, setVoices] = useState<IVoiceModel[]>([]);
-    const [voiceOption, setVoiceOption] = useState<IVoiceOption>();
+    const [voiceOption, setVoiceOption] = useState<IVoiceOption | null>();
     const [voice, setVoice] = useState<IVoiceModel | null>();
 
     const handleChangeVoicesType = (event: any) => {
@@ -41,6 +41,9 @@ export default function VoiceList(props: IVoiceListProps) {
     useEffect(() => {
         var data = localStorage.getItem(`[DeepVoice] - ${props.dialogueId}`);
         if (!data) {
+            setVoiceOption(null);
+            setVoice(null)
+            props.setIsVoiceSelected(false);
             return;
         }
 
@@ -51,10 +54,11 @@ export default function VoiceList(props: IVoiceListProps) {
 
         setVoiceOption(selectedVoiceOption);
         setVoice(selectedVoice);
-    }, []);
+    }, [props.dialogueId]);
 
     useEffect(() => {
         if (!voiceOption) {
+            props.setIsVoiceSelected(false);
             return;
         }
 
@@ -79,12 +83,12 @@ export default function VoiceList(props: IVoiceListProps) {
                 display="flex"
                 justifyContent="space-around"
                 alignItems="center"
-                sx={{ pt: 1 }}
+                sx={{ pt: 1, mb: 1 }}
             >
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="Age"
+                    label="Voice Option"
                     value={`${voiceOption?.type}`}
                     onChange={handleChangeVoicesType}
                     fullWidth
@@ -111,10 +115,15 @@ export default function VoiceList(props: IVoiceListProps) {
 
 
             </Grid>
-            <AudioPlayer
-                autoPlay={false}
-                src={`${voice?.path}/${voice?.name}.wav`}
-            />
+            <Box
+                sx={{ pt: 1, mb: 1 }}
+            >
+                <AudioPlayer
+                    autoPlay={false}
+                    src={`${voice?.path}/${voice?.name}.wav`}
+                />
+            </Box>
+
         </Box>
     )
 }

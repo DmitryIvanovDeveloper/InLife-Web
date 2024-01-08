@@ -1,6 +1,5 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -16,6 +15,10 @@ import ISignUpModel from "../../ThereGame.Business/Models/ISignUpModel";
 import useAuthenticationQueriesApi from "../../ThereGame.Api/Queries/AuthenticationQueriesApi";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from "react-router-dom";
+import { Routes } from "../../Routes";
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 
 function Copyright(props: any) {
     return (
@@ -46,13 +49,30 @@ export default function SignUpTeacher() {
         email: "",
         password: ""
     });
-    
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [authenticationError, setAuthenticationError] = useState<string>("");
+
+    const navigate = useNavigate();
+
+
     const authenticationQueriesApi = useAuthenticationQueriesApi();
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
 
-        authenticationQueriesApi.signUpTeacher(data);
+        setIsLoading(true);
+        var status = await authenticationQueriesApi.signUpTeacher(data);
+
+        if (status == Status.OK) {
+            navigate(Routes.teacherProfile);
+        }
+
+        if (status == Status.Conflict) {
+            setAuthenticationError("The account already exist");
+        }
+
+        setIsLoading(false);
     };
 
     return (
@@ -73,6 +93,11 @@ export default function SignUpTeacher() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
+
+                    {!authenticationError 
+                        ? null
+                        : <Typography color='red'>{authenticationError}</Typography>
+                    }
                     <Box
                         component="form"
                         noValidate
@@ -88,7 +113,7 @@ export default function SignUpTeacher() {
                                     fullWidth
                                     id="firstName"
                                     label="First Name"
-                                    onChange={e => setData(p => ({...p, name: e.target.value}))}
+                                    onChange={e => setData(p => ({ ...p, name: e.target.value }))}
                                     autoFocus
                                 />
                             </Grid>
@@ -100,7 +125,7 @@ export default function SignUpTeacher() {
                                     label="Last Name"
                                     name="lastName"
                                     autoComplete="family-name"
-                                    onChange={e => setData(p => ({...p, lastName: e.target.value}))}
+                                    onChange={e => setData(p => ({ ...p, lastName: e.target.value }))}
 
                                 />
                             </Grid>
@@ -112,7 +137,7 @@ export default function SignUpTeacher() {
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
-                                    onChange={e => setData(p => ({...p, email: e.target.value}))}
+                                    onChange={e => setData(p => ({ ...p, email: e.target.value }))}
 
                                 />
                             </Grid>
@@ -125,7 +150,7 @@ export default function SignUpTeacher() {
                                     type="password"
                                     id="password"
                                     autoComplete="new-password"
-                                    onChange={e => setData(p => ({...p, password: e.target.value}))}
+                                    onChange={e => setData(p => ({ ...p, password: e.target.value }))}
 
                                 />
                             </Grid>
@@ -138,17 +163,24 @@ export default function SignUpTeacher() {
                                 />
                             </Grid>
                         </Grid>
-                        <Button
+                        <LoadingButton
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
+                            loading={isLoading}
                         >
                             Sign Up
-                        </Button>
+                        </LoadingButton>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link
+                                    component="button"
+                                    variant="body2"
+                                    onClick={() => {
+                                        navigate(Routes.signInTeacher);
+                                    }}
+                                >
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

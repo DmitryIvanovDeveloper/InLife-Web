@@ -1,22 +1,30 @@
 import { useState, useEffect } from "react";
-import { useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
+import { useAnswer, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
 import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
-import AddButton from "../../components/buttons/AddButton";
-import SaveButton from "../../components/buttons/SaveButton";
+import AddButton from "../../components/Buttons/AddButton";
+import SaveButton from "../../components/Buttons/SaveButton";
 import TensesList from "../TensesList";
 import AnswerContructor from "../answerContructor/AnswerConstructor";
-import { Box, TextField, Button, Typography, Alert } from "@mui/material";
+import { Box, TextField, Button, Typography, Alert, Divider } from "@mui/material";
 import GetSettings from "../../ThereGame.Infrastructure/Helpers/PhraseAudioGegerationSettingsBuilder";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
+import LinarProgressCustom from "../../components/CircularProgress";
+import DevidedLabel from "../../components/Headers/DevidedLabel";
+import { useTreeState } from "../../Data/useTreeState";
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
+import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
+import IAudioSettings from "../../ThereGame.Business/Models/IAudioSettings";
+import { v4 as uuidv4 } from 'uuid';
 
 
 export interface IPhraseConstructor {
     dialogueId: string;
     id: string
-    prevConstructorId?: string
+    parentId: string
+    setStates?: (states: DialogueItemStateType[]) => void;
 }
 
 export default function PhraseContructor(props: IPhraseConstructor): JSX.Element | null {
@@ -26,55 +34,66 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const answerQueriesApi = useAnswerQueriesApi();
 
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
+    
+    const [treeState, setTreeState] = useTreeState();
 
     const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
-    const [isSaved, setIsSaved] = useState(true);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isEdited, setIsEdited] = useState(true);
+    const [isSaving, setIsSaving] = useState<boolean>(false);
+    const [isCreating, setIsCreating] = useState<boolean>(false);
+    const [status, setStatus] = useState<Status>(Status.OK);
 
-    const [errors, setErrors] = useState({
-        text: false
-    });
-
-    const onAddButtonClick = async () => {
-        await answerQueriesApi.create(props.id);
+    const onAddAnswerButtonClick = async () => {
+        setIsCreating(true)
+        var status = await answerQueriesApi.create(props.id);
+        setStatus(status);
+        setIsCreating(false)
     }
 
     // QueryApi
     const onSave = async () => {
-        if (phrase.text == '') {
-            setErrors(prev => ({
-                ...prev,
-                text: true
-            }));
-
-            return;
-        }
-
         const updatedPhrase = JSON.parse(JSON.stringify(phrase));
 
-        updatedPhrase.audioGenerationSettings = getSettings();
+        updatedPhrase.audioSettings = getSettings();
 
-        setIsLoading(true);
-        await phraseQueriesApi.update(updatedPhrase);
-        setIsLoading(false);
-
-        localStorage.removeItem(props.id);
-        setIsSaved(true);
+        setIsSaving(true);
+        var status = await phraseQueriesApi.update(updatedPhrase);
+        setStatus(status);
+        setIsSaving(false);
+        if (status == Status.OK) {
+            localStorage.removeItem(props.id);
+        }
+        setIsEdited(true);
     }
 
     const onDelete = async () => {
-        await phraseQueriesApi.delete(props.id);
+        var status = await phraseQueriesApi.delete(props.id);
+        setStatus(status);
+        localStorage.removeItem(props.id);
+        setDialogueItemConstructor(() => null);
     }
 
-    const reset = ()  => {
+    const reset = () => {
         setPhrase(phraseRecoil);
-        setIsSaved(true);
+        setIsEdited(true);
+        setStatus(Status.OK);
         localStorage.removeItem(props.id);
     }
 
-    const onAnswerButtonClick = (id: string) => {
+    const onAnswerButtonClick = (id: any) => {
         setSelection(id);
-        setDialogueItemConstructor(() => <AnswerContructor dialogueId={props.dialogueId} id={id} prevConstructorId={props.id} />);
+
+        setTreeState(prev => ({
+            expanded: [...prev.expanded, id], 
+            selected: [id]
+        }));
+
+        setDialogueItemConstructor(() =>
+            <AnswerContructor
+                dialogueId={props.dialogueId}
+                id={id}
+                parentId={props.id}
+        />);
     }
 
     const onChangeText = (event: any) => {
@@ -82,13 +101,8 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             ...prev,
             text: event.target.value
         }));
-    
-        setErrors(prev => ({
-            ...prev,
-            text: false
-        }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onCommentsChange = (event: any) => {
@@ -96,7 +110,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             ...prev,
             comments: event.target.value
         }));
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onSetTenses = (tenses: string[]) => {
@@ -105,41 +119,42 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             tensesList: tenses
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
-    
+
     // UseEffects
 
     const getSettings = () => {
-
         var data = localStorage.getItem(`[DeepVoice] - ${props.dialogueId}`);
-        if (!data)
-        {
-            return phrase.audioGenerationSettings;
+        if (!data) {
+            return phrase.audioSettings;
         }
 
         var parsedData = JSON.parse(data);
 
-        var settings = GetSettings(parsedData.type, parsedData.name, phrase.text);
-      
-        return settings;
+        var newAudioSettings: IAudioSettings = {
+            id: uuidv4(),
+            generationSettings: GetSettings(parsedData.type, parsedData.name, phrase.text)
+        }
+
+        return newAudioSettings;
     }
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
             setPhrase(phraseRecoil);
-            setIsSaved(true);
+            setIsEdited(true);
             return;
         }
-        setIsSaved(false);
+        setIsEdited(false);
 
         setPhrase(JSON.parse(data));
     }, [phraseRecoil])
 
     useEffect(() => {
-        if (isSaved) {
+        if (isEdited) {
             return;
         }
 
@@ -147,17 +162,31 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
     }, [phrase]);
 
+    useEffect(() => {
+        if (!props.setStates) {
+            return;
+        }
+
+        if (isEdited) {
+            props.setStates([DialogueItemStateType.NoErrors])
+            return;
+        }
+
+        props.setStates([DialogueItemStateType.UnsavedChanges])
+    }, [isEdited]);
+
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
-        if(JSON.stringify(phraseRecoil) !== data){
+        if (JSON.stringify(phraseRecoil) !== data) {
             return;
         }
 
         localStorage.removeItem(props.id);
-        setIsSaved(true)
+        setIsEdited(true)
     }, [phrase]);
 
+    console.log(phrase.audioSettings?.audioData)
     if (!phrase) {
         return null;
     }
@@ -167,10 +196,14 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             component="form"
             sx={{
                 '& > :not(style)': { m: 1, width: '100%' },
-                p: 5.
-                
+                p: 5,
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                height: 800,
+                overflow: "hidden",
+                overflowY: "scroll",
             }}
-            style={{height:"1000px", overflow: "auto"}}
             autoComplete="off"
         >
             <AppBarDeleteButton
@@ -179,7 +212,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             />
 
             <TensesList tensesList={phrase.tensesList} setTensesList={onSetTenses} />
-            
+
             <TextField
                 InputLabelProps={{ shrink: true }}
 
@@ -191,8 +224,10 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 required={true}
                 placeholder="Hello, my name is John"
                 fullWidth
-                error={errors.text}
             />
+
+            <Divider variant="fullWidth" />
+
             <TextField
                 InputLabelProps={{ shrink: true }}
                 value={phrase.comments}
@@ -203,30 +238,57 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 fullWidth
             />
 
-            <AddButton onCLick={onAddButtonClick} />
+            <Divider variant="fullWidth" />
+
+            <SaveButton 
+                onClick={onSave} 
+                isLoading={isSaving} 
+                isDisabled={false} 
+            />
+
+            {!isEdited || status != Status.OK
+                ? <Box>
+                    <Alert severity="warning">The constructor has unsaved changes</Alert>
+                    <Button onClick={reset}>reset</Button>
+                </Box>
+                : <Alert severity="success">The constructor is saved!</Alert>
+            }
+            
+            {status != Status.OK
+                ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
+                : null
+            }
+            {!phrase.audioSettings?.audioData && !!phraseRecoil.text 
+                ? <Alert severity="error">The phrase is not generated to audio!</Alert>
+                : null
+            }
+
+
+
+            <DevidedLabel name="Linked answers"/>
+
+            {isCreating
+                ? <LinarProgressCustom name="Creating"/>
+                : <AddButton onClick={onAddAnswerButtonClick} name="Create Answer" />
+            }
 
             {phrase.answers.length != 0
                 ?
                 <Box>
-                    <div>Answers to the phrase</div>
-                    
-                        {phrase.answers.map(answer => (
-                            <Button id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
-                                <Typography sx={{textDecoration: 'underline'}}>{answer.texts.join()}</Typography>
+                    {phrase.answers.map(answer => (
+                        <Box
+                            display='flex'
+                            justifyContent='space-between'
+                            sx={{p: 1}}
+                        >
+                            <Button variant='outlined' id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
+                                <Typography sx={{ textDecoration: 'underline' }}>{!answer.texts.length ? "New Phrase" : answer.texts[0]}</Typography>
                             </Button>
-                        ))}
+                        </Box>
+
+                    ))}
                 </Box>
                 : null
-            }
-
-            <SaveButton onClick={onSave} isLoading={isLoading} isDisabled={false}/>
-            
-            {!isSaved
-                ? <Box>
-                    <Alert severity="warning">The constructor has unsaved changes</Alert>
-                    <Button onClick={reset}>reset</Button>
-                 </Box>
-                : <Alert severity="success">The constructor is saved!</Alert>
             }
         </Box>
     )

@@ -1,13 +1,13 @@
 import { Box, AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
 import React from "react";
-import DeleteButton from "./buttons/DeleteButton";
+import DeleteButton from "./Buttons/DeleteButton";
 
 export interface IAppBarCustomProps{
     name: string;
 }
 export default function AppBarCustom(props: IAppBarCustomProps) {
     return (
-        <Box sx={{ flexGrow: 1, display: "flex" }}>
+        <Box sx={{ flexGrow: 1, display: "flex", maxHeight: "60px" }}>
             <AppBar position="static" sx={{ borderRadius: 1 }}>
                 <Toolbar>
                     <IconButton

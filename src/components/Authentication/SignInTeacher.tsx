@@ -15,21 +15,33 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ISignInModel from '../../ThereGame.Business/Models/ISignInModel';
 import useAuthenticationQueriesApi from '../../ThereGame.Api/Queries/AuthenticationQueriesApi';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Routes } from '../../Routes';
+import { Status } from '../../ThereGame.Infrastructure/Statuses/Status';
 
 const defaultTheme = createTheme();
 
 export default function SignInTeacher() {
     const authenticationQueriesApi = useAuthenticationQueriesApi();
+    const navigate = useNavigate();
+    const [authenticationError, setAuthenticationError] = useState<string>("");
 
     const [data, setData] = useState<ISignInModel>({
         email: "",
         password: ""
     });
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
-        
-        authenticationQueriesApi.signInTeacher(data);
+
+        var status = await authenticationQueriesApi.signInTeacher(data);
+        if (status == Status.Unauthorized) {
+
+            setAuthenticationError("Account is not exist");
+            return;
+        }
+
+        navigate(Routes.teacherProfile);
     };
 
     return (
@@ -50,6 +62,12 @@ export default function SignInTeacher() {
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
+
+                    {!authenticationError 
+                        ? null
+                        : <Typography color='red'>{authenticationError}</Typography>
+                    }
+
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
                             margin="normal"
@@ -60,7 +78,7 @@ export default function SignInTeacher() {
                             name="email"
                             autoComplete="email"
                             autoFocus
-                            onChange={e => setData(p => ({...p, email: e.target.value}))}
+                            onChange={e => setData(p => ({ ...p, email: e.target.value }))}
                         />
                         <TextField
                             margin="normal"
@@ -71,7 +89,7 @@ export default function SignInTeacher() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
-                            onChange={e => setData(p => ({...p, password: e.target.value}))}
+                            onChange={e => setData(p => ({ ...p, password: e.target.value }))}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
@@ -85,15 +103,17 @@ export default function SignInTeacher() {
                         >
                             Sign In
                         </Button>
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
-                            </Grid>
+                        <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link
+                                    component="button"
+                                    variant="body2"
+                                    onClick={() => {
+                                       navigate(Routes.signUpTeacher);
+                                    }}
+                                >
                                     {"Don't have an account? Sign Up"}
+
                                 </Link>
                             </Grid>
                         </Grid>

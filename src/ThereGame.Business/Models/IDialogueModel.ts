@@ -4,10 +4,10 @@ import IStudentModel from "./IStudentModel";
 export interface IDialogueModel {
     isVoiceSelected: boolean;
     isPublished: boolean;
-    userId: string;
+    teacherId: string;
     levelId: string;
     id: string;
     name: string;
     phrase: IPhraseModel;
-    students: IStudentModel[];
+    studentsId: string[];
 }

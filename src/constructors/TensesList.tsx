@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Tenseses } from '../Data/tenseses';
 import { useEffect, useState } from 'react';
 import { Button, Box } from '@mui/material';
+import DevidedLabel from '../components/Headers/DevidedLabel';
 
 
 export interface ITensesListProps {
@@ -34,6 +35,8 @@ export default function TensesList(props: ITensesListProps) {
 
     return (
         <Box sx={{ borderRadius: 2, paddingTop: "20px", paddingBottom: "20px", justifyContent: 'center' }}>
+            <DevidedLabel name="Tenses"/>
+
             {Tenseses.map(tenses => (
                 <Button
                     variant={!clickedButtons.find(button => button == tenses) ? "outlined" : "contained"}

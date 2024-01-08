@@ -1,24 +1,33 @@
 import { Box, Grid } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useDialogueItemConstructor, usePhrase } from "../Data/useDialogues";
-import TextButton from "../components/buttons/TextButton";
+import TextButton from "../components/Buttons/TextButton";
 import Answer from "./Answer";
 import PhraseContructor from "../constructors/phraseContructor.tsx/PhraseContructor";
+import { useState } from "react";
+import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
 
 export interface IPhraseProps {
     dialogueId: string;
+    parentId: string
     id: string;
 }
 
 export default function Phrase(props: IPhraseProps): JSX.Element | null {
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+    const [states, setStates] = useState<DialogueItemStateType[]>([DialogueItemStateType.NoErrors]);
 
     function OnClick(event: any) {
         event.stopPropagation();
         event.preventDefault();
 
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={phraseRecoil.id} />);
+        setDialogueItemConstructor(() => <PhraseContructor 
+            dialogueId={props.dialogueId} 
+            id={phraseRecoil.id}
+            parentId={props.parentId}
+            setStates={setStates}
+        />);
     }
 
     if (!phraseRecoil) {
@@ -28,12 +37,13 @@ export default function Phrase(props: IPhraseProps): JSX.Element | null {
     return (
         <Box display="flex">
             <TextButton onClick={OnClick}>
+                
                 <TreeItem
                     key={phraseRecoil.id}
                     nodeId={phraseRecoil.id}
                     itemType="Phrase"
-                    label={`${phraseRecoil.text} [P]`}
-                    style={{color: "#9c27b0"}} 
+                    label={`${!phraseRecoil.text ? "New Phrase" : phraseRecoil.text} [P]`}
+                    style={{color: states[0] == DialogueItemStateType.UnsavedChanges ? "#e65100":  "#9c27b0"}} 
                 >
                     <Grid
                         sx={{
@@ -44,7 +54,7 @@ export default function Phrase(props: IPhraseProps): JSX.Element | null {
 
                     >
                         {phraseRecoil.answers.map(answer => (
-                            <Answer key={answer.id} dialogueId={props.dialogueId} id={answer.id} />
+                            <Answer key={answer.id} dialogueId={props.dialogueId} id={answer.id} parentId={props.id}/>
                         ))}
                     </Grid>
                 </TreeItem>

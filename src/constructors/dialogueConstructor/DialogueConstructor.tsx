@@ -1,7 +1,7 @@
 import { Alert, Box, Button, TextField } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import SaveButton from "../../components/buttons/SaveButton";
+import SaveButton from "../../components/Buttons/SaveButton";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
@@ -9,10 +9,14 @@ import PhraseContructor from "../phraseContructor.tsx/PhraseContructor";
 import VoiceList from "../../components/voiceList/VoiceList";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 import StudentList from "../../components/StudentList";
-import IStudentModel from "../../ThereGame.Business/Models/IStudentModel";
+import { useTreeState } from "../../Data/useTreeState";
+import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
+import Switcher from "../../components/Buttons/Switcher";
+import DevidedLabel from "../../components/Headers/DevidedLabel";
 
 export interface IDialogueConstructor {
     id: string;
+    setStates?: (states: DialogueItemStateType[]) => void;
 }
 
 export default function DialogueConstructor(props: IDialogueConstructor): JSX.Element | null {
@@ -20,10 +24,11 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
 
-    const [isVoiceSelected, setIsVoiceSelected] = useState<boolean>(false);
+    const [isVoiceSelected, setIsSelected] = useState<boolean>(false);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    const [isSaved, setIsSaved] = useState(true);
+    const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [treeState, setTreeState] = useTreeState();
 
     const dialogueQueriesApi = useDialogieQueriesApi();
 
@@ -31,15 +36,14 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         setIsLoading(true)
         await dialogueQueriesApi.update(dialogue)
         setIsLoading(false)
-        setIsSaved(true);
-
-        reset();
+        setIsEdited(true);
     }
 
     const onDelete = async () => {
         await dialogueQueriesApi.delete(props.id);
         localStorage.removeItem(`[DeepVoice] - ${props.id}`)
         localStorage.removeItem(props.id)
+        setDialogueItemConstructor(() => null);
     }
 
     const onChangeName = (event: any) => {
@@ -48,35 +52,54 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             name: event.target.value
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onClickPhrase = (event: any) => {
         event.stopPropagation();
         event.preventDefault();
 
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.id} id={dialogue.phrase.id} />);
+        setTreeState(prev => ({
+            expanded: [...prev.expanded, dialogue.id, dialogue.phrase.id],
+            selected: [dialogue.phrase.id]
+        }));
+
+        setDialogueItemConstructor(() => <PhraseContructor
+            dialogueId={props.id}
+            id={dialogue.phrase.id}
+            parentId={""}
+        />);
     }
 
+    const setIsVoiceSelected = (isSelected: boolean) => {
+        setIsSelected(isSelected);
+        setDialogue(prev => ({
+            ...prev,
+            isVoiceSelected: isSelected
+        }))
+
+        setIsEdited(false);
+    }
     const publish = async () => {
         setDialogue(prev => ({
             ...prev,
             isPublished: !prev.isPublished
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
-    const setStudentList = (students: IStudentModel[]) => {
+    const setStudentList = (studentsId: string[]) => {
         setDialogue(prev => ({
             ...prev,
-            students: students
+            studentsId: studentsId
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const reset = () => {
+        setDialogue(dialogueRecoil);
         localStorage.removeItem(props.id);
     }
 
@@ -84,18 +107,18 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         var data = localStorage.getItem(props.id);
         if (!data) {
             setDialogue(dialogueRecoil);
-            setIsSaved(true);
+            setIsEdited(true);
             return;
         }
 
-        setIsSaved(false);
+        setIsEdited(false);
 
         setDialogue(JSON.parse(data));
     }, [dialogueRecoil]);
 
     useEffect(() => {
-        if (isSaved) {
-            return;
+        if (isEdited) {
+            reset();
         }
 
         if (JSON.stringify(dialogueRecoil) !== JSON.stringify(dialogue)) {
@@ -104,15 +127,21 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         }
 
         localStorage.removeItem(props.id);
-        setIsSaved(true)
+        setIsEdited(true)
     }, [dialogue]);
 
     useEffect(() => {
-        setDialogue(prev => ({
-            ...prev,
-            isVoiceSelected
-        }))
-    }, [isVoiceSelected]);
+        if (!props.setStates) {
+            return;
+        }
+
+        if (isEdited) {
+            props.setStates([DialogueItemStateType.NoErrors])
+            return;
+        }
+
+        props.setStates([DialogueItemStateType.UnsavedChanges])
+    }, [isEdited]);
 
     if (!dialogue) {
         return null;
@@ -123,7 +152,13 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             component="form"
             sx={{
                 '& > :not(style)': { m: 1, width: '100%' },
-                p: 5
+                p: 5,
+                mb: 2,
+                display: "flex",
+                flexDirection: "column",
+                height: 800,
+                overflow: "hidden",
+                overflowY: "scroll",
             }}
             autoComplete="off"
         >
@@ -132,19 +167,15 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 onDelete={onDelete}
             />
 
+            <DevidedLabel name={"Audio Settings"} />
+
             <VoiceList
                 dialogueId={props.id}
                 setIsVoiceSelected={setIsVoiceSelected}
                 isVoiceSelected={dialogueRecoil?.isVoiceSelected} // Don't change to Dialogue
             />
 
-            <Button
-                onClick={publish}
-                variant={dialogue.isPublished ? "contained" : "outlined"}
-            >
-                {dialogue.isPublished ? "Publish" : "Not publish"}
-            </Button>
-
+            <DevidedLabel name={"Dialogue Name"} />
             <TextField
                 onChange={onChangeName}
                 value={dialogue.name}
@@ -154,32 +185,36 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 variant="outlined"
             />
 
-            <StudentList
-                studentList={dialogue.students}
-                setStudentList={setStudentList}
-            />
-
             <SaveButton
                 onClick={save}
                 isLoading={isLoading}
                 isDisabled={!isVoiceSelected}
             />
 
+            <DevidedLabel name={"Initial Phrase"} />
             <Box>
                 <Button
                     disabled={!dialogueRecoil?.isVoiceSelected} // Don't change to Dialogue
                     variant="contained"
-                    onClick={onClickPhrase}>{dialogue.phrase.text}
+                    onClick={onClickPhrase}>{!dialogue.phrase.text ? "New Phrase" : dialogue.phrase.text}
                 </Button>
             </Box>
 
-            {!isSaved
+            {!isEdited
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={reset}>reset</Button>
                 </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
+
+            <DevidedLabel name={"Publish Settings"} />
+            <Switcher setIsChecked={publish} checked={dialogue.isPublished} />
+
+            <StudentList
+                studentList={dialogue.studentsId}
+                setStudentList={setStudentList}
+            />
         </Box>
     )
 }

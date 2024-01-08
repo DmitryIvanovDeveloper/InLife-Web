@@ -1,3 +1,4 @@
+import IAudioSettings from "../../../../ThereGame.Business/Models/IAudioSettings";
 import IAnswerResponseDto from "./IAnswerResponseDto";
 
 export default interface IPhraseResponseDto {
@@ -7,5 +8,5 @@ export default interface IPhraseResponseDto {
     readonly answers: IAnswerResponseDto[];
     readonly tensesList: string[];
     readonly comments: string;
-    readonly audioGenerationSettings: string;
+    readonly audioSettings: IAudioSettings;
 }

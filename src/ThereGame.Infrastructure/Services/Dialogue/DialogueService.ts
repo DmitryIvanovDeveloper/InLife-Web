@@ -3,15 +3,15 @@ import IDialogueService from "../../../ThereGame.Business/Domain/Util/Services/I
 import { ICreateDialogueRequestDto, IUpdateDialogueRequestDto } from "../../../ThereGame.Api/Util/Mapping/RequestDtos/IDialogueRequestsDto";
 import TypedResult from "../../Statuses/Result";
 import { Status } from "../../Statuses/Status";
-import { Routes } from "../../../Routes";
 import "reflect-metadata";
+import { RoutesAPI } from "../../../Routes";
 
 @injectable()
 export default class DialogueService implements IDialogueService {
     
     public async Get(): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(Routes.dialogues);
+            var response = await fetch(RoutesAPI.dialogues);
             if (response.status == 204)
             {
                 return new TypedResult<Status>(Status.NoContent);
@@ -28,7 +28,7 @@ export default class DialogueService implements IDialogueService {
 
     public async GetById(id: string): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(`${Routes.dialogues}${id}`);
+            var response = await fetch(`${RoutesAPI.dialogues}${id}`);
             if (response.status == 204)
             {
                 return new TypedResult<Status>(Status.NoContent);
@@ -45,7 +45,7 @@ export default class DialogueService implements IDialogueService {
  
     public async Update(item: IUpdateDialogueRequestDto): Promise<TypedResult<Status>> {
         try {
-            await fetch(Routes.dialogues, {
+            await fetch(RoutesAPI.dialogues, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export default class DialogueService implements IDialogueService {
 
     public async Delete(id: string): Promise<TypedResult<Status>>{
         try {
-            await fetch(`${Routes.dialogues}${id}`, {
+            await fetch(`${RoutesAPI.dialogues}${id}`, {
                 method: 'DELETE',
             })
 
@@ -76,7 +76,7 @@ export default class DialogueService implements IDialogueService {
 
     public async Create(item: ICreateDialogueRequestDto): Promise<TypedResult<Status>> {
         try {
-            await fetch(Routes.dialogues, {
+            await fetch(RoutesAPI.dialogues, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

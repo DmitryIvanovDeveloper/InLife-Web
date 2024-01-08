@@ -1,4 +1,4 @@
-const Routes = {
+const RoutesAPI = {
     dialogues: `${process.env.REACT_APP_SERVER}/api/dialogues/`,
     phrases: `${process.env.REACT_APP_SERVER}/api/phrases/`,
     answers: `${process.env.REACT_APP_SERVER}/api/answers/`,
@@ -9,4 +9,15 @@ const Routes = {
     authSignInStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-in/students`,
     authSignUpStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/students`,
 }
-export { Routes }
+
+const Routes = {
+   signInTeacher: "/auth/sign-in/teacher",
+   signUpTeacher: "/auth/sign-up/teacher",
+   signInStudent: "/auth/sign-in/student",
+   signUpStudent: "/auth/sign-up/student",
+   dialoguesBuilder: "/teacher/builder",
+   teacherProfile: "/teacher/profile",
+   teacherProfileEditor: "/teacher/profile/editor",
+}
+
+export { RoutesAPI, Routes }

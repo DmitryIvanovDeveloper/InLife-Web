@@ -1,13 +1,14 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, LinearProgress, Typography } from "@mui/material";
 import React from "react";
 
-export default function CircularProgressCustom() {
+export interface ILinarProgressCustomProps {
+    name: string;
+}
+export default function LinarProgressCustom(props: ILinarProgressCustomProps) {
     return (
-        <Box 
-            display="flex"
-            justifyContent="center"
-        >
-            <CircularProgress size="1rem" />
+        <Box sx={{ width: '100%' }}>
+            <Typography>{props.name}...</Typography>
+            <LinearProgress />
         </Box>
     )
 }

@@ -8,8 +8,8 @@ import IAnswerService from "./ThereGame.Business/Domain/Util/Services/IAnswerSer
 import AnswerService from "./ThereGame.Infrastructure/Services/Dialogue/AnswerService";
 import IAuthenticationService from "./ThereGame.Business/Domain/Util/Services/IAuthenticationService";
 import AuthenticationService from "./ThereGame.Infrastructure/Services/AuthenticationService";
-import IUserService from "./ThereGame.Business/Domain/Util/Services/IUserService";
-import UserService from "./ThereGame.Infrastructure/Services/UserService";
+import ITeacherService from "./ThereGame.Business/Domain/Util/Services/ITeacherService";
+import TeacherService from "./ThereGame.Infrastructure/Services/TeacherService";
 
 export const appContainer = new Container();
 
@@ -18,5 +18,5 @@ appContainer.bind<IDialogueService>(TYPES.DialogueService).to(DialogueService).i
 appContainer.bind<IPhraseService>(TYPES.PhraseService).to(PhraseService).inSingletonScope();
 appContainer.bind<IAnswerService>(TYPES.AnswerService).to(AnswerService).inSingletonScope();
 appContainer.bind<IAuthenticationService>(TYPES.AuthenticationService).to(AuthenticationService).inSingletonScope();
-appContainer.bind<IUserService>(TYPES.UserService).to(UserService).inSingletonScope();
+appContainer.bind<ITeacherService>(TYPES.teacherService).to(TeacherService).inSingletonScope();
 

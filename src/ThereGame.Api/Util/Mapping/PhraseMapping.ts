@@ -6,7 +6,6 @@ import IPhraseResponseDto from "./ResponseDtos/IPhraseResponseDto";
 export default class PhraseMapping {
     
     public response(phrase: IPhraseResponseDto): IPhraseModel {
-
         return {
             parentId: phrase.parentAnswerId,
             text: phrase.text,
@@ -14,7 +13,7 @@ export default class PhraseMapping {
             tensesList: phrase.tensesList,
             comments: phrase.comments,
             id: phrase.id,
-            audioGenerationSettings: phrase.audioGenerationSettings,
+            audioSettings: phrase.audioSettings,
         }
     }
     public request(phrase: IPhraseModel): IPhraseRequestDto {
@@ -25,7 +24,7 @@ export default class PhraseMapping {
             tensesList: phrase.tensesList,
             comments: phrase.comments,
             id: phrase.id,
-            audioGenerationSettings: phrase.audioGenerationSettings,
+            audioSettings: phrase.audioSettings,
         }
     }
 }

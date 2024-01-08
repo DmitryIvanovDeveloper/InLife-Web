@@ -9,3 +9,5 @@ const studentAtom = atom<IStudentModel[]>({
     key: 'studentAtom',
     default: []
 })
+
+

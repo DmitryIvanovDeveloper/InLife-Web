@@ -26,9 +26,9 @@ export default function GetSettings(voiceOptionType: string, name: string, text:
 
 export enum DeepVoiceType
 {
-    Neural = "Neural",
+    Neural = "DeepVoice_Neural",
     MonoMulti = "DeepVoice_Multi",
-    Standard = "Standard",
+    Standard = "DeepVoice_Standard",
 }
 
 //     var option1 = `{\"text\":\"" + $"{text}" + "\",\"model\":\"" + "DeepVoice_Neural" + "\",\"name\":\"" + $"{VoiceOptionsNeuralModel.Amy}" + "\",\"variability\":\"" + "0.0" + "\",\"invoice\":\"" + "IN010102296709" + "\",\"clarity\":\"" + "0.0" + "\"}`;
