@@ -16,9 +16,16 @@ export interface ILevelCarouselProps {
 export default function LevelCarousel(props: ILevelCarouselProps) {
 
     const onCurrentChange = (event: any) => {
+        console.log(event.item.id);
         props.setLevel(event.item.id);
     }
-   
+    
+    useEffect(() => {
+        console.log(Locations.findIndex(location => location.id == props.id));
+
+      
+    }, []);
+
     return (
         <div className="App">
             <hr className="seperator" />
