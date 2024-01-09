@@ -16,7 +16,6 @@ export interface ILevelCarouselProps {
 export default function LevelCarousel(props: ILevelCarouselProps) {
 
     const onCurrentChange = (event: any) => {
-        console.log(event.item.id);
         props.setLevel(event.item.id);
     }
     
