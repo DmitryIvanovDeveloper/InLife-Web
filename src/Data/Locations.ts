@@ -13,6 +13,8 @@ import StreetOldman from "../Images/Locations/StreetOldman.png"
 import HospitalDoctor from "../Images/Locations/HospitalDoctor.png"
 import HospitalNurse from "../Images/Locations/HospitalNurse.png"
 import StreetWalkerWoman from "../Images/Locations/StreetWalkerWoman.png"
+import AutoMechanic from "../Images/Locations/AutoMechanic.png"
+import PoliceStationPoliceman from "../Images/Locations/PoliceStationPoliceman.png"
 
 import { GenderType } from './GenderType';
 
@@ -87,6 +89,18 @@ export const Locations = [{
     name: "Street: Walker woman",
     gender: GenderType.Female,
     image: StreetWalkerWoman
+},
+{
+    id: process.env.REACT_APP_LOCATION_AUTO_MECHANIC,
+    name: "Auto mechanic",
+    gender: GenderType.Male,
+    image: AutoMechanic
+},
+{
+    id: process.env.REACT_APP_LOCATION_POLICE_STATION_POLICE_MAN,
+    name: "Police Station: Police man",
+    gender: GenderType.Male,
+    image: PoliceStationPoliceman
 },
 ]
 
