@@ -18,6 +18,7 @@ import PoliceStationPoliceMan from "../Images/Locations/PoliceStationPoliceman.p
 import PoliceStationSwat from "../Images/Locations/PoliceStationSwat.png"
 import PoliceStationDetective from "../Images/Locations/PoliceStationDetective.png"
 import PoliceStationOfficer from "../Images/Locations/PoliceStationOfficer.png"
+import ConstructionZoneForeman from "../Images/Locations/ConstructionZoneForeman.png"
 
 import { GenderType } from './GenderType';
 
@@ -122,6 +123,12 @@ export const Locations = [{
     name: "Police Station: Officer",
     gender: GenderType.Female,
     image: PoliceStationOfficer
+},
+{
+    id: process.env.REACT_APP_LOCATION_CONSTRUCTION_ZONE_FOREMAN,
+    name: "Construction Zone: Foreman",
+    gender: GenderType.Male,
+    image: ConstructionZoneForeman
 },
 ]
 
