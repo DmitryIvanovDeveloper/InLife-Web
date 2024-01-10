@@ -14,32 +14,18 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import ISignUpModel from "../../ThereGame.Business/Models/ISignUpModel";
 import useAuthenticationQueriesApi from "../../ThereGame.Api/Queries/AuthenticationQueriesApi";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { useSearchParams } from "react-router-dom";
-
-function Copyright(props: any) {
-    return (
-        <Typography
-            variant="body2"
-            color="text.secondary"
-            align="center"
-            {...props}
-        >
-            {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{" "}
-            {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
-}
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
+import { Routes } from "../../Routes";
 
 const theme = createTheme();
 
 export default function SignUpStudent() {
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+    const [authenticationError, setAuthenticationError] = useState<string>("");
 
     const [data, setData] = useState<ISignUpModel>({
         id: uuidv4(),
@@ -52,10 +38,17 @@ export default function SignUpStudent() {
     
     const authenticationQueriesApi = useAuthenticationQueriesApi();
 
-    const handleSubmit = (event: any) => {
+    const handleSubmit = async (event: any) => {
         event.preventDefault();
 
-        authenticationQueriesApi.signUpStudent(data);
+        var status = await authenticationQueriesApi.signUpStudent(data);
+        if (status == Status.OK) {
+            navigate(Routes.studentProfile);
+        }
+
+        if (status == Status.Conflict) {
+            setAuthenticationError("The account already exist");
+        }
     };
 
     return (
@@ -76,6 +69,10 @@ export default function SignUpStudent() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
+                    {!authenticationError 
+                        ? null
+                        : <Typography color='red'>{authenticationError}</Typography>
+                    }
                     <Box
                         component="form"
                         noValidate
@@ -158,7 +155,6 @@ export default function SignUpStudent() {
                         </Grid>
                     </Box>
                 </Box>
-                <Copyright sx={{ mt: 5 }} />
             </Container>
         </ThemeProvider>
     );

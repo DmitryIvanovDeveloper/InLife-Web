@@ -391,7 +391,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                             <Button 
                                 id={phrase.id} 
                                 onClick={onPhraseButtonClick} 
-                                sx={{ m: 1, }}>{phrase.text}</Button>
+                                sx={{ m: 1, }}>{!phrase.text ? "New Pharse" : phrase.text}</Button>
                         ))}
                     </ButtonGroup>
                 </Box>

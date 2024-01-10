@@ -281,7 +281,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                             sx={{p: 1}}
                         >
                             <Button variant='outlined' id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
-                                <Typography sx={{ textDecoration: 'underline' }}>{!answer.texts.length ? "New Phrase" : answer.texts[0]}</Typography>
+                                <Typography sx={{ textDecoration: 'underline' }}>{!answer.texts[0] ? "New Phrase" : answer.texts[0]}</Typography>
                             </Button>
                         </Box>
 

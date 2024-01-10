@@ -10,6 +10,7 @@ import { Status } from './ThereGame.Infrastructure/Statuses/Status';
 import { Routes as LocalRoutes} from './Routes';
 import './App.css';
 import ProfileEditor from './components/Profile/ProfileEditor';
+import StudentProfile from './components/Student/StdentProfile';
 
 export function App() {
 
@@ -40,6 +41,8 @@ export function App() {
                 <Route path={LocalRoutes.signUpTeacher} element={<SignUpTeacher />} />
                 <Route path={LocalRoutes.signUpStudent} element={<SignUpStudent />} />
                 <Route path={LocalRoutes.teacherProfile} element={<TeacherProfile />} />
+                <Route path={LocalRoutes.studentProfile} element={<StudentProfile />} />
+                <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
                 <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
                 <Route path={LocalRoutes.dialoguesBuilder} element={<DialogueBuilder />} />
             </Routes>
