@@ -18,7 +18,7 @@ export default function useAuthenticationQueriesApi() {
             var response = await authenticationService.signInTeacher(request);
             if (response.status == Status.OK)
             {
-                localStorage.setItem("[Teacher] - Token", response.data);
+                localStorage.setItem("[Teacher] - Token", response.data.token);
             }
 
             return response.status;

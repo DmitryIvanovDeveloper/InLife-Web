@@ -4,9 +4,8 @@ const RoutesAPI = {
     answers: `${process.env.REACT_APP_SERVER}/api/answers/`,
     teachers: `${process.env.REACT_APP_SERVER}/api/teachers/`,
     teachersMe: `${process.env.REACT_APP_SERVER}/api/teachers/me`,
-    authSignInTeacher: `${process.env.REACT_APP_SERVER}/api/auth/sign-in/teachers`,
+    authSignIn: `${process.env.REACT_APP_SERVER}/api/auth/sign-in`,
     authSignUpTeacher: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/teachers`,
-    authSignInStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-in/students`,
     authSignUpStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/students`,
 }
 

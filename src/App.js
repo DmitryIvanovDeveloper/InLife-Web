@@ -10,7 +10,7 @@ import { Status } from './ThereGame.Infrastructure/Statuses/Status';
 import { Routes as LocalRoutes} from './Routes';
 import './App.css';
 import ProfileEditor from './components/Profile/ProfileEditor';
-import StudentProfile from './components/Student/StdentProfile';
+import StudentProfile from './components/Student/StudentProfile';
 
 export function App() {
 

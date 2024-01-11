@@ -12,7 +12,7 @@ export default class AuthenticationService implements IAuthenticationService {
     
     async signInTeacher(request: ISignInRequestDto): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(RoutesAPI.authSignInTeacher, {
+            var response = await fetch(RoutesAPI.authSignIn, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export default class AuthenticationService implements IAuthenticationService {
 
     async signInStudent(request: ISignInRequestDto): Promise<TypedResult<Status>> {
         try {
-            var response = await fetch(RoutesAPI.authSignInStudent, {
+            var response = await fetch(RoutesAPI.authSignIn, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
