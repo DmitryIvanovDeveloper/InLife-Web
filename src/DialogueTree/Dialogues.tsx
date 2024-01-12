@@ -15,6 +15,10 @@ import Dialogue from './Dialogue';
 import { useTeacher } from '../Data/useTeacher';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import { useTreeState } from '../Data/useTreeState';
+import DialogueGraph from '../components/GraphTree/DialigueGraph';
+import { ButtonGroup, Grid } from '@mui/material';
+import { DialogueItemStateType } from '../ThereGame.Business/Util/DialogueItemStateType';
+import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
 
 export interface IDialoguesProps { }
 
@@ -25,9 +29,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [teacher] = useTeacher();
 
     const [npcId, setNpcId] = useState<string>(Locations[0].id ?? '');
+    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const [dialogues, setDialogues] = useState<IDialogueModel[]>(teacher?.dialogues ?? []);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
+    const [dialogue, setDialogue] = useState<IDialogueModel>();
 
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
         setTreeState(prev => ({
@@ -47,6 +53,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         setIsNewDialogueCreating(true)
         await dialogueQueriesApi.create(npcId);
         setIsNewDialogueCreating(false)
+    }
+
+    const onClick = (dialogue: IDialogueModel) => {
+        setDialogue(dialogue);
+        setDialogueItemConstructor(() => <DialogueConstructor id={dialogue.id} setStates={() => {}}/>);
     }
 
     useEffect(() => {
@@ -84,8 +95,8 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
             <Box>
                 {isNewDialogueCreating
-                    ? <LinarProgressCustom name='Creating'/>
-                    : <Button 
+                    ? <LinarProgressCustom name='Creating' />
+                    : <Button
                         fullWidth
                         variant='contained'
                         onClick={createNewDialogue}>
@@ -93,8 +104,23 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                     </Button>
                 }
             </Box>
-                
-            <TreeView
+            <Grid>
+                {dialogues
+                    .map(dialogue => (
+                        <Button
+                            sx={{ p: 1 }}
+                            onClick={() => onClick(dialogue)}>{!dialogue.name ? "New Dialogue" : dialogue.name}</Button>
+                    ))
+                }
+            </Grid>
+
+
+            {!dialogue
+                ? null
+                : <DialogueGraph dialogue={dialogue} />
+            }
+
+            {/* <TreeView
                 aria-label="controlled"
                 
                 defaultCollapseIcon={<ExpandMoreIcon />}
@@ -109,7 +135,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                     .map(dialogue => (
                         <Dialogue id={dialogue.id} />
                     ))}
-            </TreeView>
+            </TreeView> */}
         </Box>
     );
 }
