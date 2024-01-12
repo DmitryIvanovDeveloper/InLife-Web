@@ -56,13 +56,15 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     style={{
                         border: "1px solid transparent",
                         borderRadius: "5px",
-                        backgroundColor: props.selectedNodeId == props.customNodeElementProps.nodeDatum.attributes?.id 
-                            ? "#43a047" 
-                            : states[0] == DialogueItemStateType.UnsavedChanges 
+                        backgroundColor: states[0] == DialogueItemStateType.UnsavedChanges 
                                 ? "#ffe082"
                                 : props.customNodeElementProps.nodeDatum.attributes?.color as string,
                         margin: 1,
-                        padding: 1
+                        padding: 1,
+                        borderColor: props.selectedNodeId == props.customNodeElementProps.nodeDatum.attributes?.id 
+                        ? "#ff5722" 
+                        : props.customNodeElementProps.nodeDatum.attributes?.color as string,
+                        borderBlockWidth: 10
                     }}
                 >
                     <h3 style={{ textAlign: "center" }}>{props.customNodeElementProps.nodeDatum.name}</h3>

@@ -81,7 +81,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 mb: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 800,
+                height: 1000,
                 overflow: "hidden",
                 overflowY: "scroll",
             }}

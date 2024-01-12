@@ -5,6 +5,7 @@ import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { DialogueItemNode } from "./DialogueItemNode";
 import { NodeType } from "./DialogueitemType";
+import { Box } from "@mui/material";
 
 
 export interface IDialoguesGraphProps {
@@ -66,21 +67,24 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     }
 
     return (
-        <Tree
-            data={data}
-            nodeSize={nodeSize}
-            rootNodeClassName="node__root"
-            branchNodeClassName="node__branch"
-            leafNodeClassName="node__leaf"
-            pathClassFunc={() => "node__link"}
-            renderCustomNodeElement={(dialogueItem) => (
-                <DialogueItemNode 
-                    customNodeElementProps={dialogueItem} 
-                    selectedNodeId={selectedNodeId} 
-                    setSelectedNodeId={setSelectedNodeId}
-                />
-            )}
-            orientation="vertical"
-        />
+        <Box height={1000}  borderColor="primary.main">
+            <Tree
+                data={data}
+                nodeSize={nodeSize}
+                rootNodeClassName="node__root"
+                branchNodeClassName="node__branch"
+                leafNodeClassName="node__leaf"
+                pathClassFunc={() => "node__link"}
+                renderCustomNodeElement={(dialogueItem) => (
+                    <DialogueItemNode
+                        customNodeElementProps={dialogueItem}
+                        selectedNodeId={selectedNodeId}
+                        setSelectedNodeId={setSelectedNodeId}
+                    />
+                )}
+                orientation="vertical"
+            />
+        </Box>
+
     );
 }

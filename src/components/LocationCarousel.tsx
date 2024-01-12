@@ -5,7 +5,7 @@ import { VoiceOptionsNeuralType } from "../Data/VoiceList/VoiceOptionsNeuralType
 import { GenderType } from "../Data/GenderType";
 
 const breakPoints = [
-    { width: 1, itemsToShow: 1 },
+    { width: 100, itemsToShow: 1 },
 ];
 
 export interface ILevelCarouselProps {
@@ -18,12 +18,6 @@ export default function LevelCarousel(props: ILevelCarouselProps) {
     const onCurrentChange = (event: any) => {
         props.setLevel(event.item.id);
     }
-    
-    useEffect(() => {
-        console.log(Locations.findIndex(location => location.id == props.id));
-
-      
-    }, []);
 
     return (
         <div className="App">
