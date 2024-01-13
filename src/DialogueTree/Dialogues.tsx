@@ -1,20 +1,19 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
-import { useDialogueItemConstructor, useDialogues } from '../Data/useDialogues';
+import { useDialogueItemConstructor } from '../Data/useDialogues';
 import { useEffect, useState } from 'react';
 import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import LinarProgressCustom from '../components/CircularProgress';
 import LocationCarousel from '../components/LocationCarousel';
 import { Locations } from '../Data/Locations';
 import AppBarCustom from '../components/AppBarCustom';
-import Dialogue from './Dialogue';
 import { useTeacher } from '../Data/useTeacher';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import { useTreeState } from '../Data/useTreeState';
+import DialogueGraph from '../components/GraphTree/DialogueGraph';
+import { Grid } from '@mui/material';
+import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
 
 export interface IDialoguesProps { }
 
@@ -25,9 +24,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [teacher] = useTeacher();
 
     const [npcId, setNpcId] = useState<string>(Locations[0].id ?? '');
+    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const [dialogues, setDialogues] = useState<IDialogueModel[]>(teacher?.dialogues ?? []);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
+    const [dialogue, setDialogue] = useState<IDialogueModel>();
 
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
         setTreeState(prev => ({
@@ -47,6 +48,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         setIsNewDialogueCreating(true)
         await dialogueQueriesApi.create(npcId);
         setIsNewDialogueCreating(false)
+    }
+
+    const onClick = (dialogue: IDialogueModel) => {
+        setDialogue(dialogue);
+        setDialogueItemConstructor(() => <DialogueConstructor id={dialogue.id} setStates={() => {}}/>);
     }
 
     useEffect(() => {
@@ -70,7 +76,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 mb: 2,
                 display: "flex",
                 flexDirection: "column",
-                height: 800,
+                height: 1000,
                 overflow: "hidden",
                 overflowY: "scroll",
             }}
@@ -79,13 +85,13 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             <AppBarCustom
                 name={Locations.find(l => l.id == npcId)?.name ?? ''}
             />
-
+           
             <LocationCarousel setLevel={setNpcId} id={npcId} />
 
             <Box>
                 {isNewDialogueCreating
-                    ? <LinarProgressCustom name='Creating'/>
-                    : <Button 
+                    ? <LinarProgressCustom name='Creating' />
+                    : <Button
                         fullWidth
                         variant='contained'
                         onClick={createNewDialogue}>
@@ -93,8 +99,23 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                     </Button>
                 }
             </Box>
-                
-            <TreeView
+            <Grid>
+                {dialogues
+                    .map(dialogue => (
+                        <Button
+                            sx={{ p: 1 }}
+                            onClick={() => onClick(dialogue)}>{!dialogue.name ? "New Dialogue" : dialogue.name}</Button>
+                    ))
+                }
+            </Grid>
+
+
+            {!dialogue
+                ? null
+                : <DialogueGraph dialogueId={dialogue.id} />
+            }
+
+            {/* <TreeView
                 aria-label="controlled"
                 
                 defaultCollapseIcon={<ExpandMoreIcon />}
@@ -109,7 +130,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                     .map(dialogue => (
                         <Dialogue id={dialogue.id} />
                     ))}
-            </TreeView>
+            </TreeView> */}
         </Box>
     );
 }
