@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Carousel from "react-elastic-carousel";
 import { Locations } from "../Data/Locations";
-import { VoiceOptionsNeuralType } from "../Data/VoiceList/VoiceOptionsNeuralType";
-import { GenderType } from "../Data/GenderType";
+import { Box } from "@mui/material";
 
 const breakPoints = [
-    { width: 100, itemsToShow: 1 },
+    { width: 2, itemsToShow: 1,  },
 ];
 
 export interface ILevelCarouselProps {
@@ -20,23 +19,20 @@ export default function LevelCarousel(props: ILevelCarouselProps) {
     }
 
     return (
-        <div className="App">
-            <hr className="seperator" />
-            <div className="carousel-wrapper">
-                { //@ts-ignore 
-                    <Carousel
-                        initialFirstItem={Locations.findIndex(location => location.id == props.id) ?? [0]}
-                        onNextEnd={onCurrentChange}
-                        onPrevEnd={onCurrentChange}
+        <Box>
+            { //@ts-ignore 
+                <Carousel
+                    initialFirstItem={Locations.findIndex(location => location.id == props.id) ?? [0]}
+                    onNextEnd={onCurrentChange}
+                    onPrevEnd={onCurrentChange}
 
-                        breakPoints={breakPoints}>
-                        {Locations.map((location) => (
-                            <img id={location.id} key={location.id} src={location.image} width="750" height="250" />
-                        ))}
-                    </Carousel>
-                }
+                    breakPoints={breakPoints}>
+                    {Locations.map((location) => (
+                        <img id={location.id} key={location.id} src={location.image} width="750" height="250" />
+                    ))}
+                </Carousel>
+            }
 
-            </div>
-        </div>
+        </Box>
     );
 }

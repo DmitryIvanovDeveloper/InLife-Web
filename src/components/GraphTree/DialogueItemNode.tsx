@@ -6,6 +6,7 @@ import DialogueConstructor from "../../constructors/dialogueConstructor/Dialogue
 import PhraseContructor from "../../constructors/phraseContructor.tsx/PhraseContructor";
 import { NodeType } from "./DialogueitemType";
 import { CustomNodeElementProps } from "react-d3-tree";
+import { useSelection } from "../../Data/useSelection";
 
 const nodeSize = { x: 200, y: 200 };
 const foreignObjectProps = {
@@ -18,17 +19,15 @@ const foreignObjectProps = {
 
 export interface IRenderForeignDialogueItemNodeProps {
     customNodeElementProps: CustomNodeElementProps,
-    selectedNodeId: string,
-    setSelectedNodeId: (id: string) => void
 }
 
 export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [states, setStates] = useState<DialogueItemStateType[]>([DialogueItemStateType.NoErrors]);
+    const [selection, setSelection] = useSelection();
 
     const onClick = (id: string, nodeType: NodeType) => {
-
-        props.setSelectedNodeId(id);
+        setSelection(id);
 
         if (nodeType == NodeType.Dialogue) {
             setDialogueItemConstructor(() => <DialogueConstructor id={id} setStates={setStates}/>);
@@ -43,7 +42,6 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
             setDialogueItemConstructor(() => <AnswerContructor id={id} setStates={setStates} dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string} parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}/>);
         }
     }
-
 
     return (
         <g>
@@ -61,7 +59,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                                 : props.customNodeElementProps.nodeDatum.attributes?.color as string,
                         margin: 1,
                         padding: 1,
-                        borderColor: props.selectedNodeId == props.customNodeElementProps.nodeDatum.attributes?.id 
+                        borderColor: selection == props.customNodeElementProps.nodeDatum.attributes?.id 
                         ? "#ff5722" 
                         : props.customNodeElementProps.nodeDatum.attributes?.color as string,
                         borderBlockWidth: 10

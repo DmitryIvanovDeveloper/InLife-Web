@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import Tree, { RawNodeDatum } from "react-d3-tree";
-import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { DialogueItemNode } from "./DialogueItemNode";
 import { NodeType } from "./DialogueitemType";
-import { Box } from "@mui/material";
+import { useDialogue } from "../../Data/useDialogues";
+import { useSelection } from "../../Data/useSelection";
 
 
 export interface IDialoguesGraphProps {
-    dialogue: IDialogueModel
+    dialogueId: string
 }
 
 export default function DialogueGraph(props: IDialoguesGraphProps) {
     const [data, setData] = useState<RawNodeDatum>();
     const nodeSize = { x: 200, y: 200 };
-    const [selectedNodeId, setSelectedNodeId] = useState<string>("");
+
+    const diaologueRecoil = useDialogue(props.dialogueId);
 
     function transformPhrase(phrase: IPhraseModel): RawNodeDatum {
         var node: RawNodeDatum = {
@@ -25,7 +26,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 id: phrase.id,
                 nodeType: NodeType.Phrase,
                 parentId: phrase.parentId ?? "",
-                dialogueId: props.dialogue.id,
+                dialogueId: diaologueRecoil.id,
                 color: "#80cbc4"
             }
         }
@@ -39,7 +40,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 id: answer.id,
                 nodeType: NodeType.Answer,
                 parentId: answer.parentId ?? "",
-                dialogueId: props.dialogue.id,
+                dialogueId: diaologueRecoil.id,
                 color: "#81d4fa"
             }
         }
@@ -48,26 +49,26 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
 
     useEffect(() => {
         var node: RawNodeDatum = {
-            name: props.dialogue.name,
-            children: [transformPhrase(props.dialogue.phrase)],
+            name: diaologueRecoil.name,
+            children: [transformPhrase(diaologueRecoil.phrase)],
             attributes: {
-                id: props.dialogue.id,
+                id: diaologueRecoil.id,
                 nodeType: NodeType.Dialogue,
                 parentId: "",
-                dialogueId: props.dialogue.id,
+                dialogueId: diaologueRecoil.id,
                 color: "#ef9a9a"
             }
         }
 
         setData(node);
-    }, [props.dialogue]);
+    }, [diaologueRecoil]);
 
     if (!data) {
         return null;
     }
 
     return (
-        <Box height={1000}  borderColor="primary.main">
+        <div  style={{backgroundColor: "#e1f5fe", height: 1000, borderRadius: 15}}>
             <Tree
                 data={data}
                 nodeSize={nodeSize}
@@ -78,13 +79,11 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 renderCustomNodeElement={(dialogueItem) => (
                     <DialogueItemNode
                         customNodeElementProps={dialogueItem}
-                        selectedNodeId={selectedNodeId}
-                        setSelectedNodeId={setSelectedNodeId}
                     />
                 )}
                 orientation="vertical"
             />
-        </Box>
+        </div>
 
     );
 }

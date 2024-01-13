@@ -1,23 +1,18 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { TreeView } from '@mui/x-tree-view/TreeView';
-import { useDialogueItemConstructor, useDialogues } from '../Data/useDialogues';
+import { useDialogueItemConstructor } from '../Data/useDialogues';
 import { useEffect, useState } from 'react';
 import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import LinarProgressCustom from '../components/CircularProgress';
 import LocationCarousel from '../components/LocationCarousel';
 import { Locations } from '../Data/Locations';
 import AppBarCustom from '../components/AppBarCustom';
-import Dialogue from './Dialogue';
 import { useTeacher } from '../Data/useTeacher';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import { useTreeState } from '../Data/useTreeState';
-import DialogueGraph from '../components/GraphTree/DialigueGraph';
-import { ButtonGroup, Grid } from '@mui/material';
-import { DialogueItemStateType } from '../ThereGame.Business/Util/DialogueItemStateType';
+import DialogueGraph from '../components/GraphTree/DialogueGraph';
+import { Grid } from '@mui/material';
 import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
 
 export interface IDialoguesProps { }
@@ -90,7 +85,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             <AppBarCustom
                 name={Locations.find(l => l.id == npcId)?.name ?? ''}
             />
-
+           
             <LocationCarousel setLevel={setNpcId} id={npcId} />
 
             <Box>
@@ -117,7 +112,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
             {!dialogue
                 ? null
-                : <DialogueGraph dialogue={dialogue} />
+                : <DialogueGraph dialogueId={dialogue.id} />
             }
 
             {/* <TreeView
