@@ -46,7 +46,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [status, setStatus] = useState<Status>(Status.OK);
 
-    const [isSaved, setIsSaved] = useState(true);
+    const [isEdited, setIsEdited] = useState(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isCreating, setIsCreating] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
@@ -65,7 +65,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             text: event.target.value
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onPhraseButtonClick = (event: any) => {
@@ -85,7 +85,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             wordsToUse: event.target.value
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     // Mistake Explanation
@@ -121,7 +121,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             ]
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onDeleteMistakeExplanation = (id: string) => {
@@ -131,7 +131,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 .filter(explanation => explanation.id != id)
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     // Translate
@@ -148,7 +148,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             translates: [...answer.translates, translate]
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onDeleteTranslate = (id: string) => {
@@ -158,7 +158,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 .filter(translate => translate.id != id)
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onTranslateChange = (translates: ITranslateModel[]) => {
@@ -167,7 +167,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             translates: translates
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onSetTenses = (tenses: string[]) => {
@@ -176,12 +176,12 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             tensesList: tenses
         }));
 
-        setIsSaved(false)
+        setIsEdited(false)
     }
 
     const reset = () => {
         setAnswer(answerRecoil);
-        setIsSaved(true);
+        setIsEdited(true);
 
         localStorage.removeItem(props.id);
     }
@@ -191,7 +191,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsDeleting(true);
         await answerQueriesApi.delete(props.id)
         setIsDeleting(false);
-        setIsSaved(true)
+        setIsEdited(true)
         setDialogueItemConstructor(() => null);
     }
 
@@ -199,7 +199,8 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsLoading(true);
         await answerQueriesApi.update(answer)
         setIsLoading(false);
-        reset();
+        setIsEdited(true);
+        localStorage.removeItem(props.id)
     }
 
     const onChangeEquivalentAnswer = (value: string, index: number) => {
@@ -211,7 +212,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             texts: texts
         }))
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
     const onAddEquivalentAnswer = (value: string) => {
         setAnswer(prev => ({
@@ -219,7 +220,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             texts: [...prev.texts, value]
         }))
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     const onRemoveEquivalentAnswer = (value: string) => {
@@ -228,7 +229,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             texts: prev.texts.filter(text => text != value)
         }));
 
-        setIsSaved(false);
+        setIsEdited(false);
     }
 
     // UseEffects
@@ -236,10 +237,10 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         var data = localStorage.getItem(props.id);
         if (!data) {
             setAnswer(answerRecoil);
-            setIsSaved(true);
+            setIsEdited(true);
             return;
         }
-        setIsSaved(false);
+        setIsEdited(false);
 
         setAnswer(JSON.parse(data));
     }, [answerRecoil]);
@@ -248,16 +249,16 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         var data = localStorage.getItem(props.id);
         if (!data) {
             setAnswer(answerRecoil);
-            setIsSaved(true);
+            setIsEdited(true);
             return;
         }
-        setIsSaved(false);
+        setIsEdited(false);
 
         setAnswer(JSON.parse(data));
     }, []);
 
     useEffect(() => {
-        if (isSaved) {
+        if (isEdited) {
             return;
         }
 
@@ -271,7 +272,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         }
 
         localStorage.removeItem(props.id);
-        setIsSaved(true)
+        setIsEdited(true)
     }, [answer]);
 
     useEffect(() => {
@@ -279,13 +280,13 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             return;
         }
 
-        if (isSaved) {
+        if (isEdited) {
             props.setStates([DialogueItemStateType.NoErrors])
             return;
         }
 
         props.setStates([DialogueItemStateType.UnsavedChanges])
-    }, [isSaved]);
+    }, [isEdited]);
 
     if (!answer) {
         return null;
@@ -361,7 +362,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             
             <Divider variant="fullWidth" />
 
-            {!isSaved
+            {!isEdited
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={reset}>reset</Button>
