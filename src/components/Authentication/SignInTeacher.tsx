@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../Routes';
 import { Status } from '../../ThereGame.Infrastructure/Statuses/Status';
+import { StatusDescription } from '../../ThereGame.Infrastructure/Statuses/StatusDescription';
 
 const defaultTheme = createTheme();
 
@@ -36,12 +37,17 @@ export default function SignInTeacher() {
 
         var status = await authenticationQueriesApi.signInTeacher(data);
         if (status == Status.Unauthorized) {
-
-            setAuthenticationError("Account is not exist");
+            setAuthenticationError(StatusDescription.Unauthorized);
             return;
         }
-
-        navigate(Routes.teacherProfile);
+        if (status == Status.InternalServerError) {
+            setAuthenticationError(StatusDescription.InternalServerError);
+            return;
+        }
+        if (status == Status.OK) {
+            navigate(Routes.teacherProfile);
+            return;
+        }
     };
 
     return (

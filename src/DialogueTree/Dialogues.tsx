@@ -28,7 +28,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     const [dialogues, setDialogues] = useState<IDialogueModel[]>(teacher?.dialogues ?? []);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
-    const [dialogue, setDialogue] = useState<IDialogueModel>();
+    const [dialogue, setDialogue] = useState<IDialogueModel | null>(null);
 
     const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
         setTreeState(prev => ({
@@ -44,6 +44,12 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         }))
     };
 
+    const onChangeLocation = (id: string) => {
+        setNpcId(id);
+        setDialogue(null);
+        setDialogueItemConstructor(() => <div></div>);
+
+    }
     const createNewDialogue = async () => {
         setIsNewDialogueCreating(true)
         await dialogueQueriesApi.create(npcId);
@@ -86,7 +92,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 name={Locations.find(l => l.id == npcId)?.name ?? ''}
             />
            
-            <LocationCarousel setLevel={setNpcId} id={npcId} />
+            <LocationCarousel setLevel={onChangeLocation} id={npcId} />
 
             <Box>
                 {isNewDialogueCreating

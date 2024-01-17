@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Tree, { RawNodeDatum } from "react-d3-tree";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { DialogueItemNode } from "./DialogueItemNode";
 import { NodeType } from "./DialogueitemType";
 import { useDialogue } from "../../Data/useDialogues";
-import { useSelection } from "../../Data/useSelection";
-
 
 export interface IDialoguesGraphProps {
     dialogueId: string
@@ -32,6 +30,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         }
         return node;
     }
+    
     function transformAnswer(answer: IAnswerModel): RawNodeDatum {
         var node: RawNodeDatum = {
             name: answer.texts[0],
@@ -66,12 +65,12 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     if (!data) {
         return null;
     }
-
     return (
         <div  style={{backgroundColor: "#e1f5fe", height: 1000, borderRadius: 15}}>
             <Tree
                 data={data}
                 nodeSize={nodeSize}
+                translate={{x: 350, y: 50}}
                 rootNodeClassName="node__root"
                 branchNodeClassName="node__branch"
                 leafNodeClassName="node__leaf"
