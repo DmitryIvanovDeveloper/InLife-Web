@@ -40,7 +40,7 @@ export default function useDialogieQueriesApi() {
             }
 
             var phrase: IPhraseModel = {
-                parentId: null,
+                parentId: "",
                 text: '',
                 answers: [],
                 tensesList: [],

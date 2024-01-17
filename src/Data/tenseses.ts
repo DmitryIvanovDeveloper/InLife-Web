@@ -11,4 +11,5 @@ export const Tenseses = [
     "Future Perfect",
     "Future Continuous",
     "Future Perfect Continuous",
+    "Conditional"
 ];

@@ -1,16 +1,21 @@
-import { Box, Button, Chip, Divider, Grid, Stack, TextField, Typography } from "@mui/material"
+import { Box, Button, Chip, CircularProgress, Divider, Grid, Stack, TextField, Typography } from "@mui/material"
 import DevidedLabel from "../../components/Headers/DevidedLabel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useTeacher } from "../../Data/useTeacher";
 
 export interface EquivalentTextConstructorProps {
     texts: string[];
+    chatGpt: (sentence: string) => void;
     onChangeEquivalentAnswer: (value: string, index: number) => void;
     onAddEquivalentAnswer: (text: string) => void;
     onRemoveEquivalentAnswer: (value: string) => void;
+    isLoading: boolean;
 }
 
 
 export default function EquivalentTextConstructor(props: EquivalentTextConstructorProps) {
+    const [teacher] = useTeacher();
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
     const [selectedTextId, setSelectedTextId] = useState({
         id: 0,
@@ -23,6 +28,11 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
         setSelectedTextId({ text: text, id: id });
         setIsUpdate(true);
     }
+
+    useEffect(() => {
+        var isAdmin = teacher?.id == process.env.REACT_APP_ADMIN_ID;
+        setIsAdmin(isAdmin);
+    }, []);
 
     const onSave = () => {
 
@@ -56,6 +66,15 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
 
 
             <Box sx={{ pt: 1 }} style={{ display: "flex", justifyContent: "flex-end" }}>
+                {!isAdmin
+                    ? null
+                    : props.isLoading
+                        ? <CircularProgress />
+                        : <Button onClick={() => props.chatGpt(selectedTextId.text)}>ChatGpt</Button>
+                }
+
+
+
                 <Button
                     disabled={!selectedTextId.text}
                     style={{ backgroundColor: "darkgreen", color: "white", }}

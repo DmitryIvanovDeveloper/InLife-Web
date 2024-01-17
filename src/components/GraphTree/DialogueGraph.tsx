@@ -23,7 +23,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             attributes: {
                 id: phrase.id,
                 nodeType: NodeType.Phrase,
-                parentId: phrase.parentId ?? "",
+                parentId: phrase.parentId,
                 dialogueId: diaologueRecoil.id,
                 color: "#80cbc4"
             }
@@ -38,7 +38,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             attributes: {
                 id: answer.id,
                 nodeType: NodeType.Answer,
-                parentId: answer.parentId ?? "",
+                parentId: answer.parentId,
                 dialogueId: diaologueRecoil.id,
                 color: "#81d4fa"
             }

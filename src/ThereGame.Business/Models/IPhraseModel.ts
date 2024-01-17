@@ -4,7 +4,7 @@ import IAudioSettings from "./IAudioSettings";
 import IDialogueItemModel from "./IDialogueItemModel";
 
 export default interface IPhraseModel extends IDialogueItemModel {
-    readonly parentId: string | null;
+    readonly parentId: string;
     readonly text: string;
     readonly answers: IAnswerModel[];
     readonly tensesList: string[];
