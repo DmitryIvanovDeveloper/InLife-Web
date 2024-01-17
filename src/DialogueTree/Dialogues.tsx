@@ -30,20 +30,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
     const [dialogue, setDialogue] = useState<IDialogueModel | null>(null);
 
-    const handleToggle = (event: React.SyntheticEvent, nodeIds: string[]) => {
-        setTreeState(prev => ({
-            ...prev,
-            expanded: nodeIds
-        }))
-    };
-
-    const handleSelect = (event: React.SyntheticEvent, nodeIds: string[]) => {
-        setTreeState(prev => ({
-            ...prev,
-            selected: nodeIds
-        }))
-    };
-
     const onChangeLocation = (id: string) => {
         setNpcId(id);
         setDialogue(null);
@@ -120,23 +106,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 ? null
                 : <DialogueGraph dialogueId={dialogue.id} />
             }
-
-            {/* <TreeView
-                aria-label="controlled"
-                
-                defaultCollapseIcon={<ExpandMoreIcon />}
-                defaultExpandIcon={<ChevronRightIcon />}
-                expanded={treeState.expanded}
-                selected={treeState.selected}
-                onNodeToggle={handleToggle}
-                onNodeSelect={handleSelect}
-                multiSelect
-            >
-                {dialogues
-                    .map(dialogue => (
-                        <Dialogue id={dialogue.id} />
-                    ))}
-            </TreeView> */}
         </Box>
     );
 }

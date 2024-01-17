@@ -80,7 +80,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         localStorage.removeItem(props.id);
     }
 
-    const onAnswerButtonClick = (id: any) => {
+    const onAnswerButtonClick = (id: string) => {
         setSelection(id);
 
         setTreeState(prev => ({
@@ -281,7 +281,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                             sx={{p: 1}}
                         >
                             <Button variant='outlined' id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
-                                <Typography sx={{ textDecoration: 'underline' }}>{!answer.texts[0] ? "New Phrase" : answer.texts[0]}</Typography>
+                                <Typography sx={{ textDecoration: 'underline' }}>{!answer.texts[0] ? "New Answer" : answer.texts[0]}</Typography>
                             </Button>
                         </Box>
 

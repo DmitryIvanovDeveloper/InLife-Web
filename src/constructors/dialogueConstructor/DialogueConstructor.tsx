@@ -13,6 +13,7 @@ import { useTreeState } from "../../Data/useTreeState";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import Switcher from "../../components/Button/Switcher";
 import DevidedLabel from "../../components/Headers/DevidedLabel";
+import { useSelection } from "../../Data/useSelection";
 
 export interface IDialogueConstructor {
     id: string;
@@ -29,6 +30,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [treeState, setTreeState] = useTreeState();
+    const [selection, setSelection] = useSelection();
 
     const dialogueQueriesApi = useDialogieQueriesApi();
 
@@ -64,6 +66,8 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             selected: [dialogue.phrase.id]
         }));
 
+        setSelection(dialogue.phrase.id);
+        
         setDialogueItemConstructor(() => <PhraseContructor
             dialogueId={props.id}
             id={dialogue.phrase.id}
