@@ -7,6 +7,7 @@ const RoutesAPI = {
     authSignIn: `${process.env.REACT_APP_SERVER}/api/auth/sign-in`,
     authSignUpTeacher: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/teachers`,
     authSignUpStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/students`,
+    chatGPT: "https://api.openai.com/v1/chat/completions"
 }
 
 const Routes = {

@@ -39,7 +39,7 @@ export default function TensesList(props: ITensesListProps) {
 
             {Tenseses.map(tenses => (
                 <Button
-                    variant={!clickedButtons.find(button => button == tenses) ? "outlined" : "contained"}
+                    variant={!clickedButtons?.find(button => button == tenses) ? "outlined" : "contained"}
                     style={{ margin: "5px", fontWeight: 700 }}
                     value={tenses}
                     onClick={OnClick}>{tenses}

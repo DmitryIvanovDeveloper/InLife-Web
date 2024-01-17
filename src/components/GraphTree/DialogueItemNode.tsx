@@ -39,7 +39,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         }
 
         if (nodeType == NodeType.Answer) {
-            setDialogueItemConstructor(() => <AnswerContructor id={id} setStates={setStates} dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string} parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}/>);
+            setDialogueItemConstructor(() => <AnswerContructor id={id} setStates={setStates} dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string} parentId={props.customNodeElementProps.nodeDatum.attributes?.parentId as string}/>);
         }
     }
 

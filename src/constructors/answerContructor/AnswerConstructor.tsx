@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import AddButton from "../../components/Button/AddButton";
 import SaveButton from "../../components/Button/SaveButton";
 import { useSelection } from "../../Data/useSelection";
-import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
+import { useAnswer, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
 import MistakeExplanationConstructor from "./MistakeExplanationsConstructor";
@@ -22,6 +22,8 @@ import TensesList from "../TensesList";
 import { useTreeState } from "../../Data/useTreeState";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
+import ChatGptService from "../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";
+import IChatGPTResponseDto, { IDataResponse } from "../../ThereGame.Infrastructure/Services/ChatGpt/Dtos/IChatGptResponseDto";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -35,6 +37,7 @@ export interface IAnswerContructor {
 export default function AnswerContructor(props: IAnswerContructor): JSX.Element | null {
 
     const answerRecoil = useAnswer(props.dialogueId, props.id);
+
     const answerQueriesApi = useAnswerQueriesApi();
     const phraseQueriesApi = usePhraseQueriesApi();
 
@@ -50,6 +53,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isCreating, setIsCreating] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
+    const [isChatGptLoading, setIsChatGptLoading] = useState<boolean>(false);
 
     const onAddPhraseButtonClick = async () => {
         setIsCreating(true)
@@ -58,7 +62,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsCreating(false)
 
     }
-
     const onChangeText = (event: any) => {
         setAnswer(prev => ({
             ...prev,
@@ -72,17 +75,17 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setSelection(event.target.id);
 
         setTreeState(prev => ({
-            expanded: [...prev.expanded, event.target.id], 
+            expanded: [...prev.expanded, event.target.id],
             selected: event.target.id
         }));
 
         setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={event.target.id} parentId={props.parentId} />);
     }
 
-    const onWordsToUseChange = (event: any) => {
+    const onWordsToUseChange = (wordsToUse: string) => {
         setAnswer(prev => ({
             ...prev,
-            wordsToUse: event.target.value
+            wordsToUse: wordsToUse
         }));
 
         setIsEdited(false);
@@ -179,6 +182,39 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsEdited(false)
     }
 
+    const ChatGpt = async (sentence: string) => {
+        if (!sentence) {
+            return;
+        }
+        
+        setIsChatGptLoading(true);
+        var result = await new ChatGptService().request(sentence);
+
+        var chatGPTResponse: IChatGPTResponseDto = result?.data;
+
+        chatGPTResponse.choices.map(choice => {
+            var data: IDataResponse = JSON.parse(choice.message.content);
+
+            data.variations.map(variation => {
+                onAddEquivalentAnswer(variation);
+            })
+            var translates = data.translations.map(translate => {
+                return {
+                    parentId: answer.id,
+                    id: uuidv4(),
+                    language: LanguageType.Russian,
+                    text: translate
+                }
+            });
+
+            onTranslateChange(translates);
+            onWordsToUseChange(data.words_uppercase);
+            onSetTenses(data.tenseses);
+        });
+        setIsChatGptLoading(false);
+
+    }
+
     const reset = () => {
         setAnswer(answerRecoil);
         setIsEdited(true);
@@ -206,7 +242,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const onChangeEquivalentAnswer = (value: string, index: number) => {
         var texts = [...answer.texts];
         texts[index] = value;
-        
+
         setAnswer(prev => ({
             ...prev,
             texts: texts
@@ -288,6 +324,9 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         props.setStates([DialogueItemStateType.UnsavedChanges])
     }, [isEdited]);
 
+    useEffect(() => {
+        console.log(answer.tensesList)
+    }, [answer.tensesList])
     if (!answer) {
         return null;
     }
@@ -313,13 +352,11 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 onDelete={onDelete}
             />
 
-            {isDeleting 
-                ? <LinarProgressCustom name="Deleting"/>
+            {isDeleting
+                ? <LinarProgressCustom name="Deleting" />
                 : null
             }
 
-
-            
             <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} />
 
             <EquivalentTextConstructor
@@ -327,9 +364,11 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 onAddEquivalentAnswer={onAddEquivalentAnswer}
                 onRemoveEquivalentAnswer={onRemoveEquivalentAnswer}
                 texts={answer.texts}
+                chatGpt={ChatGpt}
+                isLoading={isChatGptLoading}
             />
 
-            <DevidedLabel name="Words Hints"/>
+            <DevidedLabel name="Words Hints" />
 
             <TextField
                 InputLabelProps={{ shrink: true }}
@@ -338,7 +377,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 id="outlined-basic"
                 label="Words to use"
                 variant="outlined"
-                onChange={onWordsToUseChange}
+                onChange={(event) => onWordsToUseChange(event.target.value)}
                 required={true}
                 fullWidth
             ></TextField>
@@ -359,7 +398,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 onExplanationChange={onExplanationChange}
                 onAddMistakeExplanation={onAddMistakeExplanation}
             /> */}
-            
+
             <Divider variant="fullWidth" />
 
             {!isEdited
@@ -370,16 +409,16 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
 
-            <SaveButton 
-                onClick={onSave} 
-                isLoading={isLoading} 
-                isDisabled={false} 
+            <SaveButton
+                onClick={onSave}
+                isLoading={isLoading}
+                isDisabled={false}
             />
 
             <DevidedLabel name="Linked phrases" />
 
             {isCreating
-                ? <LinarProgressCustom name="Creating"/>
+                ? <LinarProgressCustom name="Creating" />
                 : <AddButton onClick={onAddPhraseButtonClick} name="Create Phrase" />
             }
 
@@ -389,9 +428,9 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                     <ButtonGroup
                     >
                         {answer.phrases?.map(phrase => (
-                            <Button 
-                                id={phrase.id} 
-                                onClick={onPhraseButtonClick} 
+                            <Button
+                                id={phrase.id}
+                                onClick={onPhraseButtonClick}
                                 sx={{ m: 1, }}>{!phrase.text ? "New Pharse" : phrase.text}</Button>
                         ))}
                     </ButtonGroup>
