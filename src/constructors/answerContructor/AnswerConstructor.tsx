@@ -199,7 +199,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsLoading(true);
         await answerQueriesApi.update(answer)
         setIsLoading(false);
-        localStorage.removeItem(props.id)
+        reset();
     }
 
     const onChangeEquivalentAnswer = (value: string, index: number) => {
