@@ -4,7 +4,6 @@ import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
 import AnswerMapping from "../Util/Mapping/AnswerMapping";
-import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { v4 as uuidv4 } from 'uuid';
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import useTeacherQueriesApi from "./TeacherQueriesApi";

@@ -18,7 +18,7 @@ export default class PhraseMapping {
     }
     public request(phrase: IPhraseModel): IPhraseRequestDto {
         return {
-            parentAnswerId: phrase.parentId,
+            parentAnswerId: !phrase.parentId ? null : phrase.parentId,
             text: phrase.text,
             answers: phrase.answers.map(answer => new AnswerMapping().request(answer)),
             tensesList: phrase.tensesList,
