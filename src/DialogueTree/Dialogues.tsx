@@ -10,16 +10,19 @@ import { Locations } from '../Data/Locations';
 import AppBarCustom from '../components/AppBarCustom';
 import { useTeacher } from '../Data/useTeacher';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
-import { useTreeState } from '../Data/useTreeState';
 import DialogueGraph from '../components/GraphTree/DialogueGraph';
-import { Grid } from '@mui/material';
+import { Grid, IconButton } from '@mui/material';
 import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
+import { useNavigate } from 'react-router-dom';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import { Routes } from '../Routes';
 
 export interface IDialoguesProps { }
 
 export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
+
+
     const dialogueQueriesApi = useDialogieQueriesApi();
-    const [treeState, setTreeState] = useTreeState();
 
     const [teacher] = useTeacher();
 
@@ -44,7 +47,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     const onClick = (dialogue: IDialogueModel) => {
         setDialogue(dialogue);
-        setDialogueItemConstructor(() => <DialogueConstructor id={dialogue.id} setStates={() => {}}/>);
+        setDialogueItemConstructor(() => <DialogueConstructor id={dialogue.id} setStates={() => { }} />);
     }
 
     useEffect(() => {
@@ -74,10 +77,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             }}
 
             autoComplete="off" >
+            
             <AppBarCustom
                 name={Locations.find(l => l.id == npcId)?.name ?? ''}
             />
-           
+
             <LocationCarousel setLevel={onChangeLocation} id={npcId} />
 
             <Box>

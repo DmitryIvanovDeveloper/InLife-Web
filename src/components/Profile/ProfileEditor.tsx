@@ -13,7 +13,6 @@ import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
 import Tab, { tabClasses } from '@mui/joy/Tab';
 import Breadcrumbs from '@mui/joy/Breadcrumbs';
-import Link from '@mui/joy/Link';
 import Card from '@mui/joy/Card';
 import CardActions from '@mui/joy/CardActions';
 import CardOverflow from '@mui/joy/CardOverflow';
@@ -21,7 +20,6 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import EmailRoundedIcon from '@mui/icons-material/EmailRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
-import CountrySelector from './CountrySelector';
 import Avatar from "react-avatar-edit";
 import { useEffect, useState } from 'react';
 import { useTeacher } from '../../Data/useTeacher';
@@ -29,7 +27,7 @@ import useTeacherQueriesApi from '../../ThereGame.Api/Queries/TeacherQueriesApi'
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../Routes';
 import { Status } from '../../ThereGame.Infrastructure/Statuses/Status';
-import HomeIcon from '@mui/icons-material/Home';
+
 export interface ITeacherBio {
     avatar: string,
     name: string,

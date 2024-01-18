@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import { useTeacher } from '../../Data/useTeacher';
 import { useStudents } from '../../Data/useStudents';
 import { useDialogues } from '../../Data/useDialogues';
-import { Avatar, Button, Card, Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import CopyToClipboardButton from '../CopyToClipboard/CopyToClipboard';
 import { Routes } from '../../Routes';
 import { useNavigate } from 'react-router-dom';
@@ -66,7 +66,7 @@ export default function BasicTabs() {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <CopyToClipboardButton link={`http://localhost:3000/${Routes.signUpStudent}?id=${teacher?.id}`} />
+                <CopyToClipboardButton link={`${process.env.REACT_APP_SERVER}/${Routes.signUpStudent}?id=${teacher?.id}`} />
 
                 <Grid display='flex' flexDirection='row'>
                     {students.map(student => (
