@@ -1,6 +1,6 @@
 // IMPORTS
 import Card from "@mui/material/Card";
-import { Box, Grid, LinearProgress } from "@mui/material";
+import { Box, CircularProgress, Grid, LinearProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MenuAppBar from "../AppBars/MenuAppBar";
@@ -25,19 +25,15 @@ export default function TeacherProfile(props: any) {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        setIsLoading(true);
         teacherQueriesApi.getById()
-            .then(status => {
+            .then(() => {
                 setIsLoading(false);
             });
     }, []);
     
     if (isLoading) {
-        return <Box 
-            display='flex' 
-            justifyContent='center'
-        >
-            <LinearProgress />
+        <Box display='flex' justifyContent='center' height='1000vh'>
+            <CircularProgress />
         </Box>
     }
     

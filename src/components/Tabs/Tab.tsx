@@ -66,7 +66,7 @@ export default function BasicTabs() {
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
-                <CopyToClipboardButton link={`${process.env.REACT_APP_SERVER}/${Routes.signUpStudent}?id=${teacher?.id}`} />
+                <CopyToClipboardButton link={`${process.env.REACT_APP_SERVER}${Routes.signUpStudent}?id=${teacher?.id}`} />
 
                 <Grid display='flex' flexDirection='row'>
                     {students.map(student => (

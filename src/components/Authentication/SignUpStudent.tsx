@@ -1,6 +1,5 @@
 import * as React from "react";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -19,6 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { Routes } from "../../Routes";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const theme = createTheme();
 
@@ -26,6 +26,7 @@ export default function SignUpStudent() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const [authenticationError, setAuthenticationError] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [data, setData] = useState<ISignUpModel>({
         id: uuidv4(),
@@ -41,6 +42,8 @@ export default function SignUpStudent() {
     const handleSubmit = async (event: any) => {
         event.preventDefault();
 
+        setIsLoading(true);
+
         var status = await authenticationQueriesApi.signUpStudent(data);
         if (status == Status.OK) {
             navigate(Routes.studentProfile);
@@ -49,6 +52,8 @@ export default function SignUpStudent() {
         if (status == Status.Conflict) {
             setAuthenticationError("The account already exist");
         }
+
+        setIsLoading(false);
     };
 
     return (
@@ -138,14 +143,15 @@ export default function SignUpStudent() {
                                 />
                             </Grid>
                         </Grid>
-                        <Button
+                        <LoadingButton
+                            loading={isLoading}
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
                             Sign Up
-                        </Button>
+                        </LoadingButton>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <Link href="#" variant="body2">

@@ -23,13 +23,16 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
 
     const handleClose = () => {
         setAnchorEl(null);
-        navigation(Routes.teacherProfileEditor)
 
     };
 
+    const editProfile = () => {
+        navigation(Routes.teacherProfileEditor)
+    }
+
     const logout = () => {
         localStorage.removeItem("[Teacher] - Id")
-        navigation("/auth/sign-in/teacher")
+        navigation(Routes.signInTeacher)
         handleClose();
     }
 
@@ -64,7 +67,7 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose}>Edit Profile</MenuItem>
+                            <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
                             <MenuItem onClick={logout}>Logout</MenuItem>
                         </Menu>
                     </Toolbar>

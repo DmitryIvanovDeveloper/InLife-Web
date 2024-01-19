@@ -1,10 +1,7 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -19,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../Routes';
 import { Status } from '../../ThereGame.Infrastructure/Statuses/Status';
 import { StatusDescription } from '../../ThereGame.Infrastructure/Statuses/StatusDescription';
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const defaultTheme = createTheme();
 
@@ -26,6 +24,7 @@ export default function SignInTeacher() {
     const authenticationQueriesApi = useAuthenticationQueriesApi();
     const navigate = useNavigate();
     const [authenticationError, setAuthenticationError] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [data, setData] = useState<ISignInModel>({
         email: "",
@@ -35,19 +34,20 @@ export default function SignInTeacher() {
     const handleSubmit = async (event: any) => {
         event.preventDefault();
 
+        setIsLoading(true);
+
         var status = await authenticationQueriesApi.signInTeacher(data);
         if (status == Status.Unauthorized) {
             setAuthenticationError(StatusDescription.Unauthorized);
-            return;
         }
         if (status == Status.InternalServerError) {
             setAuthenticationError(StatusDescription.InternalServerError);
-            return;
         }
         if (status == Status.OK) {
             navigate(Routes.teacherProfile);
-            return;
         }
+
+        setIsLoading(false);
     };
 
     return (
@@ -97,18 +97,16 @@ export default function SignInTeacher() {
                             autoComplete="current-password"
                             onChange={e => setData(p => ({ ...p, password: e.target.value }))}
                         />
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
-                        />
-                        <Button
+                       
+                        <LoadingButton
+                            loading={isLoading}
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
                             Sign In
-                        </Button>
+                        </LoadingButton>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <Link

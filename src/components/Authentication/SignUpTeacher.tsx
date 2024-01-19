@@ -20,24 +20,6 @@ import { Routes } from "../../Routes";
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 
-function Copyright(props: any) {
-    return (
-        <Typography
-            variant="body2"
-            color="text.secondary"
-            align="center"
-            {...props}
-        >
-            {"Copyright © "}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>{" "}
-            {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
-}
-
 const theme = createTheme();
 
 export default function SignUpTeacher() {
@@ -187,7 +169,6 @@ export default function SignUpTeacher() {
                         </Grid>
                     </Box>
                 </Box>
-                <Copyright sx={{ mt: 5 }} />
             </Container>
         </ThemeProvider>
     );

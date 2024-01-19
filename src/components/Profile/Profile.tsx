@@ -1,4 +1,3 @@
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { Avatar, Badge, Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { useTeacher } from "../../Data/useTeacher";
 
@@ -7,7 +6,10 @@ export default function Profile() {
     const [teacher] = useTeacher();
 
     if (!teacher) {
-        return null
+        return (
+            <Box display='flex' justifyContent='center' height='1000vh'>
+                <CircularProgress />
+            </Box>)
     }
     
     return (
@@ -15,18 +17,6 @@ export default function Profile() {
             <Badge
                 overlap="circular"
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            // badgeContent={
-            //     <PhotoCamera
-            //         sx={{
-            //             border: "5px solid white",
-            //             backgroundColor: "#ff558f",
-            //             borderRadius: "50%",
-            //             padding: ".2rem",
-            //             width: 35,
-            //             height: 35
-            //         }}
-            //     ></PhotoCamera>
-            // }
             >
                 <Avatar
                     sx={{ width: 100, height: 100, mb: 1.5 }}
