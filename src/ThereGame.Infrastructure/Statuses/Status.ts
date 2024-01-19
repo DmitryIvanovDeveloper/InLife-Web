@@ -1,4 +1,5 @@
 export enum Status {
+    Unknowed,
     OK,
     NoContent,
     BadRequest,
