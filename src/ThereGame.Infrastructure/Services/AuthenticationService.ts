@@ -23,9 +23,9 @@ export default class AuthenticationService implements IAuthenticationService {
             if (response.status == 401) {
                 return new TypedResult<Status>(Status.Unauthorized);
             }
-            
+
+            console.log(response);
             var data = await response.json();
-           
             return new TypedResult<Status>(Status.OK, data);
         }
         catch (error) {

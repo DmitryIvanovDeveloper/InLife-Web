@@ -21,6 +21,7 @@ export default function useAuthenticationQueriesApi() {
                 localStorage.setItem("[Teacher] - Token", response.data.token);
             }
 
+            console.log(response);
             return response.status;
         },
 
