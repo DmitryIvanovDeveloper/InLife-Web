@@ -34,7 +34,6 @@ export default class AuthenticationService implements IAuthenticationService {
 
         }
         catch (error) {
-            console.log(error);
             return new TypedResult<Status>(Status.InternalServerError);
         }
     }
