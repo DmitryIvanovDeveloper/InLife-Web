@@ -11,16 +11,12 @@ import AppBarCustom from '../components/AppBarCustom';
 import { useTeacher } from '../Data/useTeacher';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import DialogueGraph from '../components/GraphTree/DialogueGraph';
-import { Grid, IconButton } from '@mui/material';
+import { Grid } from '@mui/material';
 import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
-import { useNavigate } from 'react-router-dom';
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import { Routes } from '../Routes';
 
 export interface IDialoguesProps { }
 
 export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
-
 
     const dialogueQueriesApi = useDialogieQueriesApi();
 
@@ -62,7 +58,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         return null;
     }
 
-
     return (
         <Box component="form"
             sx={{
@@ -97,10 +92,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             </Box>
             <Grid>
                 {dialogues
-                    .map(dialogue => (
+                    .map(currentDialogue => (
                         <Button
+                            variant={dialogue?.id == currentDialogue.id ? 'contained' : 'outlined'}
                             sx={{ p: 1 }}
-                            onClick={() => onClick(dialogue)}>{!dialogue.name ? "New Dialogue" : dialogue.name}</Button>
+                            onClick={() => onClick(currentDialogue)}>{!currentDialogue.name ? "New Dialogue" : currentDialogue.name}</Button>
                     ))
                 }
             </Grid>
