@@ -31,7 +31,7 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
     }
 
     const logout = () => {
-        localStorage.removeItem("[Teacher] - Id")
+        localStorage.removeItem("[Teacher] - Token")
         navigation(Routes.signInTeacher)
         handleClose();
     }
