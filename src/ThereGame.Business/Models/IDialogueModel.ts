@@ -1,8 +1,7 @@
 import IPhraseModel from "./IPhraseModel";
-import IStudentModel from "./IStudentModel";
 
 export interface IDialogueModel {
-    isVoiceSelected: boolean;
+    voiceSettings: string;
     isPublished: boolean;
     teacherId: string;
     levelId: string;

@@ -53,7 +53,7 @@ export default function useDialogieQueriesApi() {
             }
 
             const dialogue: IDialogueModel = {
-                isVoiceSelected: false,
+                voiceSettings: "",
                 isPublished: false,
                 levelId: id,
                 id: uuidv4(),

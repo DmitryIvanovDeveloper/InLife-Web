@@ -34,7 +34,7 @@ export default function Dialogue(props: IDialogueProps) {
                     style={{color: states[0] == DialogueItemStateType.UnsavedChanges ? "#e65100":  "blue"}} 
                     label={`${!dialogueRecoil.name ? "New Dialogue" : dialogueRecoil.name} [D]`}
                 >
-                    {dialogueRecoil.isVoiceSelected
+                    {dialogueRecoil.voiceSettings
                         ? <Phrase
                             dialogueId={dialogueRecoil.id}
                             id={dialogueRecoil.phrase.id}

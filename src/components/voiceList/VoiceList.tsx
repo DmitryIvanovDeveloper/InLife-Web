@@ -10,8 +10,8 @@ import IVoiceOption from "../../Data/VoiceList/IVoiceOption";
 
 export interface IVoiceListProps {
     dialogueId: string,
-    setIsVoiceSelected: (isSelected: boolean) => void;
-    isVoiceSelected: boolean;
+    setIsVoiceSelected: (voiceSettings: string) => void;
+    voiceSettings: string;
 }
 export default function VoiceList(props: IVoiceListProps) {
 
@@ -39,15 +39,13 @@ export default function VoiceList(props: IVoiceListProps) {
     }
 
     useEffect(() => {
-        var data = localStorage.getItem(`[DeepVoice] - ${props.dialogueId}`);
-        if (!data) {
+        if (!props.voiceSettings) {
             setVoiceOption(null);
             setVoice(null)
-            props.setIsVoiceSelected(false);
             return;
         }
 
-        var parsedData = JSON.parse(data);
+        var parsedData = JSON.parse(props.voiceSettings);
 
         var selectedVoiceOption = VoicesOptions.find(vo => vo.type == parsedData.type);
         var selectedVoice = selectedVoiceOption?.voices.find(v => v.name = parsedData.name);
@@ -58,7 +56,7 @@ export default function VoiceList(props: IVoiceListProps) {
 
     useEffect(() => {
         if (!voiceOption) {
-            props.setIsVoiceSelected(false);
+            props.setIsVoiceSelected("");
             return;
         }
 
@@ -67,14 +65,12 @@ export default function VoiceList(props: IVoiceListProps) {
 
     useEffect(() => {
         if (!voiceOption || !voice) {
-            props.setIsVoiceSelected(false);
+            props.setIsVoiceSelected("");
             return;
         }
 
-        props.setIsVoiceSelected(true);
+        props.setIsVoiceSelected(JSON.stringify({ name: voice.name, type: voiceOption.type }));
         // setIsPlay(true)
-
-        localStorage.setItem(`[DeepVoice] - ${props.dialogueId}`, JSON.stringify({ name: voice.name, type: voiceOption.type }));
     }, [voiceOption, voice]);
 
     return (
@@ -92,7 +88,7 @@ export default function VoiceList(props: IVoiceListProps) {
                     value={`${voiceOption?.type}`}
                     onChange={handleChangeVoicesType}
                     fullWidth
-                    disabled={props.isVoiceSelected}
+                    disabled={!!props.voiceSettings}
                 >
                     {VoicesOptions.map(voiceOption => (
                         <MenuItem key={voiceOption.id} id={voiceOption.id} value={voiceOption.type}>{voiceOption.type}</MenuItem>
@@ -106,7 +102,7 @@ export default function VoiceList(props: IVoiceListProps) {
                     onChange={handleChangeVoices}
                     value={`${voice?.name}`}
                     fullWidth
-                    disabled={props.isVoiceSelected}
+                    disabled={!!props.voiceSettings}
                 >
                     {voices.map(voice => (
                         <MenuItem key={voice.id} id={voice.id} value={voice.name}>{voice.name}</MenuItem>

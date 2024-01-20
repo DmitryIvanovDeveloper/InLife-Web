@@ -7,7 +7,7 @@ export default class DialogueMapping {
 
     public response(dialogue: IDialogueResponseDto): IDialogueModel {
         return {
-            isVoiceSelected: dialogue.isVoiceSelected,
+            voiceSettings: dialogue.voiceSettings,
             levelId: dialogue.levelId,
             isPublished: dialogue.isPublished,
             id: dialogue.id,
@@ -24,7 +24,7 @@ export default class DialogueMapping {
 
     public request(dialogue: IDialogueModel): IDialogueRequestDto {
         return {
-            isVoiceSelected: dialogue.isVoiceSelected,
+            voiceSettings: dialogue.voiceSettings,
             id: dialogue.id,
             name: dialogue.name,
             levelId: dialogue.levelId,
@@ -43,7 +43,7 @@ export default class DialogueMapping {
             levelId: dialogue.levelId,
             teacherId: dialogue.teacherId,
             isPublished: dialogue.isPublished,
-            isVoiceSelected: dialogue.isVoiceSelected,
+            voiceSettings: dialogue.voiceSettings,
             phrase: new PhraseMapping().request(dialogue.phrase),
             studentsId: dialogue.studentsId
         }
@@ -51,7 +51,7 @@ export default class DialogueMapping {
     
     public requestToUpdateDialogue(dialogue: IDialogueModel): IUpdateDialogueRequestDto {
         return {
-            isVoiceSelected: dialogue.isVoiceSelected,
+            voiceSettings: dialogue.voiceSettings,
             id: dialogue.id,
             name: dialogue.name,
             levelId: dialogue.levelId,

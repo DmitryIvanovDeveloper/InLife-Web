@@ -25,7 +25,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
 
-    const [isVoiceSelected, setIsSelected] = useState<boolean>(false);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,15 +34,14 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const dialogueQueriesApi = useDialogieQueriesApi();
 
     const save = async () => {
-        setIsLoading(true)
-        await dialogueQueriesApi.update(dialogue)
-        setIsLoading(false)
+        setIsLoading(true);
+        await dialogueQueriesApi.update(dialogue);
+        setIsLoading(false);
         setIsEdited(true);
     }
 
     const onDelete = async () => {
         await dialogueQueriesApi.delete(props.id);
-        localStorage.removeItem(`[DeepVoice] - ${props.id}`)
         localStorage.removeItem(props.id)
         setDialogueItemConstructor(() => null);
     }
@@ -75,11 +73,10 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         />);
     }
 
-    const setIsVoiceSelected = (isSelected: boolean) => {
-        setIsSelected(isSelected);
+    const setIsVoiceSelected = (isSelected: string) => {
         setDialogue(prev => ({
             ...prev,
-            isVoiceSelected: isSelected
+            voiceSettings: isSelected
         }))
 
         setIsEdited(false);
@@ -176,7 +173,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             <VoiceList
                 dialogueId={props.id}
                 setIsVoiceSelected={setIsVoiceSelected}
-                isVoiceSelected={dialogueRecoil?.isVoiceSelected} // Don't change to Dialogue
+                voiceSettings={dialogueRecoil?.voiceSettings} // Don't change to Dialogue
             />
 
             <DevidedLabel name={"Dialogue Name"} />
@@ -192,13 +189,13 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             <SaveButton
                 onClick={save}
                 isLoading={isLoading}
-                isDisabled={!isVoiceSelected}
+                isDisabled={!dialogue.voiceSettings}
             />
 
             <DevidedLabel name={"Initial Phrase"} />
             <Box>
                 <Button
-                    disabled={!dialogueRecoil?.isVoiceSelected} // Don't change to Dialogue
+                    disabled={!dialogueRecoil?.voiceSettings} // Don't change to Dialogue
                     variant="contained"
                     onClick={onClickPhrase}>{!dialogue.phrase.text ? "New Phrase" : dialogue.phrase.text}
                 </Button>

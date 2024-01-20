@@ -2,7 +2,7 @@ import IStudentModel from "../../../../ThereGame.Business/Models/IStudentModel";
 import IPhraseResponseDto from "./IPhraseResponseDto";
 
 export interface IDialogueResponseDto {
-    isVoiceSelected: boolean,
+    voiceSettings: string,
     isPublished: boolean;
     levelId: string;
     teacherId: string;

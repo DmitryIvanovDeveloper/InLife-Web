@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAnswer, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
+import { useAnswer, useDialogue, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
 import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
@@ -34,6 +34,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const answerQueriesApi = useAnswerQueriesApi();
 
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
+    const dialogueRecoil = useDialogue(props.dialogueId);
     
     const [treeState, setTreeState] = useTreeState();
 
@@ -126,12 +127,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     // UseEffects
 
     const getSettings = () => {
-        var data = localStorage.getItem(`[DeepVoice] - ${props.dialogueId}`);
-        if (!data) {
-            return phrase.audioSettings;
-        }
-
-        var parsedData = JSON.parse(data);
+        var parsedData = JSON.parse(dialogueRecoil.voiceSettings);
 
         var newAudioSettings: IAudioSettings = {
             id: uuidv4(),
