@@ -28,6 +28,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [dialogues, setDialogues] = useState<IDialogueModel[]>(teacher?.dialogues ?? []);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
     const [dialogue, setDialogue] = useState<IDialogueModel | null>(null);
+    const [isHideLocations, setIsHideLocations] = useState<boolean>(false);
 
     const onChangeLocation = (id: string) => {
         setNpcId(id);
@@ -41,10 +42,21 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         setIsNewDialogueCreating(false)
     }
 
-    const onClick = (dialogue: IDialogueModel) => {
-        setDialogue(dialogue);
-        setDialogueItemConstructor(() => <DialogueConstructor id={dialogue.id} setStates={() => { }} />);
+    const onClick = (clickedDialogue: IDialogueModel) => {
+        if (dialogue?.id == clickedDialogue.id) {
+            setDialogue(null);
+            setIsHideLocations(false);
+            setDialogueItemConstructor(() => <div></div>);
+
+            return;
+        }
+
+        setDialogue(clickedDialogue);
+        setIsHideLocations(true);
+        setDialogueItemConstructor(() => <DialogueConstructor id={clickedDialogue.id} setStates={() => { }} />);
     }
+
+    
 
     useEffect(() => {
         if (!npcId) {
@@ -76,8 +88,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             <AppBarCustom
                 name={Locations.find(l => l.id == npcId)?.name ?? ''}
             />
-
-            <LocationCarousel setLevel={onChangeLocation} id={npcId} />
+            {isHideLocations
+                ? null
+                : <LocationCarousel setLevel={onChangeLocation} id={npcId} />
+            }
+            
 
             <Box>
                 {isNewDialogueCreating
