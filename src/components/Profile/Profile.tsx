@@ -7,7 +7,7 @@ export default function Profile() {
 
     if (!teacher) {
         return (
-            <Box display='flex' justifyContent='center' height='1000vh'>
+            <Box display='flex' justifyContent='center'>
                 <CircularProgress />
             </Box>)
     }

@@ -25,21 +25,24 @@ export default function TeacherProfile(props: any) {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        setIsLoading(true);
         teacherQueriesApi.getById()
             .then(() => {
                 setIsLoading(false);
             });
     }, []);
-    
+
     if (isLoading) {
-        <Box display='flex' justifyContent='center' height='1000vh'>
-            <CircularProgress />
-        </Box>
+        return (
+            <Box display='flex' justifyContent='center' alignItems='center' height='100vh'>
+                <CircularProgress />
+            </Box>
+        )
     }
-    
+
     return (
         <Card variant="outlined">
-            <MenuAppBar teacherId="teacher?.id"/>
+            <MenuAppBar teacherId="teacher?.id" />
             <BasicTabs />
         </Card>
     );

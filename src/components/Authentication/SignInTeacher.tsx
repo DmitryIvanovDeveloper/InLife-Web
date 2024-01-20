@@ -11,12 +11,14 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ISignInModel from '../../ThereGame.Business/Models/ISignInModel';
 import useAuthenticationQueriesApi from '../../ThereGame.Api/Queries/AuthenticationQueriesApi';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Routes } from '../../Routes';
 import { Status } from '../../ThereGame.Infrastructure/Statuses/Status';
 import { StatusDescription } from '../../ThereGame.Infrastructure/Statuses/StatusDescription';
 import LoadingButton from '@mui/lab/LoadingButton';
+import useTeacherQueriesApi from '../../ThereGame.Api/Queries/TeacherQueriesApi';
+import { Routes as LocalRoutes } from '../../Routes';
 
 const defaultTheme = createTheme();
 
@@ -30,6 +32,14 @@ export default function SignInTeacher() {
         email: "",
         password: ""
     });
+
+    useEffect(() => {
+        setIsLoading(true);
+        if (!!localStorage.getItem("[Teacher] - Token")){
+            navigate(LocalRoutes.teacherProfile);
+        }
+        setIsLoading(false);
+    }, []);
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
