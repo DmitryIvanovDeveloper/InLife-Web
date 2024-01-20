@@ -5,21 +5,27 @@ import useTeacherQueriesApi from './ThereGame.Api/Queries/TeacherQueriesApi';
 import SignUpStudent from './components/Authentication/SignUpStudent';
 import SignUpTeacher from './components/Authentication/SignUpTeacher';
 import TeacherProfile from './components/Teacher/TeacherProfile';
-import { useNavigate, Routes, Route } from "react-router-dom";
+import { useNavigate, Routes, Route, useLocation } from "react-router-dom";
 import { Status } from './ThereGame.Infrastructure/Statuses/Status';
 import { Routes as LocalRoutes } from './Routes';
-import './App.css';
 import ProfileEditor from './components/Profile/ProfileEditor';
 import StudentProfile from './components/Student/StudentProfile';
 import { Box, CircularProgress } from '@mui/material';
+import './App.css';
 
 export function App() {
 
     var teacherQuerisApi = useTeacherQueriesApi();
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
+        if (location.pathname == "/"){
+            navigate(LocalRoutes.signInTeacher);
+            return;
+        }
+
         teacherQuerisApi.getById()
             .then(status => {
                 if (status == Status.Unauthorized) {
