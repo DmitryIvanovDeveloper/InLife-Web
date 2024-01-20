@@ -17,12 +17,11 @@ import { Routes } from '../../Routes';
 import { Status } from '../../ThereGame.Infrastructure/Statuses/Status';
 import { StatusDescription } from '../../ThereGame.Infrastructure/Statuses/StatusDescription';
 import LoadingButton from '@mui/lab/LoadingButton';
-import useTeacherQueriesApi from '../../ThereGame.Api/Queries/TeacherQueriesApi';
-import { Routes as LocalRoutes } from '../../Routes';
+import { RoleType } from '../../ThereGame.Business/Util/Role';
 
 const defaultTheme = createTheme();
 
-export default function SignInTeacher() {
+export default function SignIn() {
     const authenticationQueriesApi = useAuthenticationQueriesApi();
     const navigate = useNavigate();
     const [authenticationError, setAuthenticationError] = useState<string>("");
@@ -33,28 +32,24 @@ export default function SignInTeacher() {
         password: ""
     });
 
-    useEffect(() => {
-        setIsLoading(true);
-        if (!!localStorage.getItem("[Teacher] - Token")){
-            navigate(LocalRoutes.teacherProfile);
-        }
-        setIsLoading(false);
-    }, []);
-
     const handleSubmit = async (event: any) => {
         event.preventDefault();
 
         setIsLoading(true);
 
-        var status = await authenticationQueriesApi.signInTeacher(data);
-        if (status == Status.Unauthorized) {
+        var result = await authenticationQueriesApi.signIn(data);
+        
+        if (result.status == Status.Unauthorized) {
             setAuthenticationError(StatusDescription.Unauthorized);
         }
-        if (status == Status.InternalServerError) {
+        if (result.status == Status.InternalServerError) {
             setAuthenticationError(StatusDescription.InternalServerError);
         }
-        if (status == Status.OK) {
+        if (result.status == Status.OK && result.data.role == RoleType.Teacher) {
             navigate(Routes.teacherProfile);
+        }
+        if (result.status == Status.OK && result.data.role == RoleType.Student) {
+            navigate(Routes.studentProfile);
         }
 
         setIsLoading(false);

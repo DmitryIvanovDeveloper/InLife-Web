@@ -8,7 +8,6 @@ import IAnswerResponseDto from "./ResponseDtos/IAnswerResponseDto";
 export default class AnswerMapping {
 
     public response(answer: IAnswerResponseDto): IAnswerModel {
-
         return {
             tensesList: answer.tensesList,
             texts: answer.texts,

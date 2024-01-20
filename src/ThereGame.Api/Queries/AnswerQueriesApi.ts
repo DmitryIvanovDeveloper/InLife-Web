@@ -1,4 +1,3 @@
-import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import IAnswerService from "../../ThereGame.Business/Domain/Util/Services/IAnswerService";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { appContainer } from "../../inversify.config";
@@ -12,8 +11,6 @@ export default function useAnswerQueriesApi() {
     const answerService = appContainer.get<IAnswerService>(TYPES.AnswerService);
     var teacherQueriesApi = useTeacherQueriesApi();
     
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-
     return {
         getById: async (id: string): Promise<Status> => {
             var response = await answerService.GetById(id);

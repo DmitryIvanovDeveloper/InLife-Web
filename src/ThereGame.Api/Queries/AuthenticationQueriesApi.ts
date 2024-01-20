@@ -1,6 +1,7 @@
 import IAuthenticationService from "../../ThereGame.Business/Domain/Util/Services/IAuthenticationService";
 import ISignInModel from "../../ThereGame.Business/Models/ISignInModel";
 import ISignUpModel from "../../ThereGame.Business/Models/ISignUpModel";
+import TypedResult from "../../ThereGame.Infrastructure/Statuses/Result";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
@@ -12,19 +13,19 @@ export default function useAuthenticationQueriesApi() {
     const authenticationService = appContainer.get<IAuthenticationService>(TYPES.AuthenticationService);
     
     return {
-        signInTeacher: async (data: ISignInModel): Promise<Status> => {
+        signIn: async (data: ISignInModel): Promise<TypedResult<Status>> => {
             var request = new AuthenticationMapping().requestSignIn(data);
             
-            var response = await authenticationService.signInTeacher(request);
+            var response = await authenticationService.signIn(request);
             if (response.status == Status.OK)
             {
                 localStorage.setItem("[Teacher] - Token", response.data.token);
             }
 
-            return response.status;
+            return response;
         },
 
-        signUpTeacher: async (data: ISignUpModel): Promise<Status> => {
+        signUpTeacher: async (data: ISignUpModel): Promise<TypedResult<Status>> => {
             var request = new AuthenticationMapping().requestSignUp(data);
 
             var response = await authenticationService.signUpTeacher(request);
@@ -34,19 +35,7 @@ export default function useAuthenticationQueriesApi() {
             }
 
 
-            return response.status;
-        },
-
-        signInStudent: async (data: ISignInModel): Promise<Status> => {
-            var request = new AuthenticationMapping().requestSignIn(data);
-            
-            var response = await authenticationService.signInStudent(request);
-            if (response.status == Status.OK)
-            {
-                localStorage.setItem("[Student] - Token", response.data);
-            }
-
-            return response.status;
+            return response;
         },
 
         signUpStudent: async (data: ISignUpModel): Promise<Status> => {

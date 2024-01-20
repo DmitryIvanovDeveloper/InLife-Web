@@ -10,7 +10,7 @@ import { RoutesAPI } from "../../Routes";
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {
     
-    async signInTeacher(request: ISignInRequestDto): Promise<TypedResult<Status>> {
+    async signIn(request: ISignInRequestDto): Promise<TypedResult<Status>> {
         try {
             var response = await fetch(RoutesAPI.authSignIn, {
                 method: 'POST',
@@ -61,24 +61,6 @@ export default class AuthenticationService implements IAuthenticationService {
         }
     }
 
-    async signInStudent(request: ISignInRequestDto): Promise<TypedResult<Status>> {
-        try {
-            var response = await fetch(RoutesAPI.authSignIn, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(request)
-            })
-
-            var data = await response.json();
-           
-            return new TypedResult<Status>(Status.OK, data);
-        }
-        catch (error) {
-            return new TypedResult<Status>(Status.InternalServerError);
-        }
-    }
     async signUpStudent(request: ISignUpRequestDto): Promise<TypedResult<Status>> {
         try {
             var response = await fetch(RoutesAPI.authSignUpStudent, {

@@ -11,9 +11,8 @@ const RoutesAPI = {
 }
 
 const Routes = {
-   signInTeacher: "/auth/sign-in/teacher",
+   signIn: "/auth/sign-in/",
    signUpTeacher: "/auth/sign-up/teacher",
-   signInStudent: "/auth/sign-in/student",
    signUpStudent: "/auth/sign-up/student",
    dialoguesBuilder: "/teacher/builder",
    teacherProfile: "/teacher/profile",

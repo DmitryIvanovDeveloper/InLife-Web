@@ -37,20 +37,19 @@ export default function SignUpTeacher() {
 
     const navigate = useNavigate();
 
-
     const authenticationQueriesApi = useAuthenticationQueriesApi();
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
 
         setIsLoading(true);
-        var status = await authenticationQueriesApi.signUpTeacher(data);
+        var typedResult = await authenticationQueriesApi.signUpTeacher(data);
 
-        if (status == Status.OK) {
+        if (typedResult.status == Status.OK) {
             navigate(Routes.teacherProfile);
         }
 
-        if (status == Status.Conflict) {
+        if (typedResult.status == Status.Conflict) {
             setAuthenticationError("The account already exist");
         }
 
@@ -160,7 +159,7 @@ export default function SignUpTeacher() {
                                     component="button"
                                     variant="body2"
                                     onClick={() => {
-                                        navigate(Routes.signInTeacher);
+                                        navigate(Routes.signIn);
                                     }}
                                 >
                                     Already have an account? Sign in

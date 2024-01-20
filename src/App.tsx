@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import DialogueBuilder from './DialogueTree/DialogueBuilder';
-import SignInTeacher from './components/Authentication/SignInTeacher';
+import SignIn from './components/Authentication/SignIn';
 import SignUpStudent from './components/Authentication/SignUpStudent';
 import SignUpTeacher from './components/Authentication/SignUpTeacher';
 import TeacherProfile from './components/Teacher/TeacherProfile';
@@ -15,8 +15,12 @@ export function App() {
     const location = useLocation();
 
     useEffect(() => {
+        if (!!localStorage.getItem("[Teacher] - Token")){
+            navigate(LocalRoutes.teacherProfile);
+            return;
+        }
         if (location.pathname == "/"){
-            navigate(LocalRoutes.signInTeacher);
+            navigate(LocalRoutes.signIn);
             return;
         }
     }, []);
@@ -24,7 +28,7 @@ export function App() {
     return (
         <React.StrictMode>
             <Routes>
-                <Route path={LocalRoutes.signInTeacher} element={<SignInTeacher />} />
+                <Route path={LocalRoutes.signIn} element={<SignIn />} />
                 <Route path={LocalRoutes.signUpTeacher} element={<SignUpTeacher />} />
                 <Route path={LocalRoutes.signUpStudent} element={<SignUpStudent />} />
                 <Route path={LocalRoutes.teacherProfile} element={<TeacherProfile />} />

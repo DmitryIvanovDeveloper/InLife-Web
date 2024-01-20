@@ -2,8 +2,6 @@ import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -24,9 +22,10 @@ const theme = createTheme();
 
 export default function SignUpStudent() {
     const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
     const [authenticationError, setAuthenticationError] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    
+    const navigate = useNavigate();
 
     const [data, setData] = useState<ISignUpModel>({
         id: uuidv4(),
@@ -132,14 +131,6 @@ export default function SignUpStudent() {
                                     autoComplete="new-password"
                                     onChange={e => setData(p => ({...p, password: e.target.value}))}
 
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox value="allowExtraEmails" color="primary" />
-                                    }
-                                    label="I want to receive inspiration, marketing promotions and updates via email."
                                 />
                             </Grid>
                         </Grid>
