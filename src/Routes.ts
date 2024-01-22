@@ -3,6 +3,7 @@ const RoutesAPI = {
     phrases: `${process.env.REACT_APP_SERVER}/api/phrases/`,
     answers: `${process.env.REACT_APP_SERVER}/api/answers/`,
     teachers: `${process.env.REACT_APP_SERVER}/api/teachers/`,
+    teachersMe: `${process.env.REACT_APP_SERVER}/api/teachers/me`,
     authSignIn: `${process.env.REACT_APP_SERVER}/api/auth/sign-in/me`,
     authSignUpTeacher: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/teachers`,
     authSignUpStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/students`,
