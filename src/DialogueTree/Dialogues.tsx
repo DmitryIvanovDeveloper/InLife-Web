@@ -13,6 +13,7 @@ import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import DialogueGraph from '../components/GraphTree/DialogueGraph';
 import { Grid } from '@mui/material';
 import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
+import { useSelection } from '../Data/useSelection';
 
 export interface IDialoguesProps { }
 
@@ -29,6 +30,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
     const [dialogue, setDialogue] = useState<IDialogueModel | null>(null);
     const [isHideLocations, setIsHideLocations] = useState<boolean>(false);
+    const [selection, setSelection] = useSelection();
 
     const onChangeLocation = (id: string) => {
         setNpcId(id);
@@ -44,6 +46,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     const onClick = (clickedDialogue: IDialogueModel) => {
         if (dialogue?.id == clickedDialogue.id) {
+            setSelection("");
             setDialogue(null);
             setIsHideLocations(false);
             setDialogueItemConstructor(() => <div></div>);
@@ -51,6 +54,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             return;
         }
 
+        setSelection(dialogue?.id ?? "");
         setDialogue(clickedDialogue);
         setIsHideLocations(true);
         setDialogueItemConstructor(() => <DialogueConstructor id={clickedDialogue.id} setStates={() => { }} />);
