@@ -20,6 +20,7 @@ export default function CommentsInfo(props: ICommentsInfoProps) {
                 value={props.comments}
                 id="outlined-basic"
                 label="Comments"
+                placeholder="Any comments"
                 variant="outlined"
                 onChange={(event) => props.onCommentsChange(event.target.value)}
                 fullWidth

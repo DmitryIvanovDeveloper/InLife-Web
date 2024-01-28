@@ -4,14 +4,11 @@ import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
-import AddButton from "../../components/Button/AddButton";
 import SaveButton from "../../components/Button/SaveButton";
 import AnswerContructor from "../answerContructor/AnswerConstructor";
-import { Box, Button, Typography, Alert, Divider, Tab } from "@mui/material";
+import { Box, Button, Alert, Divider, Tab } from "@mui/material";
 import GetSettings from "../../ThereGame.Infrastructure/Helpers/PhraseAudioGegerationSettingsBuilder";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
-import LinarProgressCustom from "../../components/CircularProgress";
-import DevidedLabel from "../../components/Headers/DevidedLabel";
 import { useTreeState } from "../../Data/useTreeState";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
@@ -257,8 +254,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 </TabContext>
             </Box>
 
-            
-
             <Divider variant="fullWidth" />
 
             <SaveButton
@@ -281,34 +276,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             }
             {!phrase.audioSettings?.audioData && !!phraseRecoil.text
                 ? <Alert severity="error">The phrase is not generated to audio!</Alert>
-                : null
-            }
-
-
-
-            <DevidedLabel name="Linked answers" />
-
-            {isCreating
-                ? <LinarProgressCustom name="Creating" />
-                : <AddButton onClick={onAddAnswerButtonClick} name="Create Answer" />
-            }
-
-            {phrase.answers.length != 0
-                ?
-                <Box>
-                    {phrase.answers.map(answer => (
-                        <Box
-                            display='flex'
-                            justifyContent='space-between'
-                            sx={{ p: 1 }}
-                        >
-                            <Button variant='outlined' id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
-                                <Typography sx={{ textDecoration: 'underline' }}>{!answer.texts[0] ? "New Answer" : answer.texts[0]}</Typography>
-                            </Button>
-                        </Box>
-
-                    ))}
-                </Box>
                 : null
             }
         </Box>

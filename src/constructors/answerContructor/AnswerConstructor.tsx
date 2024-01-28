@@ -1,4 +1,4 @@
-import { Alert, Box, Button, ButtonGroup, Divider, FormLabel, Grid, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, ButtonGroup, Divider, FormLabel, Grid, Tab, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddButton from "../../components/Button/AddButton";
 import SaveButton from "../../components/Button/SaveButton";
@@ -15,7 +15,7 @@ import PhraseContructor from "../phraseContructor/PhraseContructor";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
-import EquivalentTextConstructor from "./EquivalentTextConstructor";
+import EquivalentTextConstructor from "./Answer/EquivalentTextConstructor";
 import LinarProgressCustom from "../../components/CircularProgress";
 import DevidedLabel from "../../components/Headers/DevidedLabel";
 import TensesList from "../phraseContructor/TensesList/TensesList";
@@ -24,6 +24,13 @@ import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import ChatGptService from "../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";
 import IChatGPTResponseDto, { IDataResponse } from "../../ThereGame.Infrastructure/Services/ChatGpt/Dtos/IChatGptResponseDto";
+import TabList from "@mui/lab/TabList";
+import TabContext from "@mui/lab/TabContext";
+import TabPanel from "@mui/lab/TabPanel";
+import TensesListInfo from "./TensesList/TensesListInfo";
+import EquivalentAnswersInfo from "./Answer/AnswersInfo";
+import PossibleWordsToUseInfo from "./PossibleWordsToUse/PossibleWordsToUseInfo";
+import TranslatesInfo from "./Translates/TranslatesInfo";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -54,6 +61,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const [isCreating, setIsCreating] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [isChatGptLoading, setIsChatGptLoading] = useState<boolean>(false);
+    const [tab, setTab] = useState<string>("1");
 
     const onAddPhraseButtonClick = async () => {
         setIsCreating(true)
@@ -186,7 +194,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         if (!sentence) {
             return;
         }
-        
+
         setIsChatGptLoading(true);
         var result = await new ChatGptService().request(sentence);
 
@@ -268,6 +276,53 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsEdited(false);
     }
 
+    // Components
+    function TensesListComponent() {
+        return (
+            <TensesListInfo
+                tensesList={answer.tensesList}
+                setTensesList={onSetTenses}
+            />
+        )
+    }
+
+    function EquivalentAnswersComponent() {
+        return (
+            <EquivalentAnswersInfo
+                onChangeEquivalentAnswer={onChangeEquivalentAnswer}
+                onAddEquivalentAnswer={onAddEquivalentAnswer}
+                onRemoveEquivalentAnswer={onRemoveEquivalentAnswer}
+                texts={answer.texts}
+                chatGpt={ChatGpt}
+                isLoading={isChatGptLoading}
+            />
+        )
+    }
+
+    function PossibleWordsToUseComponent() {
+        return (
+            <PossibleWordsToUseInfo
+                wordsToUse={answer.wordsToUse}
+                onWordsToUseChange={onWordsToUseChange}
+            />
+        )
+    }
+
+    function TranslatesComponent() {
+        return (
+            <TranslatesInfo
+                translates={answer.translates}
+                onAddTranslate={onAddTranslate}
+                onDeleteTranslate={onDeleteTranslate}
+                onTranslateChange={onTranslateChange}
+            />
+        )
+    }
+
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setTab(newValue);
+    };
+
     // UseEffects
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -324,9 +379,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         props.setStates([DialogueItemStateType.UnsavedChanges])
     }, [isEdited]);
 
-    useEffect(() => {
-        console.log(answer.tensesList)
-    }, [answer.tensesList])
     if (!answer) {
         return null;
     }
@@ -357,38 +409,22 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 : null
             }
 
-            <TensesList tensesList={answer.tensesList} setTensesList={onSetTenses} />
-
-            <EquivalentTextConstructor
-                onChangeEquivalentAnswer={onChangeEquivalentAnswer}
-                onAddEquivalentAnswer={onAddEquivalentAnswer}
-                onRemoveEquivalentAnswer={onRemoveEquivalentAnswer}
-                texts={answer.texts}
-                chatGpt={ChatGpt}
-                isLoading={isChatGptLoading}
-            />
-
-            <DevidedLabel name="Words Hints" />
-
-            <TextField
-                InputLabelProps={{ shrink: true }}
-                placeholder="Hello, You, Meet, etc."
-                value={answer.wordsToUse}
-                id="outlined-basic"
-                label="Words to use"
-                variant="outlined"
-                onChange={(event) => onWordsToUseChange(event.target.value)}
-                required={true}
-                fullWidth
-            ></TextField>
-
-
-            <TranslateConstructor
-                translates={answer.translates}
-                onAddTranslate={onAddTranslate}
-                onDeleteTranslate={onDeleteTranslate}
-                onTranslateChange={onTranslateChange}
-            />
+            <Box sx={{ width: '100%', typography: 'body1' }}>
+                <TabContext value={tab}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <TabList onChange={handleChange} aria-label="lab API tabs example">
+                            <Tab label="Equivalent Answers" value="1" />
+                            <Tab label="Tenses list" value="2" />
+                            <Tab label="Possible words" value="3" />
+                            <Tab label="Translates" value="4" />
+                        </TabList>
+                    </Box>
+                    <TabPanel value="1">{EquivalentAnswersComponent()}</TabPanel>
+                    <TabPanel value="2">{TensesListComponent()}</TabPanel>
+                    <TabPanel value="3">{PossibleWordsToUseComponent()}</TabPanel>
+                    <TabPanel value="4">{TranslatesComponent()}</TabPanel>
+                </TabContext>
+            </Box>
 
             <Divider variant="fullWidth" />
 
@@ -398,8 +434,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 onExplanationChange={onExplanationChange}
                 onAddMistakeExplanation={onAddMistakeExplanation}
             /> */}
-
-            <Divider variant="fullWidth" />
 
             {!isEdited
                 ? <Box>
@@ -414,29 +448,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 isLoading={isLoading}
                 isDisabled={false}
             />
-
-            <DevidedLabel name="Linked phrases" />
-
-            {isCreating
-                ? <LinarProgressCustom name="Creating" />
-                : <AddButton onClick={onAddPhraseButtonClick} name="Create Phrase" />
-            }
-
-            {answer.phrases?.length != 0
-                ?
-                <Box>
-                    <ButtonGroup
-                    >
-                        {answer.phrases?.map(phrase => (
-                            <Button
-                                id={phrase.id}
-                                onClick={onPhraseButtonClick}
-                                sx={{ m: 1, }}>{!phrase.text ? "New Pharse" : phrase.text}</Button>
-                        ))}
-                    </ButtonGroup>
-                </Box>
-                : null
-            }
         </Box>
     )
 }

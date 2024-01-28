@@ -1,4 +1,4 @@
-import { Box, Grid, TextField, Button, FormControl } from "@mui/material";
+import { Box, Grid, TextField, Button } from "@mui/material";
 import React  from "react";
 import Translate from "./Translate";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
@@ -55,7 +55,7 @@ export default function TranslateConstructor(props: ITranslateConstructor) {
     }
 
     return (
-        <Box sx={{ pt: 3, pb: 3 }}>
+        <Box sx={{ pt: 3, pb: 3, width: "100%" }}>
             
             <DevidedLabel name="Translates Hints"/>
 

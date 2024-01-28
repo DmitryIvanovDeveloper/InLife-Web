@@ -4,24 +4,24 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-import TensesListPhrase from '../../../Images/Instructions/TensesListPhrase.png';
+import Translates from '../../../Images/Instructions/Translates.png';
 
-export default function TensesListInstruction() {
+export default function TranslatesInstructions() {
   return (
     <Card>
       <CardActionArea>
         <CardMedia
           component="img"
           height="218"
-          image={TensesListPhrase}
+          image={Translates}
           alt="green iguana"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            TensesList
+            Translates
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Tenses list on the phrase
+            Descriptions
           </Typography>
         </CardContent>
       </CardActionArea>

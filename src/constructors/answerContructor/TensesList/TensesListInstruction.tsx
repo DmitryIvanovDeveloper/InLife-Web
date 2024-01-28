@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-import TensesListPhrase from '../../../Images/Instructions/TensesListPhrase.png';
+import TensesListAnswer from '../../../Images/Instructions/TensesListAnswer.png';
 
 export default function TensesListInstruction() {
   return (
@@ -13,7 +13,7 @@ export default function TensesListInstruction() {
         <CardMedia
           component="img"
           height="218"
-          image={TensesListPhrase}
+          image={TensesListAnswer}
           alt="green iguana"
         />
         <CardContent>
@@ -21,7 +21,7 @@ export default function TensesListInstruction() {
             TensesList
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Tenses list on the phrase
+            Tenses list for answer
           </Typography>
         </CardContent>
       </CardActionArea>

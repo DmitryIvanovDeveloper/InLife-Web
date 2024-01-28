@@ -192,15 +192,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 isDisabled={!dialogue.voiceSettings}
             />
 
-            <DevidedLabel name={"Initial Phrase"} />
-            <Box>
-                <Button
-                    disabled={!dialogueRecoil?.voiceSettings} // Don't change to Dialogue
-                    variant="contained"
-                    onClick={onClickPhrase}>{!dialogue.phrase.text ? "New Phrase" : dialogue.phrase.text}
-                </Button>
-            </Box>
-
             {!isEdited
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>

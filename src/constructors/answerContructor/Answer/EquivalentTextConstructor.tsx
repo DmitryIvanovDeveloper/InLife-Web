@@ -1,7 +1,7 @@
 import { Box, Button, Chip, CircularProgress, Divider, Grid, Stack, TextField, Typography } from "@mui/material"
-import DevidedLabel from "../../components/Headers/DevidedLabel";
+import DevidedLabel from "../../../components/Headers/DevidedLabel";
 import { useEffect, useState } from "react";
-import { useTeacher } from "../../Data/useTeacher";
+import { useTeacher } from "../../../Data/useTeacher";
 
 export interface EquivalentTextConstructorProps {
     texts: string[];
@@ -47,7 +47,7 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
     }
 
     return (
-        <Box>
+        <Box sx={{width: "100%"}} >
             <DevidedLabel name="Possible equivalent Text" />
             <TextField
                 InputLabelProps={{ shrink: true }}

@@ -4,24 +4,23 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-import TensesListPhrase from '../../../Images/Instructions/TensesListPhrase.png';
 
-export default function TensesListInstruction() {
+export default function EquivalentAnswersInstructions() {
   return (
     <Card>
       <CardActionArea>
         <CardMedia
           component="img"
           height="218"
-          image={TensesListPhrase}
+          // image={PossibleAnswers}
           alt="green iguana"
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            TensesList
+            Possible Answers
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Tenses list on the phrase
+            Possible Answers
           </Typography>
         </CardContent>
       </CardActionArea>
