@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Tenseses } from '../Data/tenseses';
+import { Tenseses } from '../../../Data/tenseses';
 import { useEffect, useState } from 'react';
 import { Button, Box } from '@mui/material';
-import DevidedLabel from '../components/Headers/DevidedLabel';
+import DevidedLabel from '../../../components/Headers/DevidedLabel';
 
 
 export interface ITensesListProps {

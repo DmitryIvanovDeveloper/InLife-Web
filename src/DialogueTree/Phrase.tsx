@@ -3,7 +3,7 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useDialogueItemConstructor, usePhrase } from "../Data/useDialogues";
 import TextButton from "../components/Button/TextButton";
 import Answer from "./Answer";
-import PhraseContructor from "../constructors/phraseContructor.tsx/PhraseContructor";
+import PhraseContructor from "../constructors/phraseContructor/PhraseContructor";
 import { useState } from "react";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
 

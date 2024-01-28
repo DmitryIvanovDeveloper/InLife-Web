@@ -5,8 +5,8 @@ import 'react-h5-audio-player/lib/styles.css';
 // import 'react-h5-audio-player/lib/styles.less';
 // import 'react-h5-audio-player/src/styles.scss'
 import { useEffect, useState } from "react";
-import IVoiceModel from "./IVoiceModel";
 import IVoiceOption from "../../Data/VoiceList/IVoiceOption";
+import IVoiceModel from "./IVoiceModel";
 
 export interface IVoiceListProps {
     dialogueId: string,
