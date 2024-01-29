@@ -8,11 +8,8 @@ export default function DialogueNameInsrtuction() {
         <Card>
             <CardActionArea>
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Dialogue name
-                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Descriptions
+                        Dialogue root name
                     </Typography>
                 </CardContent>
             </CardActionArea>
