@@ -1,24 +1,26 @@
 import { useState, useEffect } from "react";
-import { useAnswer, useDialogue, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
+import { useDialogue, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
 import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
-import AddButton from "../../components/Button/AddButton";
 import SaveButton from "../../components/Button/SaveButton";
-import TensesList from "../TensesList";
-import AnswerContructor from "../answerContructor/AnswerConstructor";
-import { Box, TextField, Button, Typography, Alert, Divider } from "@mui/material";
+import { Box, Button, Alert, Divider, Tab } from "@mui/material";
 import GetSettings from "../../ThereGame.Infrastructure/Helpers/PhraseAudioGegerationSettingsBuilder";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
-import LinarProgressCustom from "../../components/CircularProgress";
-import DevidedLabel from "../../components/Headers/DevidedLabel";
 import { useTreeState } from "../../Data/useTreeState";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import IAudioSettings from "../../ThereGame.Business/Models/IAudioSettings";
 import { v4 as uuidv4 } from 'uuid';
-
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import CommentsInfo from "./Comments/CommentsInfo";
+import PhraseInfo from "./Phrase/PhraseInfo";
+import TensesListInfo from "./TensesList/TensesListInfo";
+import AnswerContructor from "../AnswerContructor/AnswerConstructor";
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -35,8 +37,10 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const dialogueRecoil = useDialogue(props.dialogueId);
-    
+
     const [treeState, setTreeState] = useTreeState();
+
+    const [tab, setTab] = useState<string>("1");
 
     const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
     const [isEdited, setIsEdited] = useState(true);
@@ -85,7 +89,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setSelection(id);
 
         setTreeState(prev => ({
-            expanded: [...prev.expanded, id], 
+            expanded: [...prev.expanded, id],
             selected: [id]
         }));
 
@@ -94,22 +98,22 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 dialogueId={props.dialogueId}
                 id={id}
                 parentId={props.id}
-        />);
+            />);
     }
 
-    const onChangeText = (event: any) => {
+    const onChangeText = (phrase: string) => {
         setPhrase(prev => ({
             ...prev,
-            text: event.target.value
+            text: phrase
         }));
 
         setIsEdited(false);
     }
 
-    const onCommentsChange = (event: any) => {
+    const onCommentsChange = (comments: string) => {
         setPhrase(prev => ({
             ...prev,
-            comments: event.target.value
+            comments
         }));
         setIsEdited(false);
     }
@@ -123,6 +127,37 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsEdited(false);
     }
 
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setTab(newValue);
+    };
+
+    // Components
+    function PhraseComponent() {
+        return (
+            <PhraseInfo
+                phrase={phrase.text}
+                onChangeText={onChangeText}
+            />
+        )
+    }
+
+    function TensesListComponent() {
+        return (
+            <TensesListInfo
+                tensesList={phrase.tensesList}
+                setTensesList={onSetTenses}
+            />
+        )
+    }
+
+    function CommentsComponent() {
+        return (
+            <CommentsInfo
+                comments={phrase.comments}
+                onCommentsChange={onCommentsChange}
+            />
+        )
+    }
 
     // UseEffects
 
@@ -205,84 +240,57 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 name='Phrase Constructor'
                 onDelete={onDelete}
             />
+            <Box sx={{ width: '100%', typography: 'body1' }}>
+                <TabContext value={tab}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <TabList onChange={handleChange} aria-label="lab API tabs example">
+                            <Tab label="Pharse" value="1" />
+                            {!phrase.text
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
 
-            <TensesList tensesList={phrase.tensesList} setTensesList={onSetTenses} />
+                            <Tab label="Pharse tenseses" value="2" />
+                            {phrase.tensesList.length == 0
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
 
-            <TextField
-                InputLabelProps={{ shrink: true }}
-
-                value={phrase.text}
-                id="outlined-basic"
-                label="Text"
-                variant="outlined"
-                onChange={onChangeText}
-                required={true}
-                placeholder="Hello, my name is John"
-                fullWidth
-            />
+                            <Tab label="Comments" value="3" />
+                            {!phrase.comments
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
+                        </TabList>
+                    </Box>
+                    <TabPanel value="1">{PhraseComponent()}</TabPanel>
+                    <TabPanel value="2">{TensesListComponent()}</TabPanel>
+                    <TabPanel value="3">{CommentsComponent()}</TabPanel>
+                </TabContext>
+            </Box>
 
             <Divider variant="fullWidth" />
 
-            <TextField
-                InputLabelProps={{ shrink: true }}
-                value={phrase.comments}
-                id="outlined-basic"
-                label="Comments"
-                variant="outlined"
-                onChange={onCommentsChange}
-                fullWidth
-            />
-
-            <Divider variant="fullWidth" />
-
-            <SaveButton 
-                onClick={onSave} 
-                isLoading={isSaving} 
-                isDisabled={false} 
+            <SaveButton
+                onClick={onSave}
+                isLoading={isSaving}
+                isDisabled={false}
             />
 
             {!isEdited || status != Status.OK
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
-                    <Button onClick={reset}>reset</Button>
+                    <Button onClick={reset}>reset all changes</Button>
                 </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
-            
+
             {status != Status.OK
                 ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
                 : null
             }
-            {!phrase.audioSettings?.audioData && !!phraseRecoil.text 
+            {!phrase.audioSettings?.audioData && !!phraseRecoil.text
                 ? <Alert severity="error">The phrase is not generated to audio!</Alert>
-                : null
-            }
-
-
-
-            <DevidedLabel name="Linked answers"/>
-
-            {isCreating
-                ? <LinarProgressCustom name="Creating"/>
-                : <AddButton onClick={onAddAnswerButtonClick} name="Create Answer" />
-            }
-
-            {phrase.answers.length != 0
-                ?
-                <Box>
-                    {phrase.answers.map(answer => (
-                        <Box
-                            display='flex'
-                            justifyContent='space-between'
-                            sx={{p: 1}}
-                        >
-                            <Button variant='outlined' id={answer.id} onClick={() => onAnswerButtonClick(answer.id)} sx={{ p: 1, }}>
-                                <Typography sx={{ textDecoration: 'underline' }}>{!answer.texts[0] ? "New Answer" : answer.texts[0]}</Typography>
-                            </Button>
-                        </Box>
-
-                    ))}
-                </Box>
                 : null
             }
         </Box>

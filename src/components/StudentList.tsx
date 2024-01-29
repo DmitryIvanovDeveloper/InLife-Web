@@ -48,8 +48,14 @@ export default function StudentList(props: IStudentListProps) {
     }
 
     return (
-        <Box sx={{ borderRadius: 2, paddingTop: "20px", paddingBottom: "20px", justifyContent: 'center' }}>
-            <DevidedLabel name="Student Access" />
+        <Box sx={{ 
+            borderRadius: 2, 
+            paddingTop: "20px", 
+            paddingBottom: "20px", 
+            justifyContent: 'center' ,
+            width: "100%"
+        }}>
+            <DevidedLabel name="" />
             <Grid display='flex' flexDirection='row'>
                 <Button fullWidth onClick={selectAll}>Select all</Button>
                 <Button fullWidth onClick={unselectAll}>Unselect all</Button>

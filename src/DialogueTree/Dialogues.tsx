@@ -11,9 +11,9 @@ import AppBarCustom from '../components/AppBarCustom';
 import { useTeacher } from '../Data/useTeacher';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import DialogueGraph from '../components/GraphTree/DialogueGraph';
-import { Grid } from '@mui/material';
-import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
+import DialogueConstructor from '../Constructors/DialogueConstructor/DialogueConstructor';
 import { useSelection } from '../Data/useSelection';
+import DialoguesTab from './DialogesTab';
 
 export interface IDialoguesProps { }
 
@@ -97,7 +97,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 : <LocationCarousel setLevel={onChangeLocation} id={npcId} />
             }
             
-
             <Box>
                 {isNewDialogueCreating
                     ? <LinarProgressCustom name='Creating' />
@@ -109,17 +108,12 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                     </Button>
                 }
             </Box>
-            <Grid>
-                {dialogues
-                    .map(currentDialogue => (
-                        <Button
-                            variant={dialogue?.id == currentDialogue.id ? 'contained' : 'outlined'}
-                            sx={{ p: 1 }}
-                            onClick={() => onClick(currentDialogue)}>{!currentDialogue.name ? "New Dialogue" : currentDialogue.name}</Button>
-                    ))
-                }
-            </Grid>
 
+           <DialoguesTab 
+                dialogues={dialogues} 
+                onClick={onClick}
+                dialogue={dialogue}
+            />
 
             {!dialogue
                 ? null

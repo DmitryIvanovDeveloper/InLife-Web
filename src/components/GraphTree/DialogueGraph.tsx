@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Tree, { RawNodeDatum } from "react-d3-tree";
-import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
+import { useDialogue } from "../../Data/useDialogues";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
+import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemNode } from "./DialogueItemNode";
 import { NodeType } from "./DialogueitemType";
-import { useDialogue } from "../../Data/useDialogues";
 
 export interface IDialoguesGraphProps {
     dialogueId: string
@@ -36,6 +36,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             name: answer.texts[0],
             children: answer.phrases.map(phrase => transformPhrase(phrase)),
             attributes: {
+                possibleAnswersLength: answer.texts.length,
                 id: answer.id,
                 nodeType: NodeType.Answer,
                 parentId: answer.parentId,

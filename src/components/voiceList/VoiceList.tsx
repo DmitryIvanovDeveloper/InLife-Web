@@ -5,8 +5,8 @@ import 'react-h5-audio-player/lib/styles.css';
 // import 'react-h5-audio-player/lib/styles.less';
 // import 'react-h5-audio-player/src/styles.scss'
 import { useEffect, useState } from "react";
-import IVoiceModel from "./IVoiceModel";
 import IVoiceOption from "../../Data/VoiceList/IVoiceOption";
+import IVoiceModel from "./IVoiceModel";
 
 export interface IVoiceListProps {
     dialogueId: string,
@@ -70,16 +70,16 @@ export default function VoiceList(props: IVoiceListProps) {
         }
 
         props.setIsVoiceSelected(JSON.stringify({ name: voice.name, type: voiceOption.type }));
-        // setIsPlay(true)
     }, [voiceOption, voice]);
 
     return (
-        <Box>
+        <Box sx={{width: "100%"}}>
             <Grid
                 display="flex"
                 justifyContent="space-around"
                 alignItems="center"
-                sx={{ pt: 1, mb: 1 }}
+                sx={{ pt: 1, mb: 0.5, mt: 3 }}
+                
             >
                 <Select
                     labelId="demo-simple-select-label"

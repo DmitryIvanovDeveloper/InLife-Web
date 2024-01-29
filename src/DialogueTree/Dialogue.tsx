@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import TextButton from "../components/Button/TextButton";
 import { useDialogue, useDialogueItemConstructor } from "../Data/useDialogues";
-import DialogueConstructor from "../constructors/dialogueConstructor/DialogueConstructor";
+import DialogueConstructor from "../Constructors/DialogueConstructor/DialogueConstructor";
 import Phrase from "./Phrase";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
 import { useState } from "react";
@@ -11,7 +11,6 @@ export interface IDialogueProps {
     id: string,
 }
 export default function Dialogue(props: IDialogueProps) {
-
     var dialogueRecoil = useDialogue(props.id);
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();

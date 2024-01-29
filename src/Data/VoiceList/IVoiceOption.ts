@@ -1,4 +1,4 @@
-import IVoiceModel from "../../components/voiceList/IVoiceModel"
+import IVoiceModel from "../../components/VoiceList/IVoiceModel"
 
 export default interface IVoiceOption {
     id: string

@@ -1,7 +1,7 @@
-import { Box, Button, Chip, CircularProgress, Divider, Grid, Stack, TextField, Typography } from "@mui/material"
-import DevidedLabel from "../../components/Headers/DevidedLabel";
+import { Box, Button, Chip, CircularProgress, Grid, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useTeacher } from "../../Data/useTeacher";
+import { useTeacher } from "../../../Data/useTeacher";
+import DevidedLabel from "../../../components/Headers/DevidedLabel";
 
 export interface EquivalentTextConstructorProps {
     texts: string[];
@@ -11,7 +11,6 @@ export interface EquivalentTextConstructorProps {
     onRemoveEquivalentAnswer: (value: string) => void;
     isLoading: boolean;
 }
-
 
 export default function EquivalentTextConstructor(props: EquivalentTextConstructorProps) {
     const [teacher] = useTeacher();
@@ -47,8 +46,8 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
     }
 
     return (
-        <Box>
-            <DevidedLabel name="Possible equivalent Text" />
+        <Box sx={{width: "100%"}} >
+            <DevidedLabel name="" />
             <TextField
                 InputLabelProps={{ shrink: true }}
                 placeholder="Yes, today is a greate day!"
@@ -73,8 +72,6 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
                         : <Button onClick={() => props.chatGpt(selectedTextId.text)}>ChatGpt</Button>
                 }
 
-
-
                 <Button
                     disabled={!selectedTextId.text}
                     style={{ backgroundColor: "darkgreen", color: "white", }}
@@ -84,7 +81,6 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
                 spacing={1}
                 sx={{ m: 2 }}
             >
-
                 {props.texts.map((text, index) => (
                     <Grid
                         sx={{ pt: 1 }}
@@ -97,26 +93,6 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
                             onDelete={() => props.onRemoveEquivalentAnswer(text)}
                         />
                     </Grid>
-
-                    // <Grid
-                    //     display="flex"
-                    //     justifyContent="space-around"
-                    //     alignItems="center"
-                    //     sx={{ pt: 1 }}
-                    // >
-                    //     <TextField
-                    //         InputLabelProps={{ shrink: true }}
-                    //         placeholder="Yes, today is a greate day!"
-                    //         value={text}
-                    //         id="outlined-basic"
-                    //         label="Text"
-                    //         variant="outlined"
-                    //         onChange={(event) => props.onChangeEquivalentAnswer(event.target.value, index)}
-                    //         required={true}
-                    //         fullWidth
-                    //     />
-                    //     <Button onClick={(event) => props.onRemoveEquivalentAnswer(text)}>Delete</Button>
-                    // </Grid>
                 ))}
             </Stack>
         </Box>
