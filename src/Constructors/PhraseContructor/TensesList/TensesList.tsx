@@ -1,7 +1,7 @@
 import { Box, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Tenseses } from '../../../Data/tenseses';
-import DevidedLabel from '../../../components/Headers/DevidedLabel';
+import DevidedLabel from '../../../Components/Headers/DevidedLabel';
 
 
 export interface ITensesListProps {

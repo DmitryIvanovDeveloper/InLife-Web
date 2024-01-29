@@ -4,7 +4,7 @@ import { useState } from "react";
 import DialogueConstructor from "../Constructors/DialogueConstructor/DialogueConstructor";
 import { useDialogue, useDialogueItemConstructor } from "../Data/useDialogues";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
-import TextButton from "../components/Button/TextButton";
+import TextButton from "../Components/Button/TextButton";
 import Phrase from "./Phrase";
 
 export interface IDialogueProps {

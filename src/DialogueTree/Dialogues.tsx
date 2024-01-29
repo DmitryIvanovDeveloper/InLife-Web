@@ -8,10 +8,10 @@ import { useSelection } from '../Data/useSelection';
 import { useTeacher } from '../Data/useTeacher';
 import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
-import AppBarCustom from '../components/AppBarCustom';
-import LinarProgressCustom from '../components/CircularProgress';
-import DialogueGraph from '../components/GraphTree/DialogueGraph';
-import LocationCarousel from '../components/LocationCarousel';
+import AppBarCustom from '../Components/AppBarCustom';
+import LinarProgressCustom from '../Components/CircularProgress';
+import DialogueGraph from '../Components/GraphTree/DialogueGraph';
+import LocationCarousel from '../Components/LocationCarousel';
 import DialoguesTab from './DialogesTab';
 
 export interface IDialoguesProps { }

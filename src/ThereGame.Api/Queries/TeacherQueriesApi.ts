@@ -3,7 +3,7 @@ import { useStudents } from "../../Data/useStudents";
 import { useTeacher } from "../../Data/useTeacher";
 import ITeacherService from "../../ThereGame.Business/Domain/Util/Services/ITeacherService";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
-import { ITeacherBio } from "../../components/Profile/ProfileEditor";
+import { ITeacherBio } from "../../Components/Profile/ProfileEditor";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
 import TeacherMapping from "../Util/Mapping/TeacherMapping";

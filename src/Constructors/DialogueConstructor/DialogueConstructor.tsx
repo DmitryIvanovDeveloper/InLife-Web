@@ -10,13 +10,13 @@ import { useTreeState } from "../../Data/useTreeState";
 import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import AppBarDeleteButton from "../../components/AppBarDeleteButton";
-import SaveButton from "../../components/Button/SaveButton";
-import LinarProgressCustom from "../../components/CircularProgress";
+import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
+import SaveButton from "../../Components/Button/SaveButton";
+import LinarProgressCustom from "../../Components/CircularProgress";
 import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
 import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
-import PhraseConstructor from '../phraseContructor/PhraseConstructor';
+import PhraseConstructor from '../PhraseContructor/PhraseConstructor';
 
 export interface IDialogueConstructor {
     id: string;

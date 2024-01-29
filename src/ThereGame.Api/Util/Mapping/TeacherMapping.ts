@@ -1,7 +1,7 @@
 import ITeacherModel from "../../../ThereGame.Business/Models/ITeacherModel";
 import ITeacherRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ITeacherRequestDto";
 import ITeacherResponseDto from "../../../ThereGame.Infrastructure/Services/Dto/ITeacherResponseDto";
-import { ITeacherBio } from "../../../components/Profile/ProfileEditor";
+import { ITeacherBio } from "../../../Components/Profile/ProfileEditor";
 import DialogueMapping from "./DialogueMapping";
 import StudentMapping from "./StudentMapping";
 

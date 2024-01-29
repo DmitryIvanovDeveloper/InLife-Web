@@ -3,7 +3,7 @@ import { useState } from "react";
 import AnswerContructor from "../Constructors/AnswerContructor/AnswerConstructor";
 import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
-import TextButton from "../components/Button/TextButton";
+import TextButton from "../Components/Button/TextButton";
 import Phrase from "./Phrase";
 
 export interface IAnswerProps {

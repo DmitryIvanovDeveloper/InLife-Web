@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import TensesList from "./TensesList";
-import TensesListInstruction from "./TensesListIntruction";
+import TensesListInstruction from "./TensesListInstruction";
 
 export interface IPhraseInfoProps {
     tensesList: string[];

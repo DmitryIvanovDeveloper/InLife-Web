@@ -1,7 +1,7 @@
 import { Box, Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
-import DevidedLabel from "../../components/Headers/DevidedLabel";
+import DevidedLabel from "../../Components/Headers/DevidedLabel";
 
 export interface IMistakeExplanationConstructor {
     explanations: IMistakeExplanationModel[]

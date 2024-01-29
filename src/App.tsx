@@ -3,12 +3,12 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import './App.css';
 import DialogueBuilder from './DialogueTree/DialogueBuilder';
 import { Routes as LocalRoutes } from './Routes';
-import SignIn from './components/Authentication/SignIn';
-import SignUpStudent from './components/Authentication/SignUpStudent';
-import SignUpTeacher from './components/Authentication/SignUpTeacher';
-import ProfileEditor from './components/Profile/ProfileEditor';
-import StudentProfile from './components/Student/StudentProfile';
-import TeacherProfile from './components/Teacher/TeacherProfile';
+import SignIn from './Components/Authentication/SignIn';
+import SignUpStudent from './Components/Authentication/SignUpStudent';
+import SignUpTeacher from './Components/Authentication/SignUpTeacher';
+import ProfileEditor from './Components/Profile/ProfileEditor';
+import StudentProfile from './Components/Student/StudentProfile';
+import TeacherProfile from './Components/Teacher/TeacherProfile';
 
 export function App() {
     const navigate = useNavigate();

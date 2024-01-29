@@ -18,10 +18,10 @@ import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueIte
 import ChatGptService from "../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";
 import IChatGPTResponseDto, { IDataResponse } from "../../ThereGame.Infrastructure/Services/ChatGpt/Dtos/IChatGptResponseDto";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
-import AppBarDeleteButton from "../../components/AppBarDeleteButton";
-import SaveButton from "../../components/Button/SaveButton";
-import LinarProgressCustom from "../../components/CircularProgress";
-import PhraseConstructor from "../phraseContructor/PhraseConstructor";
+import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
+import SaveButton from "../../Components/Button/SaveButton";
+import LinarProgressCustom from "../../Components/CircularProgress";
+import PhraseConstructor from "../PhraseContructor/PhraseConstructor";
 import EquivalentAnswersInfo from "./Answer/AnswersInfo";
 import PossibleWordsToUseInfo from "./PossibleWordsToUse/PossibleWordsToUseInfo";
 import TensesListInfo from "./TensesList/TensesListInfo";

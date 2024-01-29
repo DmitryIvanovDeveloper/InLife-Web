@@ -5,7 +5,7 @@ import { useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
 import AnswerContructor from '../../Constructors/AnswerContructor/AnswerConstructor';
 import DialogueConstructor from '../../Constructors/DialogueConstructor/DialogueConstructor';
-import PhraseConstructor from '../../Constructors/phraseContructor/PhraseConstructor';
+import PhraseConstructor from '../../Constructors/PhraseContructor/PhraseConstructor';
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";

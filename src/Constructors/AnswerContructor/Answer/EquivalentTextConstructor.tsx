@@ -1,7 +1,7 @@
 import { Box, Button, Chip, CircularProgress, Grid, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTeacher } from "../../../Data/useTeacher";
-import DevidedLabel from "../../../components/Headers/DevidedLabel";
+import DevidedLabel from "../../../Components/Headers/DevidedLabel";
 
 export interface EquivalentTextConstructorProps {
     texts: string[];
