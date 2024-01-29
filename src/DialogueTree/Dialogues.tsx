@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useEffect, useState } from 'react';
-import DialogueConstructor from '../constructors/DialogueConstructor/DialogueConstructor';
+import DialogueConstructor from '../Constructors/DialogueConstructor/DialogueConstructor';
 import { Locations } from '../Data/Locations';
 import { useDialogueItemConstructor } from '../Data/useDialogues';
 import { useSelection } from '../Data/useSelection';

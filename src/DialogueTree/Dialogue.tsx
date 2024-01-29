@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import { useState } from "react";
-import DialogueConstructor from "../constructors/DialogueConstructor/DialogueConstructor";
+import DialogueConstructor from "../Constructors/DialogueConstructor/DialogueConstructor";
 import { useDialogue, useDialogueItemConstructor } from "../Data/useDialogues";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
 import TextButton from "../components/Button/TextButton";
