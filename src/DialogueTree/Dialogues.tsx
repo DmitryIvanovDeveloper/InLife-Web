@@ -11,7 +11,7 @@ import AppBarCustom from '../components/AppBarCustom';
 import { useTeacher } from '../Data/useTeacher';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import DialogueGraph from '../components/GraphTree/DialogueGraph';
-import DialogueConstructor from '../constructors/dialogueConstructor/DialogueConstructor';
+import DialogueConstructor from '../Constructors/DialogueConstructor/DialogueConstructor';
 import { useSelection } from '../Data/useSelection';
 import DialoguesTab from './DialogesTab';
 

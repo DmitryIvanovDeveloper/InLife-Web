@@ -1,7 +1,7 @@
-import { Box, Button, Chip, CircularProgress, Divider, Grid, Stack, TextField, Typography } from "@mui/material"
-import DevidedLabel from "../../../components/Headers/DevidedLabel";
+import { Box, Button, Chip, CircularProgress, Grid, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTeacher } from "../../../Data/useTeacher";
+import DevidedLabel from "../../../components/Headers/DevidedLabel";
 
 export interface EquivalentTextConstructorProps {
     texts: string[];
@@ -97,26 +97,6 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
                             onDelete={() => props.onRemoveEquivalentAnswer(text)}
                         />
                     </Grid>
-
-                    // <Grid
-                    //     display="flex"
-                    //     justifyContent="space-around"
-                    //     alignItems="center"
-                    //     sx={{ pt: 1 }}
-                    // >
-                    //     <TextField
-                    //         InputLabelProps={{ shrink: true }}
-                    //         placeholder="Yes, today is a greate day!"
-                    //         value={text}
-                    //         id="outlined-basic"
-                    //         label="Text"
-                    //         variant="outlined"
-                    //         onChange={(event) => props.onChangeEquivalentAnswer(event.target.value, index)}
-                    //         required={true}
-                    //         fullWidth
-                    //     />
-                    //     <Button onClick={(event) => props.onRemoveEquivalentAnswer(text)}>Delete</Button>
-                    // </Grid>
                 ))}
             </Stack>
         </Box>

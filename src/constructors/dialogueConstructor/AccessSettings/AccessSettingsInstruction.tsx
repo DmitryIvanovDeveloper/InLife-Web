@@ -1,26 +1,20 @@
-import { CardActionArea } from '@mui/material';
+import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import TensesListPhrase from '../../../Images/Instructions/TensesListPhrase.png';
+import { CardActionArea } from '@mui/material';
 
-export default function TensesListInstruction() {
+export default function AccessSettingsInsrtuction() {
   return (
     <Card>
       <CardActionArea>
-        <CardMedia
-          component="img"
-          height="218"
-          image={TensesListPhrase}
-          alt="green iguana"
-        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            TensesList
+            AccessSettings
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Tenses list on the phrase
+            Descriptions
           </Typography>
         </CardContent>
       </CardActionArea>

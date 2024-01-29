@@ -1,11 +1,11 @@
-import { Alert, Box, Button, TextField } from "@mui/material";
+import { Alert, Box, Button, Tab, TextField } from "@mui/material";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import SaveButton from "../../components/Button/SaveButton";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
-import PhraseContructor from "../phraseContructor/PhraseContructor";
+import PhraseContructor from "../PhraseContructor/PhraseContructor";
 import VoiceList from "../../components/VoiceList/VoiceList";
 import AppBarDeleteButton from "../../components/AppBarDeleteButton";
 import StudentList from "../../components/StudentList";
@@ -14,6 +14,12 @@ import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueIte
 import Switcher from "../../components/Button/Switcher";
 import DevidedLabel from "../../components/Headers/DevidedLabel";
 import { useSelection } from "../../Data/useSelection";
+import TabList from "@mui/lab/TabList";
+import TabContext from "@mui/lab/TabContext";
+import TabPanel from "@mui/lab/TabPanel";
+import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
+import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
+import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 
 export interface IDialogueConstructor {
     id: string;
@@ -30,6 +36,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [treeState, setTreeState] = useTreeState();
     const [selection, setSelection] = useSelection();
+    const [tab, setTab] = useState<string>("1");
 
     const dialogueQueriesApi = useDialogieQueriesApi();
 
@@ -46,10 +53,10 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         setDialogueItemConstructor(() => null);
     }
 
-    const onChangeName = (event: any) => {
+    const onChangeName = (name: string) => {
         setDialogue(prev => ({
             ...prev,
-            name: event.target.value
+            name
         }));
 
         setIsEdited(false);
@@ -65,7 +72,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         }));
 
         setSelection(dialogue.phrase.id);
-        
+
         setDialogueItemConstructor(() => <PhraseContructor
             dialogueId={props.id}
             id={dialogue.phrase.id}
@@ -103,6 +110,41 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         setDialogue(dialogueRecoil);
         localStorage.removeItem(props.id);
     }
+
+    // Componets
+    function VoiceSettingsComponent() {
+        return (
+            <VoiceSettingsInfo
+                dialogueId={props.id}
+                setIsVoiceSelected={setIsVoiceSelected}
+                voiceSettings={dialogueRecoil?.voiceSettings}
+            />
+        )
+    }
+
+    function DialogueNameComponent() {
+        return (
+            <DialogueNameInfo
+                name={dialogue.name}
+                onChangeName={onChangeName}
+            />
+        )
+    }
+
+    function AccessSettingsComponent() {
+        return (
+            <AccessSettingsInfo
+                studentsId={dialogue.studentsId}
+                setStudentList={setStudentList}
+                publish={publish} 
+                isPublished={dialogue.isPublished}
+            />
+        )
+    }
+
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setTab(newValue);
+    };
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -168,23 +210,20 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 onDelete={onDelete}
             />
 
-            <DevidedLabel name={"Audio Settings"} />
-
-            <VoiceList
-                dialogueId={props.id}
-                setIsVoiceSelected={setIsVoiceSelected}
-                voiceSettings={dialogueRecoil?.voiceSettings} // Don't change to Dialogue
-            />
-
-            <DevidedLabel name={"Dialogue Name"} />
-            <TextField
-                onChange={onChangeName}
-                value={dialogue.name}
-                required={true}
-                id="outlined-basic"
-                label="Name"
-                variant="outlined"
-            />
+            <Box sx={{ width: '100%', typography: 'body1' }}>
+                <TabContext value={tab}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <TabList onChange={handleChange} aria-label="lab API tabs example">
+                            <Tab label="Dialogue name" value="1" />
+                            <Tab label="Voice Settings" value="2" />
+                            <Tab label="Access Settings" value="3" />
+                        </TabList>
+                    </Box>
+                    <TabPanel value="1">{DialogueNameComponent()}</TabPanel>
+                    <TabPanel value="2">{VoiceSettingsComponent()}</TabPanel>
+                    <TabPanel value="3">{AccessSettingsComponent()}</TabPanel>
+                </TabContext>
+            </Box>
 
             <SaveButton
                 onClick={save}
@@ -199,14 +238,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
             }
-
-            <DevidedLabel name={"Publish Settings"} />
-            <Switcher setIsChecked={publish} checked={dialogue.isPublished} />
-
-            <StudentList
-                studentList={dialogue.studentsId}
-                setStudentList={setStudentList}
-            />
         </Box>
     )
 }

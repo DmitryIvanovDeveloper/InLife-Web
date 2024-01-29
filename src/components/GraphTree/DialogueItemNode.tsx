@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { useDialogueItemConstructor } from "../../Data/useDialogues";
-import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import AnswerContructor from "../../constructors/answerContructor/AnswerConstructor";
-import DialogueConstructor from "../../constructors/dialogueConstructor/DialogueConstructor";
-import PhraseContructor from "../../constructors/phraseContructor/PhraseContructor";
-import { NodeType } from "./DialogueitemType";
-import { CustomNodeElementProps } from "react-d3-tree";
-import { useSelection } from "../../Data/useSelection";
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
+import { Box, CircularProgress } from "@mui/material";
+import { useState } from "react";
+import { CustomNodeElementProps } from "react-d3-tree";
+import { useDialogueItemConstructor } from "../../Data/useDialogues";
+import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
-import { IconButton } from "@mui/material";
-
+import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
+import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
+import { NodeType } from "./DialogueitemType";
+import AnswerContructor from '../../Constructors/AnswerContructor/AnswerConstructor';
+import DialogueConstructor from '../../Constructors/DialogueConstructor/DialogueConstructor';
+import PhraseContructor from '../../Constructors/PhraseContructor/PhraseContructor';
+import a from '../../Images/Instructions/Phrase.png'
 const nodeSize = { x: 200, y: 200 };
 const foreignObjectProps = {
     width: nodeSize.x,
@@ -29,6 +29,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [states, setStates] = useState<DialogueItemStateType[]>([DialogueItemStateType.NoErrors]);
     const [selection, setSelection] = useSelection();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const phraseQueriesApi = usePhraseQueriesApi();
     const answerQueriesApi = useAnswerQueriesApi();
@@ -36,7 +37,6 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const onClick = (id: string, nodeType: NodeType) => {
         setSelection(id);
 
-        console.log(id);
         if (nodeType == NodeType.Dialogue) {
             setDialogueItemConstructor(() =>
                 <DialogueConstructor
@@ -67,14 +67,16 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         }
     }
 
-    const onCreateNewNode = (id: string, nodeType: NodeType) => {
+    const onCreateNewNode = async (id: string, nodeType: NodeType) => {
+        setIsLoading(true);
         if (nodeType == NodeType.Phrase) {
-            answerQueriesApi.create(id);
+            await answerQueriesApi.create(id);
         }
 
         if (nodeType == NodeType.Answer) {
-            phraseQueriesApi.create(id);
+            await phraseQueriesApi.create(id);
         }
+        setIsLoading(false);
     }
 
     return (
@@ -100,12 +102,17 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                 >
                     <h3 style={{ textAlign: "center" }}>{props.customNodeElementProps.nodeDatum.name}</h3>
                 </div>
-                {selection == props.customNodeElementProps.nodeDatum.attributes?.id
-                    ? <IconButton>
-                        <AddBoxIcon onClick={() => onCreateNewNode(props.customNodeElementProps.nodeDatum.attributes?.id as string, props.customNodeElementProps.nodeDatum.attributes?.nodeType as NodeType)} />
-                    </IconButton>
-                    : null
-                }
+                <Box display='flex' justifyContent="center">
+                    {isLoading
+                        ? <CircularProgress size={30} sx={{}}/>
+                        : selection == props.customNodeElementProps.nodeDatum.attributes?.id
+                            ? <Box display='flex' justifyContent="center">
+                                <AddBoxIcon onClick={() => onCreateNewNode(props.customNodeElementProps.nodeDatum.attributes?.id as string, props.customNodeElementProps.nodeDatum.attributes?.nodeType as NodeType)} />
+                            </Box>
+                            : null
+                    }
+                </Box>
+
 
             </foreignObject>
         </g>

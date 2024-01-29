@@ -1,5 +1,4 @@
 import { Box, TextField } from "@mui/material";
-import TensesList from "../../phraseContructor/TensesList/TensesList";
 import PossibleWordsToUseInstruction from "./PossibleWordsToUseInstruction";
 
 export interface IPossibleWordsToUseInfoProps {
@@ -21,10 +20,9 @@ export default function PossibleWordsToUseInfo(props: IPossibleWordsToUseInfoPro
                 placeholder="Hello, You, Meet, etc."
                 value={props.wordsToUse}
                 id="outlined-basic"
-                label="Words to use"
+                label="Possible words"
                 variant="outlined"
                 onChange={(event) => props.onWordsToUseChange(event.target.value)}
-                required={true}
                 fullWidth
             ></TextField>
         </Box>

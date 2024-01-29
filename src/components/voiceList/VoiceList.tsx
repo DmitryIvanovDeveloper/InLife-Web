@@ -70,16 +70,16 @@ export default function VoiceList(props: IVoiceListProps) {
         }
 
         props.setIsVoiceSelected(JSON.stringify({ name: voice.name, type: voiceOption.type }));
-        // setIsPlay(true)
     }, [voiceOption, voice]);
 
     return (
-        <Box>
+        <Box sx={{width: "100%"}}>
             <Grid
                 display="flex"
                 justifyContent="space-around"
                 alignItems="center"
-                sx={{ pt: 1, mb: 1 }}
+                sx={{ pt: 1, mb: 0.5, mt: 3 }}
+                
             >
                 <Select
                     labelId="demo-simple-select-label"

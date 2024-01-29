@@ -1,7 +1,6 @@
-import * as React from 'react';
-import { Tenseses } from '../../../Data/tenseses';
+import { Box, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Button, Box } from '@mui/material';
+import { Tenseses } from '../../../Data/tenseses';
 import DevidedLabel from '../../../components/Headers/DevidedLabel';
 
 

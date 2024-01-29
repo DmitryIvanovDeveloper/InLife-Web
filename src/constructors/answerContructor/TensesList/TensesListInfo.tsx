@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import TensesList from "../../phraseContructor/TensesList/TensesList";
+import TensesList from "../../PhraseContructor/TensesList/TensesList";
 import TensesListInstruction from "./TensesListInstruction";
 
 export interface IPhraseInfoProps {
