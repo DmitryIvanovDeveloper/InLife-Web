@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 
@@ -10,11 +9,11 @@ export default function VoiceSettingsInstruction() {
         <Card>
             <CardActionArea>
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Voice Settings
+                    <Typography variant="body2" color="text.secondary">
+                        Select voice to the person
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Descriptions
+                        WARNING: You can save a voice only once to the dialogue
                     </Typography>
                 </CardContent>
             </CardActionArea>

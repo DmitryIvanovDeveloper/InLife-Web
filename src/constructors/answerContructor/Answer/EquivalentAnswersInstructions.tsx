@@ -17,11 +17,8 @@ export default function EquivalentAnswersInstructions() {
                     alt="green iguana"
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Possible Answers
-                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Add answers that student can get an access to specific phrase
+                        Add answers to next specific phrase
                     </Typography>
                 </CardContent>
             </CardActionArea>

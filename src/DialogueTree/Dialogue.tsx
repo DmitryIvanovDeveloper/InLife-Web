@@ -11,7 +11,6 @@ export interface IDialogueProps {
     id: string,
 }
 export default function Dialogue(props: IDialogueProps) {
-
     var dialogueRecoil = useDialogue(props.id);
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();

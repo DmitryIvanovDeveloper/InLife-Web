@@ -16,11 +16,8 @@ export default function PossibleWordsToUseInstruction() {
                     alt="green iguana"
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Possible words
-                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Add words than a student can use to an answer
+                        Add possible words that a student can use
                     </Typography>
                 </CardContent>
             </CardActionArea>

@@ -97,7 +97,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 : <LocationCarousel setLevel={onChangeLocation} id={npcId} />
             }
             
-
             <Box>
                 {isNewDialogueCreating
                     ? <LinarProgressCustom name='Creating' />

@@ -18,7 +18,7 @@ export default function DialoguesTab(props: IDialogueTabsProps) {
             aria-label="secondary tabs example"
         >
             {props.dialogues.map(dialogue => (
-                <Tab onClick={() => props.onClick(dialogue)} value={dialogue.name} label={dialogue.name} />
+                <Tab onClick={() => props.onClick(dialogue)} value={dialogue.name ?? "New dialogue"} label={dialogue.name } />
             ))}
         </Tabs>
     )

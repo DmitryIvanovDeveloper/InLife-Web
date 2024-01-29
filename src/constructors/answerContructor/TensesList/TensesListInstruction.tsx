@@ -16,11 +16,8 @@ export default function TensesListInstruction() {
                     alt="green iguana"
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Tenses list
-                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Possible tenseses for the answers a student can answer
+                        Possible tenseses for the possible answers
                     </Typography>
                 </CardContent>
             </CardActionArea>

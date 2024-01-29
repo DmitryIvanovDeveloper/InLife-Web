@@ -1,8 +1,8 @@
-import { Alert, Box, Button, ButtonGroup, Divider, FormLabel, Grid, Tab, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Divider, Tab, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import SaveButton from "../../components/Button/SaveButton";
 import { useSelection } from "../../Data/useSelection";
-import { useAnswer, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
+import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
 import MistakeExplanationConstructor from "./MistakeExplanationsConstructor";
@@ -26,6 +26,7 @@ import TensesListInfo from "./TensesList/TensesListInfo";
 import EquivalentAnswersInfo from "./Answer/AnswersInfo";
 import PossibleWordsToUseInfo from "./PossibleWordsToUse/PossibleWordsToUseInfo";
 import TranslatesInfo from "./Translates/TranslatesInfo";
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -408,10 +409,26 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
                 <TabContext value={tab}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList onChange={handleChange} aria-label="lab API tabs example">
-                            <Tab label="Equivalent Answers" value="1" />
+                            <Tab label="Possible Answers" value="1" />
+                            {!answer.texts.length
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
                             <Tab label="Tenses list" value="2" />
+                            {!answer.tensesList.length
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
                             <Tab label="Possible words" value="3" />
+                            {!answer.wordsToUse
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
                             <Tab label="Translates" value="4" />
+                            {!answer.translates.length
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
                         </TabList>
                     </Box>
                     <TabPanel value="1">{EquivalentAnswersComponent()}</TabPanel>
@@ -433,7 +450,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             {!isEdited
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
-                    <Button onClick={reset}>reset</Button>
+                    <Button onClick={reset}>reset all changes</Button>
                 </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
             }

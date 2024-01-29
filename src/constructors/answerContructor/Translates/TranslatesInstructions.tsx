@@ -17,11 +17,8 @@ export default function TranslatesInstructions() {
                     alt="green iguana"
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Translates
-                    </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        Add the possible answers translates that a student can answer
+                        Add the possible answers translates
                     </Typography>
                 </CardContent>
             </CardActionArea>

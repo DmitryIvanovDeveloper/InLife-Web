@@ -12,7 +12,6 @@ export interface EquivalentTextConstructorProps {
     isLoading: boolean;
 }
 
-
 export default function EquivalentTextConstructor(props: EquivalentTextConstructorProps) {
     const [teacher] = useTeacher();
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
@@ -48,7 +47,7 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
 
     return (
         <Box sx={{width: "100%"}} >
-            <DevidedLabel name="Possible equivalent Text" />
+            <DevidedLabel name="" />
             <TextField
                 InputLabelProps={{ shrink: true }}
                 placeholder="Yes, today is a greate day!"
@@ -73,8 +72,6 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
                         : <Button onClick={() => props.chatGpt(selectedTextId.text)}>ChatGpt</Button>
                 }
 
-
-
                 <Button
                     disabled={!selectedTextId.text}
                     style={{ backgroundColor: "darkgreen", color: "white", }}
@@ -84,7 +81,6 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
                 spacing={1}
                 sx={{ m: 2 }}
             >
-
                 {props.texts.map((text, index) => (
                     <Grid
                         sx={{ pt: 1 }}

@@ -36,6 +36,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             name: answer.texts[0],
             children: answer.phrases.map(phrase => transformPhrase(phrase)),
             attributes: {
+                possibleAnswersLength: answer.texts.length,
                 id: answer.id,
                 nodeType: NodeType.Answer,
                 parentId: answer.parentId,

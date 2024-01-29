@@ -20,6 +20,7 @@ import CommentsInfo from "./Comments/CommentsInfo";
 import PhraseInfo from "./Phrase/PhraseInfo";
 import TensesListInfo from "./TensesList/TensesListInfo";
 import AnswerContructor from "../AnswerContructor/AnswerConstructor";
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -151,8 +152,8 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
     function CommentsComponent() {
         return (
-           <CommentsInfo 
-                comments={phrase.comments} 
+            <CommentsInfo
+                comments={phrase.comments}
                 onCommentsChange={onCommentsChange}
             />
         )
@@ -243,9 +244,23 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 <TabContext value={tab}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList onChange={handleChange} aria-label="lab API tabs example">
-                            <Tab label="Phrase" value="1" />
-                            <Tab label="Phrase Tenseses" value="2" />
-                            <Tab label="Phrase Comments" value="3" />
+                            <Tab label="Pharse" value="1" />
+                            {!phrase.text
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
+
+                            <Tab label="Pharse tenseses" value="2" />
+                            {phrase.tensesList.length == 0
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
+
+                            <Tab label="Comments" value="3" />
+                            {!phrase.comments
+                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                : null
+                            }
                         </TabList>
                     </Box>
                     <TabPanel value="1">{PhraseComponent()}</TabPanel>
@@ -265,7 +280,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             {!isEdited || status != Status.OK
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
-                    <Button onClick={reset}>reset</Button>
+                    <Button onClick={reset}>reset all changes</Button>
                 </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
             }

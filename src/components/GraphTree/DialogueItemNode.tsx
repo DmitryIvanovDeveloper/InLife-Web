@@ -1,5 +1,5 @@
 import AddBoxIcon from '@mui/icons-material/AddBox';
-import { Box, CircularProgress } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
@@ -11,14 +11,15 @@ import { NodeType } from "./DialogueitemType";
 import AnswerContructor from '../../Constructors/AnswerContructor/AnswerConstructor';
 import DialogueConstructor from '../../Constructors/DialogueConstructor/DialogueConstructor';
 import PhraseContructor from '../../Constructors/PhraseContructor/PhraseContructor';
-import a from '../../Images/Instructions/Phrase.png'
+import Avatar from '@mui/material/Avatar';
+
 const nodeSize = { x: 200, y: 200 };
 const foreignObjectProps = {
     width: nodeSize.x,
     height: nodeSize.y,
     x: -100,
     y: -20,
-    margin: 1
+    margin: 5
 };
 
 export interface IRenderForeignDialogueItemNodeProps {
@@ -81,10 +82,20 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
 
     return (
         <g>
-            <circle r={15}></circle>
             <foreignObject
                 onClick={() => onClick(props.customNodeElementProps.nodeDatum.attributes?.id as string, props.customNodeElementProps.nodeDatum.attributes?.nodeType as NodeType)}
                 {...foreignObjectProps}>
+                {props.customNodeElementProps.nodeDatum.attributes?.nodeType == NodeType.Phrase
+                    ? <Box
+                        display='flex'
+                        justifyContent='center'
+
+                    >
+                        <Avatar />
+                    </Box>
+                    : null
+                }
+
                 <div
                     style={{
                         border: "1px solid transparent",
@@ -97,23 +108,22 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                         borderColor: selection == props.customNodeElementProps.nodeDatum.attributes?.id
                             ? "#ff5722"
                             : props.customNodeElementProps.nodeDatum.attributes?.color as string,
-                        borderBlockWidth: 10
+                        borderBlockWidth: 10,
+                        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px"
                     }}
                 >
-                    <h3 style={{ textAlign: "center" }}>{props.customNodeElementProps.nodeDatum.name}</h3>
+                    <h3 style={{ textAlign: "center" }}>{`${props.customNodeElementProps.nodeDatum.name}`}</h3>
                 </div>
                 <Box display='flex' justifyContent="center">
                     {isLoading
-                        ? <CircularProgress size={30} sx={{}}/>
-                        : selection == props.customNodeElementProps.nodeDatum.attributes?.id
-                            ? <Box display='flex' justifyContent="center">
+                        ? <CircularProgress size={30} />
+                        : selection == props.customNodeElementProps.nodeDatum.attributes?.id && props.customNodeElementProps.nodeDatum.attributes?.nodeType != NodeType.Dialogue
+                            ? <Button>
                                 <AddBoxIcon onClick={() => onCreateNewNode(props.customNodeElementProps.nodeDatum.attributes?.id as string, props.customNodeElementProps.nodeDatum.attributes?.nodeType as NodeType)} />
-                            </Box>
+                            </Button>
                             : null
                     }
                 </Box>
-
-
             </foreignObject>
         </g>
     );

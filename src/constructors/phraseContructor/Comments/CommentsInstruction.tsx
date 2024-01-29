@@ -7,24 +7,21 @@ import { CardActionArea } from '@mui/material';
 import Comments from '../../../Images/Instructions/Comments.png';
 
 export default function CommentsInstruction() {
-  return (
-    <Card >
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="275"
-          image={Comments}
-          alt="green iguana"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Comments
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Any comments to a student
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-  );
+    return (
+        <Card >
+            <CardActionArea>
+                <CardMedia
+                    component="img"
+                    height="275"
+                    image={Comments}
+                    alt="green iguana"
+                />
+                <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                        Add some comments to the phrase or something else
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
+    );
 }
