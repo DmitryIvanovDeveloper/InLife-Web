@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import './App.css';
 import DialogueBuilder from './DialogueTree/DialogueBuilder';
+import { Routes as LocalRoutes } from './Routes';
 import SignIn from './components/Authentication/SignIn';
 import SignUpStudent from './components/Authentication/SignUpStudent';
 import SignUpTeacher from './components/Authentication/SignUpTeacher';
-import TeacherProfile from './components/Teacher/TeacherProfile';
-import { useNavigate, Routes, Route, useLocation } from "react-router-dom";
-import { Routes as LocalRoutes } from './Routes';
 import ProfileEditor from './components/Profile/ProfileEditor';
 import StudentProfile from './components/Student/StudentProfile';
-import './App.css';
+import TeacherProfile from './components/Teacher/TeacherProfile';
 
 export function App() {
     const navigate = useNavigate();

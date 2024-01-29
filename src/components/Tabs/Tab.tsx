@@ -1,17 +1,17 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { useTeacher } from '../../Data/useTeacher';
-import { useStudents } from '../../Data/useStudents';
-import { useDialogues } from '../../Data/useDialogues';
-import { Button, Grid } from '@mui/material';
-import CopyToClipboardButton from '../CopyToClipboard/CopyToClipboard';
-import { Routes } from '../../Routes';
-import { useNavigate } from 'react-router-dom';
-import StudentCard from '../Student/Student';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import { Button, Grid } from '@mui/material';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDialogues } from '../../Data/useDialogues';
+import { useStudents } from '../../Data/useStudents';
+import { useTeacher } from '../../Data/useTeacher';
+import { Routes } from '../../Routes';
+import CopyToClipboardButton from '../CopyToClipboard/CopyToClipboard';
+import StudentCard from '../Student/Student';
 
 interface TabPanelProps {
     children?: React.ReactNode;

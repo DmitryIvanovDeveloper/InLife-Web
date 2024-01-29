@@ -1,23 +1,22 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import ISignInModel from '../../ThereGame.Business/Models/ISignInModel';
-import useAuthenticationQueriesApi from '../../ThereGame.Api/Queries/AuthenticationQueriesApi';
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../Routes';
+import useAuthenticationQueriesApi from '../../ThereGame.Api/Queries/AuthenticationQueriesApi';
+import ISignInModel from '../../ThereGame.Business/Models/ISignInModel';
+import { RoleType } from '../../ThereGame.Business/Util/Role';
 import { Status } from '../../ThereGame.Infrastructure/Statuses/Status';
 import { StatusDescription } from '../../ThereGame.Infrastructure/Statuses/StatusDescription';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { RoleType } from '../../ThereGame.Business/Util/Role';
 
 const defaultTheme = createTheme();
 

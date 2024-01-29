@@ -1,4 +1,3 @@
-import * as React from 'react';
 import AspectRatio from '@mui/joy/AspectRatio';
 import Box from '@mui/joy/Box';
 import Card, { CardProps } from '@mui/joy/Card';
@@ -6,9 +5,10 @@ import CardContent from '@mui/joy/CardContent';
 import IconButton from '@mui/joy/IconButton';
 import LinearProgress from '@mui/joy/LinearProgress';
 import Typography from '@mui/joy/Typography';
+import * as React from 'react';
 
-import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 
 export default function FileUpload(

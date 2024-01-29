@@ -3,22 +3,22 @@ import BusStation from '../Images/Locations/BusStation.png';
 //@ts-ignore
 import FitnessTraier from '../Images/Locations/FitnessTrainer.png';
 //@ts-ignore
-import WalkerMan from '../Images/Locations/Walker.png';
+import AutoMechanic from "../Images/Locations/AutoMechanic.png";
+import ConstructionZoneForeman from "../Images/Locations/ConstructionZoneForeman.png";
 import FountainOldMan from '../Images/Locations/FountainOldMan.png';
-import TrafficControllOfficer from "../Images/Locations/TrafficControllOfficer.png"
-import Stranger from "../Images/Locations/StreetStranger.png"
-import TrafficIncidentPoliceWoman from "../Images/Locations/TrafficIncidentPoliceWoman.png"
-import TrafficIncidentDoctor from "../Images/Locations/TrafficIncidentDoctor.png"
-import StreetOldman from "../Images/Locations/StreetOldman.png"
-import HospitalDoctor from "../Images/Locations/HospitalDoctor.png"
-import HospitalNurse from "../Images/Locations/HospitalNurse.png"
-import StreetWalkerWoman from "../Images/Locations/StreetWalkerWoman.png"
-import AutoMechanic from "../Images/Locations/AutoMechanic.png"
-import PoliceStationPoliceMan from "../Images/Locations/PoliceStationPoliceman.png"
-import PoliceStationSwat from "../Images/Locations/PoliceStationSwat.png"
-import PoliceStationDetective from "../Images/Locations/PoliceStationDetective.png"
-import PoliceStationOfficer from "../Images/Locations/PoliceStationOfficer.png"
-import ConstructionZoneForeman from "../Images/Locations/ConstructionZoneForeman.png"
+import HospitalDoctor from "../Images/Locations/HospitalDoctor.png";
+import HospitalNurse from "../Images/Locations/HospitalNurse.png";
+import PoliceStationDetective from "../Images/Locations/PoliceStationDetective.png";
+import PoliceStationOfficer from "../Images/Locations/PoliceStationOfficer.png";
+import PoliceStationPoliceMan from "../Images/Locations/PoliceStationPoliceman.png";
+import PoliceStationSwat from "../Images/Locations/PoliceStationSwat.png";
+import StreetOldman from "../Images/Locations/StreetOldman.png";
+import Stranger from "../Images/Locations/StreetStranger.png";
+import StreetWalkerWoman from "../Images/Locations/StreetWalkerWoman.png";
+import TrafficControllOfficer from "../Images/Locations/TrafficControllOfficer.png";
+import TrafficIncidentDoctor from "../Images/Locations/TrafficIncidentDoctor.png";
+import TrafficIncidentPoliceWoman from "../Images/Locations/TrafficIncidentPoliceWoman.png";
+import WalkerMan from '../Images/Locations/Walker.png';
 
 import { GenderType } from './GenderType';
 

@@ -1,11 +1,11 @@
 import { injectable } from "inversify";
+import "reflect-metadata";
+import { RoutesAPI } from "../../Routes";
 import IAuthenticationService from "../../ThereGame.Business/Domain/Util/Services/IAuthenticationService";
 import TypedResult from "../Statuses/Result";
 import { Status } from "../Statuses/Status";
 import ISignInRequestDto from "./Dto/ISignInRequestDto";
 import ISignUpRequestDto from "./Dto/ISignUpRequestDto";
-import "reflect-metadata";
-import { RoutesAPI } from "../../Routes";
 
 @injectable()
 export default class AuthenticationService implements IAuthenticationService {

@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import ConfirmToDeleteModalScreen from "../ConfirmToDeleteModalScreen";
 
 export interface IDeleteButton {

@@ -1,7 +1,6 @@
-import React from "react";
+import { Box } from "@mui/material";
 import Carousel from "react-elastic-carousel";
 import { Locations } from "../Data/Locations";
-import { Box } from "@mui/material";
 
 const breakPoints = [
     { width: 2, itemsToShow: 1,  },

@@ -1,32 +1,31 @@
-import { Alert, Box, Button, Divider, Tab, TextField } from "@mui/material";
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import { Alert, Box, Button, Divider, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import SaveButton from "../../components/Button/SaveButton";
-import { useSelection } from "../../Data/useSelection";
+import { v4 as uuidv4 } from 'uuid';
+import { LanguageType } from "../../Data/LanguageType";
 import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
+import { useSelection } from "../../Data/useSelection";
+import { useTreeState } from "../../Data/useTreeState";
+import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
+import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
-import MistakeExplanationConstructor from "./MistakeExplanationsConstructor";
-import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
-import { LanguageType } from "../../Data/LanguageType";
-import { v4 as uuidv4 } from 'uuid';
-import PhraseContructor from "../PhraseContructor/PhraseContructor";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
-import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
-import AppBarDeleteButton from "../../components/AppBarDeleteButton";
-import LinarProgressCustom from "../../components/CircularProgress";
-import { useTreeState } from "../../Data/useTreeState";
-import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import ChatGptService from "../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";
 import IChatGPTResponseDto, { IDataResponse } from "../../ThereGame.Infrastructure/Services/ChatGpt/Dtos/IChatGptResponseDto";
-import TabList from "@mui/lab/TabList";
-import TabContext from "@mui/lab/TabContext";
-import TabPanel from "@mui/lab/TabPanel";
-import TensesListInfo from "./TensesList/TensesListInfo";
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
+import AppBarDeleteButton from "../../components/AppBarDeleteButton";
+import SaveButton from "../../components/Button/SaveButton";
+import LinarProgressCustom from "../../components/CircularProgress";
+import PhraseConstructor from "../phraseContructor/PhraseConstructor";
 import EquivalentAnswersInfo from "./Answer/AnswersInfo";
 import PossibleWordsToUseInfo from "./PossibleWordsToUse/PossibleWordsToUseInfo";
+import TensesListInfo from "./TensesList/TensesListInfo";
 import TranslatesInfo from "./Translates/TranslatesInfo";
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -83,7 +82,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             selected: event.target.id
         }));
 
-        setDialogueItemConstructor(() => <PhraseContructor dialogueId={props.dialogueId} id={event.target.id} parentId={props.parentId} />);
+        setDialogueItemConstructor(() => <PhraseConstructor dialogueId={props.dialogueId} id={event.target.id} parentId={props.parentId} />);
     }
 
     const onWordsToUseChange = (wordsToUse: string) => {

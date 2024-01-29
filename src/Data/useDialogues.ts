@@ -1,9 +1,8 @@
-import { dialoguesTemplate } from './DialogueData';
-import { atom, selectorFamily, useRecoilState, useRecoilValue } from 'recoil'
-import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel'
-import IPhraseModel from '../ThereGame.Business/Models/IPhraseModel'
-import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel'
+import { atom, selectorFamily, useRecoilState, useRecoilValue } from 'recoil';
+import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel';
 import IDialogueItemModel from '../ThereGame.Business/Models/IDialogueItemModel';
+import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
+import IPhraseModel from '../ThereGame.Business/Models/IPhraseModel';
 
 export type IUpdatePhraseItemInput = {
     readonly dialogueId?: string

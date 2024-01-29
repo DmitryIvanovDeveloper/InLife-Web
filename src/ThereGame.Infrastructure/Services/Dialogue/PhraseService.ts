@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
+import "reflect-metadata";
+import { RoutesAPI } from "../../../Routes";
 import IPhraseRequestDto from "../../../ThereGame.Api/Util/Mapping/RequestDtos/IPhraseRequestDto";
 import IPhraseService from "../../../ThereGame.Business/Domain/Util/Services/IPhraseService";
 import TypedResult from "../../Statuses/Result";
 import { Status } from "../../Statuses/Status";
-import "reflect-metadata";
-import { RoutesAPI } from "../../../Routes";
 
 //@ts-ignore
 @injectable()

@@ -1,10 +1,10 @@
 import { injectable } from "inversify";
-import IDialogueService from "../../../ThereGame.Business/Domain/Util/Services/IDialogueService";
-import { ICreateDialogueRequestDto, IUpdateDialogueRequestDto } from "../../../ThereGame.Api/Util/Mapping/RequestDtos/IDialogueRequestsDto";
-import TypedResult from "../../Statuses/Result";
-import { Status } from "../../Statuses/Status";
 import "reflect-metadata";
 import { RoutesAPI } from "../../../Routes";
+import { ICreateDialogueRequestDto, IUpdateDialogueRequestDto } from "../../../ThereGame.Api/Util/Mapping/RequestDtos/IDialogueRequestsDto";
+import IDialogueService from "../../../ThereGame.Business/Domain/Util/Services/IDialogueService";
+import TypedResult from "../../Statuses/Result";
+import { Status } from "../../Statuses/Status";
 
 @injectable()
 export default class DialogueService implements IDialogueService {

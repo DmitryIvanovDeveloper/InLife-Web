@@ -1,8 +1,6 @@
-import * as React from 'react';
+import { Avatar, Box, Button, Card, Grid, Switch, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Button, Box, Grid, Card, Switch, Avatar, Typography } from '@mui/material';
 import { useStudents } from '../../Data/useStudents';
-import DevidedLabel from '../Headers/DevidedLabel';
 
 export interface IStudentListProps {
     studentList: string[]

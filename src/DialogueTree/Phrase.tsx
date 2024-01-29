@@ -1,11 +1,11 @@
 import { Box, Grid } from "@mui/material";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import { useState } from "react";
+import PhraseConstructor from "../Constructors/phraseContructor/PhraseConstructor";
 import { useDialogueItemConstructor, usePhrase } from "../Data/useDialogues";
+import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
 import TextButton from "../components/Button/TextButton";
 import Answer from "./Answer";
-import PhraseContructor from "../Constructors/PhraseContructor/PhraseContructor";
-import { useState } from "react";
-import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
 
 export interface IPhraseProps {
     dialogueId: string;
@@ -22,7 +22,7 @@ export default function Phrase(props: IPhraseProps): JSX.Element | null {
         event.stopPropagation();
         event.preventDefault();
 
-        setDialogueItemConstructor(() => <PhraseContructor 
+        setDialogueItemConstructor(() => <PhraseConstructor 
             dialogueId={props.dialogueId} 
             id={phraseRecoil.id}
             parentId={props.parentId}

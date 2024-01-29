@@ -1,10 +1,10 @@
+import { v4 as uuidv4 } from 'uuid';
 import IPhraseService from "../../ThereGame.Business/Domain/Util/Services/IPhraseService";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
+import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
-import { v4 as uuidv4 } from 'uuid';
 import PhraseMapping from "../Util/Mapping/PhraseMapping";
-import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import useTeacherQueriesApi from "./TeacherQueriesApi";
 
 export default function usePhraseQueriesApi() {

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react"
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import Phrase from "./Phrase";
-import TextButton from "../components/Button/TextButton";
-import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues";
+import { useState } from "react";
 import AnswerContructor from "../Constructors/AnswerContructor/AnswerConstructor";
+import { useAnswer, useDialogueItemConstructor } from "../Data/useDialogues";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
+import TextButton from "../components/Button/TextButton";
+import Phrase from "./Phrase";
 
 export interface IAnswerProps {
     dialogueId: string,

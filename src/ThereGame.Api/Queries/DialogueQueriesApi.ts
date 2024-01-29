@@ -1,12 +1,12 @@
-import { Status } from './../../ThereGame.Infrastructure/Statuses/Status';
+import { v4 as uuidv4 } from 'uuid';
+import { useTeacher } from '../../Data/useTeacher';
 import IDialogueService from "../../ThereGame.Business/Domain/Util/Services/IDialogueService";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
+import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel';
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
 import DialogueMapping from "../Util/Mapping/DialogueMapping";
-import { v4 as uuidv4 } from 'uuid';
-import IPhraseModel from '../../ThereGame.Business/Models/IPhraseModel';
-import { useTeacher } from '../../Data/useTeacher';
+import { Status } from './../../ThereGame.Infrastructure/Statuses/Status';
 import useTeacherQueriesApi from './TeacherQueriesApi';
 
 export default function useDialogieQueriesApi() {

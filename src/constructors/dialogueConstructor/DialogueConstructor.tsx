@@ -1,23 +1,22 @@
-import { Alert, Box, Button, Tab, TextField } from "@mui/material";
-import React, { useEffect } from "react";
-import { useState } from "react";
-import SaveButton from "../../components/Button/SaveButton";
-import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
-import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
-import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
-import PhraseContructor from "../PhraseContructor/PhraseContructor";
-import AppBarDeleteButton from "../../components/AppBarDeleteButton";
-import { useTreeState } from "../../Data/useTreeState";
-import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import { useSelection } from "../../Data/useSelection";
-import TabList from "@mui/lab/TabList";
-import TabContext from "@mui/lab/TabContext";
-import TabPanel from "@mui/lab/TabPanel";
-import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
-import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
-import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import { Alert, Box, Button, Tab } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
+import { useSelection } from "../../Data/useSelection";
+import { useTreeState } from "../../Data/useTreeState";
+import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
+import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
+import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
+import AppBarDeleteButton from "../../components/AppBarDeleteButton";
+import SaveButton from "../../components/Button/SaveButton";
 import LinarProgressCustom from "../../components/CircularProgress";
+import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
+import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
+import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
+import PhraseConstructor from '../phraseContructor/PhraseConstructor';
 
 export interface IDialogueConstructor {
     id: string;
@@ -75,7 +74,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
         setSelection(dialogue.phrase.id);
 
-        setDialogueItemConstructor(() => <PhraseContructor
+        setDialogueItemConstructor(() => <PhraseConstructor
             dialogueId={props.id}
             id={dialogue.phrase.id}
             parentId={""}

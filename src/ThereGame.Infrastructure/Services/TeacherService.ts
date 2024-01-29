@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
+import "reflect-metadata";
 import { RoutesAPI } from "../../Routes";
 import ITeacherService from "../../ThereGame.Business/Domain/Util/Services/ITeacherService";
 import TypedResult from "../Statuses/Result";
 import { Status } from "../Statuses/Status";
-import "reflect-metadata";
 import ITeacherRequestDto from "./Dto/ITeacherRequestDto";
 
 @injectable()

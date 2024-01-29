@@ -2,7 +2,6 @@ import { useDialogues } from "../../Data/useDialogues";
 import { useStudents } from "../../Data/useStudents";
 import { useTeacher } from "../../Data/useTeacher";
 import ITeacherService from "../../ThereGame.Business/Domain/Util/Services/ITeacherService";
-import ITeacherModel from "../../ThereGame.Business/Models/ITeacherModel";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { ITeacherBio } from "../../components/Profile/ProfileEditor";
 import { appContainer } from "../../inversify.config";

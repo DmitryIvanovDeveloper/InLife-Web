@@ -1,6 +1,6 @@
-import { Box, Button, Grid, Icon, IconButton, Snackbar } from '@mui/material'
-import { useState } from 'react';
 import LinkIcon from '@mui/icons-material/Link';
+import { Button, Grid, Snackbar } from '@mui/material';
+import { useState } from 'react';
 export interface ICopyToClipboardButtonProps {
     link: string;
 }

@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Card, Typography } from "@mui/material";
+import { Avatar, Card, Typography } from "@mui/material";
 import IStudentModel from "../../ThereGame.Business/Models/IStudentModel";
 
 export interface IStudentCardProps {

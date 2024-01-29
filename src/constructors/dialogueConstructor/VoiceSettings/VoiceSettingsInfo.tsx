@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import VoiceSettingsInstruction from "./VoiceSettingsInstruction";
 import VoiceList from "../../../components/VoiceList/VoiceList";
+import VoiceSettingsInstruction from "./VoiceSettingsInstruction";
 
 
 export interface IVoiceSettingsInfoProps {

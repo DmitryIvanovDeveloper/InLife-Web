@@ -1,5 +1,5 @@
-import { IMistakeExplanationModel } from './IExplanationModel';
 import IDialogueItemModel from './IDialogueItemModel';
+import { IMistakeExplanationModel } from './IExplanationModel';
 import IPhraseModel from './IPhraseModel';
 import ITranslateModel from './ITranslateModel';
 

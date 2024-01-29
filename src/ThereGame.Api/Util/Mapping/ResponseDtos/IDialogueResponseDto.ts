@@ -1,4 +1,3 @@
-import IStudentModel from "../../../../ThereGame.Business/Models/IStudentModel";
 import IPhraseResponseDto from "./IPhraseResponseDto";
 
 export interface IDialogueResponseDto {

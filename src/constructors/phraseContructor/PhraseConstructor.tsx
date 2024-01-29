@@ -29,7 +29,7 @@ export interface IPhraseConstructor {
     setStates?: (states: DialogueItemStateType[]) => void;
 }
 
-export default function PhraseContructor(props: IPhraseConstructor): JSX.Element | null {
+export default function PhraseConstructor(props: IPhraseConstructor): JSX.Element | null {
     const [selection, setSelection] = useSelection();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const phraseQueriesApi = usePhraseQueriesApi();

@@ -1,4 +1,4 @@
-import { ICreateDialogueRequestDto, IDialogueRequestDto, IUpdateDialogueRequestDto } from "../../../../ThereGame.Api/Util/Mapping/RequestDtos/IDialogueRequestsDto";
+import { ICreateDialogueRequestDto, IUpdateDialogueRequestDto } from "../../../../ThereGame.Api/Util/Mapping/RequestDtos/IDialogueRequestsDto";
 import TypedResult from "../../../../ThereGame.Infrastructure/Statuses/Result";
 import { Status } from "../../../../ThereGame.Infrastructure/Statuses/Status";
 

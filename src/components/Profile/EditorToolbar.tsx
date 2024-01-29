@@ -1,13 +1,12 @@
-import * as React from 'react';
 import Box, { BoxProps } from '@mui/joy/Box';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
 import IconButton from '@mui/joy/IconButton';
+import Option from '@mui/joy/Option';
+import Select from '@mui/joy/Select';
 
 import FormatBoldRoundedIcon from '@mui/icons-material/FormatBoldRounded';
 import FormatItalicRoundedIcon from '@mui/icons-material/FormatItalicRounded';
-import StrikethroughSRoundedIcon from '@mui/icons-material/StrikethroughSRounded';
 import FormatListBulletedRoundedIcon from '@mui/icons-material/FormatListBulletedRounded';
+import StrikethroughSRoundedIcon from '@mui/icons-material/StrikethroughSRounded';
 
 export default function EditorToolbar(props: BoxProps) {
     const { sx, ...other } = props;

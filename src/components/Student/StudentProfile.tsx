@@ -1,9 +1,8 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
-import PlayMarket from '../../Images/Stores/Google_Play.png'
-import AppStore from '../../Images/Stores/AppStore.png'
+import * as React from 'react';
+import AppStore from '../../Images/Stores/AppStore.png';
+import PlayMarket from '../../Images/Stores/Google_Play.png';
 
 const style = {
     position: 'absolute' as 'absolute',

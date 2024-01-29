@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import StudentList from "../../../components/StudentList";
 import Switcher from "../../../components/Button/Switcher";
+import StudentList from "../../../components/StudentList";
 import AccessSettingsInsrtuction from "./AccessSettingsInstruction";
 
 export interface IAccessSettingsInfoProps {

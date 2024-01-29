@@ -1,6 +1,5 @@
-import * as React from 'react';
-import Switch from '@mui/material/Switch';
 import { Box, Typography } from '@mui/material';
+import Switch from '@mui/material/Switch';
 
 
 const label = { inputProps: { 'aria-label': 'Color switch demo' } };

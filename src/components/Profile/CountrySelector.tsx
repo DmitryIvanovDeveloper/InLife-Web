@@ -1,8 +1,7 @@
-import * as React from 'react';
+import AspectRatio from '@mui/joy/AspectRatio';
 import Autocomplete from '@mui/joy/Autocomplete';
 import AutocompleteOption from '@mui/joy/AutocompleteOption';
-import AspectRatio from '@mui/joy/AspectRatio';
-import FormControl, { FormControlProps } from '@mui/joy/FormControl';
+import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
 import Typography from '@mui/joy/Typography';

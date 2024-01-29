@@ -1,6 +1,6 @@
+import { Box } from "@mui/material";
 import React, { useState } from "react";
 import AvatarEditor from "./AvatarEditor";
-import { Avatar, Box } from "@mui/material";
 
 export default function ProfileAvatar() {
   const [imageFile, setImageFile] = useState<File>();

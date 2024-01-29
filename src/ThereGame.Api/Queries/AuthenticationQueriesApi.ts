@@ -6,7 +6,6 @@ import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
 import AuthenticationMapping from "../Util/Mapping/AuthenticationMapping";
-import { useNavigate } from "react-router-dom";
 
 export default function useAuthenticationQueriesApi() {
 

@@ -1,10 +1,8 @@
 import ISignInModel from "../../../ThereGame.Business/Models/ISignInModel";
 import ISignUpModel from "../../../ThereGame.Business/Models/ISignUpModel";
-import ITeacherModel from "../../../ThereGame.Business/Models/ITeacherModel";
-import ISignInResponseDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInResponseDto";
 import ISignInRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInRequestDto";
+import ISignInResponseDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignInResponseDto";
 import ISignUpRequestDto from "../../../ThereGame.Infrastructure/Services/Dto/ISignUpRequestDto";
-import { RoleType } from "../../../ThereGame.Business/Util/Role";
 
 export default class AuthenticationMapping {
     requestSignIn(data: ISignInModel): ISignInRequestDto {

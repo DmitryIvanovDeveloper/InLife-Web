@@ -1,4 +1,4 @@
-import { Tabs, Tab } from "@mui/material";
+import { Tab, Tabs } from "@mui/material";
 import { IDialogueModel } from "../ThereGame.Business/Models/IDialogueModel";
 
 export interface IDialogueTabsProps {

@@ -1,18 +1,17 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { useDialogueItemConstructor } from '../Data/useDialogues';
 import { useEffect, useState } from 'react';
-import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
-import LinarProgressCustom from '../components/CircularProgress';
-import LocationCarousel from '../components/LocationCarousel';
-import { Locations } from '../Data/Locations';
-import AppBarCustom from '../components/AppBarCustom';
-import { useTeacher } from '../Data/useTeacher';
-import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
-import DialogueGraph from '../components/GraphTree/DialogueGraph';
 import DialogueConstructor from '../Constructors/DialogueConstructor/DialogueConstructor';
+import { Locations } from '../Data/Locations';
+import { useDialogueItemConstructor } from '../Data/useDialogues';
 import { useSelection } from '../Data/useSelection';
+import { useTeacher } from '../Data/useTeacher';
+import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
+import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
+import AppBarCustom from '../components/AppBarCustom';
+import LinarProgressCustom from '../components/CircularProgress';
+import DialogueGraph from '../components/GraphTree/DialogueGraph';
+import LocationCarousel from '../components/LocationCarousel';
 import DialoguesTab from './DialogesTab';
 
 export interface IDialoguesProps { }

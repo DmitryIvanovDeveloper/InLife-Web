@@ -1,8 +1,7 @@
-import { Box, Grid, TextField, Button } from "@mui/material";
-import React  from "react";
-import Translate from "./Translate";
+import { Box, Button, Grid, TextField } from "@mui/material";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
 import DevidedLabel from "../../components/Headers/DevidedLabel";
+import Translate from "./Translate";
 
 export interface ITranslateConstructor {
     translates: ITranslateModel[];

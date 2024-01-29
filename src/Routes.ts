@@ -20,4 +20,4 @@ const Routes = {
    teacherProfileEditor: "/teacher/profile/editor",
 }
 
-export { RoutesAPI, Routes }
+export { Routes, RoutesAPI }

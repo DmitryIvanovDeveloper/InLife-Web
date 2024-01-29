@@ -1,15 +1,15 @@
 import { Container } from "inversify";
-import { TYPES } from "./types";
+import IAnswerService from "./ThereGame.Business/Domain/Util/Services/IAnswerService";
+import IAuthenticationService from "./ThereGame.Business/Domain/Util/Services/IAuthenticationService";
 import IDialogueService from "./ThereGame.Business/Domain/Util/Services/IDialogueService";
 import IPhraseService from "./ThereGame.Business/Domain/Util/Services/IPhraseService";
+import ITeacherService from "./ThereGame.Business/Domain/Util/Services/ITeacherService";
+import AuthenticationService from "./ThereGame.Infrastructure/Services/AuthenticationService";
+import AnswerService from "./ThereGame.Infrastructure/Services/Dialogue/AnswerService";
 import DialogueService from "./ThereGame.Infrastructure/Services/Dialogue/DialogueService";
 import PhraseService from "./ThereGame.Infrastructure/Services/Dialogue/PhraseService";
-import IAnswerService from "./ThereGame.Business/Domain/Util/Services/IAnswerService";
-import AnswerService from "./ThereGame.Infrastructure/Services/Dialogue/AnswerService";
-import IAuthenticationService from "./ThereGame.Business/Domain/Util/Services/IAuthenticationService";
-import AuthenticationService from "./ThereGame.Infrastructure/Services/AuthenticationService";
-import ITeacherService from "./ThereGame.Business/Domain/Util/Services/ITeacherService";
 import TeacherService from "./ThereGame.Infrastructure/Services/TeacherService";
+import { TYPES } from "./types";
 
 export const appContainer = new Container();
 

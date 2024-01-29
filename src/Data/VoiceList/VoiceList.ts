@@ -1,9 +1,9 @@
 
-import { VoiceOptionsNeuralType } from "./VoiceOptionsNeuralType";
 import { v4 as uuidv4 } from 'uuid';
-import { VoiceOptionsStandartType } from "./VoiceOptionsStandartType";
-import { VoiceOptionsMonoMultyType } from "./VoiceOptionsMonoMultyType";
 import IVoiceOption from "./IVoiceOption";
+import { VoiceOptionsMonoMultyType } from "./VoiceOptionsMonoMultyType";
+import { VoiceOptionsNeuralType } from "./VoiceOptionsNeuralType";
+import { VoiceOptionsStandartType } from "./VoiceOptionsStandartType";
 
 var path = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/audio/PreviewVoices`;
 

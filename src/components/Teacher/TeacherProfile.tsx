@@ -1,10 +1,9 @@
 // IMPORTS
+import { Box, CircularProgress } from "@mui/material";
 import Card from "@mui/material/Card";
-import { Box, CircularProgress, Grid, LinearProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import MenuAppBar from "../AppBars/MenuAppBar";
+import { useEffect, useState } from "react";
 import useTeacherQueriesApi from "../../ThereGame.Api/Queries/TeacherQueriesApi";
+import MenuAppBar from "../AppBars/MenuAppBar";
 import BasicTabs from "../Tabs/Tab";
 
 // STYLES

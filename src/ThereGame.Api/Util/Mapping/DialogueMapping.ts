@@ -1,6 +1,6 @@
 import { IDialogueModel } from "../../../ThereGame.Business/Models/IDialogueModel";
-import { ICreateDialogueRequestDto, IDialogueRequestDto, IUpdateDialogueRequestDto } from "./RequestDtos/IDialogueRequestsDto";
 import PhraseMapping from "./PhraseMapping";
+import { ICreateDialogueRequestDto, IDialogueRequestDto, IUpdateDialogueRequestDto } from "./RequestDtos/IDialogueRequestsDto";
 import { IDialogueResponseDto } from "./ResponseDtos/IDialogueResponseDto";
 
 export default class DialogueMapping {

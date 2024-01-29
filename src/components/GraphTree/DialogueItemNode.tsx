@@ -1,17 +1,17 @@
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { Box, Button, CircularProgress } from "@mui/material";
+import Avatar from '@mui/material/Avatar';
 import { useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
+import AnswerContructor from '../../Constructors/AnswerContructor/AnswerConstructor';
+import DialogueConstructor from '../../Constructors/DialogueConstructor/DialogueConstructor';
+import PhraseConstructor from '../../Constructors/phraseContructor/PhraseConstructor';
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import { useSelection } from "../../Data/useSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import { NodeType } from "./DialogueitemType";
-import AnswerContructor from '../../Constructors/AnswerContructor/AnswerConstructor';
-import DialogueConstructor from '../../Constructors/DialogueConstructor/DialogueConstructor';
-import PhraseContructor from '../../Constructors/PhraseContructor/PhraseContructor';
-import Avatar from '@mui/material/Avatar';
 
 const nodeSize = { x: 200, y: 200 };
 const foreignObjectProps = {
@@ -48,7 +48,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
 
         if (nodeType == NodeType.Phrase) {
             setDialogueItemConstructor(() =>
-                <PhraseContructor
+                <PhraseConstructor
                     id={id}
                     setStates={setStates}
                     dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}

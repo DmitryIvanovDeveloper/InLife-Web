@@ -1,8 +1,7 @@
-import { Box, AppBar, Toolbar, IconButton, Typography, Button } from "@mui/material";
-import React from "react";
-import { Routes } from "../Routes";
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Routes } from "../Routes";
 
 export interface IAppBarCustomProps {
     name: string;

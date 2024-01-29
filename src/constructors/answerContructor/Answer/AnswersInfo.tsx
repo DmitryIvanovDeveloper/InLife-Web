@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import EquivalentTextConstructor from "./EquivalentTextConstructor";
 import EquivalentAnswersInstructions from "./EquivalentAnswersInstructions";
+import EquivalentTextConstructor from "./EquivalentTextConstructor";
 
 export interface IEquivalentAnswersInfoProps {
     texts: string[];
