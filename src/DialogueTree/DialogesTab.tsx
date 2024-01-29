@@ -1,5 +1,6 @@
 import { Tab, Tabs } from "@mui/material";
 import { IDialogueModel } from "../ThereGame.Business/Models/IDialogueModel";
+import { useEffect } from "react";
 
 export interface IDialogueTabsProps {
     dialogues: IDialogueModel[];
@@ -8,17 +9,15 @@ export interface IDialogueTabsProps {
 }
 
 export default function DialoguesTab(props: IDialogueTabsProps) {
-    
     return (
         <Tabs
-            value={props.dialogue?.name}
-            onChange={() => {}}
+            value={props.dialogue?.id}
             textColor="secondary"
             indicatorColor="secondary"
             aria-label="secondary tabs example"
         >
             {props.dialogues.map(dialogue => (
-                <Tab onClick={() => props.onClick(dialogue)} value={dialogue.name ?? "New dialogue"} label={dialogue.name } />
+                <Tab onClick={() => props.onClick(dialogue)} value={dialogue.id} label={!dialogue.name ? "New dialogue" : dialogue.name } />
             ))}
         </Tabs>
     )
