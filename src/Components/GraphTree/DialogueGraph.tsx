@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
-import Tree, { RawNodeDatum } from "react-d3-tree";
+import Tree, { CustomNodeElementProps, RawNodeDatum } from "react-d3-tree";
 import { useDialogue } from "../../Data/useDialogues";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemNode } from "./DialogueItemNode";
 import { NodeType } from "./DialogueitemType";
+import { Resizable } from 're-resizable';
+
+
+<Resizable
+    defaultSize={{
+        width: 320,
+        height: 200,
+    }}
+></Resizable>
+
 
 export interface IDialoguesGraphProps {
     dialogueId: string
@@ -30,7 +40,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         }
         return node;
     }
-    
+
     function transformAnswer(answer: IAnswerModel): RawNodeDatum {
         var node: RawNodeDatum = {
             name: answer.texts[0],
@@ -56,34 +66,53 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 nodeType: NodeType.Dialogue,
                 parentId: "",
                 dialogueId: diaologueRecoil.id,
-                color: "#ef9a9a"
+                color: "#ef9a9a",
             }
         }
 
         setData(node);
     }, [diaologueRecoil]);
 
+    function node(dialogueItem: CustomNodeElementProps) {
+        if (!diaologueRecoil.voiceSettings &&
+            dialogueItem.nodeDatum.attributes?.nodeType == NodeType.Dialogue) {
+            return <DialogueItemNode customNodeElementProps={dialogueItem}
+            />
+        }
+        if (!!diaologueRecoil.voiceSettings)
+        {
+            return <DialogueItemNode customNodeElementProps={dialogueItem} />
+        }
+
+        return <div />
+    }
     if (!data) {
         return null;
     }
     return (
-        <div  style={{backgroundColor: "#e1f5fe", height: 1000, borderRadius: 15}}>
-            <Tree
-                data={data}
-                nodeSize={nodeSize}
-                translate={{x: 350, y: 50}}
-                rootNodeClassName="node__root"
-                branchNodeClassName="node__branch"
-                leafNodeClassName="node__leaf"
-                pathClassFunc={() => "node__link"}
-                renderCustomNodeElement={(dialogueItem) => (
-                    <DialogueItemNode
-                        customNodeElementProps={dialogueItem}
-                    />
-                )}
-                orientation="vertical"
-            />
-        </div>
+        <Resizable
+            defaultSize={{
+                width: "100%",
+                height: "60%"
+            }}
+        >
+            <div style={{ backgroundColor: "#e1f5fe", borderRadius: 15, height: "100%"}}>
+                <Tree
+                    data={data}
+                    nodeSize={nodeSize}
+                    translate={{ x: 350, y: 50 }}
+                    rootNodeClassName="node__root"
+                    branchNodeClassName="node__branch"
+                    leafNodeClassName="node__leaf"
+                    pathClassFunc={() => "node__link"}
+                    renderCustomNodeElement={(dialogueItem) => {
+                        return node(dialogueItem);
+                    }}
+                    orientation="vertical"
+                />
+            </div>
+        </Resizable>
 
-    );
+
+    )
 }

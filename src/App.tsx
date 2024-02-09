@@ -15,29 +15,28 @@ export function App() {
     const location = useLocation();
 
     useEffect(() => {
-        if (!!localStorage.getItem("[Teacher] - Token")){
+        if (!!localStorage.getItem("[Teacher] - Token")) {
             navigate(LocalRoutes.teacherProfile);
             return;
         }
-        if (location.pathname == "/"){
+        if (location.pathname == "/") {
             navigate(LocalRoutes.signIn);
             return;
         }
     }, []);
 
     return (
-        <React.StrictMode>
-            <Routes>
-                <Route path={LocalRoutes.signIn} element={<SignIn />} />
-                <Route path={LocalRoutes.signUpTeacher} element={<SignUpTeacher />} />
-                <Route path={LocalRoutes.signUpStudent} element={<SignUpStudent />} />
-                <Route path={LocalRoutes.teacherProfile} element={<TeacherProfile />} />
-                <Route path={LocalRoutes.studentProfile} element={<StudentProfile />} />
-                <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
-                <Route path={LocalRoutes.dialoguesBuilder} element={<DialogueBuilder />} />
-            </Routes>
-        </React.StrictMode>
-
+            <React.StrictMode>
+                <Routes>
+                    <Route path={LocalRoutes.signIn} element={<SignIn />} />
+                    <Route path={LocalRoutes.signUpTeacher} element={<SignUpTeacher />} />
+                    <Route path={LocalRoutes.signUpStudent} element={<SignUpStudent />} />
+                    <Route path={LocalRoutes.teacherProfile} element={<TeacherProfile />} />
+                    <Route path={LocalRoutes.studentProfile} element={<StudentProfile />} />
+                    <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
+                    <Route path={LocalRoutes.dialoguesBuilder} element={<DialogueBuilder />} />
+                </Routes>
+            </React.StrictMode>
     );
 }
 
