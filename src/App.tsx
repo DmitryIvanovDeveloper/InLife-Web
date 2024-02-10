@@ -7,8 +7,9 @@ import SignIn from './Components/Authentication/SignIn';
 import SignUpStudent from './Components/Authentication/SignUpStudent';
 import SignUpTeacher from './Components/Authentication/SignUpTeacher';
 import ProfileEditor from './Components/Profile/ProfileEditor';
-import StudentProfile from './Components/Student/StudentProfile';
+import StudentProfile from './Components/Student/Profile/StudentProfile';
 import TeacherProfile from './Components/Teacher/TeacherProfile';
+import StudentDialogueStatistics from './Components/Student/Statistic/StudentDialogueStatistics/StudentDialogueStatistics';
 
 export function App() {
     const navigate = useNavigate();
@@ -35,6 +36,7 @@ export function App() {
                     <Route path={LocalRoutes.studentProfile} element={<StudentProfile />} />
                     <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
                     <Route path={LocalRoutes.dialoguesBuilder} element={<DialogueBuilder />} />
+                    <Route path={LocalRoutes.student} element={<StudentDialogueStatistics />} />
                 </Routes>
             </React.StrictMode>
     );

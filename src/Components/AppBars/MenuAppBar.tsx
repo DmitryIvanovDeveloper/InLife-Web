@@ -8,7 +8,7 @@ import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../Routes';
-import Profile from '../Profile/Profile';
+import TeacherProfile from '../Profile/Profile';
 
 export interface IMenuAppBarProps {
     teacherId: string;
@@ -73,7 +73,7 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
                     </Toolbar>
                 </Box>
                 
-                <Profile />
+                <TeacherProfile />
             </AppBar>
         </Box>
     );

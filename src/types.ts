@@ -3,7 +3,8 @@ const TYPES = {
     PhraseService: Symbol.for("PhraseService"),
     AnswerService: Symbol.for("AnswerService"),
     AuthenticationService: Symbol.for("AuthenticationService"),
-    teacherService: Symbol.for("TeacherService"),
+    TeacherService: Symbol.for("TeacherService"),
+    DialogueStatisticService: Symbol.for("DialogueStatisticService"),
 }
 
 export { TYPES }

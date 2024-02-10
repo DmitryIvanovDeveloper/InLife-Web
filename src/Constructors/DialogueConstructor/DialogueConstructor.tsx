@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
 import { useSelection } from "../../Data/useSelection";
 import { useTreeState } from "../../Data/useTreeState";
-import useDialogieQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
+import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
@@ -36,7 +36,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [tab, setTab] = useState<string>("1");
 
-    const dialogueQueriesApi = useDialogieQueriesApi();
+    const dialogueQueriesApi = useDialogueQueriesApi();
 
     const save = async () => {
         setIsLoading(true);

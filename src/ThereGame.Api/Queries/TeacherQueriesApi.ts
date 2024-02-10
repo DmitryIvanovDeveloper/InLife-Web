@@ -10,7 +10,7 @@ import TeacherMapping from "../Util/Mapping/TeacherMapping";
 
 export default function useTeacherQueriesApi() {
 
-    const teacherService = appContainer.get<ITeacherService>(TYPES.teacherService);
+    const teacherService = appContainer.get<ITeacherService>(TYPES.TeacherService);
 
     const [_, setTeacher] = useTeacher();
     const [dialogue, setDialogues] = useDialogues();

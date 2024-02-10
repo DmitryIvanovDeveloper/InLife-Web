@@ -1,5 +1,6 @@
 const RoutesAPI = {
     dialogues: `${process.env.REACT_APP_SERVER}/api/dialogues/`,
+    dialoguesStatistic: `${process.env.REACT_APP_SERVER}/api/dialogues/statistic`,
     phrases: `${process.env.REACT_APP_SERVER}/api/phrases/`,
     answers: `${process.env.REACT_APP_SERVER}/api/answers/`,
     teachers: `${process.env.REACT_APP_SERVER}/api/teachers/`,
@@ -18,6 +19,7 @@ const Routes = {
    teacherProfile: "/teacher/profile",
    studentProfile: "/student/profile",
    teacherProfileEditor: "/teacher/profile/editor",
+   student: "/student/statistic",
 }
 
 export { Routes, RoutesAPI }
