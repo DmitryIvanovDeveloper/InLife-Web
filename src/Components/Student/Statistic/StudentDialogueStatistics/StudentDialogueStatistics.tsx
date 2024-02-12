@@ -1,11 +1,11 @@
 //@ts-nocheck
 import { useEffect, useState } from "react"
-import { Box, } from "@mui/material";
+import { Box } from "@mui/material";
 import DialogueChat from "./DialogueChat";
 import SplitPane from "react-split-pane";
 import { useDialoguesStatistic } from "../../../../Data/useDialogueStatistic";
-import IDialogueStatistic from "../../../../ThereGame.Business/Models/IDialogueStatistic";
-import StudentStatisticAppBar from "./StudentStatisticAppBar";
+import IStudentDialogueStatisticModel from "../../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
+import StudentStatisticAppBar from "../StudentStatisticAppBar";
 import { isDateSame } from "../../../../ThereGame.Infrastructure/Helpers/DatesCompare";
 import DialoguesStatisticFilter from "./DialoguesStatisticFilter";
 
@@ -13,11 +13,11 @@ export default function StudentDialogueStatistics() {
     const [date, onChangeDate] = useState<Date>(new Date());
     const [dialoguesStatistics, _] = useDialoguesStatistic();
     const [selectedDialogueId, setSelectedDialogueId] = useState<string>("");
-    const [dialoguesStatisticByDate, setDialoguesStatisticByDate] = useState<IDialogueStatistic[]>([]);
+    const [dialoguesStatisticByDate, setDialoguesStatisticByDate] = useState<IStudentDialogueStatisticModel[]>([]);
 
     useEffect(() => {
         var dialogueStatisticsByDate = dialoguesStatistics
-            .filter(dialogueStatistic => isDateSame(dialogueStatistic.date, date as Date))
+            .filter(dialogueStatistic => isDateSame(dialogueStatistic.startDate, date as Date))
         ;
         setDialoguesStatisticByDate(dialogueStatisticsByDate);
         setSelectedDialogueId("");

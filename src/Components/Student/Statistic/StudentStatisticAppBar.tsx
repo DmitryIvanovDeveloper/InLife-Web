@@ -1,7 +1,7 @@
 import { AppBar, Box, Toolbar, IconButton, Grid, Badge, Typography, Avatar } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useStudents } from "../../../../Data/useStudents";
-import IStudentModel from "../../../../ThereGame.Business/Models/IStudentModel";
+import { useStudents } from "../../../Data/useStudents";
+import IStudentModel from "../../../ThereGame.Business/Models/IStudentModel";
 import { useLocation } from "react-router-dom";
 
 export default function StudentStatisticAppBar() {

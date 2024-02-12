@@ -1,7 +1,7 @@
 import { atom, selectorFamily, useRecoilState, useRecoilValue } from "recoil";
-import IDialogueStatistic from "../ThereGame.Business/Models/IDialogueStatistic";
+import IStudentDialogueStatisticModel from "../ThereGame.Business/Models/IStudentDialogueStatisticModel";
 
-const dialogueStatisticAtom = atom<IDialogueStatistic[]>({
+const dialogueStatisticAtom = atom<IStudentDialogueStatisticModel[]>({
     key: 'dialogueStatisticAtom',
     default: [],
 })
@@ -13,13 +13,13 @@ export function useDialoguesStatistic() {
     return useRecoilState(dialogueStatisticAtom);
 }
 
-const dialogueStatisticSelectorFamily = selectorFamily<IDialogueStatistic, string>({
+const dialogueStatisticSelectorFamily = selectorFamily<IStudentDialogueStatisticModel, string>({
     key: 'dialogueStatisticSelectorFamily',
     get: (dialogueId: string) => ({ get }) => {
         const dialogues = get(dialogueStatisticAtom);
         console.log(dialogues);
         console.log(dialogueId);
-        return dialogues.find(dialogue => dialogue.id == dialogueId) as IDialogueStatistic
+        return dialogues.find(dialogue => dialogue.dialogueId == dialogueId) as IStudentDialogueStatisticModel
     },
     dangerouslyAllowMutability: true,
 });

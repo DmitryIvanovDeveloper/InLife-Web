@@ -1,11 +1,11 @@
 import { useDialoguesStatistic } from "../../Data/useDialogueStatistic";
 import { appContainer } from "../../inversify.config";
-import IDialogueStatisticService from "../../ThereGame.Business/Domain/Util/Services/IDialogueStatisticService";
+import IStudentDialogueStatisticService from "../../ThereGame.Business/Domain/Util/Services/IDialogueStatisticService";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import { TYPES } from "../../types";
 
 export default function useDialogueStatisticApi() {
-    const dialogueStatisticService = appContainer.get<IDialogueStatisticService>(TYPES.DialogueStatisticService);
+    const dialogueStatisticService = appContainer.get<IStudentDialogueStatisticService>(TYPES.DialogueStatisticService);
     const [_, setDialoguesStatistic] = useDialoguesStatistic();
 
     return {
