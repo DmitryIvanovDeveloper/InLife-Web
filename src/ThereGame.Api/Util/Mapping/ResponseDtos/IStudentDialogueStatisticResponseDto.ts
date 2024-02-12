@@ -7,6 +7,7 @@ export default interface IStudentDialogueStatisticResponseDto {
 }
 
 export interface IDialogueHistoryDto {
+    orderId: number,
     phraseId: string;
     phrase: string;
     answers: string[]

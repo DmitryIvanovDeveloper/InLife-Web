@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { MessageBox } from 'react-chat-elements'
 import IStudentDialogueStatisticModel from '../../../../ThereGame.Business/Models/IStudentDialogueStatisticModel';
@@ -11,7 +11,6 @@ import IStudentModel from '../../../../ThereGame.Business/Models/IStudentModel';
 import moment from 'moment';
 
 import 'react-chat-elements/dist/main.css'
-import { green } from '@mui/material/colors';
 
 export interface IDialogueChatProps {
     dialogueStatisticId: string;
@@ -29,14 +28,19 @@ export default function DialogueChat(props: IDialogueChatProps) {
     const [dialogueStatisticByTime, setDialoguesStatisticByTime] = useState<IStudentDialogueStatisticModel | null>();
     const [student, setStudent] = useState<IStudentModel>();
     const [spentTime, setSpentTime] = useState<number>();
-
     const setDialogueParameters = (date: Date, time: number) => {
         setSelectedStartDate(date);
         setDialogueTime(time);
     }
 
     useEffect(() => {
-        var dialoguesStatisticByTime = props.dialogueStatisticByDate.find(dialogueStatistic => dialogueStatistic.startDate.getTime() == dialogueTime);
+        if (!dialogueTime) {
+            return;
+        }
+        
+        var dialoguesStatisticByTime = props.dialogueStatisticByDate
+            .find(dialogueStatistic => dialogueStatistic.startDate.getTime() == dialogueTime);
+
         setDialoguesStatisticByTime(dialoguesStatisticByTime);
     }, [dialogueTime]);
 
@@ -52,9 +56,29 @@ export default function DialogueChat(props: IDialogueChatProps) {
     }, []);
 
     useEffect(() => {
-        var spentTime = moment(dialogueStatisticByTime?.startDate).diff(dialogueStatisticByTime?.endDate, 'minutes');
-        setSpentTime(spentTime);
-    }, [dialogueTime]);
+        var spentTime = moment(dialogueStatisticByTime?.endDate).diff(dialogueStatisticByTime?.startDate, 'seconds');
+      
+        setSpentTime(convertSecondsToMinutes(spentTime));
+    }, [dialogueTime, dialogueStatisticByTime]);
+
+    const convertSecondsToMinutes = (seconds: number) => {
+        var time_s = seconds;
+        var minute = Math.floor(time_s / 60);
+        var rest_seconds = time_s % 60;
+
+       return minute.toString().padStart(2, '0') + ":" + rest_seconds.toString().padStart(2, '0');
+    }
+
+    const sort = (array: any[] | undefined): any[] => {
+        if(!array){
+            return []
+        }
+
+        return [...array].sort((a, b) => {
+            if (!a || !b) return 0;
+            return a.orderId - b.orderId;
+        })
+    }
 
     return (
         <Box>
@@ -75,41 +99,46 @@ export default function DialogueChat(props: IDialogueChatProps) {
                     </Tab>
                 ))}
             </Tabs>
+            <Box
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+            flexDirection='column'
+            >
+                <Typography>spentTime</Typography>
+                <Typography>{spentTime}</Typography>
+            </Box>
+
 
             <Box
-                sx={{ 
-                    backgroundColor: "#e0f2f1", 
+                sx={{
+                    backgroundColor: "#e0f2f1",
                     borderRadius: 1,
                     padding: 2,
                     margin: 2,
-                 }}
-
+                }}
             >
-                {dialogueStatisticByTime?.dialogueHistory.map(phrase => (
-                    <Box>
-                        <MessageBox
-                            title={Locations.find(location => location.id == dialogueRecoil.levelId)?.name}
-                            position={"left"}
-                            type={"text"}
-                            text={phrase.phrase}
-                        />
-                        {phrase.answers
-
-                            .map(answer => (
-                                <MessageBox
-                                    title={`${student?.name} ${student?.lastName}`}
-                                    position={"right"}
-                                    type={"text"}
-                                    text={answer.answer}
-                                />
-                            ))
-                            .sort(((a, b) => a.orderId > b.orderId ? 1 : -1))
-                        }
-
-                    </Box>
-                ))}
+                {sort(dialogueStatisticByTime?.dialogueHistory).map(history => (
+                        <Box>
+                            <MessageBox
+                                title={Locations.find(location => location.id == dialogueRecoil.levelId)?.name}
+                                position={"left"}
+                                type={"text"}
+                                text={history.phrase}
+                            />
+                            {sort(history.answers).map(answer => (
+                                    <MessageBox
+                                        title={`${student?.name} ${student?.lastName}`}
+                                        position={"right"}
+                                        type={"text"}
+                                        text={answer.text}
+                                    />
+                                ))
+                            }
+                        </Box>
+                    ))}
             </Box>
-
         </Box>
     )
 }
+

@@ -7,6 +7,7 @@ export default interface IStudentDialogueStatisticModel {
 }
 
 export interface IDialogueHistory {
+    orderId: number
     phraseId: string;
     phrase: string;
     answers: IStudentAnswer[]
@@ -15,5 +16,5 @@ export interface IDialogueHistory {
 export interface IStudentAnswer
 {
     orderId: number,
-    answer: string
+    text: string
 }

@@ -2,11 +2,13 @@ import { AppBar, Box, Toolbar, IconButton, Grid, Badge, Typography, Avatar } fro
 import { useEffect, useState } from "react";
 import { useStudents } from "../../../Data/useStudents";
 import IStudentModel from "../../../ThereGame.Business/Models/IStudentModel";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import { Routes } from "../../../Routes";
 
 export default function StudentStatisticAppBar() {
     const location = useLocation();
-
+    const navigate = useNavigate();
     const [students, setStudents] = useStudents();
     const [student, setStudent] = useState<IStudentModel>();
 
@@ -17,37 +19,29 @@ export default function StudentStatisticAppBar() {
     }, []);
 
     return (
-        <AppBar position="static" variant='outlined'>
-        <Box display='flex' justifyContent='flex-end'>
-            <Toolbar>
-                <IconButton
-                    size="large"
-                    edge="end"
-                    color="inherit"
-                    aria-label="menu"
-                >
-                </IconButton>
+        <Box sx={{ flexGrow: 1, display: "flex", maxHeight: "60px" }}>
 
-            </Toolbar>
+            <AppBar position="static" sx={{ borderRadius: 1 }}>
+
+                <Toolbar>
+                    <IconButton onClick={() => navigate(Routes.teacherProfile)}>
+                        <HomeRoundedIcon />
+                    </IconButton>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                    >
+                    </IconButton>
+
+                    <Typography align="center" variant="h6" component="div" sx={{ flexGrow: 1, pr: 3 }}>
+                        Dialogues statistic
+                    </Typography>
+                    <Typography>{student?.name}&nbsp;{student?.lastName}</Typography>
+                </Toolbar>
+            </AppBar>
         </Box>
-        <Grid item sx={{ p: "1.5rem 0rem", textAlign: "center" }}>
-            <Badge
-                overlap="circular"
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            >
-                <Avatar
-                    sx={{ width: 100, height: 100, mb: 1.5 }}
-                    src={student?.avatar}
-                ></Avatar>
-            </Badge>
-
-            <Typography variant="h6">
-                {student?.name}&nbsp;{student?.lastName}
-            </Typography>
-
-            <Typography color="text.secondary">{student?.email}</Typography>
-        </Grid>
-
-    </AppBar>
     )
 }

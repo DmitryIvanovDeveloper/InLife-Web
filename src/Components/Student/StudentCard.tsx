@@ -16,10 +16,9 @@ export default function StudentCard(props: IStudentCardProps) {
 
     const openStudentPage = async () => {
         const status = await dialogueStatisticApi.get(props.student.id);
-        console.log(status);
         if (status == Status.OK) {
             navigate({
-                pathname: Routes.student,
+                pathname: Routes.studentDialoguesStatistic,
                 search: `id=${props.student.id}`
             })
         }

@@ -16,6 +16,7 @@ export default class StudentDialogueStatisticMapping {
     private ResponseDialogueHistories(dialogueHistoriesDto: IDialogueHistoryDto[]): IDialogueHistory[] {
         return dialogueHistoriesDto.map(dialogueHistory => {
             return {
+                orderId: dialogueHistory.orderId,
                 phraseId: dialogueHistory.phraseId,
                 phrase: dialogueHistory.phrase,
                 answers: dialogueHistory.answers.map(answer => this.responseAnswers(answer)),
@@ -27,7 +28,7 @@ export default class StudentDialogueStatisticMapping {
         var parsedAnswer = JSON.parse(answer);
         return {
             orderId: parsedAnswer.OrderId,
-            answer: parsedAnswer.Answer
+            text: parsedAnswer.Text
         }
     }
 }

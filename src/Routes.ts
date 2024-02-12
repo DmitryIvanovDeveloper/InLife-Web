@@ -20,7 +20,7 @@ const Routes = {
    teacherProfile: "/teacher/profile",
    studentProfile: "/student/profile",
    teacherProfileEditor: "/teacher/profile/editor",
-   student: "/student/statistic",
+   studentDialoguesStatistic: "/student/statistics/dialogues",
 }
 
 export { Routes, RoutesAPI }

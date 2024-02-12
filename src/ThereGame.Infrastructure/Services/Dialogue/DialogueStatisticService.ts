@@ -12,15 +12,18 @@ export default class StudentDialogueStatisticService implements IStudentDialogue
     public async GetByStudentId(id: string): Promise<TypedResult<Status>> {
         try {
             var response = await fetch(`${RoutesAPI.dialoguesStatistic}?id=${id}`);
-            if (response.status == 204)
-            {
+            if (response.status == 204) {
                 return new TypedResult<Status>(Status.NoContent);
             }
-            
-            var data = await response.json();
+            if (response.status == 200) {
+                var data = await response.json();
 
-            var studentDialoguesStatistic = new StudentDialogueStatisticMapping().Response(data);
-            return new TypedResult<Status>(Status.OK, studentDialoguesStatistic);
+                var studentDialoguesStatistic = new StudentDialogueStatisticMapping().Response(data);
+                return new TypedResult<Status>(Status.OK, studentDialoguesStatistic);
+            }
+
+            return new TypedResult<Status>(Status.Unknowed);
+
         }
         catch (error) {
             return new TypedResult<Status>(Status.InternalServerError);
