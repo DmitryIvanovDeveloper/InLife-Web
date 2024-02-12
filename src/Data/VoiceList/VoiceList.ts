@@ -38,25 +38,26 @@ export const VoicesOptions: IVoiceOption[] = [{
         }
     })
 },
-{
-    id: uuidv4(),
-    type: "Standard",
-    voices: voiceOptionsStandartType.map(type => {
-        return {
-            id: uuidv4(),
-            name: type,
-            path: voiceOptionsStandartPath
-        }
-    })
-},
-{
-    id: uuidv4(),
-    type: "MonoMulti",
-    voices: voiceOptionsMonoMultyType.map(type => {
-        return {
-            id: uuidv4(),
-            name: type,
-            path: voiceOptionsMonoMultyPath
-        }
-    })
-}]
+// {
+//     id: uuidv4(),
+//     type: "Standard",
+//     voices: voiceOptionsStandartType.map(type => {
+//         return {
+//             id: uuidv4(),
+//             name: type,
+//             path: voiceOptionsStandartPath
+//         }
+//     })
+// },
+// {
+//     id: uuidv4(),
+//     type: "MonoMulti",
+//     voices: voiceOptionsMonoMultyType.map(type => {
+//         return {
+//             id: uuidv4(),
+//             name: type,
+//             path: voiceOptionsMonoMultyPath
+//         }
+//     })
+// }
+]

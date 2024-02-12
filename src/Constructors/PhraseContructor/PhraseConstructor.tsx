@@ -244,13 +244,13 @@ export default function PhraseConstructor(props: IPhraseConstructor): JSX.Elemen
                 <TabContext value={tab}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList onChange={handleChange} aria-label="lab API tabs example">
-                            <Tab label="Pharse" value="1" />
+                            <Tab label="Phrase" value="1" />
                             {!phrase.text
                                 ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
                                 : null
                             }
 
-                            <Tab label="Pharse tenseses" value="2" />
+                            <Tab label="Phrase tenseses" value="2" />
                             {phrase.tensesList.length == 0
                                 ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
                                 : null

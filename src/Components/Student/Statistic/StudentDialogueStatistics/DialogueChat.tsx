@@ -82,7 +82,6 @@ export default function DialogueChat(props: IDialogueChatProps) {
 
     return (
         <Box>
-
             <Tabs
                 color='white'
                 value={selctedStartDate}
@@ -105,7 +104,7 @@ export default function DialogueChat(props: IDialogueChatProps) {
             alignItems='center'
             flexDirection='column'
             >
-                <Typography>spentTime</Typography>
+                <Typography>Spent Time</Typography>
                 <Typography>{spentTime}</Typography>
             </Box>
 
