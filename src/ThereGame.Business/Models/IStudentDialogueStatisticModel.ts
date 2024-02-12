@@ -9,5 +9,11 @@ export default interface IStudentDialogueStatisticModel {
 export interface IDialogueHistory {
     phraseId: string;
     phrase: string;
-    answers: string[]
+    answers: IStudentAnswer[]
+}
+
+export interface IStudentAnswer
+{
+    orderId: number,
+    answer: string
 }

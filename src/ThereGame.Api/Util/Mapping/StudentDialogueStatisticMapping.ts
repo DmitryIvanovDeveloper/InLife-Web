@@ -1,4 +1,4 @@
-import IStudentDialogueStatisticModel, { IDialogueHistory } from "../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
+import IStudentDialogueStatisticModel, { IDialogueHistory, IStudentAnswer } from "../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
 import IStudentDialogueStatisticResponseDto, { IDialogueHistoryDto } from "./ResponseDtos/IStudentDialogueStatisticResponseDto";
 
 export default class StudentDialogueStatisticMapping {
@@ -18,8 +18,16 @@ export default class StudentDialogueStatisticMapping {
             return {
                 phraseId: dialogueHistory.phraseId,
                 phrase: dialogueHistory.phrase,
-                answers: dialogueHistory.answers,
+                answers: dialogueHistory.answers.map(answer => this.responseAnswers(answer)),
             }
         })
+    }
+    private responseAnswers(answer: string): IStudentAnswer
+    {
+        var parsedAnswer = JSON.parse(answer);
+        return {
+            orderId: parsedAnswer.OrderId,
+            answer: parsedAnswer.Answer
+        }
     }
 }

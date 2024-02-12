@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { MessageBox } from 'react-chat-elements'
 import IStudentDialogueStatisticModel from '../../../../ThereGame.Business/Models/IStudentDialogueStatisticModel';
@@ -9,7 +9,6 @@ import { Locations } from '../../../../Data/Locations';
 import { useStudents } from '../../../../Data/useStudents';
 import IStudentModel from '../../../../ThereGame.Business/Models/IStudentModel';
 import moment from 'moment';
-import { v4 as uuidv4 } from 'uuid';
 
 import 'react-chat-elements/dist/main.css'
 
@@ -37,6 +36,7 @@ export default function DialogueChat(props: IDialogueChatProps) {
 
     useEffect(() => {
         var dialoguesStatisticByTime = props.dialogueStatisticByDate.find(dialogueStatistic => dialogueStatistic.startDate.getTime() == dialogueTime);
+        console.log(dialoguesStatisticByTime?.dialogueHistory)
         setDialoguesStatisticByTime(dialoguesStatisticByTime);
     }, [dialogueTime]);
 
@@ -60,8 +60,8 @@ export default function DialogueChat(props: IDialogueChatProps) {
         <Box>
             {props.dialogueStatisticByDate.filter(dialogue => dialogue.dialogueId == props.dialogueStatisticId).map(dialogue => (
                 <Button
-                    variant={dialogue.startDate == selctedTime ? "contained" : "outlined"}
-                    onClick={() => setDialogueParameters(dialogue.startDate, dialogue.startDate.getTime())}
+                    variant={dialogue.startDate.toDateString() == selctedTime ? "contained" : "outlined"}
+                    onClick={() => setDialogueParameters(dialogue.startDate.toString(), dialogue.startDate.getTime())}
                 >
                     {`${dialogue.startDate.getHours()}:${dialogue.startDate.getMinutes()}`}
                 </Button>
@@ -75,17 +75,21 @@ export default function DialogueChat(props: IDialogueChatProps) {
                         type={"text"}
                         text={phrase.phrase}
                     />
-                    {phrase.answers.map(answer => (
-                        <MessageBox
-                            title={`${student?.name} ${student?.lastName}`}
-                            position={"right"}
-                            type={"text"}
-                            text={answer}
-                        />
-                    ))}
+                    {phrase.answers
+                       
+                        .map(answer => (
+                            <MessageBox
+                                title={`${student?.name} ${student?.lastName}`}
+                                position={"right"}
+                                type={"text"}
+                                text={answer.answer}
+                            />
+                        ))
+                        .sort(((a, b) => a.orderId > b.orderId ? 1 : -1))
+                    }
 
                 </Box>
-            )).reverse()}
+            ))}
         </Box>
     )
 }
