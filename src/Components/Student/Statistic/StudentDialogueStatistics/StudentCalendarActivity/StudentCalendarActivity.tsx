@@ -13,7 +13,11 @@ export interface IStudentCalendarActivityProps {
 export default function StudentCalendarActivity(props: IStudentCalendarActivityProps) {
 
     return (
-        <Box display='flex' justifyContent='center'>
+        <Box 
+            display='flex' 
+            justifyContent='center'
+            margin="5px"
+        >
             <Calendar onChange={event => props.onChange(event as Date)} value={props.date as Value} />
         </Box>
     )

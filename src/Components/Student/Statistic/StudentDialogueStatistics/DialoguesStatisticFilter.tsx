@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Tab, Tabs } from "@mui/material";
 import StudentCalendarActivity from "./StudentCalendarActivity/StudentCalendarActivity";
 import IStudentDialogueStatisticModel from "../../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
 import { useDialogues } from "../../../../Data/useDialogues";
@@ -16,27 +16,34 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
     return (
         <Box>
             <StudentCalendarActivity onChange={props.onChangeDate} date={props.date} />
-            {getUnique(props.dialoguesStatisticByDate, "dialogueId").map(dialogueStatistic => (
-                <Button
-                    variant={dialogueStatistic.dialogueId == props.selectedDialogueId ? "contained" : "outlined"}
-                    onClick={() => props.setSelectedDialogueId(dialogueStatistic.dialogueId)}
-                >
-                    {dialogues.find(dialogue => dialogue.id == dialogueStatistic.dialogueId)?.name}
-                </Button>
-            ))}
+            <Tabs
+                value={props.selectedDialogueId}
+                textColor="secondary"
+                indicatorColor="secondary"
+                aria-label="secondary tabs example"
+            >
+                {getUnique(props.dialoguesStatisticByDate, "dialogueId").map(dialogueStatistic => (
+                    <Tab
+                        value={dialogueStatistic.dialogueId}
+                        onClick={() => props.setSelectedDialogueId(dialogueStatistic.dialogueId)}
+                        label={dialogues.find(dialogue => dialogue.id == dialogueStatistic.dialogueId)?.name}
+                    >
+                    </Tab>
+                ))}
+            </Tabs>
+
         </Box>
     )
 }
 
 function getUnique(array, key): IStudentDialogueStatisticModel[] {
     if (typeof key !== 'function') {
-      const property = key;
-      key = function(item) { return item[property]; };
+        const property = key;
+        key = function (item) { return item[property]; };
     }
-    return Array.from(array.reduce(function(map, item) {
-      const k = key(item);
-      if (!map.has(k)) map.set(k, item);
-      return map;
+    return Array.from(array.reduce(function (map, item) {
+        const k = key(item);
+        if (!map.has(k)) map.set(k, item);
+        return map;
     }, new Map()).values());
-  }
-  
+}
