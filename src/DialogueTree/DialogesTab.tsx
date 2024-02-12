@@ -1,6 +1,5 @@
 import { Tab, Tabs } from "@mui/material";
 import { IDialogueModel } from "../ThereGame.Business/Models/IDialogueModel";
-import { useEffect } from "react";
 
 export interface IDialogueTabsProps {
     dialogues: IDialogueModel[];

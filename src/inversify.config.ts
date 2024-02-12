@@ -10,6 +10,8 @@ import DialogueService from "./ThereGame.Infrastructure/Services/Dialogue/Dialog
 import PhraseService from "./ThereGame.Infrastructure/Services/Dialogue/PhraseService";
 import TeacherService from "./ThereGame.Infrastructure/Services/TeacherService";
 import { TYPES } from "./types";
+import IStudentDialogueStatisticService from "./ThereGame.Business/Domain/Util/Services/IDialogueStatisticService";
+import StudentDialogueStatisticService from "./ThereGame.Infrastructure/Services/Dialogue/DialogueStatisticService";
 
 export const appContainer = new Container();
 
@@ -18,5 +20,6 @@ appContainer.bind<IDialogueService>(TYPES.DialogueService).to(DialogueService).i
 appContainer.bind<IPhraseService>(TYPES.PhraseService).to(PhraseService).inSingletonScope();
 appContainer.bind<IAnswerService>(TYPES.AnswerService).to(AnswerService).inSingletonScope();
 appContainer.bind<IAuthenticationService>(TYPES.AuthenticationService).to(AuthenticationService).inSingletonScope();
-appContainer.bind<ITeacherService>(TYPES.teacherService).to(TeacherService).inSingletonScope();
+appContainer.bind<ITeacherService>(TYPES.TeacherService).to(TeacherService).inSingletonScope();
+appContainer.bind<IStudentDialogueStatisticService>(TYPES.DialogueStatisticService).to(StudentDialogueStatisticService).inSingletonScope();
 

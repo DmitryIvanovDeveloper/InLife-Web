@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import * as React from 'react';
-import AppStore from '../../Images/Stores/AppStore.png';
-import PlayMarket from '../../Images/Stores/Google_Play.png';
+import AppStore from '../../../Images/Stores/AppStore.png';
+import PlayMarket from '../../../Images/Stores/Google_Play.png';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -16,7 +16,7 @@ const style = {
     p: 4,
 };
 
-export default function KeepMountedModal() {
+export default function StudentProfile() {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);

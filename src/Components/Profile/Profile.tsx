@@ -1,7 +1,7 @@
 import { Avatar, Badge, Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { useTeacher } from "../../Data/useTeacher";
 
-export default function Profile() {
+export default function TeacherProfile() {
 
     const [teacher] = useTeacher();
 

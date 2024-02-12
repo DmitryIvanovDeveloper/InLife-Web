@@ -11,7 +11,7 @@ import { useStudents } from '../../Data/useStudents';
 import { useTeacher } from '../../Data/useTeacher';
 import { Routes } from '../../Routes';
 import CopyToClipboardButton from '../CopyToClipboard/CopyToClipboard';
-import StudentCard from '../Student/Student';
+import StudentCard from '../Student/StudentCard';
 
 interface TabPanelProps {
     children?: React.ReactNode;

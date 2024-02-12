@@ -6,7 +6,7 @@ import { Locations } from '../Data/Locations';
 import { useDialogueItemConstructor } from '../Data/useDialogues';
 import { useSelection } from '../Data/useSelection';
 import { useTeacher } from '../Data/useTeacher';
-import useDialogieQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
+import useDialogueQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import AppBarCustom from '../Components/AppBarCustom';
 import LinarProgressCustom from '../Components/CircularProgress';
@@ -18,7 +18,7 @@ export interface IDialoguesProps { }
 
 export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
-    const dialogueQueriesApi = useDialogieQueriesApi();
+    const dialogueQueriesApi = useDialogueQueriesApi();
 
     const [teacher] = useTeacher();
 

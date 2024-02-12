@@ -1,5 +1,6 @@
 const RoutesAPI = {
     dialogues: `${process.env.REACT_APP_SERVER}/api/dialogues/`,
+    dialoguesStatistic: `${process.env.REACT_APP_SERVER}/api/students/statistics/dialogues`,
     phrases: `${process.env.REACT_APP_SERVER}/api/phrases/`,
     answers: `${process.env.REACT_APP_SERVER}/api/answers/`,
     teachers: `${process.env.REACT_APP_SERVER}/api/teachers/`,
@@ -7,6 +8,7 @@ const RoutesAPI = {
     authSignIn: `${process.env.REACT_APP_SERVER}/api/auth/sign-in/me`,
     authSignUpTeacher: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/teachers`,
     authSignUpStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/students`,
+    
     chatGPT: "https://api.openai.com/v1/chat/completions"
 }
 
@@ -18,6 +20,7 @@ const Routes = {
    teacherProfile: "/teacher/profile",
    studentProfile: "/student/profile",
    teacherProfileEditor: "/teacher/profile/editor",
+   student: "/student/statistic",
 }
 
 export { Routes, RoutesAPI }

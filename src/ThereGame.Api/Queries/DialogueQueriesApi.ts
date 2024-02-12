@@ -9,7 +9,7 @@ import DialogueMapping from "../Util/Mapping/DialogueMapping";
 import { Status } from './../../ThereGame.Infrastructure/Statuses/Status';
 import useTeacherQueriesApi from './TeacherQueriesApi';
 
-export default function useDialogieQueriesApi() {
+export default function useDialogueQueriesApi() {
     const dialogueService = appContainer.get<IDialogueService>(TYPES.DialogueService);
     var teacherQueriesApi = useTeacherQueriesApi();
     
