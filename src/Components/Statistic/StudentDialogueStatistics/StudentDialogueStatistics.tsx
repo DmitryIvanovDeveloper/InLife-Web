@@ -3,11 +3,11 @@ import { useEffect, useState } from "react"
 import { Box } from "@mui/material";
 import DialogueChat from "./DialogueChat";
 import SplitPane from "react-split-pane";
-import { useDialoguesStatistic } from "../../../../Data/useDialogueStatistic";
-import IStudentDialogueStatisticModel from "../../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
-import StudentStatisticAppBar from "../StudentStatisticAppBar";
-import { isDateSame } from "../../../../ThereGame.Infrastructure/Helpers/DatesCompare";
+import { useDialoguesStatistic } from "../../../Data/useDialogueStatistic";
+import IStudentDialogueStatisticModel from "../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
+import { isDateSame } from "../../../ThereGame.Infrastructure/Helpers/DatesCompare";
 import DialoguesStatisticFilter from "./DialoguesStatisticFilter";
+import StudentStatisticAppBar from "./StudentStatisticAppBar";
 
 export default function StudentDialogueStatistics() {
     const [date, onChangeDate] = useState<Date>(new Date());

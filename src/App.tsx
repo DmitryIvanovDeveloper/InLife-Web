@@ -9,7 +9,7 @@ import SignUpTeacher from './Components/Authentication/SignUpTeacher';
 import ProfileEditor from './Components/Profile/ProfileEditor';
 import StudentProfile from './Components/Student/Profile/StudentProfile';
 import TeacherProfile from './Components/Teacher/TeacherProfile';
-import StudentDialogueStatistics from './Components/Student/Statistic/StudentDialogueStatistics/StudentDialogueStatistics';
+import StudentDialogueStatistics from './Components/Statistic/StudentDialogueStatistics/StudentDialogueStatistics';
 
 export function App() {
     const navigate = useNavigate();

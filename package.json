@@ -48,6 +48,7 @@
     "react-scripts": "5.0.1",
     "react-split-pane": "^0.1.92",
     "react-spring": "^9.7.3",
+    "react-swipeable-views": "^0.14.0",
     "react-test-renderer": "^18.2.0",
     "recoil": "^0.7.7",
     "reflect-metadata": "^0.1.14",

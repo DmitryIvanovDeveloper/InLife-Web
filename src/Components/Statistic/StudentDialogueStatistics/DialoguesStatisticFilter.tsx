@@ -1,8 +1,7 @@
-import { Box, Button, Tab, Tabs } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import StudentCalendarActivity from "./StudentCalendarActivity/StudentCalendarActivity";
-import IStudentDialogueStatisticModel from "../../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
-import { useDialogues } from "../../../../Data/useDialogues";
-import { useEffect } from "react";
+import { useDialogues } from "../../../Data/useDialogues";
+import IStudentDialogueStatisticModel from "../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
 
 export interface IDialoguesStatisticFilterProps {
     setSelectedDialogueId: (dialogueId: string) => void;
