@@ -1,8 +1,6 @@
 import { Box, Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
-import AnswerContructor from '../../Constructors/AnswerContructor/AnswerConstructor';
-import PhraseConstructor from '../../Constructors/PhraseContructor/PhraseConstructor';
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import { useNextDialogueItemSelection, useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
@@ -11,7 +9,7 @@ import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueIte
 import { NodeType } from "./DialogueitemType";
 import { RxAvatar } from "react-icons/rx";
 import { IoMdAddCircle } from "react-icons/io";
-import Constructor from "../../Constructors/UpdatedConstructor/Constructor";
+import Constructor from "../../Constructors/PhraseContructor/Constructor";
 
 const nodeSize = { x: 200, y: 500 };
 const foreignObjectProps = {
@@ -42,32 +40,22 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         setSelection(id);
 
         if (nodeType == NodeType.Dialogue) {
-            setDialogueItemConstructor(() =>
-                <Constructor
-                    dialogueId={id}
-                // setStates={setStates}
-                />);
+            // setDialogueItemConstructor(() =>
+            //     <Constructor
+            //         dialogueId={id}
+            //         // setStates={setStates}
+            //     />);
         }
 
         if (nodeType == NodeType.Phrase) {
             setDialogueItemConstructor(() =>
-                <PhraseConstructor
+                <Constructor
                     id={id}
                     setStates={setStates}
                     dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
                     parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
                 />);
 
-        }
-
-        if (nodeType == NodeType.Answer) {
-            setDialogueItemConstructor(() =>
-                <AnswerContructor
-                    id={id}
-                    setStates={setStates}
-                    dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
-                    parentId={props.customNodeElementProps.nodeDatum.attributes?.parentId as string}
-                />);
         }
     }
 

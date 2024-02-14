@@ -11,19 +11,21 @@ export interface IPossibleWordsToUseInfoProps {
 }
 export default function TranslatesInfo(props: IPossibleWordsToUseInfoProps) {
     return (
-        <Box 
-            display='flex' 
-            justifyContent='center' 
-            alignItems='center' 
+        <Box
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
             flexDirection='column'
         >
-            <TranslatesInstructions />
             <TranslateConstructor
                 translates={props.translates}
                 onAddTranslate={props.onAddTranslate}
                 onDeleteTranslate={props.onDeleteTranslate}
                 onTranslateChange={props.onTranslateChange}
             />
+
+            <TranslatesInstructions />
+
         </Box>
 
     )

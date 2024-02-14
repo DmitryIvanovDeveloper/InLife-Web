@@ -1,13 +1,8 @@
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import { Alert, Box, Button, Divider, Tab } from "@mui/material";
+import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { LanguageType } from "../../Data/LanguageType";
 import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
 import { useTreeState } from "../../Data/useTreeState";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
@@ -18,19 +13,17 @@ import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueIte
 import ChatGptService from "../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";
 import IChatGPTResponseDto, { IDataResponse } from "../../ThereGame.Infrastructure/Services/ChatGpt/Dtos/IChatGptResponseDto";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
-import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
-import SaveButton from "../../Components/Button/SaveButton";
-import LinarProgressCustom from "../../Components/CircularProgress";
-import PhraseConstructor from "../PhraseContructor/PhraseConstructor";
 import EquivalentAnswersInfo from "./Answer/AnswersInfo";
 import PossibleWordsToUseInfo from "./PossibleWordsToUse/PossibleWordsToUseInfo";
 import TensesListInfo from "./TensesList/TensesListInfo";
 import TranslatesInfo from "./Translates/TranslatesInfo";
+import { EditDialogueItemType } from '../models/EditType';
 
 export interface IAnswerContructor {
     dialogueId: string,
     id: string,
     parentId: string,
+    editDialogueItemType: EditDialogueItemType | undefined;
     setStates?: (states: DialogueItemStateType[]) => void;
 }
 
@@ -42,9 +35,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
     const answerQueriesApi = useAnswerQueriesApi();
     const phraseQueriesApi = usePhraseQueriesApi();
-
-    const [treeState, setTreeState] = useTreeState();
-    const [selection, setSelection] = useSelectedDialogueItemSelection();
 
     const [answer, setAnswer] = useState<IAnswerModel>(answerRecoil);
 
@@ -74,17 +64,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsEdited(false);
     }
 
-    const onPhraseButtonClick = (event: any) => {
-        setSelection(event.target.id);
-
-        setTreeState(prev => ({
-            expanded: [...prev.expanded, event.target.id],
-            selected: event.target.id
-        }));
-
-        setDialogueItemConstructor(() => <PhraseConstructor dialogueId={props.dialogueId} id={event.target.id} parentId={props.parentId} />);
-    }
-
     const onWordsToUseChange = (wordsToUse: string) => {
         setAnswer(prev => ({
             ...prev,
@@ -93,7 +72,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
         setIsEdited(false);
     }
-
     // Mistake Explanation
     const onExplanationChange = (event: any, index: number) => {
         var explanation = [...answer.mistakeExplanations];
@@ -294,7 +272,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         )
     }
 
-    function PossibleWordsToUseComponent() {
+    function PossibleWordsComponent() {
         return (
             <PossibleWordsToUseInfo
                 wordsToUse={answer.wordsToUse}
@@ -344,6 +322,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }, []);
 
     useEffect(() => {
+ 
         if (isEdited) {
             return;
         }
@@ -379,86 +358,30 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }
 
     return (
-        <Box
-            component="form"
-            sx={{
-                '& > :not(style)': { m: 1, width: '100%' },
-                p: 5,
-                mb: 2,
-                display: "flex",
-                flexDirection: "column",
-                height: 800,
-                overflow: "hidden",
-                overflowY: "scroll",
-            }}
-            noValidate
-            autoComplete="off"
-        >
-            <AppBarDeleteButton
-                name='Answer Constructor'
-                onDelete={onDelete}
-            />
-
-            {isDeleting
-                ? <LinarProgressCustom name="Deleting" />
-                : null
-            }
-
-            <Box sx={{ width: '100%', typography: 'body1' }}>
-                <TabContext value={tab}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleChange} aria-label="lab API tabs example">
-                            <Tab label="Possible Answers" value="1" />
-                            {!answer.texts.length
-                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
-                                : null
-                            }
-                            <Tab label="Tenses list" value="2" />
-                            {!answer.tensesList.length
-                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
-                                : null
-                            }
-                            <Tab label="Possible words" value="3" />
-                            {!answer.wordsToUse
-                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
-                                : null
-                            }
-                            <Tab label="Translates" value="4" />
-                            {!answer.translates.length
-                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
-                                : null
-                            }
-                        </TabList>
-                    </Box>
-                    <TabPanel value="1">{EquivalentAnswersComponent()}</TabPanel>
-                    <TabPanel value="2">{TensesListComponent()}</TabPanel>
-                    <TabPanel value="3">{PossibleWordsToUseComponent()}</TabPanel>
-                    <TabPanel value="4">{TranslatesComponent()}</TabPanel>
-                </TabContext>
-            </Box>
-
-            <Divider variant="fullWidth" />
-
-            {/* <MistakeExplanationConstructor
+        <Box>
+            {/* <MistakeExplanationConstructor    // Don't remove
                 explanations={answer.mistakeExplanations}
                 onDeleteMistakeExplanation={onDeleteMistakeExplanation}
                 onExplanationChange={onExplanationChange}
                 onAddMistakeExplanation={onAddMistakeExplanation}
             /> */}
 
-            {!isEdited
-                ? <Box>
-                    <Alert severity="warning">The constructor has unsaved changes</Alert>
-                    <Button onClick={reset}>reset all changes</Button>
-                </Box>
-                : <Alert severity="success">The constructor is saved!</Alert>
+            {props.editDialogueItemType == EditDialogueItemType.Answers
+                ? EquivalentAnswersComponent()
+                : null
             }
-
-            <SaveButton
-                onClick={onSave}
-                isLoading={isLoading}
-                isDisabled={false}
-            />
+            {props.editDialogueItemType == EditDialogueItemType.AnswersTenseses
+                ? TensesListComponent()
+                : null
+            }
+            {props.editDialogueItemType == EditDialogueItemType.Translates
+                ? TranslatesComponent()
+                : null
+            }
+            {props.editDialogueItemType == EditDialogueItemType.PossibleWords
+                ? PossibleWordsComponent()
+                : null
+            }
         </Box>
     )
 }

@@ -3,7 +3,6 @@ import DeleteButton from "./Button/DeleteButton";
 
 export interface IAppBarDeleteButtonProps{
     name: string;
-    onDelete: () => void
 }
 export default function AppBarDeleteButton(props: IAppBarDeleteButtonProps) {
     return (
@@ -21,7 +20,6 @@ export default function AppBarDeleteButton(props: IAppBarDeleteButtonProps) {
                     <Typography align="center" variant="h6" component="div" sx={{ flexGrow: 1}}>
                         {props.name}
                     </Typography>
-                    <DeleteButton onClick={(props.onDelete)}/>
                 </Toolbar>
             </AppBar>
         </Box>

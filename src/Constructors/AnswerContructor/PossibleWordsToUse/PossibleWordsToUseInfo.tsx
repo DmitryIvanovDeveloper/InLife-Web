@@ -13,7 +13,6 @@ export default function PossibleWordsToUseInfo(props: IPossibleWordsToUseInfoPro
             alignItems='center' 
             flexDirection='column'
         >
-            <PossibleWordsToUseInstruction />
             <TextField
                 sx={{m: 3}}
                 InputLabelProps={{ shrink: true }}
@@ -25,6 +24,8 @@ export default function PossibleWordsToUseInfo(props: IPossibleWordsToUseInfoPro
                 onChange={(event) => props.onWordsToUseChange(event.target.value)}
                 fullWidth
             ></TextField>
+
+            <PossibleWordsToUseInstruction />
         </Box>
 
     )

@@ -1,7 +1,8 @@
-import { Box, Button, Chip, CircularProgress, Grid, Stack, TextField } from "@mui/material";
+import { Box, Button, Chip, CircularProgress, Grid, IconButton, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTeacher } from "../../../Data/useTeacher";
 import DevidedLabel from "../../../Components/Headers/DevidedLabel";
+import SendIcon from '@mui/icons-material/SendOutlined';
 
 export interface EquivalentTextConstructorProps {
     texts: string[];
@@ -46,22 +47,35 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
     }
 
     return (
-        <Box sx={{width: "100%"}} >
+        <Box sx={{ width: "100%" }} >
             <DevidedLabel name="" />
-            <TextField
-                InputLabelProps={{ shrink: true }}
-                placeholder="Yes, today is a greate day!"
-                value={selectedTextId.text}
-                id="outlined-basic"
-                label="Text"
-                variant="outlined"
-                onChange={(event) => setSelectedTextId(prev => ({
-                    ...prev,
-                    text: event.target.value
-                }))}
-                required={true}
-                fullWidth
-            />
+            <Box
+                display="flex"
+                sx={{ ...commonStyles, borderRadius: '5px', width: "100%" }}
+                justifyContent='space-between'
+                alignItems='center'
+            >
+                <TextField
+                    InputLabelProps={{ shrink: true }}
+                    placeholder="Yes, today is a greate day!"
+                    value={selectedTextId.text}
+                    id="outlined-basic"
+                    variant="outlined"
+                    onChange={(event) => setSelectedTextId(prev => ({
+                        ...prev,
+                        text: event.target.value
+                    }))}
+                    InputProps={{
+                        disableUnderline: true,
+                    }}
+                    required={true}
+                    fullWidth
+                />
+                <IconButton>
+                    <SendIcon />
+                </IconButton>
+            </Box>
+
 
 
             <Box sx={{ pt: 1 }} style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -98,3 +112,12 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
         </Box>
     )
 }
+
+const commonStyles = {
+    bgcolor: 'background.paper',
+    borderColor: 'text.secondary',
+    m: 1,
+    border: 0.1,
+    width: '3rem',
+    height: '3.5rem',
+};

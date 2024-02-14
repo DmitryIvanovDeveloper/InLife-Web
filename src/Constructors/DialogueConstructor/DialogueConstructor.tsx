@@ -16,7 +16,7 @@ import LinarProgressCustom from "../../Components/CircularProgress";
 import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
 import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
-import PhraseConstructor from '../PhraseContructor/PhraseConstructor';
+import Constructor from '../PhraseContructor/Constructor';
 
 export interface IDialogueConstructor {
     id: string;
@@ -74,7 +74,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
         setSelection(dialogue.phrase.id);
 
-        setDialogueItemConstructor(() => <PhraseConstructor
+        setDialogueItemConstructor(() => <Constructor
             dialogueId={props.id}
             id={dialogue.phrase.id}
             parentId={""}
@@ -208,7 +208,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         >
             <AppBarDeleteButton
                 name={`"${dialogue.name}" Settings`}
-                onDelete={onDelete}
             />
 
             {isDeleting

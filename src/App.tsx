@@ -10,7 +10,6 @@ import ProfileEditor from './Components/Profile/ProfileEditor';
 import StudentProfile from './Components/Student/Profile/StudentProfile';
 import TeacherProfile from './Components/Teacher/TeacherProfile';
 import StudentDialogueStatistics from './Components/Statistic/StudentDialogueStatistics/StudentDialogueStatistics';
-import Constructor from './Constructors/UpdatedConstructor/Constructor';
 
 export function App() {
     const navigate = useNavigate();

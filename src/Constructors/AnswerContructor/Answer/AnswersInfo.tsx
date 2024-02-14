@@ -18,7 +18,6 @@ export default function EquivalentAnswersInfo(props: IEquivalentAnswersInfoProps
             alignItems='center' 
             flexDirection='column'
         >
-            <EquivalentAnswersInstructions />
             <EquivalentTextConstructor
                 onChangeEquivalentAnswer={props.onChangeEquivalentAnswer}
                 onAddEquivalentAnswer={props.onAddEquivalentAnswer}
@@ -27,6 +26,8 @@ export default function EquivalentAnswersInfo(props: IEquivalentAnswersInfoProps
                 chatGpt={props.chatGpt}
                 isLoading={props.isLoading}
             />
+            
+            <EquivalentAnswersInstructions />
         </Box>
 
     )
