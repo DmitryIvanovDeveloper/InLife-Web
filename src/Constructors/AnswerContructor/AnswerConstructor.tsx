@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { LanguageType } from "../../Data/LanguageType";
 import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useSelection } from "../../Data/useSelection";
+import { useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
 import { useTreeState } from "../../Data/useTreeState";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
@@ -44,7 +44,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const phraseQueriesApi = usePhraseQueriesApi();
 
     const [treeState, setTreeState] = useTreeState();
-    const [selection, setSelection] = useSelection();
+    const [selection, setSelection] = useSelectedDialogueItemSelection();
 
     const [answer, setAnswer] = useState<IAnswerModel>(answerRecoil);
 

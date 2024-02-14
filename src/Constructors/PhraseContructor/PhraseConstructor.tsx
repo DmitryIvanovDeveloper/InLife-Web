@@ -6,7 +6,7 @@ import { Alert, Box, Button, Divider, Tab } from "@mui/material";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { useDialogue, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
-import { useSelection } from "../../Data/useSelection";
+import { useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
 import { useTreeState } from "../../Data/useTreeState";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
@@ -30,7 +30,7 @@ export interface IPhraseConstructor {
 }
 
 export default function PhraseConstructor(props: IPhraseConstructor): JSX.Element | null {
-    const [selection, setSelection] = useSelection();
+    const [selection, setSelection] = useSelectedDialogueItemSelection();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const phraseQueriesApi = usePhraseQueriesApi();
     const answerQueriesApi = useAnswerQueriesApi();
@@ -135,7 +135,7 @@ export default function PhraseConstructor(props: IPhraseConstructor): JSX.Elemen
     function PhraseComponent() {
         return (
             <PhraseInfo
-                phrase={phrase.text}
+                phrase={phrase}
                 onChangeText={onChangeText}
             />
         )

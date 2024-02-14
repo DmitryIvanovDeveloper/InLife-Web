@@ -145,8 +145,7 @@ export default function DialogueChat(props: IDialogueChatProps) {
                                 type={"text"}
                                 text={answer.text}
                             />
-                        ))
-                        }
+                        ))}
                     </Box>
                 ))}
             </Box>

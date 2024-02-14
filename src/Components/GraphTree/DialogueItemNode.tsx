@@ -2,16 +2,16 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
 import AnswerContructor from '../../Constructors/AnswerContructor/AnswerConstructor';
-import DialogueConstructor from '../../Constructors/DialogueConstructor/DialogueConstructor';
 import PhraseConstructor from '../../Constructors/PhraseContructor/PhraseConstructor';
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useSelection } from "../../Data/useSelection";
+import { useNextDialogueItemSelection, useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import { NodeType } from "./DialogueitemType";
 import { RxAvatar } from "react-icons/rx";
 import { IoMdAddCircle } from "react-icons/io";
+import Constructor from "../../Constructors/UpdatedConstructor/Constructor";
 
 const nodeSize = { x: 200, y: 500 };
 const foreignObjectProps = {
@@ -20,6 +20,7 @@ const foreignObjectProps = {
     x: -100,
     y: -20,
     position: 'relative'
+
 };
 
 export interface IRenderForeignDialogueItemNodeProps {
@@ -28,8 +29,10 @@ export interface IRenderForeignDialogueItemNodeProps {
 
 export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+    const [nextDialoguItemSelection, setNextdialoguItemSelection] = useNextDialogueItemSelection();
+
     const [states, setStates] = useState<DialogueItemStateType[]>([DialogueItemStateType.NoErrors]);
-    const [selection, setSelection] = useSelection();
+    const [selection, setSelection] = useSelectedDialogueItemSelection();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const phraseQueriesApi = usePhraseQueriesApi();
@@ -40,9 +43,9 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
 
         if (nodeType == NodeType.Dialogue) {
             setDialogueItemConstructor(() =>
-                <DialogueConstructor
-                    id={id}
-                    setStates={setStates}
+                <Constructor
+                    dialogueId={id}
+                // setStates={setStates}
                 />);
         }
 
@@ -85,7 +88,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
             <foreignObject
                 onClick={() => onClick(props.customNodeElementProps.nodeDatum.attributes?.id as string, props.customNodeElementProps.nodeDatum.attributes?.nodeType as NodeType)}
                 {...foreignObjectProps}
-                style={{overflow: "visible"}}
+                style={{ overflow: "visible" }}
             >
                 <div
                     style={{
@@ -94,11 +97,13 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                         backgroundColor: states[0] == DialogueItemStateType.UnsavedChanges
                             ? "#ffe082"
                             : props.customNodeElementProps.nodeDatum.attributes?.color as string,
-                        margin: 10,
+                        margin: 1,
                         padding: 1,
                         borderColor: selection == props.customNodeElementProps.nodeDatum.attributes?.id
                             ? "#ff5722"
-                            : props.customNodeElementProps.nodeDatum.attributes?.color as string,
+                            : nextDialoguItemSelection == props.customNodeElementProps.nodeDatum.attributes?.id
+                                ? "#673ab7"
+                                : props.customNodeElementProps.nodeDatum.attributes?.color as string,
                         borderBlockWidth: 10,
                         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                     }}
@@ -114,13 +119,13 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     }
                     <h3 style={{ textAlign: "center" }}>{`${props.customNodeElementProps.nodeDatum.name}`}</h3>
                 </div>
-                <Box display='flex' justifyContent="center" >
+                <Box display='flex' justifyContent="center">
                     {isLoading
                         ? <CircularProgress size={30} />
                         : selection == props.customNodeElementProps.nodeDatum.attributes?.id &&
                             props.customNodeElementProps.nodeDatum.attributes?.nodeType != NodeType.Dialogue
                             ? <Button>
-                                <IoMdAddCircle style={{position: 'fixed', marginTop: 25}} size={30}  onClick={() =>
+                                <IoMdAddCircle style={{ position: 'fixed', marginTop: 25 }} size={30} onClick={() =>
                                     onCreateNewNode(props.customNodeElementProps.nodeDatum.attributes?.id as string,
                                         props.customNodeElementProps.nodeDatum.attributes?.nodeType as NodeType)}
                                 />

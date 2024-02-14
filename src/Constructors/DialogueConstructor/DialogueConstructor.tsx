@@ -5,7 +5,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Alert, Box, Button, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useSelection } from "../../Data/useSelection";
+import { useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
 import { useTreeState } from "../../Data/useTreeState";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
@@ -32,7 +32,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [treeState, setTreeState] = useTreeState();
-    const [selection, setSelection] = useSelection();
+    const [selection, setSelection] = useSelectedDialogueItemSelection();
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [tab, setTab] = useState<string>("1");
 

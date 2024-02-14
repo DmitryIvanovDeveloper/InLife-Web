@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import DialogueConstructor from '../Constructors/DialogueConstructor/DialogueConstructor';
 import { Locations } from '../Data/Locations';
 import { useDialogueItemConstructor } from '../Data/useDialogues';
-import { useSelection } from '../Data/useSelection';
+import { useSelectedDialogueItemSelection } from '../Data/useDialogueItemSelection';
 import { useTeacher } from '../Data/useTeacher';
 import useDialogueQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
@@ -29,7 +29,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
     const [dialogue, setDialogue] = useState<IDialogueModel | null>(null);
     const [isHideLocations, setIsHideLocations] = useState<boolean>(false);
-    const [selection, setSelection] = useSelection();
+    const [selection, setSelection] = useSelectedDialogueItemSelection();
 
     const onChangeLocation = (id: string) => {
         setNpcId(id);
