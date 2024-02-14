@@ -13,7 +13,6 @@ export default function CommentsInfo(props: ICommentsInfoProps) {
             alignItems='center' 
             flexDirection='column'
         >
-            <CommentsInstruction />
             <TextField
                 sx={{m: 3}}
                 InputLabelProps={{ shrink: true }}
@@ -25,6 +24,7 @@ export default function CommentsInfo(props: ICommentsInfoProps) {
                 onChange={(event) => props.onCommentsChange(event.target.value)}
                 fullWidth
             />
+            <CommentsInstruction />
         </Box>
     )
 }

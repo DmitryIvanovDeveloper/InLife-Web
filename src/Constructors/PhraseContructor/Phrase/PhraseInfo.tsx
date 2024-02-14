@@ -9,10 +9,16 @@ import { useNextDialogueItemSelection } from "../../../Data/useDialogueItemSelec
 import { IoMdAddCircle } from "react-icons/io";
 import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import MessageIcon from '@mui/icons-material/Message';
+import CommentsInfo from "../Comments/CommentsInfo";
+import TensesListInfo from "../TensesList/TensesListInfo";
+import AvTimerIcon from '@mui/icons-material/AvTimer';
 
 export interface IPhraseInfoProps {
     phrase: IPhraseModel;
     onChangeText: (phrase: string) => void;
+    onCommentsChange: (comment: string) => void;
+    setTensesList: (tensesList: string[]) => void;
 }
 export default function PhraseInfo(props: IPhraseInfoProps) {
 
@@ -24,7 +30,8 @@ export default function PhraseInfo(props: IPhraseInfoProps) {
     const [variations, setVariations] = useState<string[]>([]);
     const [nextPhrase, setNextPharse] = useState<string>("");
     const [isEdit, setIsEdit] = useState<boolean>(false);
-
+    const [isEditTenses, setIsEditTenses] = useState<boolean>(false);
+    const [isEditComments, setIsEditComments] = useState<boolean>(false);
 
     useEffect(() => {
         if (!props.phrase.answers.length) {
@@ -53,6 +60,23 @@ export default function PhraseInfo(props: IPhraseInfoProps) {
         await answerQueriesApi.create(props.phrase.id);
     }
 
+    const onEditPhrase = () => {
+        setIsEdit(!isEditTenses)
+        setIsEditComments(false)
+        setIsEditTenses(false)
+    }
+    const onEditComments = () => {
+        setIsEdit(false)
+        setIsEditTenses(false)
+        setIsEditComments(!isEditComments)
+    }
+    const onEditTenses = () => {
+        setIsEditTenses(!isEditTenses)
+        setIsEdit(false)
+        setIsEditComments(false)
+    }
+
+
     return (
         <Box>
             {/* <PhraseInstruction /> */}
@@ -79,9 +103,16 @@ export default function PhraseInfo(props: IPhraseInfoProps) {
                             <IoMdAddCircle />
                         </IconButton>
                     </Grid>
+
                     <Grid display='flex' direction='row' alignItems='center'>
-                        <IconButton onClick={() => setIsEdit(!isEdit)}>
+                        <IconButton onClick={() => onEditPhrase()}>
                             <DriveFileRenameOutlineIcon />
+                        </IconButton>
+                        <IconButton onClick={() => onEditComments()}>
+                            <MessageIcon />
+                        </IconButton>
+                        <IconButton onClick={() => onEditTenses()}>
+                            <AvTimerIcon />
                         </IconButton>
                     </Grid>
                     <MessageBox
@@ -127,6 +158,16 @@ export default function PhraseInfo(props: IPhraseInfoProps) {
                     placeholder="Hey! Hello! Today is a great day for fitness!"
                     fullWidth
                 />
+            }
+
+            {!isEditComments
+                ? null
+                : <CommentsInfo comments={props.phrase.comments} onCommentsChange={props.onCommentsChange} />
+            }
+
+            {!isEditTenses
+                ? null
+                : <TensesListInfo tensesList={props.phrase.tensesList} setTensesList={props.setTensesList} />
             }
 
         </Box >

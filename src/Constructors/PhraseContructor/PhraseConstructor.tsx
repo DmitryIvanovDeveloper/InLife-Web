@@ -137,6 +137,8 @@ export default function PhraseConstructor(props: IPhraseConstructor): JSX.Elemen
             <PhraseInfo
                 phrase={phrase}
                 onChangeText={onChangeText}
+                onCommentsChange={onCommentsChange}
+                setTensesList={onSetTenses}
             />
         )
     }
