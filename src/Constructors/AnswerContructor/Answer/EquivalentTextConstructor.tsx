@@ -49,34 +49,19 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
     return (
         <Box sx={{ width: "100%" }} >
             <DevidedLabel name="" />
-            <Box
-                display="flex"
-                sx={{ ...commonStyles, borderRadius: '5px', width: "100%" }}
-                justifyContent='space-between'
-                alignItems='center'
-            >
-                <TextField
-                    InputLabelProps={{ shrink: true }}
-                    placeholder="Yes, today is a greate day!"
-                    value={selectedTextId.text}
-                    id="outlined-basic"
-                    variant="outlined"
-                    onChange={(event) => setSelectedTextId(prev => ({
-                        ...prev,
-                        text: event.target.value
-                    }))}
-                    InputProps={{
-                        disableUnderline: true,
-                    }}
-                    required={true}
-                    fullWidth
-                />
-                <IconButton>
-                    <SendIcon />
-                </IconButton>
-            </Box>
 
-
+            <TextField
+                placeholder="Yes, today is a greate day!"
+                value={selectedTextId.text}
+                id="outlined-basic"
+                variant='standard'
+                onChange={(event) => setSelectedTextId(prev => ({
+                    ...prev,
+                    text: event.target.value
+                }))}
+                required={true}
+                fullWidth
+            />
 
             <Box sx={{ pt: 1 }} style={{ display: "flex", justifyContent: "flex-end" }}>
                 {!isAdmin

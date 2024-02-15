@@ -27,7 +27,7 @@ export default function EquivalentAnswersInfo(props: IEquivalentAnswersInfoProps
                 isLoading={props.isLoading}
             />
             
-            <EquivalentAnswersInstructions />
+            {/* <EquivalentAnswersInstructions /> */}
         </Box>
 
     )

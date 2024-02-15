@@ -18,13 +18,12 @@ export default function CommentsInfo(props: ICommentsInfoProps) {
                 InputLabelProps={{ shrink: true }}
                 value={props.comments}
                 id="outlined-basic"
-                label="Comments"
                 placeholder="Any comments"
-                variant="outlined"
+                variant="standard"
                 onChange={(event) => props.onCommentsChange(event.target.value)}
                 fullWidth
             />
-            <CommentsInstruction />
+            {/* <CommentsInstruction /> */}
         </Box>
     )
 }

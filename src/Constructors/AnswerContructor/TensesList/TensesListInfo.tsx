@@ -14,10 +14,12 @@ export default function TensesListInfo(props: IPhraseInfoProps) {
             alignItems='center' 
             flexDirection='column'
         >
-            <TensesListInstruction />
             <TensesList  
                 tensesList={props.tensesList}
-                setTensesList={props.setTensesList}/>
+                setTensesList={props.setTensesList}
+            />
+
+            {/* <TensesListInstruction /> */}
         </Box>
 
     )

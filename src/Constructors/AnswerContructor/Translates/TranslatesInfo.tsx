@@ -24,8 +24,7 @@ export default function TranslatesInfo(props: IPossibleWordsToUseInfoProps) {
                 onTranslateChange={props.onTranslateChange}
             />
 
-            <TranslatesInstructions />
-
+            {/* <TranslatesInstructions /> */}
         </Box>
 
     )

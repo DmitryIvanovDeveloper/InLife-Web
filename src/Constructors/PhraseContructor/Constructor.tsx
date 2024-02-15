@@ -1,19 +1,13 @@
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
-import { Alert, Box, Button, Divider, Grid, IconButton, Tab } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Divider, Grid, IconButton, Tab } from "@mui/material";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
-import { useDialogue, useDialogueItemConstructor, usePhrase } from "../../Data/useDialogues";
-import { useNextDialogueItemSelection, useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
-import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
-import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
-import IAudioSettings from "../../ThereGame.Business/Models/IAudioSettings";
+import {  usePhrase } from "../../Data/useDialogues";
+import { useNextDialogueItemSelection } from "../../Data/useDialogueItemSelection";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import GetSettings from "../../ThereGame.Infrastructure/Helpers/PhraseAudioGegerationSettingsBuilder";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
-import SaveButton from "../../Components/Button/SaveButton";
 import PhraseConstructor from './Phrase/PhraseContructor';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 import TranslateIcon from '@mui/icons-material/Translate';
@@ -25,29 +19,38 @@ import ChatElement from '../../Components/ChatElement/ChatElement';
 import { EditDialogueItemType } from '../models/EditType';
 import AnswerContructor from '../AnswerContructor/AnswerConstructor';
 import DeleteButton from '../../Components/Button/DeleteButton';
+import SaveIcon from '@mui/icons-material/Save';
+import { IDialogueItemEditState } from '../models/IPhraseSettingsState';
+import useConstructorActions from '../../Data/ConstructorActions';
+import { useConstructorActionsState } from '../../Data/useConstructorActionsState';
+
+const defaultDialogieItemState: IDialogueItemEditState = {
+    isPhraseEdited: false,
+    isPhraseCommentsEdited: false,
+    isPhraseTensesesEdited: false,
+    isAnswersEdited: false,
+    isAnswersTensesListEdited: false,
+    isAnswersTranslatesEdited: false,
+    isAnswersPossibleWordsEdited: false,
+}
 
 export interface IPhraseConstructor {
     dialogueId: string;
     id: string
     parentId: string
     setStates?: (states: DialogueItemStateType[]) => void;
+    onEditedDialogueItemType?: (PhraseSettingsState: IDialogueItemEditState) => {}
 }
 
 export default function Constructor(props: IPhraseConstructor): JSX.Element | null {
-    const [selection, setSelection] = useSelectedDialogueItemSelection();
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    const phraseQueriesApi = usePhraseQueriesApi();
-    const answerQueriesApi = useAnswerQueriesApi();
+    const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
+    const constructorActions = useConstructorActions();
 
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
-    const dialogueRecoil = useDialogue(props.dialogueId);
-
-    const [tab, setTab] = useState<string>(phraseRecoil.answers[0].id);
+    const [tab, setTab] = useState<string>("");
 
     const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
     const [isEdited, setIsEdited] = useState(true);
-    const [isSaving, setIsSaving] = useState<boolean>(false);
-    const [isCreating, setIsCreating] = useState<boolean>(false);
     const [status, setStatus] = useState<Status>(Status.OK);
 
     const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>();
@@ -57,53 +60,51 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
     const [nextdialoguItemSelection, setNextdialoguItemSelection] = useNextDialogueItemSelection();
 
-    const onAddAnswerButtonClick = async () => {
-        setIsCreating(true)
-        var status = await answerQueriesApi.create(props.id);
-        setStatus(status);
-        setIsCreating(false)
+    //TODO: Refactor
+    const [dialogueItemEditState, setDialogueItemEditState] = useState<IDialogueItemEditState>(() => {
+        var data = localStorage.getItem(`${props.id} Constructor-Edit-State`);
+        return !data ? defaultDialogieItemState : JSON.parse(data);
+    });
+
+
+    const onCreateAnswers = async () => {
+
     }
 
     // QueryApi
-    const onSave = async () => {
-        const updatedPhrase = JSON.parse(JSON.stringify(phrase));
-
-        updatedPhrase.audioSettings = getSettings();
-
-        setIsSaving(true);
-        var status = await phraseQueriesApi.update(updatedPhrase);
-        setStatus(status);
-        setIsSaving(false);
-        if (status == Status.OK) {
-            localStorage.removeItem(props.id);
-        }
-        setIsEdited(true);
+    const onSavePhrase = async () => {
+        constructorActions.setIsSavePhrase(true);
+    }
+    const onSaveAnswer = async () => {
+        constructorActions.setIsSaveAnswer(true);
     }
 
     const onDelete = async () => {
-        var status = await phraseQueriesApi.delete(props.id);
-        setStatus(status);
-        localStorage.removeItem(props.id);
-        setDialogueItemConstructor(() => null);
+
     }
 
-    const reset = () => {
+    useEffect(() => {
+    }, [phraseRecoil]);
+
+    const onReset = () => {
         setPhrase(phraseRecoil);
         setIsEdited(true);
         setStatus(Status.OK);
+        setDialogueItemEditState(defaultDialogieItemState);
         localStorage.removeItem(props.id);
     }
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        console.log(newValue);
         setTab(newValue);
     };
 
     const isEditDialogueItem = () => {
-        return editDialogueItemType == EditDialogueItemType.Phrase ||
+        var isEdit = editDialogueItemType == EditDialogueItemType.Phrase ||
             editDialogueItemType == EditDialogueItemType.PhraseTenseses ||
             editDialogueItemType == EditDialogueItemType.Comments
             ;
+
+        return isEdit;
     }
 
     const onEditDialogueItemType = (newEditDialogueItemType: EditDialogueItemType) => {
@@ -112,9 +113,56 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
             return
         }
 
+
         setEditDialogueItemType(newEditDialogueItemType);
     }
 
+    const onEditedDialogueItemType = (editedDialogueItemType: EditDialogueItemType, isEdited: boolean) => {
+        if (editedDialogueItemType == EditDialogueItemType.Phrase) {
+            setDialogueItemEditState(prev => ({
+                ...prev,
+                isPhraseEdited: isEdited
+            }))
+        }
+        if (editedDialogueItemType == EditDialogueItemType.PhraseTenseses) {
+            setDialogueItemEditState(prev => ({
+                ...prev,
+                isPhraseTensesesEdited: isEdited
+            }))
+        }
+        if (editedDialogueItemType == EditDialogueItemType.Comments) {
+            setDialogueItemEditState(prev => ({
+                ...prev,
+                isPhraseCommentsEdited: isEdited
+            }))
+        }
+        if (editedDialogueItemType == EditDialogueItemType.Answers) {
+            setDialogueItemEditState(prev => ({
+                ...prev,
+                isAnswersEdited: isEdited
+            }))
+        }
+        if (editedDialogueItemType == EditDialogueItemType.AnswersTenseses) {
+            setDialogueItemEditState(prev => ({
+                ...prev,
+                isAnswersTensesListEdited: isEdited
+            }))
+        }
+        if (editedDialogueItemType == EditDialogueItemType.Translates) {
+            setDialogueItemEditState(prev => ({
+                ...prev,
+                isAnswersTranslatesEdited: isEdited
+            }))
+        }
+        if (editedDialogueItemType == EditDialogueItemType.PossibleWords) {
+            setDialogueItemEditState(prev => ({
+                ...prev,
+                isAnswersPossibleWordsEdited: isEdited
+            }))
+        }
+    }
+
+    // UseEffects
 
     useEffect(() => {
         if (!phraseRecoil.answers.length) {
@@ -122,34 +170,20 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
             return;
         }
 
-        setVariations(phraseRecoil.answers.find(answer => answer.id == tab)?.texts ?? [])
-    }, [phraseRecoil]);
-
+        var answer = phraseRecoil.answers.find(answer => answer?.id == tab);
+        setVariations(answer?.texts ?? [])
+    }, [ props.id]);
 
     useEffect(() => {
-        var nextPhrase = phraseRecoil.answers.find(answer => answer.id == tab)?.phrases[0];
+        var nextPhrase = phraseRecoil.answers.find(answer => answer?.id == tab)?.phrases[0];
         setNextPharse(nextPhrase?.text ?? "");
 
         setNextdialoguItemSelection(nextPhrase?.id ?? "");
-    }, [tab, phraseRecoil]);
-
-
-
-
-    // UseEffects
-
-    const getSettings = () => {
-        var parsedData = JSON.parse(dialogueRecoil.voiceSettings);
-
-        var newAudioSettings: IAudioSettings = {
-            id: uuidv4(),
-            generationSettings: GetSettings(parsedData.type, parsedData.name, phrase.text)
-        }
-
-        return newAudioSettings;
-    }
+    }, [variations]);
 
     useEffect(() => {
+        setTab(phraseRecoil.answers[0]?.id ?? "");
+
         var data = localStorage.getItem(props.id);
         if (!data) {
             setPhrase(phraseRecoil);
@@ -162,13 +196,55 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     }, [phraseRecoil])
 
     useEffect(() => {
+        localStorage.setItem(`${props.id} Constructor-Edit-State`, JSON.stringify(dialogueItemEditState));
+    }, [dialogueItemEditState]);
+
+    useEffect(() => {
+        var data = localStorage.getItem(`${props.id} Constructor-Edit-State`);
+        if (!data) {
+            return;
+        }
+        setDialogueItemEditState(JSON.parse(data));
+    }, []);
+
+    useEffect(() => {
         if (isEdited) {
             return;
         }
 
         localStorage.setItem(props.id, JSON.stringify(phrase));
-
     }, [phrase]);
+
+    useEffect(() => {
+        if (dialogueItemEditState.isPhraseEdited) {
+            setEditDialogueItemType(EditDialogueItemType.Phrase)
+            return;
+        }
+        if (dialogueItemEditState.isPhraseCommentsEdited) {
+            setEditDialogueItemType(EditDialogueItemType.Comments);
+            return;
+        }
+        if (dialogueItemEditState.isPhraseCommentsEdited) {
+            setEditDialogueItemType(EditDialogueItemType.PhraseTenseses);
+            return;
+        }
+        if (dialogueItemEditState.isAnswersEdited) {
+            setEditDialogueItemType(EditDialogueItemType.Answers);
+            return;
+        }
+        if (dialogueItemEditState.isAnswersPossibleWordsEdited) {
+            setEditDialogueItemType(EditDialogueItemType.PossibleWords);
+            return;
+        }
+        if (dialogueItemEditState.isAnswersTensesListEdited) {
+            setEditDialogueItemType(EditDialogueItemType.AnswersTenseses);
+            return;
+        }
+        if (dialogueItemEditState.isAnswersTranslatesEdited) {
+            setEditDialogueItemType(EditDialogueItemType.Translates);
+            return;
+        }
+    }, []);
 
     useEffect(() => {
         if (!props.setStates) {
@@ -184,20 +260,9 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     }, [isEdited]);
 
 
-    useEffect(() => {
-        var data = localStorage.getItem(props.id);
-        if (JSON.stringify(phraseRecoil) !== data) {
-            return;
-        }
-
-        localStorage.removeItem(props.id);
-        setIsEdited(true)
-    }, [phrase]);
-
     if (!phrase) {
         return null;
     }
-
     return (
         <Box
             component="form"
@@ -230,12 +295,12 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                             <TabList onChange={handleChange} aria-label="lab API tabs example">
                                 {!!phraseRecoil.answers.length
                                     ? phraseRecoil.answers.map((answer, id) => (
-                                        <Tab key={answer.id} onClick={() => { setVariations(answer.texts) }} label={`story line ${id + 1}`} value={answer.id} />
+                                        <Tab key={answer?.id} onClick={() => { setVariations(answer.texts) }} label={`story line ${id + 1}`} value={answer?.id} />
                                     ))
-                                    : <Tab label={`story line 1`} />
+                                    : <Tab value="" label={`story line 1`} />
                                 }
                             </TabList>
-                            <IconButton onClick={onAddAnswerButtonClick}>
+                            <IconButton onClick={onCreateAnswers}>
                                 <IoMdAddCircle />
                             </IconButton>
                         </Grid>
@@ -244,16 +309,56 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                         <DeleteButton onDelete={() => onDelete()} />
                     </Grid>
 
-                    <Grid display='flex' direction='row' alignItems='center'>
-                        <IconButton onClick={() => onEditDialogueItemType(EditDialogueItemType.Phrase)}>
+                    <Grid display='flex' direction='row' alignItems='center' margin="3px">
+                        <IconButton
+                            sx={{
+                                backgroundColor: editDialogueItemType == EditDialogueItemType.Phrase ? "white" : "",
+                                color: dialogueItemEditState.isPhraseEdited ? "#e65100" : ""
+                            }}
+                            onClick={() => onEditDialogueItemType(EditDialogueItemType.Phrase)}
+                        >
                             <DriveFileRenameOutlineIcon />
                         </IconButton>
-                        <IconButton onClick={() => onEditDialogueItemType(EditDialogueItemType.Comments)}>
+                        <IconButton
+                            sx={{
+                                backgroundColor: editDialogueItemType == EditDialogueItemType.Comments ? "white" : "",
+                                color: dialogueItemEditState.isPhraseCommentsEdited ? "#e65100" : ""
+                            }}
+                            onClick={() => onEditDialogueItemType(EditDialogueItemType.Comments)}
+                        >
                             <MessageIcon />
                         </IconButton>
-                        <IconButton onClick={() => onEditDialogueItemType(EditDialogueItemType.PhraseTenseses)}>
+                        <IconButton
+                            sx={{
+                                backgroundColor: editDialogueItemType == EditDialogueItemType.PhraseTenseses ? "white" : "",
+                                color: dialogueItemEditState.isPhraseTensesesEdited ? "#e65100" : ""
+                            }}
+                            onClick={() => onEditDialogueItemType(EditDialogueItemType.PhraseTenseses)}
+                        >
                             <AvTimerIcon />
                         </IconButton>
+                        {editDialogueItemType == EditDialogueItemType.Phrase ||
+                            editDialogueItemType == EditDialogueItemType.PhraseTenseses ||
+                            editDialogueItemType == EditDialogueItemType.Comments
+                            ? <IconButton
+                                sx={{
+                                    color: dialogueItemEditState.isPhraseCommentsEdited ||
+                                        dialogueItemEditState.isPhraseEdited ||
+                                        dialogueItemEditState.isPhraseTensesesEdited
+                                        ? "#e65100"
+                                        : ""
+                                }}
+
+                                onClick={() => onSavePhrase()}
+                            >
+                                {constructorActionsState.phrase.isSave
+                                    ? <CircularProgress size={20} />
+                                    : <SaveIcon />
+                                }
+                            </IconButton>
+                            : null
+                        }
+
 
                     </Grid>
                     <ChatElement
@@ -267,18 +372,61 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                             <Grid
                                 display='flex' direction='row' alignItems='center'
                             >
-                                <IconButton onClick={() => onEditDialogueItemType(EditDialogueItemType.Answers)}>
+                                <IconButton
+                                    sx={{ 
+                                        backgroundColor: editDialogueItemType == EditDialogueItemType.Answers ? "white" : "",
+                                        color: dialogueItemEditState.isAnswersEdited ? "#e65100" : ""
+                                     }}
+                                    onClick={() => onEditDialogueItemType(EditDialogueItemType.Answers)}
+                                >
                                     <DriveFileRenameOutlineIcon />
                                 </IconButton>
-                                <IconButton onClick={() => onEditDialogueItemType(EditDialogueItemType.Translates)}>
+                                <IconButton
+                                    sx={{ 
+                                        backgroundColor: editDialogueItemType == EditDialogueItemType.Translates ? "white" : "",
+                                        color: dialogueItemEditState.isAnswersTranslatesEdited ? "#e65100" : ""
+                                     }}
+                                    onClick={() => onEditDialogueItemType(EditDialogueItemType.Translates)}>
                                     <TranslateIcon />
                                 </IconButton>
-                                <IconButton onClick={() => onEditDialogueItemType(EditDialogueItemType.AnswersTenseses)}>
+                                <IconButton
+                                    sx={{ 
+                                        backgroundColor: editDialogueItemType == EditDialogueItemType.AnswersTenseses ? "white" : "",
+                                        color: dialogueItemEditState.isAnswersTensesListEdited ? "#e65100" : "" 
+                                    }}
+                                    onClick={() => onEditDialogueItemType(EditDialogueItemType.AnswersTenseses)}>
                                     <AvTimerIcon />
                                 </IconButton>
-                                <IconButton onClick={() => onEditDialogueItemType(EditDialogueItemType.PossibleWords)}>
+                                <IconButton
+                                    sx={{ 
+                                        backgroundColor: editDialogueItemType == EditDialogueItemType.PossibleWords ? "white" : "",
+                                        color: dialogueItemEditState.isAnswersPossibleWordsEdited ? "#e65100" : ""
+                                     }}
+                                    onClick={() => onEditDialogueItemType(EditDialogueItemType.PossibleWords)}>
                                     <SpellcheckIcon />
                                 </IconButton>
+                                {editDialogueItemType == EditDialogueItemType.Answers ||
+                                    editDialogueItemType == EditDialogueItemType.AnswersTenseses ||
+                                    editDialogueItemType == EditDialogueItemType.Translates ||
+                                    editDialogueItemType == EditDialogueItemType.PossibleWords
+                                    ? <IconButton
+                                        sx={{
+                                            color: dialogueItemEditState.isAnswersEdited ||
+                                                dialogueItemEditState.isAnswersTranslatesEdited ||
+                                                dialogueItemEditState.isAnswersTensesListEdited ||
+                                                dialogueItemEditState.isAnswersPossibleWordsEdited
+                                                ? "#e65100"
+                                                : ""
+                                        }}
+                                        onClick={() => onSaveAnswer()}>
+                                        {constructorActionsState.answer.isSave
+                                            ? <CircularProgress size={20} />
+                                            : <SaveIcon />
+                                        }
+                                    </IconButton>
+                                    : null
+                                }
+
                             </Grid>
 
                             {variations.map(answer => (
@@ -310,7 +458,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
             </Box >
             <Box
                 sx={{
-                    backgroundColor: "#e0f2f1",
                     borderRadius: 1,
                     padding: 2,
                     margin: 2,
@@ -322,12 +469,16 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                         id={phrase.id}
                         parentId={phrase.parentId}
                         editDialogueItemType={editDialogueItemType}
+                        onEditedDialogueItemType={onEditedDialogueItemType}
+                        setStatus={setStatus}
                     />
                     : <AnswerContructor
                         dialogueId={props.dialogueId}
-                        id={phrase.answers.find(answer => answer.id == tab)?.id ?? ""}
+                        id={phrase.answers.find(answer => answer?.id == tab)?.id ?? ""}
                         parentId={phrase.id}
                         editDialogueItemType={editDialogueItemType}
+                        onEditedDialogueItemType={onEditedDialogueItemType}
+                        setStatus={setStatus}
                     />
                 }
 
@@ -335,17 +486,10 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
             <Divider variant="fullWidth" />
 
-            <SaveButton
-                onClick={onSave}
-                isLoading={isSaving}
-                isDisabled={false}
-            />
-
-
             {!isEdited || status != Status.OK
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
-                    <Button onClick={reset}>reset all changes</Button>
+                    <Button onClick={onReset}>reset all changes</Button>
                 </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
             }

@@ -1,20 +1,19 @@
 import { Box } from "@mui/material";
 import { useState, useEffect } from "react";
-import AppBarDeleteButton from "../../../Components/AppBarDeleteButton";
-import { useDialogueItemConstructor, usePhrase, useDialogue } from "../../../Data/useDialogues";
-import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
+import {  usePhrase, useDialogue } from "../../../Data/useDialogues";
 import usePhraseQueriesApi from "../../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IAudioSettings from "../../../ThereGame.Business/Models/IAudioSettings";
 import IPhraseModel from "../../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemStateType } from "../../../ThereGame.Business/Util/DialogueItemStateType";
 import GetSettings from "../../../ThereGame.Infrastructure/Helpers/PhraseAudioGegerationSettingsBuilder";
 import { Status } from "../../../ThereGame.Infrastructure/Statuses/Status";
-import AnswerContructor from "../../AnswerContructor/AnswerConstructor";
 import CommentsInfo from "../Comments/CommentsInfo";
 import TensesListInfo from "../TensesList/TensesListInfo";
 import PhraseInfo from "./PhraseInfo";
 import { EditDialogueItemType } from "../../models/EditType";
 import { v4 as uuidv4 } from 'uuid';
+import { useConstructorActionsState } from "../../../Data/useConstructorActionsState";
+import useConstructorActions from "../../../Data/ConstructorActions";
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -22,58 +21,51 @@ export interface IPhraseConstructor {
     parentId: string;
     editDialogueItemType: EditDialogueItemType | undefined;
     setStates?: (states: DialogueItemStateType[]) => void;
+    onEditedDialogueItemType: (editDialogueItemType: EditDialogueItemType, isEdited: boolean) => void;
+    setStatus: (status: Status) => void
 }
 
 export default function PhraseContructor(props: IPhraseConstructor): JSX.Element | null {
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+    const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
+    const constructorActions = useConstructorActions();
+    
     const phraseQueriesApi = usePhraseQueriesApi();
-    const answerQueriesApi = useAnswerQueriesApi();
 
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const dialogueRecoil = useDialogue(props.dialogueId);
 
-
     const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
     const [isEdited, setIsEdited] = useState(true);
-    const [isSaving, setIsSaving] = useState<boolean>(false);
-    const [isCreating, setIsCreating] = useState<boolean>(false);
-    const [status, setStatus] = useState<Status>(Status.OK);
 
 
-    const onAddAnswerButtonClick = async () => {
-        setIsCreating(true)
-        var status = await answerQueriesApi.create(props.id);
-        setStatus(status);
-        setIsCreating(false)
-    }
-
+   
     // QueryApi
     const onSave = async () => {
+        console.log("save");
+
         const updatedPhrase = JSON.parse(JSON.stringify(phrase));
 
         updatedPhrase.audioSettings = getSettings();
 
-        setIsSaving(true);
         var status = await phraseQueriesApi.update(updatedPhrase);
-        setStatus(status);
-        setIsSaving(false);
+        props.setStatus(status);
+        console.log(status);
+
         if (status == Status.OK) {
             localStorage.removeItem(props.id);
+            constructorActions.setIsSavePhrase(false);
         }
         setIsEdited(true);
     }
 
     const onDelete = async () => {
-        var status = await phraseQueriesApi.delete(props.id);
-        setStatus(status);
+        await phraseQueriesApi.delete(props.id);
         localStorage.removeItem(props.id);
-        setDialogueItemConstructor(() => null);
     }
 
     const reset = () => {
         setPhrase(phraseRecoil);
         setIsEdited(true);
-        setStatus(Status.OK);
         localStorage.removeItem(props.id);
     }
 
@@ -82,6 +74,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             ...prev,
             text: phrase
         }));
+
 
         setIsEdited(false);
     }
@@ -92,6 +85,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             comments
         }));
         setIsEdited(false);
+
     }
 
     const onSetTenses = (tenses: string[]) => {
@@ -101,6 +95,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         }));
 
         setIsEdited(false);
+
     }
 
     // Components
@@ -167,7 +162,14 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     }, [phrase]);
 
     useEffect(() => {
-      
+        props.onEditedDialogueItemType(EditDialogueItemType.Phrase, phrase.text != phraseRecoil.text);
+        props.onEditedDialogueItemType(EditDialogueItemType.Comments, phrase.comments != phraseRecoil.comments);
+        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(phrase.tensesList) != JSON.stringify(phraseRecoil.tensesList));
+
+    }, [phrase.tensesList, phrase.comments, phrase.text]);
+
+    useEffect(() => {
+
         if (!props.setStates) {
             return;
         }
@@ -190,6 +192,15 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         localStorage.removeItem(props.id);
         setIsEdited(true)
     }, [phrase]);
+
+    useEffect(() => {
+        if (!constructorActionsState.phrase.isSave) {
+            return;
+        }
+        
+        onSave();
+       
+    }, [constructorActionsState.phrase.isSave]);
 
     if (!phrase) {
         return null;
@@ -218,12 +229,11 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 ? PhraseTensesListComponent()
                 : null
             }
-             {props.editDialogueItemType == EditDialogueItemType.Comments
+            {props.editDialogueItemType == EditDialogueItemType.Comments
                 ? CommentsComponent()
                 : null
             }
 
-        
         </Box>
     )
 }

@@ -53,7 +53,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     id={id}
                     setStates={setStates}
                     dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
-                    parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
+                    parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string} 
                 />);
 
         }

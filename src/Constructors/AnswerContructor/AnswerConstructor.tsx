@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { LanguageType } from "../../Data/LanguageType";
 import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useTreeState } from "../../Data/useTreeState";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
@@ -18,6 +17,8 @@ import PossibleWordsToUseInfo from "./PossibleWordsToUse/PossibleWordsToUseInfo"
 import TensesListInfo from "./TensesList/TensesListInfo";
 import TranslatesInfo from "./Translates/TranslatesInfo";
 import { EditDialogueItemType } from '../models/EditType';
+import useConstructorActions from "../../Data/ConstructorActions";
+import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -25,11 +26,16 @@ export interface IAnswerContructor {
     parentId: string,
     editDialogueItemType: EditDialogueItemType | undefined;
     setStates?: (states: DialogueItemStateType[]) => void;
+    onEditedDialogueItemType: (editDialogueItemType: EditDialogueItemType, isEdited: boolean) => void;
+    setStatus: (status: Status) => void
+
 }
 
 
 
 export default function AnswerContructor(props: IAnswerContructor): JSX.Element | null {
+    const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
+    const constructorActions = useConstructorActions();
 
     const answerRecoil = useAnswer(props.dialogueId, props.id);
 
@@ -39,20 +45,14 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const [answer, setAnswer] = useState<IAnswerModel>(answerRecoil);
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    const [status, setStatus] = useState<Status>(Status.OK);
 
     const [isEdited, setIsEdited] = useState(true);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isCreating, setIsCreating] = useState<boolean>(false);
-    const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [isChatGptLoading, setIsChatGptLoading] = useState<boolean>(false);
     const [tab, setTab] = useState<string>("1");
 
     const onAddPhraseButtonClick = async () => {
-        setIsCreating(true)
         var status = await phraseQueriesApi.create(props.id);
-        setStatus(status);
-        setIsCreating(false)
+        props.setStatus(status);
 
     }
     const onChangeText = (event: any) => {
@@ -204,20 +204,15 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }
 
     // QueriesApi
-    const onDelete = async () => {
-        setIsDeleting(true);
-        await answerQueriesApi.delete(props.id)
-        setIsDeleting(false);
-        setIsEdited(true)
-        setDialogueItemConstructor(() => null);
-    }
+
 
     const onSave = async () => {
-        setIsLoading(true);
-        await answerQueriesApi.update(answer)
-        setIsLoading(false);
+        var status = await answerQueriesApi.update(answer);
+        if (status == Status.OK) {
+            localStorage.removeItem(props.id)
+            constructorActions.setIsSavePhrase(false);
+        }
         setIsEdited(true);
-        localStorage.removeItem(props.id)
     }
 
     const onChangeEquivalentAnswer = (value: string, index: number) => {
@@ -320,9 +315,17 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
         setAnswer(JSON.parse(data));
     }, []);
-
     useEffect(() => {
- 
+        if (!constructorActionsState.answer.isSave) {
+            return;
+        }
+
+        onSave();
+        constructorActions.setIsSaveAnswer(false);
+
+    }, [constructorActionsState.phrase.isSave]);
+    useEffect(() => {
+
         if (isEdited) {
             return;
         }
@@ -352,6 +355,14 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
         props.setStates([DialogueItemStateType.UnsavedChanges])
     }, [isEdited]);
+
+
+    useEffect(() => {
+        props.onEditedDialogueItemType(EditDialogueItemType.Answers, JSON.stringify(answer?.texts) != JSON.stringify(answerRecoil?.texts));
+        props.onEditedDialogueItemType(EditDialogueItemType.Translates, JSON.stringify(answer?.translates) != JSON.stringify(answer?.translates));
+        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(answer?.tensesList) != JSON.stringify(answer?.tensesList));
+        props.onEditedDialogueItemType(EditDialogueItemType.PossibleWords, answer?.wordsToUse != answer?.wordsToUse);
+    }, [answer]);
 
     if (!answer) {
         return null;

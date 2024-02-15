@@ -19,7 +19,7 @@ export default function TensesListInfo(props: IPhraseInfoProps) {
                 setTensesList={props.setTensesList}
             />
             
-            <TensesListInstruction />
+            {/* <TensesListInstruction /> */}
         </Box>
 
     )

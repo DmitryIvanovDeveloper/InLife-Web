@@ -25,7 +25,7 @@ export default function PossibleWordsToUseInfo(props: IPossibleWordsToUseInfoPro
                 fullWidth
             ></TextField>
 
-            <PossibleWordsToUseInstruction />
+            {/* <PossibleWordsToUseInstruction /> */}
         </Box>
 
     )
