@@ -41,8 +41,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
    
     // QueryApi
     const onSave = async () => {
-        console.log("save");
-
         const updatedPhrase = JSON.parse(JSON.stringify(phrase));
 
         updatedPhrase.audioSettings = getSettings();
@@ -58,10 +56,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsEdited(true);
     }
 
-    const onDelete = async () => {
-        await phraseQueriesApi.delete(props.id);
-        localStorage.removeItem(props.id);
-    }
 
     const reset = () => {
         setPhrase(phraseRecoil);

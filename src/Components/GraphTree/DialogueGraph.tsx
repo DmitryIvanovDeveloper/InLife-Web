@@ -4,7 +4,7 @@ import { useDialogue } from "../../Data/useDialogues";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemNode } from "./DialogueItemNode";
-import { NodeType } from "./DialogueitemType";
+import { DialogueItemType } from "./DialogueitemType";
 import { Resizable } from 're-resizable';
 
 
@@ -32,7 +32,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             children: phrase.answers.map(answer => transformAnswer(answer)),
             attributes: {
                 id: phrase.id,
-                nodeType: NodeType.Phrase,
+                nodeType: DialogueItemType.Phrase,
                 parentId: phrase.parentId,
                 dialogueId: diaologueRecoil.id,
                 color: "#80cbc4"
@@ -48,7 +48,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             attributes: {
                 possibleAnswersLength: answer.texts.length,
                 id: answer.id,
-                nodeType: NodeType.Answer,
+                nodeType: DialogueItemType.Answer,
                 parentId: answer.parentId,
                 dialogueId: diaologueRecoil.id,
                 color: "#81d4fa"
@@ -63,7 +63,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             children: [transformPhrase(diaologueRecoil.phrase)],
             attributes: {
                 id: diaologueRecoil.id,
-                nodeType: NodeType.Dialogue,
+                nodeType: DialogueItemType.Dialogue,
                 parentId: "",
                 dialogueId: diaologueRecoil.id,
                 color: "#ef9a9a",
@@ -75,7 +75,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
 
     function node(dialogueItem: CustomNodeElementProps) {
         if (!diaologueRecoil.voiceSettings &&
-            dialogueItem.nodeDatum.attributes?.nodeType == NodeType.Dialogue) {
+            dialogueItem.nodeDatum.attributes?.nodeType == DialogueItemType.Dialogue) {
             return <DialogueItemNode customNodeElementProps={dialogueItem}
             />
         }

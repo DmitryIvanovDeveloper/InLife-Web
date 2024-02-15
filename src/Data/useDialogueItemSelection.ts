@@ -4,10 +4,6 @@ export function useSelectedDialogueItemSelection() {
     return useRecoilState(selectedDialogueItem)
 }
 
-export function useNextdDialogueItemSelection() {
-    return useRecoilState(dialogueItem)
-}
-
 const selectedDialogueItem = atom<string>({
     key: 'selectedDialogueItem',
     default: "",
@@ -19,5 +15,14 @@ export function useNextDialogueItemSelection() {
 
 const dialogueItem = atom<string>({
     key: 'dialogieItem',
+    default: "",
+})
+
+export function useDialogueLineSelection() {
+    return useRecoilState(dialogueLineSelection)
+}
+
+const dialogueLineSelection = atom<string>({
+    key: 'dialogueLineSelection',
     default: "",
 })

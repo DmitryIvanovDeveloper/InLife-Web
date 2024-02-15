@@ -2,14 +2,15 @@ import { Box, Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useNextDialogueItemSelection, useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
+import { useDialogueLineSelection, useNextDialogueItemSelection, useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import { NodeType } from "./DialogueitemType";
 import { RxAvatar } from "react-icons/rx";
 import { IoMdAddCircle } from "react-icons/io";
 import Constructor from "../../Constructors/PhraseContructor/Constructor";
+import DialogueConstructor from "../../Constructors/DialogueConstructor/DialogueConstructor";
+import { DialogueItemType } from "./DialogueitemType";
 
 const nodeSize = { x: 200, y: 500 };
 const foreignObjectProps = {
@@ -28,53 +29,70 @@ export interface IRenderForeignDialogueItemNodeProps {
 export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [nextDialoguItemSelection, setNextdialoguItemSelection] = useNextDialogueItemSelection();
-
     const [states, setStates] = useState<DialogueItemStateType[]>([DialogueItemStateType.NoErrors]);
     const [selection, setSelection] = useSelectedDialogueItemSelection();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
+    const [dialogueLineSelection, setDialogueItemSelection] = useDialogueLineSelection();
     const phraseQueriesApi = usePhraseQueriesApi();
     const answerQueriesApi = useAnswerQueriesApi();
 
-    const onClick = (id: string, nodeType: NodeType) => {
-        setSelection(id);
-
-        if (nodeType == NodeType.Dialogue) {
-            // setDialogueItemConstructor(() =>
-            //     <Constructor
-            //         dialogueId={id}
-            //         // setStates={setStates}
-            //     />);
+    const onClick = (id: string, parentId: string, nodeType: DialogueItemType) => {
+        if (nodeType == DialogueItemType.Dialogue) {
+            setDialogueItemConstructor(() =>
+                <DialogueConstructor
+                    id={id}
+                    setStates={setStates}
+                />);
         }
 
-        if (nodeType == NodeType.Phrase) {
+        if (nodeType == DialogueItemType.Phrase) {
             setDialogueItemConstructor(() =>
                 <Constructor
                     id={id}
                     setStates={setStates}
                     dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
-                    parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string} 
+                    parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
                 />);
-
         }
+
+        if (nodeType == DialogueItemType.Answer) {
+            setDialogueItemConstructor(() =>
+                <Constructor
+                    id={parentId}
+                    setStates={setStates}
+                    dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
+                    parentId={parentId}
+                />);
+            setDialogueItemSelection(id);
+        }
+
+        setSelection(id);
+
     }
 
-    const onCreateNewNode = async (id: string, nodeType: NodeType) => {
+    const onCreateNewNode = async (id: string, nodeType: DialogueItemType) => {
         setIsLoading(true);
-        if (nodeType == NodeType.Phrase) {
+        if (nodeType == DialogueItemType.Phrase) {
             await answerQueriesApi.create(id);
         }
 
-        if (nodeType == NodeType.Answer) {
+        if (nodeType == DialogueItemType.Answer) {
             await phraseQueriesApi.create(id);
         }
         setIsLoading(false);
     }
 
+    //TODO: Refactor
     return (
         <g>
             <foreignObject
-                onClick={() => onClick(props.customNodeElementProps.nodeDatum.attributes?.id as string, props.customNodeElementProps.nodeDatum.attributes?.nodeType as NodeType)}
+                onClick={() =>
+                    onClick(
+                        props.customNodeElementProps.nodeDatum.attributes?.id as string,
+                        props.customNodeElementProps.nodeDatum.attributes?.parentId as string,
+                        props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType
+
+                    )}
                 {...foreignObjectProps}
                 style={{ overflow: "visible" }}
             >
@@ -91,12 +109,14 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                             ? "#ff5722"
                             : nextDialoguItemSelection == props.customNodeElementProps.nodeDatum.attributes?.id
                                 ? "#673ab7"
-                                : props.customNodeElementProps.nodeDatum.attributes?.color as string,
+                                : dialogueLineSelection == props.customNodeElementProps.nodeDatum.attributes?.id
+                                    ? "red"
+                                    : props.customNodeElementProps.nodeDatum.attributes?.color as string,
                         borderBlockWidth: 10,
                         boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                     }}
                 >
-                    {props.customNodeElementProps.nodeDatum.attributes?.nodeType == NodeType.Phrase
+                    {props.customNodeElementProps.nodeDatum.attributes?.nodeType == DialogueItemType.Phrase
                         ? <Box
                             display='flex'
                             justifyContent='center'
@@ -111,11 +131,11 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     {isLoading
                         ? <CircularProgress size={30} />
                         : selection == props.customNodeElementProps.nodeDatum.attributes?.id &&
-                            props.customNodeElementProps.nodeDatum.attributes?.nodeType != NodeType.Dialogue
+                            props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue
                             ? <Button>
                                 <IoMdAddCircle style={{ position: 'fixed', marginTop: 25 }} size={30} onClick={() =>
                                     onCreateNewNode(props.customNodeElementProps.nodeDatum.attributes?.id as string,
-                                        props.customNodeElementProps.nodeDatum.attributes?.nodeType as NodeType)}
+                                        props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)}
                                 />
                             </Button>
                             : null

@@ -210,8 +210,9 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         var status = await answerQueriesApi.update(answer);
         if (status == Status.OK) {
             localStorage.removeItem(props.id)
-            constructorActions.setIsSavePhrase(false);
+            constructorActions.setIsSaveAnswer(false);
         }
+        
         setIsEdited(true);
     }
 
@@ -287,10 +288,6 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         )
     }
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setTab(newValue);
-    };
-
     // UseEffects
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -315,15 +312,16 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
         setAnswer(JSON.parse(data));
     }, []);
+    
     useEffect(() => {
         if (!constructorActionsState.answer.isSave) {
             return;
         }
 
         onSave();
-        constructorActions.setIsSaveAnswer(false);
 
-    }, [constructorActionsState.phrase.isSave]);
+    }, [constructorActionsState.answer.isSave]);
+
     useEffect(() => {
 
         if (isEdited) {
