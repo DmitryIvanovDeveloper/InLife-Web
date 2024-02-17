@@ -131,7 +131,6 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
             translates: [...sessionDialogueLine.translates, translate]
         }));
 
-        console.log("ds");
         setIsEdited(false);
     }
 
@@ -192,8 +191,8 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
             onPossibleWordsChange(data.words_uppercase);
             onSetTenses(data.tenseses);
         });
+        
         setIsChatGptLoading(false);
-
     }
 
     const reset = () => {
@@ -205,7 +204,6 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
     }
 
     // QueriesApi
-
 
     const onSave = async () => {
         var status = await answerQueriesApi.update(sessionDialogueLine);

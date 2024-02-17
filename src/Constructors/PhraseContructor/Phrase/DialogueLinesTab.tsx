@@ -63,12 +63,13 @@ export default function DialogueLinesTab(props: IDialogueLinesProps) {
     }
 
     useEffect(() => {
-        if (!props.answers.length) {
+        console.log(selectDialogueLine.line.id);
+        if (!!selectDialogueLine.line.id) {
             return;
         }
-        
+
         onSelectTab(props.answers[0]?.id, 0)
-    }, [props.answers]);
+    }, [selectDialogueLine.line]);
 
     return (
         <Grid display='flex' direction='row' alignItems='flex-start' justifyContent='space-between'>

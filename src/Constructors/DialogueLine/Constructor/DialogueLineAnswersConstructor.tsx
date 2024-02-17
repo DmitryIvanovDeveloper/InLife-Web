@@ -33,8 +33,8 @@ export default function DialogueLineAnswersConstructor(props: EquivalentTextCons
         setIsAdmin(isAdmin);
     }, []);
 
+    console.log(props.texts);
     const onSave = () => {
-
         if (isUpdate) {
             props.onDialogueLineAnswerChange(selectedTextId.text, selectedTextId.id);
         }

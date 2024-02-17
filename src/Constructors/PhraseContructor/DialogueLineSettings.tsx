@@ -7,7 +7,7 @@ import TranslateIcon from '@mui/icons-material/Translate';
 import SpellcheckIcon from '@mui/icons-material/Spellcheck';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 import SaveIcon from '@mui/icons-material/Save';
-import ChatElement from "../../Components/ChatElement/ChatElement";
+import Message from "../../Components/ChatElement/Message";
 import useConstructorActions from "../../Data/ConstructorActions";
 
 export interface IAnswersActionsButtonsProps {
@@ -91,7 +91,7 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
             <Grid display='flex' direction='column' alignItems='end'>
                {props.currentDialogueLineData.map(answer => (
                   <Box>
-                     <ChatElement
+                     <Message
                         title={`student [possible answer]`}
                         position={"right"}
                         type={"text"}

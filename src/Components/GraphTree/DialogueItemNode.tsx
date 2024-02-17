@@ -54,8 +54,8 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                 const updatedSelectDialogueLine: ISelectDialogueLine = {
                     dialogueItemId: id,
                     line: {
-                        name: selectDialogueLine.line.name,
-                        id: selectDialogueLine.line.id ,
+                        name: "",
+                        id: "",
                     },
                     nextDialogueItemId: ""
                 }

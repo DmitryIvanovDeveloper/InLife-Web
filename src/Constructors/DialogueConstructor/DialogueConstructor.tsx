@@ -1,21 +1,15 @@
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
 import { Alert, Box, Button, CircularProgress, Grid, IconButton, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
 import SaveButton from "../../Components/Button/SaveButton";
-import LinarProgressCustom from "../../Components/CircularProgress";
 import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
 import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
-import ChatElement from '../../Components/ChatElement/ChatElement';
-import { EditDialogueItemType } from '../models/EditType';
 
 export interface IDialogueConstructor {
     id: string;

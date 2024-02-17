@@ -1,5 +1,5 @@
 import TabContext from '@mui/lab/TabContext';
-import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, Typography, useMediaQuery, useTheme, } from "@mui/material";
+import { Alert, Box, Button, Divider, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePhrase } from "../../Data/useDialogues";
 import { useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
@@ -7,37 +7,19 @@ import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueIte
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
 import PhraseConstructor from './Phrase/PhraseContructor';
-import ChatElement from '../../Components/ChatElement/ChatElement';
+import Message from '../../Components/ChatElement/Message';
 import { EditDialogueItemType } from '../models/EditType';
 import DialogueLineContructor from '../DialogueLine/DialogueLineContructor';
 import { IDialogueItemEditState } from '../models/IPhraseSettingsState';
 import PhraseSettings from './Phrase/PhraseSettings';
 import DialogueLineSettings from './DialogueLineSettings';
-import DialogueLinesTab from './Phrase/DialogueLinesTab';
-import ISelectDialogueLine from '../models/ISelectDialogueLine';
 import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
 import React from 'react';
 import Instruction from '../Instruction';
-import { createTheme } from '@mui/material/styles';
 import { useDialogueItemState } from '../../Data/useDialogueitemState';
 import useConstructorActions from '../../Data/ConstructorActions';
-
-let theme = createTheme({
-    // Theme customization goes here as usual, including tonalOffset and/or
-    // contrastThreshold as the augmentColor() function relies on these
-});
-
-theme = createTheme(theme, {
-    // Custom colors created with augmentColor go here
-    palette: {
-        salmon: theme.palette.augmentColor({
-            color: {
-                main: '#FF5733',
-            },
-            name: 'salmon',
-        }),
-    },
-});
+import DialogueLinesTab from './Phrase/DialogueLinesTab';
+import ISelectDialogueLine from '../models/ISelectDialogueLine';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -164,6 +146,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
     }, [selectDialogueLine.line.id])
 
+    
     useEffect(() => {
         localStorage.setItem(`${props.id} Constructor-Edit-State`, JSON.stringify(dialogueItemEditState));
     }, [dialogueItemEditState]);
@@ -263,6 +246,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                             editDialogueItemType={editDialogueItemType}
                             dialogueItemEditState={dialogueItemEditState}
                             phraseCaption={phraseRecoil.text}
+                            phraseAudio={phraseRecoil.audioSettings.audioData ?? ""}
                         />
 
                         {editDialogueItemType != undefined
@@ -284,7 +268,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                     />
 
                     {!!nextPhraseCaption
-                        ? <ChatElement
+                        ? <Message
                             title={`dsds`}
                             position={"left"}
                             type={"text"}

@@ -1,4 +1,4 @@
-import { Grid, Tab, CircularProgress, IconButton, Box } from "@mui/material";
+import { Grid, CircularProgress, IconButton, Box } from "@mui/material";
 import { EditDialogueItemType } from "../../models/EditType";
 import SaveIcon from '@mui/icons-material/Save';
 import { useConstructorActionsState } from "../../../Data/useConstructorActionsState";
@@ -6,24 +6,29 @@ import { IDialogueItemEditState } from "../../models/IPhraseSettingsState";
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import MessageIcon from '@mui/icons-material/Message';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
-import ChatElement from "../../../Components/ChatElement/ChatElement";
 import useConstructorActions from "../../../Data/ConstructorActions";
+import AudioPlayer from "react-h5-audio-player";
+import { useEffect, useState } from "react";
+import 'react-h5-audio-player/lib/styles.css';
+import Message from "../../../Components/ChatElement/Message";
+import AudioMessage from "../../../Components/ChatElement/AudioMessage";
 
 export interface IPhraseTab {
     onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType) => void;
     editDialogueItemType: EditDialogueItemType | undefined;
     dialogueItemEditState: IDialogueItemEditState;
     phraseCaption: string;
+    phraseAudio: string;
 }
 
 export default function PhraseSettings(props: IPhraseTab) {
     const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
-    
+
     return (
         <Box >
             {constructorActionsState.phrase.isSave
-                ? <CircularProgress sx={{marginTop: "10px"}} size={20} />
+                ? <CircularProgress sx={{ marginTop: "10px" }} size={20} />
                 : <Grid display='flex' direction='row' alignItems='center' margin="3px">
 
                     <IconButton
@@ -57,7 +62,7 @@ export default function PhraseSettings(props: IPhraseTab) {
                     {props.editDialogueItemType == EditDialogueItemType.Phrase ||
                         props.editDialogueItemType == EditDialogueItemType.PhraseTenseses ||
                         props.editDialogueItemType == EditDialogueItemType.Comments
-                        ? <IconButton 
+                        ? <IconButton
                             sx={{
                                 color: props.dialogueItemEditState.isPhraseCommentsEdited ||
                                     props.dialogueItemEditState.isPhraseEdited ||
@@ -75,11 +80,17 @@ export default function PhraseSettings(props: IPhraseTab) {
                 </Grid>
             }
 
-            <ChatElement
+            <Message
                 title={``}
                 position={"left"}
                 type={"text"}
                 text={props.phraseCaption}
+            />
+            <AudioMessage
+                position={"left"}
+                type={"audio"}
+                title={"Emre"}
+                audioUrl={props.phraseAudio}
             />
         </Box>
 

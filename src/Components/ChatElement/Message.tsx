@@ -8,7 +8,7 @@ export interface IChatElement {
     type: string;
     text: string;
 }
-export default function ChatElement(props: IChatElement) {
+export default function Message(props: IChatElement) {
     return (
         <MessageBox
             title={props.title}
