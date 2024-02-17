@@ -1,19 +1,18 @@
-import { Box, Button, Chip, CircularProgress, Grid, IconButton, Stack, TextField } from "@mui/material";
+import { Box, Button, Chip, CircularProgress, Grid, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTeacher } from "../../../Data/useTeacher";
 import DevidedLabel from "../../../Components/Headers/DevidedLabel";
-import SendIcon from '@mui/icons-material/SendOutlined';
 
 export interface EquivalentTextConstructorProps {
     texts: string[];
     chatGpt: (sentence: string) => void;
-    onChangeEquivalentAnswer: (value: string, index: number) => void;
+    onDialogueLineAnswerChange: (value: string, index: number) => void;
     onAddEquivalentAnswer: (text: string) => void;
     onRemoveEquivalentAnswer: (value: string) => void;
     isLoading: boolean;
 }
 
-export default function EquivalentTextConstructor(props: EquivalentTextConstructorProps) {
+export default function DialogueLineAnswersConstructor(props: EquivalentTextConstructorProps) {
     const [teacher] = useTeacher();
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
@@ -37,7 +36,7 @@ export default function EquivalentTextConstructor(props: EquivalentTextConstruct
     const onSave = () => {
 
         if (isUpdate) {
-            props.onChangeEquivalentAnswer(selectedTextId.text, selectedTextId.id);
+            props.onDialogueLineAnswerChange(selectedTextId.text, selectedTextId.id);
         }
         else {
             props.onAddEquivalentAnswer(selectedTextId.text);

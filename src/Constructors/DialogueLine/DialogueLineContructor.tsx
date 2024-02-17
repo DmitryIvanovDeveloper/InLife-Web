@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { LanguageType } from "../../Data/LanguageType";
-import { useAnswer, useDialogueItemConstructor } from "../../Data/useDialogues";
+import { useAnswer } from "../../Data/useDialogues";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
@@ -12,13 +12,14 @@ import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueIte
 import ChatGptService from "../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";
 import IChatGPTResponseDto, { IDataResponse } from "../../ThereGame.Infrastructure/Services/ChatGpt/Dtos/IChatGptResponseDto";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
-import EquivalentAnswersInfo from "./Answer/AnswersInfo";
 import PossibleWordsToUseInfo from "./PossibleWordsToUse/PossibleWordsToUseInfo";
-import TensesListInfo from "./TensesList/TensesListInfo";
+import TensesListConstructor from "./TensesList/TensesListConstructor";
 import TranslatesInfo from "./Translates/TranslatesInfo";
 import { EditDialogueItemType } from '../models/EditType';
 import useConstructorActions from "../../Data/ConstructorActions";
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
+import { useDialogueItemState } from "../../Data/useDialogueitemState";
+import DialogueLineAnswersConstructor from "./Constructor/DialogueLineAnswersConstructor";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -28,12 +29,11 @@ export interface IAnswerContructor {
     setStates?: (states: DialogueItemStateType[]) => void;
     onEditedDialogueItemType: (editDialogueItemType: EditDialogueItemType, isEdited: boolean) => void;
     setStatus: (status: Status) => void
-
 }
 
 
 
-export default function AnswerContructor(props: IAnswerContructor): JSX.Element | null {
+export default function DialogueLineContructor(props: IAnswerContructor): JSX.Element | null {
     const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
 
@@ -42,13 +42,11 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     const answerQueriesApi = useAnswerQueriesApi();
     const phraseQueriesApi = usePhraseQueriesApi();
 
-    const [answer, setAnswer] = useState<IAnswerModel>(answerRecoil);
-
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+    const [sessionDialogueLine, setSessionAnswerData] = useState<IAnswerModel>(answerRecoil);
 
     const [isEdited, setIsEdited] = useState(true);
     const [isChatGptLoading, setIsChatGptLoading] = useState<boolean>(false);
-    const [tab, setTab] = useState<string>("1");
+    const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
 
     const onAddPhraseButtonClick = async () => {
         var status = await phraseQueriesApi.create(props.id);
@@ -56,7 +54,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
     }
     const onChangeText = (event: any) => {
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
             text: event.target.value
         }));
@@ -64,8 +62,8 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsEdited(false);
     }
 
-    const onWordsToUseChange = (wordsToUse: string) => {
-        setAnswer(prev => ({
+    const onPossibleWordsChange = (wordsToUse: string) => {
+        setSessionAnswerData(prev => ({
             ...prev,
             wordsToUse: wordsToUse
         }));
@@ -74,7 +72,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }
     // Mistake Explanation
     const onExplanationChange = (event: any, index: number) => {
-        var explanation = [...answer.mistakeExplanations];
+        var explanation = [...sessionDialogueLine.mistakeExplanations];
 
         if (event.target.id == 'word') {
             explanation[index].word = event.target.value;
@@ -83,7 +81,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             explanation[index].explanation = event.target.value;
         }
 
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
             mistakeExplanations: explanation
         }));
@@ -97,7 +95,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             id: uuidv4()
         }
 
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
             mistakeExplanations: [
                 ...prev.mistakeExplanations,
@@ -109,14 +107,15 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }
 
     const onDeleteMistakeExplanation = (id: string) => {
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
-            mistakeExplanations: [...answer.mistakeExplanations]
+            mistakeExplanations: [...sessionDialogueLine.mistakeExplanations]
                 .filter(explanation => explanation.id != id)
         }));
 
         setIsEdited(false);
     }
+    
 
     // Translate
     const onAddTranslate = () => {
@@ -127,18 +126,19 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             text: ""
         }
 
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
-            translates: [...answer.translates, translate]
+            translates: [...sessionDialogueLine.translates, translate]
         }));
 
+        console.log("ds");
         setIsEdited(false);
     }
 
     const onDeleteTranslate = (id: string) => {
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
-            translates: [...answer.translates]
+            translates: [...sessionDialogueLine.translates]
                 .filter(translate => translate.id != id)
         }));
 
@@ -146,7 +146,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }
 
     const onTranslateChange = (translates: ITranslateModel[]) => {
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
             translates: translates
         }));
@@ -154,10 +154,10 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsEdited(false);
     }
 
-    const onSetTenses = (tenses: string[]) => {
-        setAnswer(prev => ({
+    const onSetTenses = (tensesList: string[]) => {
+        setSessionAnswerData(prev => ({
             ...prev,
-            tensesList: tenses
+            tensesList
         }));
 
         setIsEdited(false)
@@ -181,7 +181,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             })
             var translates = data.translations.map(translate => {
                 return {
-                    parentId: answer.id,
+                    parentId: sessionDialogueLine.id,
                     id: uuidv4(),
                     language: LanguageType.Russian,
                     text: translate
@@ -189,7 +189,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             });
 
             onTranslateChange(translates);
-            onWordsToUseChange(data.words_uppercase);
+            onPossibleWordsChange(data.words_uppercase);
             onSetTenses(data.tenseses);
         });
         setIsChatGptLoading(false);
@@ -197,17 +197,18 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }
 
     const reset = () => {
-        setAnswer(answerRecoil);
+        setSessionAnswerData(answerRecoil);
         setIsEdited(true);
 
         localStorage.removeItem(props.id);
+        constructorActions.setIsReset(false);
     }
 
     // QueriesApi
 
 
     const onSave = async () => {
-        var status = await answerQueriesApi.update(answer);
+        var status = await answerQueriesApi.update(sessionDialogueLine);
         if (status == Status.OK) {
             localStorage.removeItem(props.id)
             constructorActions.setIsSaveAnswer(false);
@@ -216,11 +217,11 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsEdited(true);
     }
 
-    const onChangeEquivalentAnswer = (value: string, index: number) => {
-        var texts = [...answer.texts];
+    const onDialogueLineAnswerChange = (value: string, index: number) => {
+        var texts = [...sessionDialogueLine.texts];
         texts[index] = value;
 
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
             texts: texts
         }))
@@ -228,7 +229,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
         setIsEdited(false);
     }
     const onAddEquivalentAnswer = (value: string) => {
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
             texts: [...prev.texts, value]
         }))
@@ -237,7 +238,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     }
 
     const onRemoveEquivalentAnswer = (value: string) => {
-        setAnswer(prev => ({
+        setSessionAnswerData(prev => ({
             ...prev,
             texts: prev.texts.filter(text => text != value)
         }));
@@ -248,20 +249,20 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     // Components
     function TensesListComponent() {
         return (
-            <TensesListInfo
-                tensesList={answer.tensesList}
+            <TensesListConstructor
+                tensesList={sessionDialogueLine.tensesList}
                 setTensesList={onSetTenses}
             />
         )
     }
 
-    function EquivalentAnswersComponent() {
+    function DialogueLineAnswersComponent() {
         return (
-            <EquivalentAnswersInfo
-                onChangeEquivalentAnswer={onChangeEquivalentAnswer}
+            <DialogueLineAnswersConstructor
+                onDialogueLineAnswerChange={onDialogueLineAnswerChange}
                 onAddEquivalentAnswer={onAddEquivalentAnswer}
                 onRemoveEquivalentAnswer={onRemoveEquivalentAnswer}
-                texts={answer.texts}
+                texts={sessionDialogueLine.texts}
                 chatGpt={ChatGpt}
                 isLoading={isChatGptLoading}
             />
@@ -271,8 +272,8 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     function PossibleWordsComponent() {
         return (
             <PossibleWordsToUseInfo
-                wordsToUse={answer.wordsToUse}
-                onWordsToUseChange={onWordsToUseChange}
+                wordsToUse={sessionDialogueLine.wordsToUse}
+                onWordsToUseChange={onPossibleWordsChange}
             />
         )
     }
@@ -280,7 +281,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     function TranslatesComponent() {
         return (
             <TranslatesInfo
-                translates={answer.translates}
+                translates={sessionDialogueLine.translates}
                 onAddTranslate={onAddTranslate}
                 onDeleteTranslate={onDeleteTranslate}
                 onTranslateChange={onTranslateChange}
@@ -292,44 +293,45 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
-            setAnswer(answerRecoil);
+            setSessionAnswerData(answerRecoil);
             setIsEdited(true);
             return;
         }
         setIsEdited(false);
 
-        setAnswer(JSON.parse(data));
+        setSessionAnswerData(JSON.parse(data));
     }, [answerRecoil]);
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
-            setAnswer(answerRecoil);
+            setSessionAnswerData(answerRecoil);
             setIsEdited(true);
             return;
         }
         setIsEdited(false);
 
-        setAnswer(JSON.parse(data));
+        setSessionAnswerData(JSON.parse(data));
     }, []);
     
     useEffect(() => {
-        if (!constructorActionsState.answer.isSave) {
-            return;
+        if (constructorActionsState.answer.isSave) {
+            onSave();
+        }
+        if (constructorActionsState.answer.isReset) {
+            reset();
         }
 
-        onSave();
 
-    }, [constructorActionsState.answer.isSave]);
+    }, [constructorActionsState.answer]);
 
     useEffect(() => {
-
         if (isEdited) {
             return;
         }
 
-        localStorage.setItem(props.id, JSON.stringify(answer));
-    }, [answer]);
+        localStorage.setItem(props.id, JSON.stringify(sessionDialogueLine));
+    }, [sessionDialogueLine]);
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -339,30 +341,26 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
 
         localStorage.removeItem(props.id);
         setIsEdited(true)
-    }, [answer]);
+    }, [sessionDialogueLine]);
 
     useEffect(() => {
-        if (!props.setStates) {
-            return;
-        }
-
         if (isEdited) {
-            props.setStates([DialogueItemStateType.NoErrors])
+            setDialogueItemState(DialogueItemStateType.NoErrors)
             return;
         }
 
-        props.setStates([DialogueItemStateType.UnsavedChanges])
+        setDialogueItemState(DialogueItemStateType.UnsavedChanges)
     }, [isEdited]);
 
 
     useEffect(() => {
-        props.onEditedDialogueItemType(EditDialogueItemType.Answers, JSON.stringify(answer?.texts) != JSON.stringify(answerRecoil?.texts));
-        props.onEditedDialogueItemType(EditDialogueItemType.Translates, JSON.stringify(answer?.translates) != JSON.stringify(answer?.translates));
-        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(answer?.tensesList) != JSON.stringify(answer?.tensesList));
-        props.onEditedDialogueItemType(EditDialogueItemType.PossibleWords, answer?.wordsToUse != answer?.wordsToUse);
-    }, [answer]);
+        props.onEditedDialogueItemType(EditDialogueItemType.Answers, JSON.stringify(sessionDialogueLine?.texts) != JSON.stringify(answerRecoil?.texts));
+        props.onEditedDialogueItemType(EditDialogueItemType.Translates, JSON.stringify(sessionDialogueLine?.translates) != JSON.stringify(answerRecoil?.translates));
+        props.onEditedDialogueItemType(EditDialogueItemType.AnswersTenseses, JSON.stringify(sessionDialogueLine?.tensesList) != JSON.stringify(answerRecoil?.tensesList));
+        props.onEditedDialogueItemType(EditDialogueItemType.PossibleWords, sessionDialogueLine?.wordsToUse != answerRecoil?.wordsToUse);
+    }, [sessionDialogueLine]);
 
-    if (!answer) {
+    if (!sessionDialogueLine) {
         return null;
     }
 
@@ -376,7 +374,7 @@ export default function AnswerContructor(props: IAnswerContructor): JSX.Element 
             /> */}
 
             {props.editDialogueItemType == EditDialogueItemType.Answers
-                ? EquivalentAnswersComponent()
+                ? DialogueLineAnswersComponent()
                 : null
             }
             {props.editDialogueItemType == EditDialogueItemType.AnswersTenseses

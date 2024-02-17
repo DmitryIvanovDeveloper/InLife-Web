@@ -6,10 +6,12 @@ export function useConstructorActionsState() {
 
 const constructorActionsState: IConstructorActionsState ={
     phrase: {
-        isSave: false
+        isSave: false,
+        isReset: false
     },
     answer: {
-        isSave: false
+        isSave: false,
+        isReset: false
     }
 }
 const constructorActionsStateAtom = atom<IConstructorActionsState>({
@@ -20,8 +22,10 @@ const constructorActionsStateAtom = atom<IConstructorActionsState>({
 export interface IConstructorActionsState {
     phrase: { 
         isSave: boolean
+        isReset: boolean
     }
     answer: {
         isSave: boolean
+        isReset: boolean
     }
 }

@@ -19,5 +19,12 @@ export default function useConstructorActions() {
             updatedState.answer.isSave = isSave;
             setConstructorActionsState(updatedState);
         },
+        setIsReset: (isReset: boolean) => {
+            const updatedState: IConstructorActionsState = JSON.parse(JSON.stringify(constructorActionsState));
+            updatedState.answer.isReset = isReset;
+            updatedState.phrase.isReset = isReset;
+
+            setConstructorActionsState(updatedState);
+        }
     }
 }

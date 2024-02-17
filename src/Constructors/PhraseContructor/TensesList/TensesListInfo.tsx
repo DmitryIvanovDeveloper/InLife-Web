@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import TensesList from "./TensesList";
 import TensesListInstruction from "./TensesListInstruction";
+import TensesListConstructor from "../../DialogueLine/TensesList/TensesListConstructor";
 
 export interface IPhraseInfoProps {
     tensesList: string[];
@@ -14,12 +14,10 @@ export default function TensesListInfo(props: IPhraseInfoProps) {
             alignItems='center' 
             flexDirection='column'
         >
-            <TensesList  
+            <TensesListConstructor  
                 tensesList={props.tensesList}
                 setTensesList={props.setTensesList}
             />
-            
-            {/* <TensesListInstruction /> */}
         </Box>
 
     )

@@ -5,8 +5,6 @@ import TabPanel from "@mui/lab/TabPanel";
 import { Alert, Box, Button, CircularProgress, Grid, IconButton, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
-import { useTreeState } from "../../Data/useTreeState";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";

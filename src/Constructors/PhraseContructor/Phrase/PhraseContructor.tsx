@@ -14,6 +14,7 @@ import { EditDialogueItemType } from "../../models/EditType";
 import { v4 as uuidv4 } from 'uuid';
 import { useConstructorActionsState } from "../../../Data/useConstructorActionsState";
 import useConstructorActions from "../../../Data/ConstructorActions";
+import { useDialogueItemState } from "../../../Data/useDialogueitemState";
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -28,26 +29,21 @@ export interface IPhraseConstructor {
 export default function PhraseContructor(props: IPhraseConstructor): JSX.Element | null {
     const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
-    
     const phraseQueriesApi = usePhraseQueriesApi();
-
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const dialogueRecoil = useDialogue(props.dialogueId);
-
-    const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
+    const [sessionPhraseData, setSessionPhraseData] = useState<IPhraseModel>(phraseRecoil);
     const [isEdited, setIsEdited] = useState(true);
+    const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
 
-
-   
     // QueryApi
     const onSave = async () => {
-        const updatedPhrase = JSON.parse(JSON.stringify(phrase));
+        const updatedsessionPhraseData = JSON.parse(JSON.stringify(sessionPhraseData));
 
-        updatedPhrase.audioSettings = getSettings();
+        updatedsessionPhraseData.audioSettings = getSettings();
 
-        var status = await phraseQueriesApi.update(updatedPhrase);
+        var status = await phraseQueriesApi.update(updatedsessionPhraseData);
         props.setStatus(status);
-        console.log(status);
 
         if (status == Status.OK) {
             localStorage.removeItem(props.id);
@@ -58,45 +54,44 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
 
     const reset = () => {
-        setPhrase(phraseRecoil);
+        setSessionPhraseData(phraseRecoil);
         setIsEdited(true);
         localStorage.removeItem(props.id);
+        constructorActions.setIsReset(false);
     }
 
     const onChangeText = (phrase: string) => {
-        setPhrase(prev => ({
+        setSessionPhraseData(prev => ({
             ...prev,
             text: phrase
         }));
 
-
+        
         setIsEdited(false);
     }
 
     const onCommentsChange = (comments: string) => {
-        setPhrase(prev => ({
+        setSessionPhraseData(prev => ({
             ...prev,
             comments
         }));
         setIsEdited(false);
-
     }
 
     const onSetTenses = (tenses: string[]) => {
-        setPhrase(prev => ({
+        setSessionPhraseData(prev => ({
             ...prev,
             tensesList: tenses
         }));
 
         setIsEdited(false);
-
     }
 
     // Components
     function PhraseComponent() {
         return (
             <PhraseInfo
-                phrase={phrase.text}
+                phrase={sessionPhraseData.text}
                 onChangeText={onChangeText}
             />
         )
@@ -105,7 +100,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     function PhraseTensesListComponent() {
         return (
             <TensesListInfo
-                tensesList={phrase.tensesList}
+                tensesList={sessionPhraseData.tensesList}
                 setTensesList={onSetTenses}
             />
         )
@@ -114,11 +109,32 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     function CommentsComponent() {
         return (
             <CommentsInfo
-                comments={phrase.comments}
+                comments={sessionPhraseData.comments}
                 onCommentsChange={onCommentsChange}
             />
         )
     }
+
+    useEffect(() => {
+        if (isEdited) {
+            return;
+        }
+
+        localStorage.setItem(props.id, JSON.stringify(sessionPhraseData));
+    }, [sessionPhraseData]);
+    
+    useEffect(() => {
+        var data = localStorage.getItem(props.id);
+        if (!data) {
+            setSessionPhraseData(phraseRecoil);
+            setIsEdited(true);
+            return;
+        }
+        
+        setIsEdited(false);
+
+        setSessionPhraseData(JSON.parse(data));
+    }, [phraseRecoil])
 
 
     // UseEffects
@@ -128,7 +144,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
         var newAudioSettings: IAudioSettings = {
             id: uuidv4(),
-            generationSettings: GetSettings(parsedData.type, parsedData.name, phrase.text)
+            generationSettings: GetSettings(parsedData.type, parsedData.name, sessionPhraseData.text)
         }
 
         return newAudioSettings;
@@ -137,13 +153,13 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
-            setPhrase(phraseRecoil);
+            setSessionPhraseData(phraseRecoil);
             setIsEdited(true);
             return;
         }
         setIsEdited(false);
 
-        setPhrase(JSON.parse(data));
+        setSessionPhraseData(JSON.parse(data));
     }, [phraseRecoil])
 
     useEffect(() => {
@@ -151,29 +167,24 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             return;
         }
 
-        localStorage.setItem(props.id, JSON.stringify(phrase));
+        localStorage.setItem(props.id, JSON.stringify(sessionPhraseData));
 
-    }, [phrase]);
-
-    useEffect(() => {
-        props.onEditedDialogueItemType(EditDialogueItemType.Phrase, phrase.text != phraseRecoil.text);
-        props.onEditedDialogueItemType(EditDialogueItemType.Comments, phrase.comments != phraseRecoil.comments);
-        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(phrase.tensesList) != JSON.stringify(phraseRecoil.tensesList));
-
-    }, [phrase.tensesList, phrase.comments, phrase.text]);
+    }, [sessionPhraseData]);
 
     useEffect(() => {
+        props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData.text != phraseRecoil.text);
+        props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData.comments != phraseRecoil.comments);
+        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData.tensesList) != JSON.stringify(phraseRecoil.tensesList));
 
-        if (!props.setStates) {
-            return;
-        }
+    }, [sessionPhraseData.tensesList, sessionPhraseData.comments, sessionPhraseData.text]);
 
+    useEffect(() => {
         if (isEdited) {
-            props.setStates([DialogueItemStateType.NoErrors])
+            setDialogueItemState(DialogueItemStateType.NoErrors)
             return;
         }
 
-        props.setStates([DialogueItemStateType.UnsavedChanges])
+        setDialogueItemState(DialogueItemStateType.UnsavedChanges)
     }, [isEdited]);
 
 
@@ -185,18 +196,20 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
         localStorage.removeItem(props.id);
         setIsEdited(true)
-    }, [phrase]);
+    }, [sessionPhraseData]);
 
     useEffect(() => {
-        if (!constructorActionsState.phrase.isSave) {
-            return;
+        if (constructorActionsState.phrase.isSave) {
+            onSave();
+        }
+        if (constructorActionsState.phrase.isReset) {
+            reset();
         }
         
-        onSave();
        
-    }, [constructorActionsState.phrase.isSave]);
+    }, [constructorActionsState.phrase]);
 
-    if (!phrase) {
+    if (!sessionPhraseData) {
         return null;
     }
 

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import DialogueConstructor from '../Constructors/DialogueConstructor/DialogueConstructor';
 import { Locations } from '../Data/Locations';
 import { useDialogueItemConstructor } from '../Data/useDialogues';
-import { useSelectedDialogueItemSelection } from '../Data/useDialogueItemSelection';
 import { useTeacher } from '../Data/useTeacher';
 import useDialogueQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
@@ -13,6 +12,7 @@ import LinarProgressCustom from '../Components/CircularProgress';
 import DialogueGraph from '../Components/GraphTree/DialogueGraph';
 import LocationCarousel from '../Components/LocationCarousel';
 import DialoguesTab from './DialogesTab';
+import { useSelectDialogueLine } from '../Data/useDialogueItemSelection';
 
 export interface IDialoguesProps { }
 
@@ -29,8 +29,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
     const [dialogue, setDialogue] = useState<IDialogueModel | null>(null);
     const [isHideLocations, setIsHideLocations] = useState<boolean>(false);
-    const [selection, setSelection] = useSelectedDialogueItemSelection();
-
     const onChangeLocation = (id: string) => {
         setNpcId(id);
         setDialogue(null);
@@ -45,7 +43,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     const onClick = (clickedDialogue: IDialogueModel) => {
         if (dialogue?.id == clickedDialogue.id) {
-            setSelection("");
+            // setSelection("");
             setDialogue(null);
             setIsHideLocations(false);
             setDialogueItemConstructor(() => <div></div>);
@@ -53,7 +51,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             return;
         }
 
-        setSelection(dialogue?.id ?? "");
+        // setSelectDialogueLine();
         setDialogue(clickedDialogue);
         setIsHideLocations(true);
         setDialogueItemConstructor(() => <DialogueConstructor id={clickedDialogue.id} setStates={() => { }} />);

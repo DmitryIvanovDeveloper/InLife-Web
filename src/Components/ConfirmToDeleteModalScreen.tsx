@@ -8,16 +8,16 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import * as React from 'react';
 import { DialogueItemType } from './GraphTree/DialogueitemType';
+import { useSelectDialogueLine } from '../Data/useDialogueItemSelection';
 
 export interface IConfirmToDeleteModalScreen {
     isOpen: boolean;
     confirm: (dialogueItemType: DialogueItemType | null) => void;
-    name: string
 }
 export default function ConfirmToDeleteModalScreen(props: IConfirmToDeleteModalScreen) {
-    const [open, setOpen] = React.useState(false);
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const [selectDialogueLine, setSelectDialogieLine] = useSelectDialogueLine();
 
     return (
         <React.Fragment>
@@ -40,7 +40,7 @@ export default function ConfirmToDeleteModalScreen(props: IConfirmToDeleteModalS
                         Phrase
                     </Button>
                     <Button sx={{ fontWeight: '600', color: '#ef5350' }} onClick={() => props.confirm(DialogueItemType.Answer)} autoFocus>
-                        {props.name}
+                        [{selectDialogueLine.line.name}]
                     </Button>
                     <Button sx={{ fontWeight: '600', color: 'white', backgroundColor: 'green' }} onClick={() => props.confirm(null)} autoFocus>
                         Disagree

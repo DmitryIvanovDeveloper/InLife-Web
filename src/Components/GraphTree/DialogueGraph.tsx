@@ -17,7 +17,7 @@ import { Resizable } from 're-resizable';
 
 
 export interface IDialoguesGraphProps {
-    dialogueId: string
+    dialogueId: string;
 }
 
 export default function DialogueGraph(props: IDialoguesGraphProps) {
@@ -76,8 +76,10 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     function node(dialogueItem: CustomNodeElementProps) {
         if (!diaologueRecoil.voiceSettings &&
             dialogueItem.nodeDatum.attributes?.nodeType == DialogueItemType.Dialogue) {
-            return <DialogueItemNode customNodeElementProps={dialogueItem}
+
+                return <DialogueItemNode customNodeElementProps={dialogueItem}
             />
+
         }
         if (!!diaologueRecoil.voiceSettings)
         {
@@ -89,6 +91,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     if (!data) {
         return null;
     }
+
     return (
         <Resizable
             defaultSize={{

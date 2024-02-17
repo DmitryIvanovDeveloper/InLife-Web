@@ -1,15 +1,13 @@
-import { Box, Button } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { Tenseses } from '../../../Data/tenseses';
-import DevidedLabel from '../../../Components/Headers/DevidedLabel';
+import { Box, Button } from "@mui/material";
+import { useState, useEffect } from "react";
+import DevidedLabel from "../../../Components/Headers/DevidedLabel";
+import { Tenseses } from "../../../Data/tenseses";
 
-
-export interface ITensesListProps {
-    tensesList: string[]
-    setTensesList: (tenses: string[]) => void
+export interface IPhraseInfoProps {
+    tensesList: string[];
+    setTensesList: (tensesList: string[]) => void;
 }
-
-export default function TensesList(props: ITensesListProps) {
+export default function TensesListConstructor(props: IPhraseInfoProps) {
     const [clickedButtons, setClickedButtons] = useState<string[]>(props.tensesList);
 
     function OnClick(event: any) {
@@ -48,5 +46,3 @@ export default function TensesList(props: ITensesListProps) {
 
     );
 }
-
-

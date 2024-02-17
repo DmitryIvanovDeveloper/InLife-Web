@@ -6,7 +6,6 @@ import { DialogueItemType } from "../GraphTree/DialogueitemType";
 
 export interface IDeleteButton {
     onDelete: (dialogueItemType: DialogueItemType) => void;
-    name: string;
 }
 
 export default function DeleteButton(props: IDeleteButton) {
@@ -22,7 +21,7 @@ export default function DeleteButton(props: IDeleteButton) {
 
     return (
         <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-            <ConfirmToDeleteModalScreen isOpen={isOpen} confirm={confirm} name={`[${props.name.toUpperCase()}]`} />
+            <ConfirmToDeleteModalScreen isOpen={isOpen} confirm={confirm} />
             <IconButton onClick={() => setIsOpen(true)} sx={{ color: '#c62828' }}>
                 <DeleteOutlinedIcon />
             </IconButton>

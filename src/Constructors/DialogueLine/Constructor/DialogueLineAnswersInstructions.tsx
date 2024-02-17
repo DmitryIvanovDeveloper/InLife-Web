@@ -3,21 +3,21 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import TensesListAnswer from '../../../Images/Instructions/TensesListAnswer.png';
+import Answers from '../../../Images/Instructions/Answers.png';
 
-export default function TensesListInstruction() {
+export default function DialogueLineAnswersInstructions() {
     return (
         <Card>
             <CardActionArea>
                 <CardMedia
                     component="img"
-                    height="218"
-                    image={TensesListAnswer}
+                    height="300"
+                    image={Answers}
                     alt="green iguana"
                 />
                 <CardContent>
                     <Typography variant="body2" color="text.secondary">
-                        Possible tenseses for the possible answers
+                        Add answers to next specific phrase
                     </Typography>
                 </CardContent>
             </CardActionArea>

@@ -1,28 +1,20 @@
 import { atom, useRecoilState } from "recoil";
+import ISelectDialogueLine from "../Constructors/models/ISelectDialogueLine";
 
-export function useSelectedDialogueItemSelection() {
-    return useRecoilState(selectedDialogueItem)
+export function useSelectDialogueLine() {
+    return useRecoilState(selectDialogueLine)
 }
 
-const selectedDialogueItem = atom<string>({
-    key: 'selectedDialogueItem',
-    default: "",
-})
-
-export function useNextDialogueItemSelection() {
-    return useRecoilState(dialogueItem)
+const defaultSelectDialogueLine: ISelectDialogueLine = {
+    dialogueItemId: "",
+    line: {
+        id: "",
+        name: ""
+    },
+    nextDialogueItemId: ""
 }
 
-const dialogueItem = atom<string>({
-    key: 'dialogieItem',
-    default: "",
-})
-
-export function useDialogueLineSelection() {
-    return useRecoilState(dialogueLineSelection)
-}
-
-const dialogueLineSelection = atom<string>({
-    key: 'dialogueLineSelection',
-    default: "",
+const selectDialogueLine = atom<ISelectDialogueLine>({
+    key: 'selectDialogueLine',
+    default: defaultSelectDialogueLine
 })

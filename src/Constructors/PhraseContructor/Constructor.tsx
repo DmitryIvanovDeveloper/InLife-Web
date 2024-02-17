@@ -1,33 +1,45 @@
 import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import { Alert, Box, Button, CircularProgress, Divider, Grid, IconButton, Tab } from "@mui/material";
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, IconButton, Typography, useMediaQuery, useTheme, } from "@mui/material";
 import { useEffect, useState } from "react";
 import { usePhrase } from "../../Data/useDialogues";
-import { useDialogueLineSelection, useNextDialogueItemSelection, useSelectedDialogueItemSelection } from "../../Data/useDialogueItemSelection";
-import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
+import { useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
 import PhraseConstructor from './Phrase/PhraseContructor';
-import AvTimerIcon from '@mui/icons-material/AvTimer';
-import TranslateIcon from '@mui/icons-material/Translate';
-import SpellcheckIcon from '@mui/icons-material/Spellcheck';
-import { IoMdAddCircle } from "react-icons/io";
-import MessageIcon from '@mui/icons-material/Message';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import ChatElement from '../../Components/ChatElement/ChatElement';
 import { EditDialogueItemType } from '../models/EditType';
-import AnswerContructor from '../AnswerContructor/AnswerConstructor';
-import DeleteButton from '../../Components/Button/DeleteButton';
-import SaveIcon from '@mui/icons-material/Save';
+import DialogueLineContructor from '../DialogueLine/DialogueLineContructor';
 import { IDialogueItemEditState } from '../models/IPhraseSettingsState';
+import PhraseSettings from './Phrase/PhraseSettings';
+import DialogueLineSettings from './DialogueLineSettings';
+import DialogueLinesTab from './Phrase/DialogueLinesTab';
+import ISelectDialogueLine from '../models/ISelectDialogueLine';
+import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
+import React from 'react';
+import Instruction from '../Instruction';
+import { createTheme } from '@mui/material/styles';
+import { useDialogueItemState } from '../../Data/useDialogueitemState';
 import useConstructorActions from '../../Data/ConstructorActions';
-import { useConstructorActionsState } from '../../Data/useConstructorActionsState';
-import useAnswerQueriesApi from '../../ThereGame.Api/Queries/AnswerQueriesApi';
-import { DialogueItemType } from '../../Components/GraphTree/DialogueitemType';
-import usePhraseQueriesApi from '../../ThereGame.Api/Queries/PhraseQueriesApi';
 
-const defaultDialogieItemState: IDialogueItemEditState = {
+let theme = createTheme({
+    // Theme customization goes here as usual, including tonalOffset and/or
+    // contrastThreshold as the augmentColor() function relies on these
+});
+
+theme = createTheme(theme, {
+    // Custom colors created with augmentColor go here
+    palette: {
+        salmon: theme.palette.augmentColor({
+            color: {
+                main: '#FF5733',
+            },
+            name: 'salmon',
+        }),
+    },
+});
+
+const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
     isPhraseCommentsEdited: false,
     isPhraseTensesesEdited: false,
@@ -41,109 +53,49 @@ export interface IPhraseConstructor {
     dialogueId: string;
     id: string
     parentId: string
-    setStates?: (states: DialogueItemStateType[]) => void;
     onEditedDialogueItemType?: (PhraseSettingsState: IDialogueItemEditState) => {}
 }
 
+
 export default function Constructor(props: IPhraseConstructor): JSX.Element | null {
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
-    
-    const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
-    const [selection, setSelection] = useSelectedDialogueItemSelection();
 
-    const [selectedVariationName, setSelectedVariationName] = useState<string>(`story line 1`);
-
-    const [phrase, setPhrase] = useState<IPhraseModel>(phraseRecoil);
-    const [isEdited, setIsEdited] = useState(true);
     const [status, setStatus] = useState<Status>(Status.OK);
 
-    const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>();
+    const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>(undefined);
+    const [currentDialogueLineData, setCurrentDialogueLineData] = useState<string[]>([]);
+    const [nextPhraseCaption, setNextPharseCaption] = useState<string>("");
+    const [selectDialogueLine, setSelectDialogueLine] = useSelectDialogueLine();
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
 
-    const [variations, setVariations] = useState<string[]>([]);
-    const [nextPhrase, setNextPharse] = useState<string>("");
-    const [isDeleting, setIsDeleting] = useState<boolean>(false);
-    const [isCreating, setIsCreating] = useState<boolean>(false);
 
-    const [nextdialoguItemSelection, setNextdialoguItemSelection] = useNextDialogueItemSelection();
-    const answerQueriesApi = useAnswerQueriesApi();
-    const phraseQueriesApi = usePhraseQueriesApi();
-
-    const [dialogueLineSelection, setDialogueLineSelection] = useDialogueLineSelection();
 
     //TODO: Refactor
     const [dialogueItemEditState, setDialogueItemEditState] = useState<IDialogueItemEditState>(() => {
         var data = localStorage.getItem(`${props.id} Constructor-Edit-State`);
-        return !data ? defaultDialogieItemState : JSON.parse(data);
+        return !data ? defaultDialogueItemState : JSON.parse(data);
     });
 
-
-    const onCreateAnswers = async () => {
-        setIsCreating(true);
-        await answerQueriesApi.create(props.id);
-        setIsCreating(false);
-
-    }
-
-    // QueryApi
-    const onSavePhrase = async () => {
-        constructorActions.setIsSavePhrase(true);
-    }
-    const onSaveAnswer = async () => {
-        constructorActions.setIsSaveAnswer(true);
-    }
-
-    const onDelete = async (dialogueItemType: DialogueItemType) => {
-        setIsDeleting(true);
-
-        if (dialogueItemType == DialogueItemType.Answer) {
-            await answerQueriesApi.delete(dialogueLineSelection);
-            localStorage.removeItem(dialogueLineSelection);
-        }
-        if (dialogueItemType == DialogueItemType.Phrase) {
-
-            await phraseQueriesApi.delete(props.id);
-            localStorage.removeItem(phrase.id);
-        }
-
-        setIsDeleting(false);
-    }
-
-
-    const onReset = () => {
-        setPhrase(phraseRecoil);
-        setPhrase(phraseRecoil);
-        setIsEdited(true);
-        setStatus(Status.OK);
-        setDialogueItemEditState(defaultDialogieItemState);
-        localStorage.removeItem(props.id);
-    }
-
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setDialogueLineSelection(newValue);
-        setEditDialogueItemType(undefined);
-    };
-
-    const isEditDialogueItem = () => {
-        var isEdit = editDialogueItemType == EditDialogueItemType.Phrase ||
+    const isEditDialogueItem = (): boolean => {
+        return editDialogueItemType == EditDialogueItemType.Phrase ||
             editDialogueItemType == EditDialogueItemType.PhraseTenseses ||
             editDialogueItemType == EditDialogueItemType.Comments
-            ;
-
-        return isEdit;
+        ;
     }
 
     const onEditDialogueItemType = (newEditDialogueItemType: EditDialogueItemType) => {
         if (newEditDialogueItemType == editDialogueItemType) {
             setEditDialogueItemType(undefined);
-            return
+            return;
         }
-
 
         setEditDialogueItemType(newEditDialogueItemType);
     }
 
     const onEditedDialogueItemType = (editedDialogueItemType: EditDialogueItemType, isEdited: boolean) => {
+
         if (editedDialogueItemType == EditDialogueItemType.Phrase) {
             setDialogueItemEditState(prev => ({
                 ...prev,
@@ -192,34 +144,25 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
     useEffect(() => {
         if (!phraseRecoil.answers.length) {
-            setVariations([])
+            setCurrentDialogueLineData([])
             return;
         }
 
-        var answer = phraseRecoil.answers.find(answer => answer?.id == dialogueLineSelection);
-        setVariations(answer?.texts ?? [])
-    }, [dialogueLineSelection]);
+        var answer = phraseRecoil.answers.find(answer => answer?.id == selectDialogueLine.line.id);
+        setCurrentDialogueLineData(answer?.texts ?? []);
+
+    }, [selectDialogueLine.line.id]);
 
     useEffect(() => {
-        var nextPhrase = phraseRecoil.answers.find(answer => answer?.id == dialogueLineSelection)?.phrases[0];
-        setNextPharse(nextPhrase?.text ?? "");
+        var nextPhrase = phraseRecoil.answers.find(answer => answer?.id == selectDialogueLine.line.id)?.phrases[0];
+        setNextPharseCaption(nextPhrase?.text ?? "");
 
-        setNextdialoguItemSelection(nextPhrase?.id ?? "");
-    }, [variations]);
+        setSelectDialogueLine(prev => ({
+            ...prev,
+            nextDialogueItemId: nextPhrase?.id ?? ""
+        }))
 
-    useEffect(() => {
-        setDialogueLineSelection(!dialogueLineSelection ? dialogueLineSelection : phraseRecoil.answers[0]?.id );
-
-        var data = localStorage.getItem(props.id);
-        if (!data) {
-            setPhrase(phraseRecoil);
-            setIsEdited(true);
-            return;
-        }
-        setIsEdited(false);
-
-        setPhrase(JSON.parse(data));
-    }, [phraseRecoil])
+    }, [selectDialogueLine.line.id])
 
     useEffect(() => {
         localStorage.setItem(`${props.id} Constructor-Edit-State`, JSON.stringify(dialogueItemEditState));
@@ -233,13 +176,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         setDialogueItemEditState(JSON.parse(data));
     }, []);
 
-    useEffect(() => {
-        if (isEdited) {
-            return;
-        }
-
-        localStorage.setItem(props.id, JSON.stringify(phrase));
-    }, [phrase]);
 
     useEffect(() => {
         if (dialogueItemEditState.isPhraseEdited) {
@@ -272,23 +208,11 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         }
     }, []);
 
-    useEffect(() => {
-        if (!props.setStates) {
-            return;
-        }
 
-        if (isEdited) {
-            props.setStates([DialogueItemStateType.NoErrors])
-            return;
-        }
-
-        props.setStates([DialogueItemStateType.UnsavedChanges])
-    }, [isEdited]);
-
-
-    if (!phrase) {
+    if (!phraseRecoil) {
         return null;
     }
+
     return (
         <Box
             component="form"
@@ -307,6 +231,12 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 name='Constructor'
             />
 
+            <Instruction
+                editDialogueItemType={editDialogueItemType}
+                onClose={() => setIsOpen(false)}
+                isOpen={isOpen}
+            />
+
             <Box
                 sx={{
                     backgroundColor: "#e0f2f1",
@@ -315,183 +245,50 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                     margin: 2,
                 }}
             >
-                <TabContext value={dialogueLineSelection}>
-                    <Grid display='flex' direction='row' alignItems='flex-start' justifyContent='space-between'>
-                        <Grid display='flex' direction='row' alignItems='center'>
-                            <TabList onChange={handleChange} aria-label="lab API tabs example">
-                                {!!phraseRecoil.answers.length
-                                    ? phraseRecoil.answers.map((answer, id) => (
-                                        <Tab key={answer?.id} onClick={() => { 
-                                            setVariations(answer.texts); 
-                                            setSelectedVariationName(`story line ${id + 1}`); 
-                                            setDialogueLineSelection(answer.id);
-                                        }} 
-                                            label={`story line ${id + 1}`} value={answer?.id} />
-                                    ))
-                                    : <Tab value="" label={`story line 1`} />
-                                }
-                            </TabList>
-                            {isCreating
-                                ? <CircularProgress color='error' size={20} />
-                                : <IconButton onClick={onCreateAnswers}>
-                                    <IoMdAddCircle />
-                                </IconButton>
-                            }
+                {dialogueItemState != DialogueItemStateType.NoErrors
+                    ? <Box display='flex' justifyContent='flex-end' flexDirection="row">
+                        <Button onClick={() => constructorActions.setIsReset(true)}>Reset unsaved changes</Button>
+                    </Box>
+                    : null
+                }
 
-                        </Grid>
-
-                        {!isDeleting
-                            ? <DeleteButton onDelete={onDelete} name={selectedVariationName} />
-                            : <CircularProgress color='error' size={20} />
-                        }
-                    </Grid>
-
-                    {constructorActionsState.phrase.isSave
-                        ? <CircularProgress size={20} />
-                        : <Grid display='flex' direction='row' alignItems='center' margin="3px">
-
-                            <IconButton
-                                sx={{
-                                    backgroundColor: editDialogueItemType == EditDialogueItemType.Phrase ? commonStyle.editItemColor : "",
-                                    color: dialogueItemEditState.isPhraseEdited ? commonStyle.editedItemColor : ""
-                                }}
-                                onClick={() => onEditDialogueItemType(EditDialogueItemType.Phrase)}
-                            >
-                                <DriveFileRenameOutlineIcon />
-                            </IconButton>
-
-                            <IconButton
-                                sx={{
-                                    backgroundColor: editDialogueItemType == EditDialogueItemType.Comments ? commonStyle.editItemColor : "",
-                                    color: dialogueItemEditState.isPhraseCommentsEdited ? commonStyle.editedItemColor : ""
-                                }}
-                                onClick={() => onEditDialogueItemType(EditDialogueItemType.Comments)}
-                            >
-                                <MessageIcon />
-                            </IconButton>
-                            <IconButton
-                                sx={{
-                                    backgroundColor: editDialogueItemType == EditDialogueItemType.PhraseTenseses ? commonStyle.editItemColor : "",
-                                    color: dialogueItemEditState.isPhraseTensesesEdited ? commonStyle.editedItemColor : ""
-                                }}
-                                onClick={() => onEditDialogueItemType(EditDialogueItemType.PhraseTenseses)}
-                            >
-                                <AvTimerIcon />
-                            </IconButton>
-                            {editDialogueItemType == EditDialogueItemType.Phrase ||
-                                editDialogueItemType == EditDialogueItemType.PhraseTenseses ||
-                                editDialogueItemType == EditDialogueItemType.Comments
-                                ? <IconButton
-                                    sx={{
-                                        color: dialogueItemEditState.isPhraseCommentsEdited ||
-                                            dialogueItemEditState.isPhraseEdited ||
-                                            dialogueItemEditState.isPhraseTensesesEdited
-                                            ? commonStyle.editedItemColor
-                                            : ""
-                                    }}
-
-                                    onClick={() => onSavePhrase()}
-                                >
-                                    <SaveIcon />
-                                </IconButton>
-                                : null
-                            }
-
-
-                        </Grid>
-                    }
-
-                    <ChatElement
-                        title={``}
-                        position={"left"}
-                        type={"text"}
-                        text={phraseRecoil.text}
+                <TabContext value={selectDialogueLine.line.id}>
+                    <DialogueLinesTab
+                        answers={phraseRecoil.answers}
+                        setEditDialogueItemType={() => setEditDialogueItemType(undefined)}
                     />
-                    <Box>
-                        <Grid display='flex' direction='column' alignItems='end'>
-                            {constructorActionsState.answer.isSave
-                                ? <CircularProgress size={20} />
-                                : <Grid
-                                    display='flex' direction='row' alignItems='center'
-                                >
-                                    <IconButton
-                                        sx={{
-                                            backgroundColor: editDialogueItemType == EditDialogueItemType.Answers ? commonStyle.editItemColor : "",
-                                            color: dialogueItemEditState.isAnswersEdited ? commonStyle.editedItemColor : ""
-                                        }}
-                                        onClick={() => onEditDialogueItemType(EditDialogueItemType.Answers)}
-                                    >
-                                        <DriveFileRenameOutlineIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        sx={{
-                                            backgroundColor: editDialogueItemType == EditDialogueItemType.Translates ? commonStyle.editItemColor : "",
-                                            color: dialogueItemEditState.isAnswersTranslatesEdited ? commonStyle.editedItemColor : ""
-                                        }}
-                                        onClick={() => onEditDialogueItemType(EditDialogueItemType.Translates)}>
-                                        <TranslateIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        sx={{
-                                            backgroundColor: editDialogueItemType == EditDialogueItemType.AnswersTenseses ? commonStyle.editItemColor : "",
-                                            color: dialogueItemEditState.isAnswersTensesListEdited ? commonStyle.editedItemColor : ""
-                                        }}
-                                        onClick={() => onEditDialogueItemType(EditDialogueItemType.AnswersTenseses)}>
-                                        <AvTimerIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        sx={{
-                                            backgroundColor: editDialogueItemType == EditDialogueItemType.PossibleWords ? commonStyle.editItemColor: "",
-                                            color: dialogueItemEditState.isAnswersPossibleWordsEdited ? commonStyle.editedItemColor : ""
-                                        }}
-                                        onClick={() => onEditDialogueItemType(EditDialogueItemType.PossibleWords)}>
-                                        <SpellcheckIcon />
-                                    </IconButton>
-                                    {editDialogueItemType == EditDialogueItemType.Answers ||
-                                        editDialogueItemType == EditDialogueItemType.AnswersTenseses ||
-                                        editDialogueItemType == EditDialogueItemType.Translates ||
-                                        editDialogueItemType == EditDialogueItemType.PossibleWords
-                                        ? <IconButton
-                                            sx={{
-                                                color: dialogueItemEditState.isAnswersEdited ||
-                                                    dialogueItemEditState.isAnswersTranslatesEdited ||
-                                                    dialogueItemEditState.isAnswersTensesListEdited ||
-                                                    dialogueItemEditState.isAnswersPossibleWordsEdited
-                                                    ? commonStyle.editedItemColor
-                                                    : ""
-                                            }}
-                                            onClick={() => onSaveAnswer()}>
+                    <Box display='flex' flexDirection="row" justifyContent='space-between'>
+                        <PhraseSettings
+                            onEditDialogueItemType={onEditDialogueItemType}
+                            editDialogueItemType={editDialogueItemType}
+                            dialogueItemEditState={dialogueItemEditState}
+                            phraseCaption={phraseRecoil.text}
+                        />
 
-                                            <SaveIcon />
-
-                                        </IconButton>
-                                        : null
-                                    }
-
-                                </Grid>
-                            }
-
-
-                            {variations.map(answer => (
-                                <Box>
-                                    <ChatElement
-                                        title={`student [possible answer]`}
-                                        position={"right"}
-                                        type={"text"}
-                                        text={answer}
-                                    />
-                                </Box>
-                            ))}
-                        </Grid>
+                        {editDialogueItemType != undefined
+                            ? <Box>
+                                <IconButton onClick={() => setIsOpen(true)}>
+                                    <HelpOutlinedIcon />
+                                </IconButton>
+                            </Box>
+                            : null
+                        }
 
                     </Box>
 
-                    {!!nextPhrase
+                    <DialogueLineSettings
+                        onEditDialogueItemType={onEditDialogueItemType}
+                        editDialogueItemType={editDialogueItemType}
+                        dialogueItemEditState={dialogueItemEditState}
+                        currentDialogueLineData={currentDialogueLineData}
+                    />
+
+                    {!!nextPhraseCaption
                         ? <ChatElement
                             title={`dsds`}
                             position={"left"}
                             type={"text"}
-                            text={nextPhrase}
+                            text={nextPhraseCaption}
                         />
                         : null
 
@@ -509,16 +306,16 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 {isEditDialogueItem()
                     ? <PhraseConstructor
                         dialogueId={props.dialogueId}
-                        id={phrase.id}
-                        parentId={phrase.parentId}
+                        id={phraseRecoil.id}
+                        parentId={phraseRecoil.parentId}
                         editDialogueItemType={editDialogueItemType}
                         onEditedDialogueItemType={onEditedDialogueItemType}
                         setStatus={setStatus}
                     />
-                    : <AnswerContructor
+                    : <DialogueLineContructor
                         dialogueId={props.dialogueId}
-                        id={phrase.answers.find(answer => answer?.id == dialogueLineSelection)?.id ?? ""}
-                        parentId={phrase.id}
+                        id={selectDialogueLine.line.id}
+                        parentId={phraseRecoil.id}
                         editDialogueItemType={editDialogueItemType}
                         onEditedDialogueItemType={onEditedDialogueItemType}
                         setStatus={setStatus}
@@ -541,7 +338,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
                 : null
             }
-            {!phrase.audioSettings?.audioData && !!phraseRecoil.text
+            {!phraseRecoil.audioSettings?.audioData && !!phraseRecoil.text
                 ? <Alert severity="error">The phrase is not generated to audio!</Alert>
                 : null
             }
