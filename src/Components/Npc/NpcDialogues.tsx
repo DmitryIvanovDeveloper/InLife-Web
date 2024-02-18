@@ -9,8 +9,6 @@ import { useEffect, useState } from "react";
 import DialogueConstructor from "../../Constructors/DialogueConstructor/DialogueConstructor";
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import { useTeacher } from "../../Data/useTeacher";
-import DialogueGraph from "../GraphTree/DialogueGraph";
-import StudentDialogueStatistics from "../Statistic/StudentDialogueStatistics/StudentDialogueStatistics";
 
 export interface IDialogueTabsProps {
     npcId: string
@@ -22,7 +20,7 @@ export default function NpcDialogues(props: IDialogueTabsProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [selectedDialogue, setSelectedDialogue] = useState<IDialogueModel | null>(null);
     const [dialogues, setDialogues] = useState<IDialogueModel[]>(teacher?.dialogues ?? []);
-    const [isOpenSettings, setIsOpenSettings] = useState<boolean>(false);
+    const [isOpenSettings, setIsOpenSettings] = useState<boolean>(true);
 
     const onClick = (clickedDialogue: IDialogueModel) => {
         if (selectedDialogue?.id == clickedDialogue.id) {
@@ -33,7 +31,6 @@ export default function NpcDialogues(props: IDialogueTabsProps) {
         }
 
         setSelectedDialogue(clickedDialogue);
-        setDialogueItemConstructor(() => <DialogueConstructor id={clickedDialogue.id} setStates={() => { }} />);
     }
 
     useEffect(() => {
@@ -62,9 +59,13 @@ export default function NpcDialogues(props: IDialogueTabsProps) {
                                     </AvatarGroup>
 
                                 </ListItemButton>
-                                <IconButton onClick={() => setIsOpenSettings(!isOpenSettings)}>
-                                    <SettingsRoundedIcon />
-                                </IconButton>
+                                {dialogue.id == selectedDialogue?.id
+                                    ? <IconButton sx={{ backgroundColor: isOpenSettings ? "#637bfe" : "", margin: 2 }} onClick={() => setIsOpenSettings(!isOpenSettings)}>
+                                        <SettingsRoundedIcon />
+                                    </IconButton>
+                                    : null
+                                }
+
                             </Box>
                         ))}
                     {isOpenSettings || selectedDialogue
@@ -85,7 +86,7 @@ export default function NpcDialogues(props: IDialogueTabsProps) {
 
             </ListItem>
             {!isOpenSettings
-                ? null //<StudentDialogueStatistics />
+                ? null
                 : <DialogueConstructor id={selectedDialogue?.id ?? ""} />
             }
         </List>

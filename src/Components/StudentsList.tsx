@@ -1,6 +1,5 @@
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
 import { useStudents } from "../Data/useStudents";
-import { Locations } from "../Data/Locations";
 import { useState } from "react";
 import { useDialogueItemConstructor } from "../Data/useDialogues";
 import StudentDialogueStatistics from "./Statistic/StudentDialogueStatistics/StudentDialogueStatistics";
@@ -11,9 +10,7 @@ export default function StudentList() {
     const[_, setDialogueItemConstructor] = useDialogueItemConstructor();
 
     const onSelect = (selectedStudentId: string) => {
-        console.log();
         setSelectedStudentId(selectedStudentId);
-        // setDialogueItemConstructor(() => <StudentDialogueStatistics />);
     }
 
     return (
