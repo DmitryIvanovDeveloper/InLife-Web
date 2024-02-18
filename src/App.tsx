@@ -36,7 +36,6 @@ export function App() {
                     <Route path={LocalRoutes.studentProfile} element={<StudentProfile />} />
                     <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
                     <Route path={LocalRoutes.dialoguesBuilder} element={<DialogueBuilder />} />
-                    <Route path={LocalRoutes.studentDialoguesStatistic} element={<StudentDialogueStatistics />} />
                 </Routes>
             </React.StrictMode>
     );

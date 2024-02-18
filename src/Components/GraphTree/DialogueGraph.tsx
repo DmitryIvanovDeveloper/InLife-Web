@@ -96,7 +96,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         <Resizable
             defaultSize={{
                 width: "100%",
-                height: "60%"
+                height: "100%"
             }}
         >
             <div style={{ backgroundColor: "#e1f5fe", borderRadius: 15, height: "100%"}}>

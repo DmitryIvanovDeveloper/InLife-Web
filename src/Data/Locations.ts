@@ -22,114 +22,121 @@ import WalkerMan from '../Images/Locations/Walker.png';
 
 import { GenderType } from './GenderType';
 
-export const Locations = [{
-    id: process.env.REACT_APP_LOCATION_BUS_STATION,
+export const Locations: INpc[] = [{
+    id: process.env.REACT_APP_LOCATION_BUS_STATION ?? "",
     name: "Street: Bus station",
     gender: GenderType.Female,
     image: BusStation
 },
 {
-    id: process.env.REACT_APP_LOCATION_FITNESS_TRAINER,
+    id: process.env.REACT_APP_LOCATION_FITNESS_TRAINER ?? "",
     name: "Park: Fitness trainer",
     gender: GenderType.Female,
     image: FitnessTraier
 },
 {
-    id: process.env.REACT_APP_LOCATION_STREET_WALKER_MAN,
+    id: process.env.REACT_APP_LOCATION_STREET_WALKER_MAN ?? "",
     name: "Street: Walker man",
     gender: GenderType.Male,
     image: WalkerMan
 },
 {
-    id: process.env.REACT_APP_LOCATION_FOUNTAIN_OLDMAN,
+    id: process.env.REACT_APP_LOCATION_FOUNTAIN_OLDMAN ?? "",
     name: "Fountain: Old man",
     gender: GenderType.Male,
     image: FountainOldMan
 },
 {
-    id: process.env.REACT_APP_LOCATION_TRAFFIC_CONTROLL_OFFICER,
+    id: process.env.REACT_APP_LOCATION_TRAFFIC_CONTROLL_OFFICER ?? "",
     name: "Traffic controll officer",
     gender: GenderType.Male,
     image: TrafficControllOfficer
 },
 {
-    id: process.env.REACT_APP_LOCATION_STREET_STRANGER,
+    id: process.env.REACT_APP_LOCATION_STREET_STRANGER ?? "",
     name: "Street: Stranger",
     gender: GenderType.Male,
     image: Stranger
 },
 {
-    id: process.env.REACT_APP_LOCATION_TRAFFIC_INCIDENT_POLICE_WOMAN,
+    id: process.env.REACT_APP_LOCATION_TRAFFIC_INCIDENT_POLICE_WOMAN ?? "",
     name: "Traffic incident: Police woman",
     gender: GenderType.Male,
     image: TrafficIncidentPoliceWoman
 },
 {
-    id: process.env.REACT_APP_LOCATION_TRAFFIC_INCIDENT_DOCTOR,
+    id: process.env.REACT_APP_LOCATION_TRAFFIC_INCIDENT_DOCTOR ?? "",
     name: "Traffic incident: Doctor",
     gender: GenderType.Male,
     image: TrafficIncidentDoctor
 },
 {
-    id: process.env.REACT_APP_LOCATION_STREET_OLDMAN,
+    id: process.env.REACT_APP_LOCATION_STREET_OLDMAN ?? "",
     name: "Street: Oldman",
     gender: GenderType.Male,
     image: StreetOldman
 },
 {
-    id: process.env.REACT_APP_LOCATION_HOSPITAL_DOCTOR,
+    id: process.env.REACT_APP_LOCATION_HOSPITAL_DOCTOR ?? "",
     name: "Hospital: Doctor",
     gender: GenderType.Male,
     image: HospitalDoctor
 },
 {
-    id: process.env.REACT_APP_LOCATION_HOSPITAL_NURSE,
+    id: process.env.REACT_APP_LOCATION_HOSPITAL_NURSE ?? "",
     name: "Hospital: Nurse",
     gender: GenderType.Female,
     image: HospitalNurse
 },
 {
-    id: process.env.REACT_APP_LOCATION_STREET_WALKER_WOMAN,
+    id: process.env.REACT_APP_LOCATION_STREET_WALKER_WOMAN ?? "",
     name: "Street: Walker woman",
     gender: GenderType.Female,
     image: StreetWalkerWoman
 },
 {
-    id: process.env.REACT_APP_LOCATION_AUTO_MECHANIC,
+    id: process.env.REACT_APP_LOCATION_AUTO_MECHANIC ?? "",
     name: "Auto mechanic",
     gender: GenderType.Male,
     image: AutoMechanic
 },
 {
-    id: process.env.REACT_APP_LOCATION_POLICE_STATION_POLICE_MAN,
+    id: process.env.REACT_APP_LOCATION_POLICE_STATION_POLICE_MAN ?? "",
     name: "Police Station: Police man",
     gender: GenderType.Male,
     image: PoliceStationPoliceMan
 },
 {
-    id: process.env.REACT_APP_LOCATION_POLICE_STATION_SWAT,
+    id: process.env.REACT_APP_LOCATION_POLICE_STATION_SWAT ?? "",
     name: "Police Station: SWAT",
     gender: GenderType.Male,
     image: PoliceStationSwat
 },
 {
-    id: process.env.REACT_APP_LOCATION_POLICE_STATION_DETECTIVE,
+    id: process.env.REACT_APP_LOCATION_POLICE_STATION_DETECTIVE ?? "",
     name: "Police Station: Detective",
     gender: GenderType.Male,
     image: PoliceStationDetective
 },
 {
-    id: process.env.REACT_APP_LOCATION_POLICE_STATION_OFFICER,
+    id: process.env.REACT_APP_LOCATION_POLICE_STATION_OFFICER ?? "",
     name: "Police Station: Officer",
     gender: GenderType.Female,
     image: PoliceStationOfficer
 },
 {
-    id: process.env.REACT_APP_LOCATION_CONSTRUCTION_ZONE_FOREMAN,
+    id: process.env.REACT_APP_LOCATION_CONSTRUCTION_ZONE_FOREMAN ?? "",
     name: "Construction Zone: Foreman",
     gender: GenderType.Male,
     image: ConstructionZoneForeman
 },
 ]
 
+
+export default interface INpc {
+    id: string;
+    name: string;
+    gender: GenderType;
+    image: string;
+}
 

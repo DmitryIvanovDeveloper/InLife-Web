@@ -17,7 +17,6 @@ export interface IDialogueChatProps {
 }
 
 export default function DialogueChat(props: IDialogueChatProps) {
-    const theme = useTheme();
     const location = useLocation();
     const dialogueRecoil = useDialogue(props.dialogueStatisticId);
 

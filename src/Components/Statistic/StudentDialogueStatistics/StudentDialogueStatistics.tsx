@@ -1,45 +1,57 @@
-//@ts-nocheck
 import { useEffect, useState } from "react"
 import { Box } from "@mui/material";
 import DialogueChat from "./DialogueChat";
-import SplitPane from "react-split-pane";
 import { useDialoguesStatistic } from "../../../Data/useDialogueStatistic";
 import IStudentDialogueStatisticModel from "../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
 import { isDateSame } from "../../../ThereGame.Infrastructure/Helpers/DatesCompare";
 import DialoguesStatisticFilter from "./DialoguesStatisticFilter";
-import StudentStatisticAppBar from "./StudentStatisticAppBar";
+import useDialogueStatisticApi from "../../../ThereGame.Api/Queries/DialogueStatisticApi";
+import { useDialogueItemConstructor } from "../../../Data/useDialogues";
 
-export default function StudentDialogueStatistics() {
+export interface IStudentDialogueStatisticsProps {
+    studentId: string;
+}
+export default function StudentDialogueStatistics(props: IStudentDialogueStatisticsProps) {
     const [date, onChangeDate] = useState<Date>(new Date());
     const [dialoguesStatistics, _] = useDialoguesStatistic();
     const [selectedDialogueId, setSelectedDialogueId] = useState<string>("");
     const [dialoguesStatisticByDate, setDialoguesStatisticByDate] = useState<IStudentDialogueStatisticModel[]>([]);
+    const dialogueStatisticApi = useDialogueStatisticApi();
+    const [dialogueItemConstructor, setDialogueItemConstructor] = useDialogueItemConstructor();
+
+    useEffect(() => {
+        dialogueStatisticApi.get(props.studentId);
+    }, []);
 
     useEffect(() => {
         var dialogueStatisticsByDate = dialoguesStatistics
-            .filter(dialogueStatistic => isDateSame(dialogueStatistic.startDate, date as Date))
-        ;
+            .filter(dialogueStatistic => isDateSame(dialogueStatistic.startDate, date as Date));
+
         setDialoguesStatisticByDate(dialogueStatisticsByDate);
         setSelectedDialogueId("");
+        setDialogueItemConstructor(() => <div/>)
+    ;
     }, [date]);
 
+    useEffect(() => {
+        if (!!dialoguesStatisticByDate?.length && !!selectedDialogueId) {
+            setDialogueItemConstructor(() => <DialogueChat
+                dialogueStatisticByDate={dialoguesStatisticByDate}
+                dialogueStatisticId={selectedDialogueId} />)
+            ;
+        }
+    }, [selectedDialogueId])
     return (
         <Box>
-            <StudentStatisticAppBar />
+            {/* <StudentStatisticAppBar /> */}
 
-            <SplitPane split="vertical" minSize={250} defaultSize={window.innerWidth / 2} maxSize={window.innerWidth / 2}>
-               <DialoguesStatisticFilter 
-                    setSelectedDialogueId={setSelectedDialogueId}
-                    onChangeDate={onChangeDate}
-                    date={date}
-                    dialoguesStatisticByDate={dialoguesStatisticByDate}
-                    selectedDialogueId={selectedDialogueId}
-               />
-                {!!dialoguesStatisticByDate?.length && !!selectedDialogueId
-                    ? <DialogueChat dialogueStatisticByDate={dialoguesStatisticByDate} dialogueStatisticId={selectedDialogueId}/>
-                    : null
-                }
-            </SplitPane>
+            <DialoguesStatisticFilter
+                setSelectedDialogueId={setSelectedDialogueId}
+                onChangeDate={onChangeDate}
+                date={date}
+                dialoguesStatisticByDate={dialoguesStatisticByDate}
+                selectedDialogueId={selectedDialogueId}
+            />
         </Box >
     )
 }

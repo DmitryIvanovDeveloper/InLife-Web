@@ -19,7 +19,6 @@ import Instruction from '../Instruction';
 import { useDialogueItemState } from '../../Data/useDialogueitemState';
 import useConstructorActions from '../../Data/ConstructorActions';
 import DialogueLinesTab from './Phrase/DialogueLinesTab';
-import ISelectDialogueLine from '../models/ISelectDialogueLine';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,

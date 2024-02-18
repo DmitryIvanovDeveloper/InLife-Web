@@ -17,8 +17,6 @@ const dialogueStatisticSelectorFamily = selectorFamily<IStudentDialogueStatistic
     key: 'dialogueStatisticSelectorFamily',
     get: (dialogueId: string) => ({ get }) => {
         const dialogues = get(dialogueStatisticAtom);
-        console.log(dialogues);
-        console.log(dialogueId);
         return dialogues.find(dialogue => dialogue.dialogueId == dialogueId) as IStudentDialogueStatisticModel
     },
     dangerouslyAllowMutability: true,

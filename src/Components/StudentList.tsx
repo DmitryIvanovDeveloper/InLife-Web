@@ -1,17 +1,32 @@
-import { Avatar, Box, Button, Card, Grid, Switch, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, Checkbox, Fab, Grid, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Switch, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useStudents } from '../Data/useStudents';
-import DevidedLabel from './Headers/DevidedLabel';
-
+import AddButton from './Button/AddButton';
+import Icon from '@mui/material/Icon';
 
 export interface IStudentListProps {
     studentList: string[]
     setStudentList: (studentList: string[]) => void
 }
 
-export default function StudentList(props: IStudentListProps) {
+export default function StudentList1(props: IStudentListProps) {
     const [selectedStudentsId, setSelectedStudentsId] = useState<string[]>(props.studentList);
     const [students, _] = useStudents();
+
+    const [checked, setChecked] = useState([1]);
+
+    const handleToggle = (value: number) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    };
 
     function onClick(event: any) {
         var index = selectedStudentsId?.indexOf(event.target.value);
@@ -45,54 +60,32 @@ export default function StudentList(props: IStudentListProps) {
     }
 
     return (
-        <Box sx={{ 
-            borderRadius: 2, 
-            paddingTop: "20px", 
-            paddingBottom: "20px", 
-            justifyContent: 'center' ,
-            width: "100%"
-        }}>
-            <DevidedLabel name="" />
-            <Grid display='flex' flexDirection='row'>
-                <Button fullWidth onClick={selectAll}>Select all</Button>
-                <Button fullWidth onClick={unselectAll}>Unselect all</Button>
-            </Grid>
-            <Grid>
-                {students.map(student => (
-                    <Card
-                        sx={{ p: 2 }}
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            width: "30%"
-                        }}>
-                        <Box
-                            sx={{ display: 'flex', justifyContent: 'flex-end', width: "100%" }}
-                        >
-                            <Switch
-                                value={student.id}
-                                checked={selectedStudentsId.includes(student.id)}
-                                onClick={onClick}>
-                            </Switch>
-                        </Box>
+        <Box sx={{height: "100%", width: "100%" }}>
+            <List dense sx={{ height: "100%" , width: '100%', bgcolor: 'background.paper' }}>
+                {students
+                    .map((student) => {
+                        const labelId = `checkbox-list-secondary-label-${student.id}`;
+                        return (
+                            <ListItem
+                                key={student.id}
+                                disablePadding
+                            >
+                                <ListItemButton>
+                                    <ListItemAvatar>
+                                        <Avatar
+                                            src={student.avatar}
+                                        />
+                                    </ListItemAvatar>
+                                    <ListItemText id={labelId} primary={`${student.name} ${student.lastName}`} />
+                                </ListItemButton>
+                            </ListItem>
+                        );
+                    })}
+            </List>
 
-                        <Avatar sx={{ m: 1 }} src={student.avatar} />
-                        <Typography>{student?.name}&nbsp;{student?.lastName}</Typography>
-                        <Typography>{student.email}</Typography>
-
-                    </Card>
-                    // <Button
-                    //     variant={selectedStudentsId.includes(student.id) ? "contained" : "outlined"}
-                    //     style={{ margin: "5px", fontWeight: 700 }}
-                    //     value={student.id}
-                    //     onClick={OnClick}>{student.email}
-                    // </Button>
-                ))}
-            </Grid>
-
+           
         </Box>
+
 
     );
 }

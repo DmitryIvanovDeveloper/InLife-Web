@@ -1,82 +1,91 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { useEffect, useState } from 'react';
-import DialogueConstructor from '../Constructors/DialogueConstructor/DialogueConstructor';
-import { Locations } from '../Data/Locations';
-import { useDialogueItemConstructor } from '../Data/useDialogues';
+import { useState } from 'react';
+import INpc from '../Data/Locations';
 import { useTeacher } from '../Data/useTeacher';
 import useDialogueQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
-import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
-import AppBarCustom from '../Components/AppBarCustom';
-import LinarProgressCustom from '../Components/CircularProgress';
-import DialogueGraph from '../Components/GraphTree/DialogueGraph';
-import LocationCarousel from '../Components/LocationCarousel';
-import DialoguesTab from './DialogesTab';
-import { useSelectDialogueLine } from '../Data/useDialogueItemSelection';
-
+import NpcList from '../Components/Npc/NpcList';
+import NpcProfile from '../Components/Npc/NpcProfile';
+import { Fab, Tab } from '@mui/material';
+import StudentList1 from '../Components/StudentList';
+import { useStudents } from '../Data/useStudents';
+import TabList from '@mui/joy/TabList';
+import Typography from '@mui/joy/Typography';
+import TabContext from '@mui/lab/TabContext';
+import SwipeableViews from 'react-swipeable-views';
+import { useTheme } from '@mui/material/styles';
+import AppBar from '@mui/material/AppBar';
+import Tabs from '@mui/material/Tabs';
+import StudentList from '../Components/StudentsList';
 export interface IDialoguesProps { }
 
 export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
+    const [students, setStudents] = useStudents();
     const dialogueQueriesApi = useDialogueQueriesApi();
 
-    const [teacher] = useTeacher();
+    const [npc, setNpc] = useState<INpc | null>(null);
 
-    const [npcId, setNpcId] = useState<string>(Locations[0].id ?? '');
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-
-    const [dialogues, setDialogues] = useState<IDialogueModel[]>(teacher?.dialogues ?? []);
     const [isNewDialogueCreating, setIsNewDialogueCreating] = useState<boolean>();
-    const [dialogue, setDialogue] = useState<IDialogueModel | null>(null);
-    const [isHideLocations, setIsHideLocations] = useState<boolean>(false);
-    const onChangeLocation = (id: string) => {
-        setNpcId(id);
-        setDialogue(null);
-        setDialogueItemConstructor(() => <div></div>);
+    const theme = useTheme();
+    const [value, setValue] = useState(0);
 
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+    };
+
+    const handleChangeIndex = (index: number) => {
+        setValue(index);
+    };
+    const onSelectNpc = (npc: INpc) => {
+        setNpc(npc);
     }
+
+
+
     const createNewDialogue = async () => {
-        setIsNewDialogueCreating(true)
-        await dialogueQueriesApi.create(npcId);
+        setIsNewDialogueCreating(true);
+        await dialogueQueriesApi.create(npc?.id ?? "");
         setIsNewDialogueCreating(false)
     }
 
-    const onClick = (clickedDialogue: IDialogueModel) => {
-        if (dialogue?.id == clickedDialogue.id) {
-            // setSelection("");
-            setDialogue(null);
-            setIsHideLocations(false);
-            setDialogueItemConstructor(() => <div></div>);
-
-            return;
-        }
-
-        // setSelectDialogueLine();
-        setDialogue(clickedDialogue);
-        setIsHideLocations(true);
-        setDialogueItemConstructor(() => <DialogueConstructor id={clickedDialogue.id} setStates={() => { }} />);
-    }
-
-    
-
-    useEffect(() => {
-        if (!npcId) {
-            return;
-        }
-
-        setDialogues(teacher?.dialogues.filter(d => d.levelId == npcId) ?? []);
-    }, [npcId, teacher]);
-
-    if (!npcId) {
-        return null;
+    function tabs() {
+        return (
+            <Box sx={{ bgcolor: 'background.paper', width: 500 }}>
+                <AppBar position="static">
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        indicatorColor="secondary"
+                        textColor="inherit"
+                        variant="fullWidth"
+                        aria-label="full width tabs example"
+                    >
+                        <Tab label="Npc" {...a11yProps(0)} />
+                        <Tab label="Students" {...a11yProps(1)} />
+                    </Tabs>
+                </AppBar>
+                <SwipeableViews
+                    // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    index={value}
+                    onChangeIndex={handleChangeIndex}
+                >
+                    <TabPanel value={value} index={0} dir={theme.direction}>
+                        <NpcList onSelectNpc={onSelectNpc} />
+                    </TabPanel>
+                    <TabPanel value={value} index={1} dir={theme.direction}>
+                        <StudentList />
+                    </TabPanel>
+                </SwipeableViews>
+            </Box>
+        )
     }
 
     return (
         <Box component="form"
             sx={{
-                '& > :not(style)': { m: 1, width: '100%' },
-                p: 5,
-                mb: 2,
+                mt: 2,
+                ml: 2,
+                '& > :not(style)': { m: 1, width: '100%', height: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 height: 1000,
@@ -85,37 +94,48 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
             }}
 
             autoComplete="off" >
-            
-            <AppBarCustom
-                name={Locations.find(l => l.id == npcId)?.name ?? ''}
-            />
-            {isHideLocations
-                ? null
-                : <LocationCarousel setLevel={onChangeLocation} id={npcId} />
-            }
-            
-            <Box>
-                {isNewDialogueCreating
-                    ? <LinarProgressCustom name='Creating' />
-                    : <Button
-                        fullWidth
-                        variant='contained'
-                        onClick={createNewDialogue}>
-                        Create New Dialogue
-                    </Button>
-                }
-            </Box>
 
-           <DialoguesTab 
-                dialogues={dialogues} 
-                onClick={onClick}
-                dialogue={dialogue}
-            />
 
-            {!dialogue
-                ? null
-                : <DialogueGraph dialogueId={dialogue.id} />
+            {!npc
+                ? tabs()
+                : <NpcProfile npc={npc} onToList={() => setNpc(null)} />
             }
         </Box>
     );
+}
+
+
+
+interface TabPanelProps {
+    children?: React.ReactNode;
+    dir?: string;
+    index: number;
+    value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`full-width-tabpanel-${index}`}
+            aria-labelledby={`full-width-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{ p: 3 }}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+}
+
+function a11yProps(index: number) {
+    return {
+        id: `full-width-tab-${index}`,
+        'aria-controls': `full-width-tabpanel-${index}`,
+    };
 }

@@ -9,8 +9,6 @@ import { DialogueItemType } from "../../../Components/GraphTree/DialogueitemType
 import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../../ThereGame.Api/Queries/PhraseQueriesApi";
 import { IoMdAddCircle } from "react-icons/io";
-import { EditDialogueItemType } from "../../models/EditType";
-
 
 export interface IDialogueLinesProps {
     answers: IAnswerModel[];
@@ -63,7 +61,6 @@ export default function DialogueLinesTab(props: IDialogueLinesProps) {
     }
 
     useEffect(() => {
-        console.log(selectDialogueLine.line.id);
         if (!!selectDialogueLine.line.id) {
             return;
         }
