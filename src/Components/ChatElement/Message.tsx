@@ -7,6 +7,7 @@ export interface IChatElement {
     position: string;
     type: string;
     text: string;
+    avatar?: string;
 }
 export default function Message(props: IChatElement) {
     return (
@@ -15,6 +16,7 @@ export default function Message(props: IChatElement) {
             position={props.position}
             type={props.type}
             text={props.text}
+            avatar={props.avatar}
         />
     )
 }

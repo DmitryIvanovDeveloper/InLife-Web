@@ -54,7 +54,7 @@ export default function MyProfile() {
 
         var status = await teacherQueriesApi.update(bio, teacher?.id);
         if (status == Status.OK) {
-            navigate(Routes.teacherProfile);
+            navigate(Routes.main);
         }
     }
     function onClose() {
@@ -123,7 +123,7 @@ export default function MyProfile() {
                         separator={<ChevronRightRoundedIcon />}
                         sx={{ pl: 0 }}
                     >
-                       <IconButton onClick={() => navigate(Routes.teacherProfile)}>
+                       <IconButton onClick={() => navigate(Routes.main)}>
                             <HomeRoundedIcon />
                        </IconButton>
                             
@@ -280,7 +280,7 @@ export default function MyProfile() {
                    
                     <CardOverflow sx={{ borderTop: '1px solid', borderColor: 'divider' }}>
                         <CardActions sx={{ alignSelf: 'flex-end', pt: 2 }}>
-                            <Button onClick={() => navigate(Routes.teacherProfile)} size="sm" variant="outlined" color="neutral">
+                            <Button onClick={() => navigate(Routes.main)} size="sm" variant="outlined" color="neutral">
                                 Cancel
                             </Button>
                             <Button onClick={onSave} size="sm" variant="solid">

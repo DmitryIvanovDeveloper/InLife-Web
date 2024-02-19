@@ -4,8 +4,13 @@ import { useState } from "react";
 import { useDialogueItemConstructor } from "../Data/useDialogues";
 import StudentDialogueStatistics from "./Statistic/StudentDialogueStatistics/StudentDialogueStatistics";
 import Switcher from "./Button/Switcher";
+import CopyToClipboardButton from "./CopyToClipboard/CopyToClipboard";
+import { useTeacher } from "../Data/useTeacher";
+import { Routes } from "../Routes";
 
 export default function StudentList() {
+    const [teacher] = useTeacher();
+
     const [students, setStudent] = useStudents();
     const [selectedStudentId, setSelectedStudentId] = useState<string>("");
     const[_, setDialogueItemConstructor] = useDialogueItemConstructor();
@@ -21,6 +26,7 @@ export default function StudentList() {
             bgcolor: 'background.paper' , 
             overflow: 'auto' 
         }}>
+            <CopyToClipboardButton link={`${window.location.host}${Routes.signUpStudent}?id=${teacher?.id}`}  />
             <ListItem
                 disablePadding
                 

@@ -24,7 +24,7 @@ export default function StudentStatisticAppBar() {
             <AppBar position="static" sx={{ borderRadius: 1 }}>
 
                 <Toolbar>
-                    <IconButton onClick={() => navigate(Routes.teacherProfile)}>
+                    <IconButton onClick={() => navigate(Routes.main)}>
                         <HomeRoundedIcon />
                     </IconButton>
                     <IconButton

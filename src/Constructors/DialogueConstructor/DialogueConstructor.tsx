@@ -2,16 +2,13 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Alert, Box, Button, Tab } from "@mui/material";
+import { Box, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useTreeState } from "../../Data/useTreeState";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
 import SaveButton from "../../Components/Button/SaveButton";
-import LinarProgressCustom from "../../Components/CircularProgress";
 import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
 import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
@@ -30,7 +27,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [treeState, setTreeState] = useTreeState();
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [tab, setTab] = useState<string>("1");
 
@@ -124,9 +120,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     }
 
     function DialogueGraphComponent() {
-        return (
-            <DialogueGraph dialogueId={dialogue.id} />
-        )
+        return <DialogueGraph dialogueId={dialogue.id} />
     }
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -178,36 +172,23 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     }
 
     return (
-        <Box
-            component="form"
-            sx={{
-                '& > :not(style)': { m: 1, width: '100%' },
-                p: 5,
-                mb: 2,
-                display: "flex",
-                flexDirection: "column",
-                height: 800,
-                overflow: "hidden",
-                overflowY: "scroll",
-            }}
-            autoComplete="off"
-        >
+        <Box>
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={tab}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <TabList onChange={handleChange} aria-label="lab API tabs example">
-                            <Tab label="Name" value="1" />
+                            <Tab label="Scene Name" value="1" />
                             {!dialogue.name
                                 ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
                                 : null
                             }
-                            <Tab label="Voice Settings" value="2" />
+                            <Tab label="Voice" value="2" />
                             {!dialogue.voiceSettings
                                 ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
                                 : null
                             }
                             <Tab label="Access" value="3" />
-                            <Tab label="Scenario" value="4" />
+                            <Tab label="Scenario" value="4" disabled={!dialogueRecoil?.voiceSettings} />
                         </TabList>
                     </Box>
                     <TabPanel value="1">{DialogueNameComponent()}</TabPanel>
@@ -221,7 +202,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 ? <SaveButton
                     onClick={save}
                     isLoading={isLoading}
-                    isDisabled={!dialogue.voiceSettings}
+                    isDisabled={false}
                 />
                 : null
             }

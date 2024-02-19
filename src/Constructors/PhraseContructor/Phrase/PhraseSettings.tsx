@@ -7,11 +7,9 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import MessageIcon from '@mui/icons-material/Message';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 import useConstructorActions from "../../../Data/ConstructorActions";
-import AudioPlayer from "react-h5-audio-player";
-import { useEffect, useState } from "react";
-import 'react-h5-audio-player/lib/styles.css';
 import Message from "../../../Components/ChatElement/Message";
 import AudioMessage from "../../../Components/ChatElement/AudioMessage";
+import 'react-h5-audio-player/lib/styles.css';
 
 export interface IPhraseTab {
     onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType) => void;
@@ -19,6 +17,7 @@ export interface IPhraseTab {
     dialogueItemEditState: IDialogueItemEditState;
     phraseCaption: string;
     phraseAudio: string;
+    name: string
 }
 
 export default function PhraseSettings(props: IPhraseTab) {
@@ -81,7 +80,7 @@ export default function PhraseSettings(props: IPhraseTab) {
             }
 
             <Message
-                title={``}
+                title={props.name}
                 position={"left"}
                 type={"text"}
                 text={props.phraseCaption}
@@ -89,11 +88,10 @@ export default function PhraseSettings(props: IPhraseTab) {
             <AudioMessage
                 position={"left"}
                 type={"audio"}
-                title={"Emre"}
+                title={props.name}
                 audioUrl={props.phraseAudio}
             />
         </Box>
-
     )
 }
 

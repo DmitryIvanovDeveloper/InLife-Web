@@ -7,15 +7,6 @@ import { DialogueItemNode } from "./DialogueItemNode";
 import { DialogueItemType } from "./DialogueitemType";
 import { Resizable } from 're-resizable';
 
-
-<Resizable
-    defaultSize={{
-        width: 320,
-        height: 200,
-    }}
-></Resizable>
-
-
 export interface IDialoguesGraphProps {
     dialogueId: string;
 }
@@ -35,7 +26,6 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 nodeType: DialogueItemType.Phrase,
                 parentId: phrase.parentId,
                 dialogueId: diaologueRecoil.id,
-                color: "#80cbc4"
             }
         }
         return node;
@@ -51,7 +41,6 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 nodeType: DialogueItemType.Answer,
                 parentId: answer.parentId,
                 dialogueId: diaologueRecoil.id,
-                color: "#81d4fa"
             }
         }
         return node;
@@ -59,7 +48,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
 
     useEffect(() => {
         var node: RawNodeDatum = {
-            name: diaologueRecoil.name,
+            name: "",
             children: [transformPhrase(diaologueRecoil.phrase)],
             attributes: {
                 id: diaologueRecoil.id,
@@ -77,12 +66,11 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         if (!diaologueRecoil.voiceSettings &&
             dialogueItem.nodeDatum.attributes?.nodeType == DialogueItemType.Dialogue) {
 
-                return <DialogueItemNode customNodeElementProps={dialogueItem}
+            return <DialogueItemNode customNodeElementProps={dialogueItem}
             />
 
         }
-        if (!!diaologueRecoil.voiceSettings)
-        {
+        if (!!diaologueRecoil.voiceSettings) {
             return <DialogueItemNode customNodeElementProps={dialogueItem} />
         }
 
@@ -96,10 +84,14 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         <Resizable
             defaultSize={{
                 width: "100%",
-                height: "100vh"
+                height: "80vh"
             }}
         >
-            <div style={{ backgroundColor: "#e1f5fe", borderRadius: 15, height: "100%"}}>
+            <div style={{
+                boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
+                borderRadius: 15, 
+                height: "100%"
+            }}>
                 <Tree
                     data={data}
                     nodeSize={nodeSize}

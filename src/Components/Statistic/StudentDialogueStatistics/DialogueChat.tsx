@@ -1,15 +1,16 @@
-//@ts-nocheck
-import { Box, Tab, Tabs, Typography, useTheme } from '@mui/material';
+
+import { Avatar, Box, Tab, Tabs, Typography, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { MessageBox } from 'react-chat-elements'
 import moment from 'moment';
 import { useLocation } from 'react-router-dom';
-import { Locations } from '../../../Data/Locations';
+import INpc, { Locations } from '../../../Data/Locations';
 import { useDialogue } from '../../../Data/useDialogues';
 import { useStudents } from '../../../Data/useStudents';
 import IStudentDialogueStatisticModel from '../../../ThereGame.Business/Models/IStudentDialogueStatisticModel';
 import IStudentModel from '../../../ThereGame.Business/Models/IStudentModel';
 import 'react-chat-elements/dist/main.css'
+import Message from '../../ChatElement/Message';
 
 export interface IDialogueChatProps {
     dialogueStatisticId: string;
@@ -26,7 +27,7 @@ export default function DialogueChat(props: IDialogueChatProps) {
     const [dialogueStatisticByTime, setDialoguesStatisticByTime] = useState<IStudentDialogueStatisticModel | null>();
     const [student, setStudent] = useState<IStudentModel>();
     const [spentTime, setSpentTime] = useState<string>();
-
+    const [npc, setNpc] = useState<INpc | null>();
 
     const setDialogueParameters = (date: Date, time: number) => {
         setSelectedStartDate(date);
@@ -50,6 +51,10 @@ export default function DialogueChat(props: IDialogueChatProps) {
 
 
     useEffect(() => {
+        var npc = Locations.find(location => location.id == dialogueRecoil.levelId)
+        if (!!npc) {
+            setNpc(npc)
+        }
         const query = new URLSearchParams(location.search);
         var expectedStudent = students.find(student => student.id == query.get("id"))
         setStudent(expectedStudent);
@@ -82,14 +87,26 @@ export default function DialogueChat(props: IDialogueChatProps) {
 
     return (
         <Box>
+            <Box display='flex' justifyContent='space-around' margin={2}>
+                <Avatar sx={{ width: 100, height: 100}} src={npc?.avatar ?? ""} />
+                <Box
+                    sx={{ margin: 2, borderRadius: 1, padding: 1}}
+                    display='flex'
+                    justifyContent='center'
+                    alignItems='center'
+                    flexDirection='column'
+                >
+                    <Typography>spent time</Typography>
+                    <Typography fontWeight="900">{spentTime}</Typography>
+                </Box>
+                <Avatar sx={{ width: 100, height: 100}} src={student?.avatar ?? ""} />
+            </Box>
             <Tabs
                 value={selctedStartDate}
                 variant="scrollable"
                 scrollButtons="auto"
                 aria-label="scrollable auto tabs example"
                 TabIndicatorProps={{
-                    backgroundColor: "#009688",
-                    fontWeight: "900"
                 }}
             >
                 {props.dialogueStatisticByDate.filter(dialogue => dialogue.dialogueId == props.dialogueStatisticId).map(dialogue => (
@@ -108,16 +125,7 @@ export default function DialogueChat(props: IDialogueChatProps) {
                 alignItems='end'
                 flexDirection='column'
             >
-                <Box
-                    sx={{backgroundColor: "#009688", margin: 2, borderRadius: 1, padding: 1}}
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                    flexDirection='column'
-                >
-                    <Typography color='white'>spent time</Typography>
-                    <Typography color='white' fontWeight="900">{spentTime}</Typography>
-                </Box>
+               
             </Box>
 
 
@@ -131,14 +139,14 @@ export default function DialogueChat(props: IDialogueChatProps) {
             >
                 {sort(dialogueStatisticByTime?.dialogueHistory).map(history => (
                     <Box>
-                        <MessageBox
-                            title={Locations.find(location => location.id == dialogueRecoil.levelId)?.name}
+                        <Message
+                            title={npc?.name ?? ""}
                             position={"left"}
                             type={"text"}
                             text={history.phrase}
                         />
                         {sort(history.answers).map(answer => (
-                            <MessageBox
+                            <Message
                                 title={`${student?.name} ${student?.lastName}`}
                                 position={"right"}
                                 type={"text"}

@@ -1,18 +1,17 @@
-import { Box, Button, CircularProgress } from "@mui/material";
-import { useState } from "react";
+import { Avatar, Box, Button, CircularProgress } from "@mui/material";
+import { Component, useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import { useSelectDialogueLine as useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import { RxAvatar } from "react-icons/rx";
 import { IoMdAddCircle } from "react-icons/io";
 import Constructor from "../../Constructors/PhraseContructor/Constructor";
-import DialogueConstructor from "../../Constructors/DialogueConstructor/DialogueConstructor";
 import { DialogueItemType } from "./DialogueitemType";
 import ISelectDialogueLine from "../../Constructors/models/ISelectDialogueLine";
 import { useDialogueItemState } from "../../Data/useDialogueitemState";
+import { useNpcSelection } from "../../Data/useSelectedNpc";
 
 const nodeSize = { x: 200, y: 500 };
 const foreignObjectProps = {
@@ -36,11 +35,15 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [selectDialogueLine, setSelectDialogueItem] = useSelectDialogueLine();
     const phraseQueriesApi = usePhraseQueriesApi();
     const answerQueriesApi = useAnswerQueriesApi();
+    const [npc, setNpc] = useNpcSelection();
 
     const onClick = (id: string, parentId: string, nodeType: DialogueItemType) => {
         if (nodeType == DialogueItemType.Dialogue) {
-            setDialogueItemConstructor(() =>
-                <DialogueConstructor id={id} />);
+            // setDialogueItemConstructor(() =>
+            //     <FullScenario
+            //         id={id}
+            //         dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
+            //     />);
         }
 
         if (nodeType == DialogueItemType.Phrase) {
@@ -51,18 +54,18 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
                 />);
 
-                const updatedSelectDialogueLine: ISelectDialogueLine = {
-                    dialogueItemId: id,
-                    line: {
-                        name: "",
-                        id: "",
-                    },
-                    nextDialogueItemId: ""
-                }
-                
-                setSelectDialogueItem(updatedSelectDialogueLine);
+            const updatedSelectDialogueLine: ISelectDialogueLine = {
+                dialogueItemId: id,
+                line: {
+                    name: "",
+                    id: "",
+                },
+                nextDialogueItemId: ""
+            }
+
+            setSelectDialogueItem(updatedSelectDialogueLine);
         }
-        
+
         if (nodeType == DialogueItemType.Answer) {
             setDialogueItemConstructor(() =>
                 <Constructor
@@ -71,22 +74,22 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     parentId={parentId}
                 />);
 
-                const updatedSelectDialogueLine: ISelectDialogueLine = {
-                    dialogueItemId: parentId,
-                    line: {
-                        name: selectDialogueLine.line.name,
-                        id
-                    },
-                    nextDialogueItemId: ""
-                }
+            const updatedSelectDialogueLine: ISelectDialogueLine = {
+                dialogueItemId: parentId,
+                line: {
+                    name: selectDialogueLine.line.name,
+                    id
+                },
+                nextDialogueItemId: ""
+            }
 
-                setSelectDialogueItem(updatedSelectDialogueLine);
+            setSelectDialogueItem(updatedSelectDialogueLine);
         }
     }
 
     const onCreateNewNode = async (id: string, nodeType: DialogueItemType) => {
         if (!id) {
-            return;   
+            return;
         }
 
         setIsLoading(true);
@@ -107,11 +110,38 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         if (nodeId == selectDialogueLine.line.id) {
             return "#673ab7";
         }
-        if (nodeId == selectDialogueLine.nextDialogueItemId ) {
+        if (nodeId == selectDialogueLine.nextDialogueItemId) {
             return "red";
         }
 
         return "white";
+    }
+
+    const nodeAvatar = (nodeType: DialogueItemType): string | undefined => {
+        if (nodeType == DialogueItemType.Phrase) {
+            return npc?.avatar 
+        }
+       
+        return "";
+    }
+
+    const backgroundColor = (nodeId: string): string => {
+        if (dialogueItemState == DialogueItemStateType.UnsavedChanges && nodeId == selectDialogueLine.dialogueItemId) {
+            return "#ffe082";
+        }
+
+        return "white"
+    }
+
+    const shadow = (nodeId: string): string => {
+        if (nodeId == selectDialogueLine.dialogueItemId ||
+            nodeId == selectDialogueLine.line.id ||
+            nodeId == selectDialogueLine.nextDialogueItemId
+        ) {
+            return "rgba(0, 0, 0, 0.5) 0px 1px 1px";
+        }
+
+        return "none";
     }
 
     //TODO: Refactor
@@ -132,26 +162,26 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     style={{
                         border: "1px solid transparent",
                         borderRadius: "5px",
-                        backgroundColor: dialogueItemState == DialogueItemStateType.UnsavedChanges && props.customNodeElementProps.nodeDatum.attributes?.id == selectDialogueLine.dialogueItemId
-                            ? "#ffe082"
-                            : props.customNodeElementProps.nodeDatum.attributes?.color as string,
+                        backgroundColor: backgroundColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
                         margin: 1,
-                        padding: 1,
                         borderColor: getNodeColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
                         borderBlockWidth: 10,
-                        boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                        boxShadow: shadow(props.customNodeElementProps.nodeDatum.attributes?.id as string),
                     }}
                 >
-                    {props.customNodeElementProps.nodeDatum.attributes?.nodeType == DialogueItemType.Phrase
-                        ? <Box
-                            display='flex'
-                            justifyContent='center'
-                        >
-                            <RxAvatar size={40} />
-                        </Box>
-                        : null
-                    }
-                    <h3 style={{ textAlign: "center" }}>{`${props.customNodeElementProps.nodeDatum.name}`}</h3>
+                    <Box
+                        display='flex'
+                        justifyContent='center'
+                    >
+                       <Avatar src={nodeAvatar(props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)} />
+                    </Box>
+                    <Box>
+                        <h3 style={{ textAlign: "center" }}>{
+                            `${props.customNodeElementProps.nodeDatum.name
+                                .substring(0, 35)}...`}
+                        </h3>
+                    </Box>
+
                 </div>
                 <Box display='flex' justifyContent="center">
                     {isLoading

@@ -33,7 +33,7 @@ export default function AudioMessage(props: IAudioMessageProps) {
                 : <MessageBox
                     position={"left"}
                     type={"audio"}
-                    title={"Emre"}
+                    title={""}
                     data={{
                         audioURL: audioBase64,
                     }}

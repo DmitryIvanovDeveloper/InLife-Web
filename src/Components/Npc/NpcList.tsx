@@ -32,7 +32,7 @@ export default function NpcList(props: INpcListProps) {
                             <ListItemAvatar>
                                 <Avatar
                                     style={{margin: 0, height: 50, width: 50}}
-                                    src={location.image}
+                                    src={location.avatar}
                                 />
                             </ListItemAvatar>
                             <ListItemText sx={{ml: 2}} id={location.id} primary={`${location.name}`} />

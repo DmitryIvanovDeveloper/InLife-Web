@@ -1,7 +1,7 @@
 import TabContext from '@mui/lab/TabContext';
-import { Alert, Box, Button, Divider, IconButton } from "@mui/material";
+import { Alert, Box, Button, Divider, IconButton, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
-import { usePhrase } from "../../Data/useDialogues";
+import { useDialogue, usePhrase } from "../../Data/useDialogues";
 import { useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
@@ -18,7 +18,9 @@ import React from 'react';
 import Instruction from '../Instruction';
 import { useDialogueItemState } from '../../Data/useDialogueitemState';
 import useConstructorActions from '../../Data/ConstructorActions';
-import DialogueLinesTab from './Phrase/DialogueLinesTab';
+import DialogueLinesTabSettings from './Phrase/DialogueLinesTabSettings';
+import DeleteDialogueItemButton from '../../Components/Button/DeleteDialogueItemButton';
+import { Locations } from '../../Data/Locations';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -39,6 +41,7 @@ export interface IPhraseConstructor {
 
 
 export default function Constructor(props: IPhraseConstructor): JSX.Element | null {
+    const dialogueRecoil = useDialogue(props.dialogueId);
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const constructorActions = useConstructorActions();
 
@@ -74,6 +77,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
         setEditDialogueItemType(newEditDialogueItemType);
     }
+
 
     const onEditedDialogueItemType = (editedDialogueItemType: EditDialogueItemType, isEdited: boolean) => {
 
@@ -141,6 +145,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     useEffect(() => {
         var expectedAnswer = phraseRecoil.answers.find(answer => answer?.id == selectDialogueLine.line.id)
         if (!expectedAnswer || !expectedAnswer.phrases.length) {
+            setNextPharseCaption("");
             return;
         }
 
@@ -155,7 +160,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
     }, [selectDialogueLine.line.id])
 
-    
+
     useEffect(() => {
         localStorage.setItem(`${props.id} Constructor-Edit-State`, JSON.stringify(dialogueItemEditState));
     }, [dialogueItemEditState]);
@@ -217,20 +222,17 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 flexDirection: "column",
                 overflow: "hidden",
                 overflowY: "scroll",
+                
             }}
             autoComplete="off"
         >
-            <AppBarDeleteButton
-                name='Constructor'
-            />
-
             <Instruction
                 editDialogueItemType={editDialogueItemType}
                 onClose={() => setIsOpen(false)}
                 isOpen={isOpen}
             />
 
-            <Box
+            <Paper elevation={0}
                 sx={{
                     backgroundColor: "#e0f2f1",
                     borderRadius: 1,
@@ -246,10 +248,9 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 }
 
                 <TabContext value={selectDialogueLine.line.id}>
-                    <DialogueLinesTab
-                        answers={phraseRecoil.answers}
-                        setEditDialogueItemType={() => setEditDialogueItemType(undefined)}
-                    />
+
+                    <DeleteDialogueItemButton />
+                    
                     <Box display='flex' flexDirection="row" justifyContent='space-between'>
                         <PhraseSettings
                             onEditDialogueItemType={onEditDialogueItemType}
@@ -257,6 +258,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                             dialogueItemEditState={dialogueItemEditState}
                             phraseCaption={phraseRecoil.text}
                             phraseAudio={phraseRecoil.audioSettings.audioData ?? ""}
+                            name={Locations.find(location => location.id == dialogueRecoil.levelId)?.name ?? ""}
                         />
 
                         {editDialogueItemType != undefined
@@ -269,6 +271,12 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                         }
 
                     </Box>
+                    <Box display='flex' justifyContent='end'>
+                        <DialogueLinesTabSettings
+                            answers={phraseRecoil.answers}
+                            setEditDialogueItemType={() => setEditDialogueItemType(undefined)}
+                        />
+                    </Box>
 
                     <DialogueLineSettings
                         onEditDialogueItemType={onEditDialogueItemType}
@@ -279,7 +287,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
                     {!!nextPhraseCaption
                         ? <Message
-                            title={`dsds`}
+                            title={Locations.find(location => location.id == dialogueRecoil.levelId)?.name ?? ""}
                             position={"left"}
                             type={"text"}
                             text={nextPhraseCaption}
@@ -289,7 +297,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                     }
 
                 </TabContext>
-            </Box >
+            </Paper >
             <Box
                 sx={{
                     borderRadius: 1,

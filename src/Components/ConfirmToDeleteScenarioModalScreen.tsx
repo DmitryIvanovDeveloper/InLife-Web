@@ -10,21 +10,21 @@ import * as React from 'react';
 import { DialogueItemType } from './GraphTree/DialogueitemType';
 import { useSelectDialogueLine } from '../Data/useDialogueItemSelection';
 
-export interface IConfirmToDeleteModalScreen {
+export interface IConfirmToDeleteScenarioModalScreenProps {
     isOpen: boolean;
-    confirm: (dialogueItemType: DialogueItemType | null) => void;
+    confirm: (isConfirm: boolean) => void;
+    name: string;
 }
-export default function ConfirmToDeleteModalScreen(props: IConfirmToDeleteModalScreen) {
+export default function ConfirmToDeleteScenarioModalScreen(props: IConfirmToDeleteScenarioModalScreenProps) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const [selectDialogueLine, setSelectDialogieLine] = useSelectDialogueLine();
 
     return (
         <React.Fragment>
             <Dialog
                 fullScreen={fullScreen}
                 open={props.isOpen}
-                onClose={() => props.confirm(null)}
+                onClose={() => props.confirm(false)}
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
@@ -32,17 +32,14 @@ export default function ConfirmToDeleteModalScreen(props: IConfirmToDeleteModalS
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        You're trying to DELETE dialogue item! Confirm?
+                        You're trying to DELETE the '{props.name}' scene. Confirm?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button sx={{ fontWeight: '600', color: '#ef5350' }} autoFocus onClick={() => props.confirm(DialogueItemType.Phrase)}>
-                        Phrase
+                    <Button sx={{ fontWeight: '600', color: '#ef5350' }} onClick={() => props.confirm(true)} autoFocus>
+                        Agree
                     </Button>
-                    <Button sx={{ fontWeight: '600', color: '#ef5350' }} onClick={() => props.confirm(DialogueItemType.Answer)} autoFocus>
-                        [{selectDialogueLine.line.name}]
-                    </Button>
-                    <Button sx={{ fontWeight: '600', color: 'white', backgroundColor: 'green' }} onClick={() => props.confirm(null)} autoFocus>
+                    <Button sx={{ fontWeight: '600', color: 'white', backgroundColor: 'green' }} onClick={() => props.confirm(false)} autoFocus>
                         Disagree
                     </Button>
                 </DialogActions>

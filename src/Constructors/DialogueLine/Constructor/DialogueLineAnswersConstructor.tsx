@@ -96,12 +96,3 @@ export default function DialogueLineAnswersConstructor(props: EquivalentTextCons
         </Box>
     )
 }
-
-const commonStyles = {
-    bgcolor: 'background.paper',
-    borderColor: 'text.secondary',
-    m: 1,
-    border: 0.1,
-    width: '3rem',
-    height: '3.5rem',
-};

@@ -1,5 +1,5 @@
 import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
-import DeleteButton from "./Button/DeleteButton";
+import DeleteDialogueItemButton from "./Button/DeleteDialogueItemButton";
 
 export interface IAppBarDeleteButtonProps{
     name: string;
