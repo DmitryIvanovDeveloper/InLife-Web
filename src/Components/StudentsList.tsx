@@ -3,6 +3,7 @@ import { useStudents } from "../Data/useStudents";
 import { useState } from "react";
 import { useDialogueItemConstructor } from "../Data/useDialogues";
 import StudentDialogueStatistics from "./Statistic/StudentDialogueStatistics/StudentDialogueStatistics";
+import Switcher from "./Button/Switcher";
 
 export default function StudentList() {
     const [students, setStudent] = useStudents();
@@ -32,6 +33,7 @@ export default function StudentList() {
                             onClick={() => onSelect(student.id)}
                             sx={{ borderRadius: 2}}
                         >
+                          
                             <ListItemAvatar>
                                 <Avatar
                                     style={{margin: 0, height: 50, width: 50}}

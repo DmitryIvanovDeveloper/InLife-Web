@@ -217,11 +217,14 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 </TabContext>
             </Box>
 
-            {/* <SaveButton
-                onClick={save}
-                isLoading={isLoading}
-                isDisabled={!dialogue.voiceSettings}
-            /> */}
+            {tab != '4'
+                ? <SaveButton
+                    onClick={save}
+                    isLoading={isLoading}
+                    isDisabled={!dialogue.voiceSettings}
+                />
+                : null
+            }
 
             {/* {!isEdited
                 ? <Box>

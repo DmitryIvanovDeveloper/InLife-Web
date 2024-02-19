@@ -49,9 +49,10 @@ export default function NpcDialogues(props: IDialogueTabsProps) {
                         .map((dialogue) => (
                             <Box display='flex' flexDirection='row' justifyContent='space-between'>
                                 <ListItemButton
+                                    sx={{ borderRadius: 2 }}
                                     onClick={() => onClick(dialogue)}
                                 >
-                                    <ListItemText id={dialogue.id} primary={`${dialogue.name}`} />
+                                    <ListItemText id={dialogue.id} primary={`${dialogue.name.toUpperCase()}`} />
                                     <AvatarGroup max={4} total={dialogue.studentsId.length}>
                                         {dialogue.studentsId.map(studentId => (
                                             <Avatar alt="Remy Sharp" src={teacher?.students.find(student => student.id == studentId)?.avatar} />

@@ -1,26 +1,22 @@
 import Box from '@mui/material/Box';
 import { useState } from 'react';
 import INpc from '../Data/Locations';
-import { useTeacher } from '../Data/useTeacher';
 import useDialogueQueriesApi from '../ThereGame.Api/Queries/DialogueQueriesApi';
 import NpcList from '../Components/Npc/NpcList';
 import NpcProfile from '../Components/Npc/NpcProfile';
-import { Fab, Tab } from '@mui/material';
-import StudentList1 from '../Components/StudentList';
+import { Tab } from '@mui/material';
 import { useStudents } from '../Data/useStudents';
-import TabList from '@mui/joy/TabList';
 import Typography from '@mui/joy/Typography';
-import TabContext from '@mui/lab/TabContext';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import StudentList from '../Components/StudentsList';
+
 export interface IDialoguesProps { }
 
 export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
-    const [students, setStudents] = useStudents();
     const dialogueQueriesApi = useDialogueQueriesApi();
 
     const [npc, setNpc] = useState<INpc | null>(null);
@@ -60,12 +56,12 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                         variant="fullWidth"
                         aria-label="full width tabs example"
                     >
-                        <Tab label="Npc" {...a11yProps(0)} />
+                        <Tab label="Actors" {...a11yProps(0)} />
                         <Tab label="Students" {...a11yProps(1)} />
                     </Tabs>
                 </AppBar>
                 <SwipeableViews
-                    // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={value}
                     onChangeIndex={handleChangeIndex}
                 >

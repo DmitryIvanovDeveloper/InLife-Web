@@ -62,7 +62,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                 
                 setSelectDialogueItem(updatedSelectDialogueLine);
         }
-
+        
         if (nodeType == DialogueItemType.Answer) {
             setDialogueItemConstructor(() =>
                 <Constructor
@@ -85,6 +85,10 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     }
 
     const onCreateNewNode = async (id: string, nodeType: DialogueItemType) => {
+        if (!id) {
+            return;   
+        }
+
         setIsLoading(true);
         if (nodeType == DialogueItemType.Phrase) {
             await answerQueriesApi.create(id);

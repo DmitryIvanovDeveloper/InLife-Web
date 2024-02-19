@@ -17,7 +17,7 @@ export interface IDialogueLinesProps {
 
 export default function DialogueLinesTab(props: IDialogueLinesProps) {
     const [selectDialogueLine, setSelectDialogueLine] = useSelectDialogueLine();
-    
+
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [isCreating, setIsCreating] = useState<boolean>(false);
 
@@ -46,8 +46,11 @@ export default function DialogueLinesTab(props: IDialogueLinesProps) {
 
         setIsDeleting(false);
     }
-    
+
     const onSelectTab = (id: string, index: number) => {
+        if (!id) {
+            return;
+        }
         const selectedDialogueLine: ISelectDialogueLine = {
             dialogueItemId: selectDialogueLine.dialogueItemId,
             line: {
@@ -77,7 +80,7 @@ export default function DialogueLinesTab(props: IDialogueLinesProps) {
                             <Tab
                                 value={answer?.id}
                                 key={answer?.id}
-                                label={`story line ${index + 1}`} 
+                                label={`story line ${index + 1}`}
                                 onClick={() => {
                                     onSelectTab(answer?.id, index);
                                 }}
@@ -96,7 +99,7 @@ export default function DialogueLinesTab(props: IDialogueLinesProps) {
             </Grid>
 
             {!isDeleting
-                ? <DeleteButton onDelete={onDelete}/>
+                ? <DeleteButton onDelete={onDelete} />
                 : <CircularProgress color='error' size={20} />
             }
         </Grid>

@@ -130,17 +130,27 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         }
 
         var answer = phraseRecoil.answers.find(answer => answer?.id == selectDialogueLine.line.id);
-        setCurrentDialogueLineData(answer?.texts ?? []);
+        if (!answer) {
+            return;
+        }
+
+        setCurrentDialogueLineData(answer.texts);
 
     }, [selectDialogueLine.line.id]);
 
     useEffect(() => {
-        var nextPhrase = phraseRecoil.answers.find(answer => answer?.id == selectDialogueLine.line.id)?.phrases[0];
-        setNextPharseCaption(nextPhrase?.text ?? "");
+        var expectedAnswer = phraseRecoil.answers.find(answer => answer?.id == selectDialogueLine.line.id)
+        if (!expectedAnswer || !expectedAnswer.phrases.length) {
+            return;
+        }
+
+        var nextPhrase = expectedAnswer.phrases[0];
+
+        setNextPharseCaption(nextPhrase.text);
 
         setSelectDialogueLine(prev => ({
             ...prev,
-            nextDialogueItemId: nextPhrase?.id ?? ""
+            nextDialogueItemId: nextPhrase.id
         }))
 
     }, [selectDialogueLine.line.id])
@@ -160,6 +170,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
 
     useEffect(() => {
+
         if (dialogueItemEditState.isPhraseEdited) {
             setEditDialogueItemType(EditDialogueItemType.Phrase)
             return;
