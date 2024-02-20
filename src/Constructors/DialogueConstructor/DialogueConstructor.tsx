@@ -172,7 +172,15 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     }
 
     return (
-        <Box>
+        <Box
+            component="form"
+            sx={{
+                '& > :not(style)': { m: 1, width: '100%' },
+                p: 5,
+                mb: 2,
+            }}
+            autoComplete="off"
+        >
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={tab}>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -188,7 +196,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                                 : null
                             }
                             <Tab label="Access" value="3" />
-                            <Tab label="Scenario" value="4" disabled={!dialogueRecoil?.voiceSettings} />
+                            <Tab label="Scenario" value="4" disabled={!dialogueRecoil?.voiceSettings ?? false} />
                         </TabList>
                     </Box>
                     <TabPanel value="1">{DialogueNameComponent()}</TabPanel>

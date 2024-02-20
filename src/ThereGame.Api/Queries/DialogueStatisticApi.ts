@@ -11,8 +11,7 @@ export default function useDialogueStatisticApi() {
     return {
         get: async (studentId: string): Promise<Status> => {
             var result = await dialogueStatisticService.GetByStudentId(studentId);
-            if (result.status == Status.OK)
-            {
+            if (result.status == Status.OK) {
                 setDialoguesStatistic(result.data);
             }
             return result.status;

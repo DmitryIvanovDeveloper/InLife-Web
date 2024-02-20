@@ -8,12 +8,15 @@ import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../Routes';
+import { Avatar, Typography } from '@mui/material';
+import { useTeacher } from '../../Data/useTeacher';
 
 export interface IMenuAppBarProps {
 }
 export default function MenuAppBar(props: IMenuAppBarProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const navigation = useNavigate();
+    const [teacher] = useTeacher()
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -37,6 +40,8 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
     return (
             <Box display='flex' justifyContent='flex-end'>
                 <Toolbar>
+                <Typography>{`${teacher?.name} ${teacher?.lastName}`}</Typography>
+
                     <IconButton
                         size="large"
                         edge="end"
@@ -44,7 +49,7 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
                         aria-label="menu"
                         onClick={handleMenu}
                     >
-                        <MenuIcon />
+                       <Avatar src={teacher?.avatar}/>
                     </IconButton>
                     <Menu
                         id="menu-appbar"

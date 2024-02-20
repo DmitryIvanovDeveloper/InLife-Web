@@ -88,9 +88,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                 '& > :not(style)': { m: 1, width: '100%', height: "100%" },
                 display: "flex",
                 flexDirection: "column",
-                height: 1000,
-                overflow: "hidden",
-                overflowY: "scroll",
             }}
 
             autoComplete="off" >

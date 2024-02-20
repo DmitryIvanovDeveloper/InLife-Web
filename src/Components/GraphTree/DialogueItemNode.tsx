@@ -133,6 +133,10 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         return "white"
     }
 
+    const dialogueItemLabel = (name: string): string => {
+        return !name ? name :  `${name.substring(0, 35)}...`
+    }
+
     const shadow = (nodeId: string): string => {
         if (nodeId == selectDialogueLine.dialogueItemId ||
             nodeId == selectDialogueLine.line.id ||
@@ -177,8 +181,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     </Box>
                     <Box>
                         <h3 style={{ textAlign: "center" }}>{
-                            `${props.customNodeElementProps.nodeDatum.name
-                                .substring(0, 35)}...`}
+                            dialogueItemLabel(props.customNodeElementProps.nodeDatum.name)}
                         </h3>
                     </Box>
 
