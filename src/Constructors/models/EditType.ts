@@ -1,4 +1,8 @@
 export enum EditDialogueItemType {
+    DialogueName,
+    VoiceSettings,
+    StudentsAccess,
+    Scenario,
     Phrase,
     Comments,
     PhraseTenseses,

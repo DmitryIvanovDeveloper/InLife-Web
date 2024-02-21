@@ -9,17 +9,25 @@ export default function TranslatesInstructions() {
     return (
         <Card>
             <CardActionArea>
+                <CardContent>
+                    <Typography variant="body2" color="text.secondary">
+                        Add  translates to the possible answers as hint to a student  [if needed]
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                       It will help to find correct asnswer
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        A student can find it in the game
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        For exapmle:
+                    </Typography>
+                </CardContent>
                 <CardMedia
                     component="img"
-                    height="218"
                     image={Translates}
                     alt="green iguana"
                 />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        Add the possible answers translates
-                    </Typography>
-                </CardContent>
             </CardActionArea>
         </Card>
     );

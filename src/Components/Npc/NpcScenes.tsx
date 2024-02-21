@@ -23,7 +23,7 @@ export interface IDialogueTabsProps {
 }
 
 export default function NpcScenes(props: IDialogueTabsProps) {
-    const [success] = useState(false);
+    const [success, setSuccess] = useState(false);
     const [teacher] = useTeacher();
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [selectedDialogue, setSelectedDialogue] = useState<IDialogueModel | null>(null);
@@ -46,6 +46,7 @@ export default function NpcScenes(props: IDialogueTabsProps) {
     const onCreate = async () => {
         setIsCreating(true);
         await dialogueQueriesApi.create(props.npc.id);
+        setSuccess(true)
         setIsCreating(false)
     }
 

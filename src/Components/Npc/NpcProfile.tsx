@@ -3,6 +3,7 @@ import INpc from "../../Data/Locations";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import NpcScenes from "./NpcScenes";
 import DevidedLabel from "../Headers/DevidedLabel";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 export interface INpcProps {
     npc: INpc;
@@ -12,7 +13,7 @@ export default function NpcProfile(props: INpcProps) {
     return (
         <Box>
             <IconButton onClick={props.onToList}>
-                <ArrowBackIosIcon />
+                <ArrowBackIosNewIcon />
             </IconButton>
 
             <Box

@@ -3,16 +3,13 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
-export default function VoiceSettingsInstruction() {
+export default function ScenarioInstructions() {
     return (
         <Card>
             <CardActionArea>
                 <CardContent>
                     <Typography variant="body1" color="text.secondary">
-                        Select a specific voice to the actor you like!
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        (WARNING: You can select asn save a voice only once to the dialogue)
+                        Create your own scenario to student you want!
                     </Typography>
                 </CardContent>
             </CardActionArea>

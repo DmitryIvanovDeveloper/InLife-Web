@@ -55,7 +55,6 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 nodeType: DialogueItemType.Dialogue,
                 parentId: "",
                 dialogueId: diaologueRecoil.id,
-                color: "#ef9a9a",
             }
         }
 

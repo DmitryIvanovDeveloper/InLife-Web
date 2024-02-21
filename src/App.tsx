@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import './App.css';
 import DialogueBuilder from './DialogueTree/DialogueBuilder';
@@ -9,15 +9,19 @@ import SignUpTeacher from './Components/Authentication/SignUpTeacher';
 import ProfileEditor from './Components/Profile/ProfileEditor';
 import StudentProfile from './Components/Student/Profile/StudentProfile';
 import useTeacherQueriesApi from './ThereGame.Api/Queries/TeacherQueriesApi';
+import { Box, CircularProgress } from '@mui/material';
 
 export function App() {
     const navigate = useNavigate();
     const location = useLocation();
     const teacherQueriesApi = useTeacherQueriesApi();
-    
+    const [isLoading, setIsLoading] = useState<boolean>();
+
     useEffect(() => {
         if (!!localStorage.getItem("[Teacher] - Token")) {
+            setIsLoading(true);
             teacherQueriesApi.getById().then(result => {
+                setIsLoading(false);
                 navigate(LocalRoutes.main);
             });
         }
@@ -27,6 +31,13 @@ export function App() {
         }
     }, []);
 
+    if (isLoading) {
+        return (
+            <Box display='flex' justifyContent='center' height='100vh' alignItems='center'>
+                <CircularProgress />
+            </Box>
+        )
+    }
     return (
             <React.StrictMode>
                 <Routes>

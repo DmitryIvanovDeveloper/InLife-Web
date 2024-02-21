@@ -12,6 +12,7 @@ import { DialogueItemType } from "./DialogueitemType";
 import ISelectDialogueLine from "../../Constructors/models/ISelectDialogueLine";
 import { useDialogueItemState } from "../../Data/useDialogueitemState";
 import { useNpcSelection } from "../../Data/useSelectedNpc";
+import FullScenario from "../../Constructors/PhraseContructor/FullScenario";
 
 const nodeSize = { x: 200, y: 500 };
 const foreignObjectProps = {
@@ -35,15 +36,18 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [selectDialogueLine, setSelectDialogueItem] = useSelectDialogueLine();
     const phraseQueriesApi = usePhraseQueriesApi();
     const answerQueriesApi = useAnswerQueriesApi();
-    const [npc, setNpc] = useNpcSelection();
+    const [npc] = useNpcSelection();
+    const [isMouseOverNode, setIsMouseOverNode] = useState<boolean>(false);
 
     const onClick = (id: string, parentId: string, nodeType: DialogueItemType) => {
+        if (id == selectDialogueLine.dialogueItemId) {
+
+            setDialogueItemConstructor(() => <div />);
+
+        }
+
         if (nodeType == DialogueItemType.Dialogue) {
-            // setDialogueItemConstructor(() =>
-            //     <FullScenario
-            //         id={id}
-            //         dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
-            //     />);
+            setDialogueItemConstructor(() => null)
         }
 
         if (nodeType == DialogueItemType.Phrase) {
@@ -107,11 +111,9 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         if (nodeId == selectDialogueLine.dialogueItemId) {
             return "#ff5722";
         }
-        if (nodeId == selectDialogueLine.line.id) {
-            return "#673ab7";
-        }
+
         if (nodeId == selectDialogueLine.nextDialogueItemId) {
-            return "red";
+            return "#4caf50";
         }
 
         return "white";
@@ -119,9 +121,9 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
 
     const nodeAvatar = (nodeType: DialogueItemType): string | undefined => {
         if (nodeType == DialogueItemType.Phrase) {
-            return npc?.avatar 
+            return npc?.avatar
         }
-       
+
         return "";
     }
 
@@ -134,7 +136,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     }
 
     const dialogueItemLabel = (name: string): string => {
-        return !name ? name :  `${name.substring(0, 35)}...`
+        return !name ? name : `${name.substring(0, 35)}...`
     }
 
     const shadow = (nodeId: string): string => {
@@ -142,12 +144,29 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
             nodeId == selectDialogueLine.line.id ||
             nodeId == selectDialogueLine.nextDialogueItemId
         ) {
-            return "rgba(0, 0, 0, 0.5) 0px 1px 1px";
+            return "rgba(0, 8, 162, 0.8) 0px 1px 1px";
         }
 
         return "none";
     }
 
+    const defaultStyle = {
+        border: "1px solid transparent",
+        borderRadius: "5px",
+        backgroundColor: backgroundColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
+        margin: 1,
+        borderColor: getNodeColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
+        boxShadow: "rgba(0, 8, 162, 0.8) 0px 1px 1px"
+    }
+
+    const selectedNodeStyle = {
+        border: "1px solid transparent",
+        borderRadius: "5px",
+        backgroundColor: "white", // backgroundColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
+        margin: 3,
+        borderColor: getNodeColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
+        boxShadow: shadow(props.customNodeElementProps.nodeDatum.attributes?.id as string),
+    }
     //TODO: Refactor
     return (
         <g>
@@ -163,33 +182,32 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                 style={{ overflow: "visible" }}
             >
                 <div
-                    style={{
-                        border: "1px solid transparent",
-                        borderRadius: "5px",
-                        backgroundColor: backgroundColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
-                        margin: 1,
-                        borderColor: getNodeColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
-                        borderBlockWidth: 10,
-                        boxShadow: shadow(props.customNodeElementProps.nodeDatum.attributes?.id as string),
-                    }}
+                    onMouseEnter={() => setIsMouseOverNode(true)}
+                    onMouseLeave={() => setIsMouseOverNode(false)}
+                    style={isMouseOverNode ? defaultStyle : selectedNodeStyle}
                 >
-                    <Box
-                        display='flex'
-                        justifyContent='center'
-                    >
-                       <Avatar src={nodeAvatar(props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)} />
-                    </Box>
+                    {props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue
+                        ? <Box
+                            display='flex'
+                            justifyContent='center'
+                        >
+                            <Avatar src={nodeAvatar(props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)} />
+                        </Box>
+
+                        : null
+                    }
                     <Box>
                         <h3 style={{ textAlign: "center" }}>{
                             dialogueItemLabel(props.customNodeElementProps.nodeDatum.name)}
                         </h3>
                     </Box>
-
                 </div>
                 <Box display='flex' justifyContent="center">
                     {isLoading
                         ? <CircularProgress size={30} />
-                        : selectDialogueLine.dialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id &&
+                        : (selectDialogueLine.line.id == props.customNodeElementProps.nodeDatum.attributes?.id ||
+                            selectDialogueLine.dialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id ||
+                            selectDialogueLine.nextDialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id) &&
                             props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue
                             ? <Button>
                                 <IoMdAddCircle style={{ position: 'fixed', marginTop: 25 }} size={30} onClick={() =>
@@ -203,4 +221,8 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
             </foreignObject>
         </g>
     );
+
+
+
 }
+

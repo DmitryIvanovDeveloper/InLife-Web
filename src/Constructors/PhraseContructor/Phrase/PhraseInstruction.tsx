@@ -9,17 +9,25 @@ export default function PhraseInstruction() {
     return (
         <Card sx={{ maxWidth: 500 }}>
             <CardActionArea>
+                <CardContent>
+                    <Typography variant="body1" color="text.secondary">
+                        Insered a phrase the actor should to say.
+                        The phrase will be generated to audio voice by AI.
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        A student can see and hear the phrase in the game.
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                       For example:
+                    </Typography>
+                </CardContent>
                 <CardMedia
                     component="img"
                     height="140"
                     image={Phrase}
                     alt="green iguana"
                 />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        The phrase will be generated to audio voice by AI (In the game)
-                    </Typography>
-                </CardContent>
+
             </CardActionArea>
         </Card>
     );

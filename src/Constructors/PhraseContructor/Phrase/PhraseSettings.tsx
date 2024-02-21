@@ -1,4 +1,4 @@
-import { Grid, CircularProgress, IconButton, Box } from "@mui/material";
+import { Grid, CircularProgress, IconButton, Box, Typography } from "@mui/material";
 import { EditDialogueItemType } from "../../models/EditType";
 import SaveIcon from '@mui/icons-material/Save';
 import { useConstructorActionsState } from "../../../Data/useConstructorActionsState";
@@ -85,12 +85,16 @@ export default function PhraseSettings(props: IPhraseTab) {
                 type={"text"}
                 text={props.phraseCaption}
             />
-            <AudioMessage
-                position={"left"}
-                type={"audio"}
-                title={props.name}
-                audioUrl={props.phraseAudio}
-            />
+            {constructorActionsState.phrase.isSave
+                ? <Typography>Generating audio by AI...</Typography>
+                : <AudioMessage
+                    position={"left"}
+                    type={"audio"}
+                    title={props.name}
+                    audioUrl={props.phraseAudio}
+                />
+            }
+
         </Box>
     )
 }

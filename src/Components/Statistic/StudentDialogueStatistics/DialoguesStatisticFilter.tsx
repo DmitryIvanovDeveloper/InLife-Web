@@ -1,4 +1,4 @@
-import { Avatar, Box, Tab, Tabs, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, Tab, Tabs, Typography, withStyles } from "@mui/material";
 import StudentCalendarActivity from "./StudentCalendarActivity/StudentCalendarActivity";
 import { useDialogueItemConstructor, useDialogues } from "../../../Data/useDialogues";
 import IStudentDialogueStatisticModel from "../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
@@ -13,6 +13,7 @@ import { useDialoguesStatistic } from "../../../Data/useDialogueStatistic";
 import DevidedLabel from "../../Headers/DevidedLabel";
 
 export interface IDialoguesStatisticFilterProps {
+    studentId: string;
 }
 export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilterProps) {
     const [date, onChangeDate] = useState<Date>(new Date());
@@ -27,7 +28,6 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
     const [statisticByDate, setStatisticsByDate] = useState<IStudentDialogueStatisticModel[]>([]);
     const [selectedStatistic, setSelectedStatistic] = useState<IStudentDialogueStatisticModel | null>(null);
 
-
     const [filtredDialogues, setFiltredDialogues] = useState<IDialogueModel[]>([])
 
     const onSelectDialogue = (event: React.SyntheticEvent, newDialogue: IDialogueModel) => {
@@ -39,6 +39,7 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
         setSelectedStatistic(statistic);
 
         setDialogueItemConstructor(() => <DialogueChat
+            studentId={props?.studentId}
             dialogueId={statistic.dialogueId}
             statisticHistoty={statistic.dialogueHistory}
         />)
@@ -50,6 +51,7 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
     };
 
     useEffect(() => {
+        setDefaultFilter();
         var dialogueStatisticsByDate = dialoguesStatistic
             .filter(dialogueStatistic => isDateSame(dialogueStatistic.startDate, date as Date));
 
@@ -62,10 +64,14 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
     }, [statisticByDate])
 
     useEffect(() => {
-        setSelectedDialogue(null);
+        setSelectedDialogue(null)
     }, [selectedNpc])
 
     const setDefaultFilter = () => {
+        setNpcs([])
+        setSelectedNpc(null)
+        setSelectedDialogue(null);
+        setSelectedStatistic(null)
 
         if (!statisticByDate.length) {
             return;
@@ -91,7 +97,6 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
 
         var dialoguesByStatistic = dialogues.filter(dialogue => statistics.find(ds => ds.dialogueId == dialogue.id));
         return dialoguesByStatistic;
-        return getUnique(dialoguesByStatistic, "dialogueId");
     }
 
     const getDialogueStatisticTime = (): IStudentDialogueStatisticModel[] => {
@@ -99,120 +104,143 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
             return [];
         }
 
-        return statisticByDate.filter(statistic => statistic.dialogueId == selectedDialogue.id);
+        var filteredDialogue = statisticByDate.filter(statistic => statistic.dialogueId == selectedDialogue.id);
+        return sortByStartTime(filteredDialogue);
+    }
+
+    const getSpentTime = (): number => {
+        if (!selectedStatistic) {
+            return 0;
+        }
+
+        return moment(selectedStatistic?.endDate).diff(selectedStatistic?.startDate, 'seconds')
+    }
+
+    const sortByStartTime = (statistic: IStudentDialogueStatisticModel[]) => {
+        return statistic.sort((a, b) => {
+            return new Date(a.startDate).getTime() -
+                new Date(b.startDate).getTime()
+        }).reverse();
     }
 
     return (
-        <Box>
-            <StudentCalendarActivity
-                highlightDates={dialoguesStatistic.map(statistic => new Date(statistic.startDate))}
-                onChange={onChangeDate}
-                date={date}
-            />
-            <DevidedLabel name="" />
+            <Box>
+                <StudentCalendarActivity
+                    highlightDates={dialoguesStatistic.map(statistic => new Date(statistic.startDate))}
+                    onChange={onChangeDate}
+                    date={date}
+                />
+                <DevidedLabel name="" />
 
-            <Box
-                sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}
-            >
-                <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    value={selectedNpc}
-                    onChange={onSelectNpc}
-                    aria-label="Vertical tabs example"
-                    sx={{ borderRight: 1, borderColor: 'divider', width: "100%" }}
+                <Box
+                    sx={{ 
+                        flexGrow: 1, 
+                        bgcolor: 'background.paper', 
+                        display: 'flex', 
+                        overflow: 'sroll',
+                         height: "100vh" 
+                    }}
                 >
-                    <Tab
-                        value={"location"}
-                        label={"Actors"}
-                        disabled={true}
+                    <Tabs
+                        orientation="vertical"
+                        variant="scrollable"
+                        value={selectedNpc}
+                        onChange={onSelectNpc}
+                        aria-label="Vertical tabs example"
+                        sx={{ borderRight: 1, borderColor: 'divider', width: "100%" }}
                     >
-                    </Tab>
-                    {npcs
-                        .map((location, index) => (
-                            <Tab
-                                value={location}
-                                label={<Avatar sx={{ width: "70px", height: "70px" }} src={location.avatar} />}
-                                {...a11yProps(index)}
-                            >
-                            </Tab>
-                        ))}
-                </Tabs>
+                        <Tab
+                            value={"location"}
+                            label={"Actors"}
+                            disabled={true}
+                        >
+                        </Tab>
+                        {npcs
+                            .map((location, index) => (
+                                <Tab
+                                    value={location}
+                                    label={
+                                    <Avatar sx={{ width: "70px", height: "70px" }} src={location.avatar} />}
+                                    {...a11yProps(index)}
+                                >
+                                </Tab>
+                            ))}
+                    </Tabs>
 
-                <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    value={selectedDialogue}
-                    onChange={onSelectDialogue}
-                    aria-labelledby="dsdsd"
-                    aria-label="Vertical tabs example"
-                    sx={{ borderRight: 1, borderColor: 'divider', width: "100%" }}
-                >
-                    <Tab
-                        label={"Played Scenes"}
-                        disabled={true}
+                    <Tabs
+                        orientation="vertical"
+                        variant="scrollable"
+                        value={selectedDialogue}
+                        onChange={onSelectDialogue}
+                        aria-labelledby="dsdsd"
+                        aria-label="Vertical tabs example"
+                        sx={{ borderRight: 1, borderColor: 'divider', width: "100%" }}
                     >
-                    </Tab>
-                    {getFiltredDialoguesByNpc(selectedNpc)
-                        .map((filtredDialogue, index) => (
-                            <Tab
-                                value={filtredDialogue}
-                                label={filtredDialogue.name}
-                                {...a11yProps(index)}
-                            >
-                            </Tab>
-                        ))}
-                </Tabs>
-                <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    value={selectedStatistic}
-                    onChange={onSelectTime}
-                    aria-label="Vertical tabs example"
-                    sx={{ borderRight: 1, borderColor: 'divider', width: "100%" }}
-                >
-                    <Tab
-                        label={"Time"}
-                        disabled={true}
+                        <Tab
+                            label={"Played Scenes"}
+                            disabled={true}
+                        >
+                        </Tab>
+                        {getFiltredDialoguesByNpc(selectedNpc)
+                            .map((filtredDialogue, index) => (
+                                <Tab
+                                    value={filtredDialogue}
+                                    label={filtredDialogue.name}
+                                    {...a11yProps(index)}
+                                >
+                                </Tab>
+                            ))}
+                    </Tabs>
+                    <Tabs
+                        orientation="vertical"
+                        variant="scrollable"
+                        value={selectedStatistic}
+                        onChange={onSelectTime}
+                        aria-label="Vertical tabs example"
+                        sx={{ borderRight: 1, borderColor: 'divider', width: "100%" }}
                     >
-                    </Tab>
-                    {getDialogueStatisticTime()
-                        .map((statistic, index) => (
-                            <Tab
-                                value={statistic}
-                                label={`${statistic.startDate.getHours()}:${statistic.startDate.getMinutes()}`}
-                                {...a11yProps(index)}
-                            >
-                            </Tab>
-                        ))}
-                </Tabs>
+                        <Tab
+                            label={"Time"}
+                            disabled={true}
+                        >
+                        </Tab>
+                        {getDialogueStatisticTime()
+                            .map((statistic, index) => (
+                                <Tab
+                                    value={statistic}
+                                    label={`${statistic.startDate.getHours()}:${statistic.startDate.getMinutes()}`}
+                                    {...a11yProps(index)}
+                                >
+                                </Tab>
+                            ))}
+                    </Tabs>
 
-                <Tabs
-                    orientation="vertical"
-                    variant="scrollable"
-                    aria-labelledby="dsdsd"
-                    aria-label="Vertical tabs example"
-                    sx={{ borderRight: 1, borderColor: 'divider', width: "100%" }}
-                >
-                    <Tab
-                        label={"Spent Time (m:s)"}
-                        disabled={true}
-                    />
-                    {getDialogueStatisticTime()
-                        .map((statistic, index) => (
-                            <Tab
-                                disabled={true}
-                                label={convertSecondsToMinutes(moment(statistic?.endDate).diff(statistic?.startDate, 'seconds'))}
-                            >
-                            </Tab>
-                        ))}
-                </Tabs>
+                    <Tabs
+                        orientation="vertical"
+                        variant="scrollable"
+                        aria-labelledby="dsdsd"
+                        aria-label="Vertical tabs example"
+                        sx={{ borderRight: 1, borderColor: 'divider', width: "100%" }}
+                    >
+                        <Tab
+                            label={"Spent Time (m:s)"}
+                            disabled={true}
+                        />
+
+                        <Tab
+                            disabled={true}
+                            label={convertSecondsToMinutes(getSpentTime())}
+                        />
+                    </Tabs>
+                </Box>
             </Box>
-        </Box>
     )
 }
 
 const convertSecondsToMinutes = (seconds: number): string => {
+    if (!seconds) {
+       return ""
+    }
     var time_s = seconds;
     var minute = Math.floor(time_s / 60);
     var rest_seconds = time_s % 60;

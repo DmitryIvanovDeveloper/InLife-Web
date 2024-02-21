@@ -47,8 +47,6 @@ export default function DialogueLineAnswersConstructor(props: EquivalentTextCons
 
     return (
         <Box sx={{ width: "100%" }} >
-            <DevidedLabel name="" />
-
             <TextField
                 placeholder="Yes, today is a greate day!"
                 value={selectedTextId.text}

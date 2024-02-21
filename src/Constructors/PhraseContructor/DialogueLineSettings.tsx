@@ -101,7 +101,6 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                   </Box>
                ))}
             </Grid>
-
          </Box>
       </Box>
    )

@@ -8,6 +8,9 @@ import CommentsInstruction from "./PhraseContructor/Comments/CommentsInstruction
 import PhraseInstruction from "./PhraseContructor/Phrase/PhraseInstruction"
 import TensesListInstruction from "./PhraseContructor/TensesList/TensesListInstruction"
 import { EditDialogueItemType } from "./models/EditType"
+import VoiceSettingsInstruction from "./DialogueConstructor/VoiceSettings/VoiceSettingsInstruction"
+import AccessSettingsInsrtuction from "./DialogueConstructor/AccessSettings/AccessSettingsInstruction"
+import ScenarioInstructions from "./Scenario/ScenarioInstructions"
 
 export interface IInstructionProps {
     editDialogueItemType: EditDialogueItemType | undefined;
@@ -17,7 +20,7 @@ export interface IInstructionProps {
 export default function Instruction(props: IInstructionProps) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    
+
 
     const getInstruction = () => {
         if (props.editDialogueItemType == EditDialogueItemType.Phrase) {
@@ -41,6 +44,51 @@ export default function Instruction(props: IInstructionProps) {
         if (props.editDialogueItemType == EditDialogueItemType.Translates) {
             return <TranslatesInstructions />
         }
+        if (props.editDialogueItemType == EditDialogueItemType.VoiceSettings) {
+            return <VoiceSettingsInstruction />
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.Scenario) {
+            return <ScenarioInstructions />
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.StudentsAccess) {
+            return <AccessSettingsInsrtuction />
+        }
+        
+
+        return null;
+    }
+
+    const getInstructionName = () => {
+        if (props.editDialogueItemType == EditDialogueItemType.Phrase) {
+            return "Actor phrase"
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.Comments) {
+            return "Comments"
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.PhraseTenseses) {
+            return "Phrase tenseses"
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.Answers) {
+            return "Possible answers"
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.AnswersTenseses) {
+            return 'Answers tnseses'
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.PossibleWords) {
+            return "Possible words"
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.Translates) {
+            return "Answers translates"
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.VoiceSettings) {
+            return "Actor voice"
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.Scenario) {
+            return "Scenario"
+        }
+        if (props.editDialogueItemType == EditDialogueItemType.StudentsAccess) {
+            return "Student Access"
+        }
 
         return null;
     }
@@ -52,11 +100,11 @@ export default function Instruction(props: IInstructionProps) {
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
-                    {"Instructions"}
+                    {getInstructionName()}
                 </DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                       Instructions for {getInstruction()}
+                     {getInstruction()}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

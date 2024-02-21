@@ -1,11 +1,10 @@
 import TabContext from '@mui/lab/TabContext';
-import { Alert, Box, Button, Divider, IconButton, Paper } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Alert, Box, Button, CircularProgress, Divider, IconButton, Paper } from "@mui/material";
+import { Component, useEffect, useState } from "react";
 import { useDialogue, usePhrase } from "../../Data/useDialogues";
 import { useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
-import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
 import PhraseConstructor from './Phrase/PhraseContructor';
 import Message from '../../Components/ChatElement/Message';
 import { EditDialogueItemType } from '../models/EditType';
@@ -21,6 +20,9 @@ import useConstructorActions from '../../Data/ConstructorActions';
 import DialogueLinesTabSettings from './Phrase/DialogueLinesTabSettings';
 import DeleteDialogueItemButton from '../../Components/Button/DeleteDialogueItemButton';
 import { Locations } from '../../Data/Locations';
+import MapsUgcIcon from '@mui/icons-material/MapsUgc';
+import usePhraseQueriesApi from '../../ThereGame.Api/Queries/PhraseQueriesApi';
+import { keyframes } from '@mui/system';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -38,7 +40,10 @@ export interface IPhraseConstructor {
     parentId: string
     onEditedDialogueItemType?: (PhraseSettingsState: IDialogueItemEditState) => {}
 }
-
+const blink = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
 
 export default function Constructor(props: IPhraseConstructor): JSX.Element | null {
     const dialogueRecoil = useDialogue(props.dialogueId);
@@ -52,8 +57,10 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const [nextPhraseCaption, setNextPharseCaption] = useState<string>("");
     const [selectDialogueLine, setSelectDialogueLine] = useSelectDialogueLine();
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
+    const [dialogueItemState] = useDialogueItemState();
+    const [isPhraseCreating, setIsPhraseCreating] = useState<boolean>(false);
 
+    const phraseQueriesApi = usePhraseQueriesApi();
 
 
     //TODO: Refactor
@@ -66,8 +73,10 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         return editDialogueItemType == EditDialogueItemType.Phrase ||
             editDialogueItemType == EditDialogueItemType.PhraseTenseses ||
             editDialogueItemType == EditDialogueItemType.Comments
-        ;
+            ;
     }
+
+
 
     const onEditDialogueItemType = (newEditDialogueItemType: EditDialogueItemType) => {
         if (newEditDialogueItemType == editDialogueItemType) {
@@ -77,7 +86,14 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
         setEditDialogueItemType(newEditDialogueItemType);
     }
-
+    const onCreatePhrase = async () => {
+        if (!selectDialogueLine.line.id) {
+            return;
+        }
+        setIsPhraseCreating(true);
+        await phraseQueriesApi.create(selectDialogueLine.line.id);
+        setIsPhraseCreating(false);
+    }
 
     const onEditedDialogueItemType = (editedDialogueItemType: EditDialogueItemType, isEdited: boolean) => {
 
@@ -125,6 +141,19 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         }
     }
 
+    function CreateNextPhraseComponent() {
+        if (isPhraseCreating) {
+            return <CircularProgress size={20} />
+        }
+        if (!selectDialogueLine.line.id) {
+            return null;
+        }
+        return (
+            <IconButton onClick={onCreatePhrase}>
+                <MapsUgcIcon />
+            </IconButton>
+        )
+    }
     // UseEffects
 
     useEffect(() => {
@@ -222,7 +251,8 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 flexDirection: "column",
                 overflow: "hidden",
                 overflowY: "scroll",
-                
+                height: '100vh'
+
             }}
             autoComplete="off"
         >
@@ -250,7 +280,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 <TabContext value={selectDialogueLine.line.id}>
 
                     <DeleteDialogueItemButton />
-                    
+
                     <Box display='flex' flexDirection="row" justifyContent='space-between'>
                         <PhraseSettings
                             onEditDialogueItemType={onEditDialogueItemType}
@@ -263,7 +293,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
                         {editDialogueItemType != undefined
                             ? <Box>
-                                <IconButton onClick={() => setIsOpen(true)}>
+                                <IconButton onClick={() => setIsOpen(true)} >
                                     <HelpOutlinedIcon />
                                 </IconButton>
                             </Box>
@@ -293,40 +323,31 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                             text={nextPhraseCaption}
                         />
                         : null
-
                     }
+                    {CreateNextPhraseComponent()}
 
                 </TabContext>
             </Paper >
-            <Box
-                sx={{
-                    borderRadius: 1,
-                    padding: 2,
-                    margin: 2,
-                }}
-            >
-                {isEditDialogueItem()
-                    ? <PhraseConstructor
-                        dialogueId={props.dialogueId}
-                        id={phraseRecoil.id}
-                        parentId={phraseRecoil.parentId}
-                        editDialogueItemType={editDialogueItemType}
-                        onEditedDialogueItemType={onEditedDialogueItemType}
-                        setStatus={setStatus}
-                    />
-                    : <DialogueLineContructor
-                        dialogueId={props.dialogueId}
-                        id={selectDialogueLine.line.id}
-                        parentId={phraseRecoil.id}
-                        editDialogueItemType={editDialogueItemType}
-                        onEditedDialogueItemType={onEditedDialogueItemType}
-                        setStatus={setStatus}
-                    />
-                }
 
-            </Box>
+            {isEditDialogueItem()
+                ? <PhraseConstructor
+                    dialogueId={props.dialogueId}
+                    id={phraseRecoil.id}
+                    parentId={phraseRecoil.parentId}
+                    editDialogueItemType={editDialogueItemType}
+                    onEditedDialogueItemType={onEditedDialogueItemType}
+                    setStatus={setStatus}
+                />
+                : <DialogueLineContructor
+                    dialogueId={props.dialogueId}
+                    id={selectDialogueLine.line.id}
+                    parentId={phraseRecoil.id}
+                    editDialogueItemType={editDialogueItemType}
+                    onEditedDialogueItemType={onEditedDialogueItemType}
+                    setStatus={setStatus}
+                />
+            }
 
-            <Divider variant="fullWidth" />
 
             {/* {!isEdited || status != Status.OK
                 ? <Box>

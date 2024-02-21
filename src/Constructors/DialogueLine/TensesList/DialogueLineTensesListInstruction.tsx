@@ -9,17 +9,26 @@ export default function DialogueLineTensesListInstruction() {
     return (
         <Card>
             <CardActionArea>
+                <CardContent>
+                    <Typography variant="body1" color="text.secondary">
+                        Select tenseses for the possible answers as hint to a student [if needed]
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                       It will help to find correct asnswer
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        A student can find it in the game
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        For exapmle:
+                    </Typography>
+                </CardContent>
                 <CardMedia
                     component="img"
-                    height="218"
                     image={TensesListAnswer}
                     alt="green iguana"
                 />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        Possible tenseses for the possible answers
-                    </Typography>
-                </CardContent>
+
             </CardActionArea>
         </Card>
     );

@@ -18,21 +18,19 @@ export interface IStudentCalendarActivityProps {
 export default function StudentCalendarActivity(props: IStudentCalendarActivityProps) {
     const today = dayjs();
 
-    const [highlightedDays, setHighlitedDays] = useState(props.highlightDates)
+    const [highlightedDays, setHighlitedDays] = useState<Date[]>(props.highlightDates)
+    const [actions, serActions] = useState();
 
     const CustomDay = (props: PickersDayProps<Date>) => {
-        const matchedStyles = highlightedDays.reduce((a, v) => {
-            const hasHighlight = highlightedDays
-                .find(highlightedDay => isSameDay(new Date(props.day), highlightedDay)) && 
-                !isSameDay(new Date(props.day), new Date())
-            ;
-            return hasHighlight ? { backgroundColor: "#c8e6c9", } : a;
-        }, {});
+            const hasHighlight = highlightedDays.find(highlightedDay => isSameDay(new Date(props.day), highlightedDay))
+            
 
-        return <PickersDay {...props} sx={{ ...matchedStyles }} />;
+        return <PickersDay {...props} sx={{ backgroundColor:  hasHighlight ? "#8bc34a" : "", color:  hasHighlight ? "white" : ""}} />;
     };
 
     useEffect(() => {
+    console.log(highlightedDays);
+
         props.onChange(new Date());
     }, []);
     
@@ -45,6 +43,7 @@ export default function StudentCalendarActivity(props: IStudentCalendarActivityP
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                     onChange={event => props.onChange(event as Date)}
+                    label="Date du jour à visualiser"
                     openTo="day"
                     // value={value}
                     slots={{ day: CustomDay }}

@@ -69,8 +69,10 @@ export default function useDialogueQueriesApi() {
             if (response?.status != Status.OK) {
                 return;
             }
+            
 
             await teacherQueriesApi.getById();
+            return response.status;
         },
 
         update: async (dialugueModel: IDialogueModel) => {

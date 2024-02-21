@@ -11,12 +11,12 @@ import 'react-chat-elements/dist/main.css'
 import Message from '../../ChatElement/Message';
 
 export interface IDialogueChatProps {
+    studentId?: string;
     dialogueId: string;
     statisticHistoty: IDialogueHistory[]
 }
 
 export default function DialogueChat(props: IDialogueChatProps) {
-    const location = useLocation();
     const dialogueRecoil = useDialogue(props.dialogueId);
     const [students] = useStudents();
     const [student, setStudent] = useState<IStudentModel>();
@@ -28,8 +28,9 @@ export default function DialogueChat(props: IDialogueChatProps) {
         if (!!npc) {
             setNpc(npc)
         }
-        const query = new URLSearchParams(location.search);
-        var expectedStudent = students.find(student => student.id == query.get("id"))
+        var expectedStudent = students.find(student => student.id == props.studentId)
+        console.log(students);
+
         setStudent(expectedStudent);
     }, [props.dialogueId]);
 

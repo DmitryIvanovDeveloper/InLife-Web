@@ -6,6 +6,7 @@ import { useSelectDialogueLine } from "../../../Data/useDialogueItemSelection";
 import ISelectDialogueLine from "../../models/ISelectDialogueLine";
 import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
 import { IoMdAddCircle } from "react-icons/io";
+import { useDialogueItemConstructor } from "../../../Data/useDialogues";
 
 export interface IDialogueLinesProps {
     answers: IAnswerModel[];
@@ -29,6 +30,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
         if (!id) {
             return;
         }
+
         const selectedDialogueLine: ISelectDialogueLine = {
             dialogueItemId: selectDialogueLine.dialogueItemId,
             line: {
