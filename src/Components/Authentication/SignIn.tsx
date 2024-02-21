@@ -17,11 +17,14 @@ import ISignInModel from '../../ThereGame.Business/Models/ISignInModel';
 import { RoleType } from '../../ThereGame.Business/Util/Role';
 import { Status } from '../../ThereGame.Infrastructure/Statuses/Status';
 import { StatusDescription } from '../../ThereGame.Infrastructure/Statuses/StatusDescription';
+import useTeacherQueriesApi from '../../ThereGame.Api/Queries/TeacherQueriesApi';
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
     const authenticationQueriesApi = useAuthenticationQueriesApi();
+    const teacherQueriesApi = useTeacherQueriesApi();
+
     const navigate = useNavigate();
     const [authenticationError, setAuthenticationError] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -45,7 +48,7 @@ export default function SignIn() {
             setAuthenticationError(StatusDescription.InternalServerError);
         }
         if (result.status == Status.OK && result.data.role == RoleType.Teacher) {
-            navigate(Routes.teacherProfile);
+            navigate(Routes.main);
         }
         if (result.status == Status.OK && result.data.role == RoleType.Student) {
             navigate(Routes.studentProfile);
@@ -53,6 +56,8 @@ export default function SignIn() {
 
         setIsLoading(false);
     };
+
+
 
     return (
         <ThemeProvider theme={defaultTheme}>

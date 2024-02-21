@@ -8,17 +8,14 @@ export default function AccessSettingsInsrtuction() {
         <Card>
             <CardActionArea>
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Instructions
+                    <Typography variant="body2" color="text.secondary">
+                        Select a student[s] can play the scenario in the game
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        1 - Global publish - All not authorized users  have an access to the dialogue (in the game) 
+                       Select 'Global Publish' all users can play the scenario
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        2 - Student publish - Authorized students have an access  to the dialogue (in the game)
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        3 - You always have an access to the dialogue (in the game) 
+                        (You always can play the scenario if signed-in as teacher account in the game)
                     </Typography>
                 </CardContent>
             </CardActionArea>

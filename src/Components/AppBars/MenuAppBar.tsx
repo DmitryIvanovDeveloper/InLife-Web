@@ -8,14 +8,15 @@ import Toolbar from '@mui/material/Toolbar';
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '../../Routes';
-import TeacherProfile from '../Profile/Profile';
+import { Avatar, Typography } from '@mui/material';
+import { useTeacher } from '../../Data/useTeacher';
 
 export interface IMenuAppBarProps {
-    teacherId: string;
 }
 export default function MenuAppBar(props: IMenuAppBarProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const navigation = useNavigate();
+    const [teacher] = useTeacher()
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -37,44 +38,38 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
     }
 
     return (
-        <Box sx={{ flexGrow: 1 }}
-            display='flex'
-        >
-            <AppBar position="static" variant='outlined'>
-                <Box display='flex' justifyContent='flex-end'>
-                    <Toolbar>
-                        <IconButton
-                            size="large"
-                            edge="end"
-                            color="inherit"
-                            aria-label="menu"
-                            onClick={handleMenu}
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                        <Menu
-                            id="menu-appbar"
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            keepMounted
-                            transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                        >
-                            <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
-                            <MenuItem onClick={logout}>Logout</MenuItem>
-                        </Menu>
-                    </Toolbar>
-                </Box>
-                
-                <TeacherProfile />
-            </AppBar>
-        </Box>
+            <Box display='flex' justifyContent='flex-end'>
+                <Toolbar>
+                <Typography>{`${teacher?.name} ${teacher?.lastName}`}</Typography>
+
+                    <IconButton
+                        size="large"
+                        edge="end"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={handleMenu}
+                    >
+                       <Avatar src={teacher?.avatar}/>
+                    </IconButton>
+                    <Menu
+                        id="menu-appbar"
+                        anchorEl={anchorEl}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
+                        <MenuItem onClick={logout}>Logout</MenuItem>
+                    </Menu>
+                </Toolbar>
+            </Box>
     );
 }

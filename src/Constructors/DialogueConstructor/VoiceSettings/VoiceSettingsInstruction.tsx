@@ -8,11 +8,11 @@ export default function VoiceSettingsInstruction() {
         <Card>
             <CardActionArea>
                 <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        Select voice to the person
+                    <Typography variant="body1" color="text.secondary">
+                        Select a specific voice to the actor you like!
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        WARNING: You can save a voice only once to the dialogue
+                        (WARNING: You can select asn save a voice only once to the dialogue)
                     </Typography>
                 </CardContent>
             </CardActionArea>

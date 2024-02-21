@@ -13,18 +13,17 @@ export default function CommentsInfo(props: ICommentsInfoProps) {
             alignItems='center' 
             flexDirection='column'
         >
-            <CommentsInstruction />
             <TextField
                 sx={{m: 3}}
                 InputLabelProps={{ shrink: true }}
                 value={props.comments}
                 id="outlined-basic"
-                label="Comments"
                 placeholder="Any comments"
-                variant="outlined"
+                variant="standard"
                 onChange={(event) => props.onCommentsChange(event.target.value)}
                 fullWidth
             />
+            {/* <CommentsInstruction /> */}
         </Box>
     )
 }

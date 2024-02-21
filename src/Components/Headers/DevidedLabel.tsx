@@ -2,7 +2,6 @@ import { Box, Divider, Typography } from "@mui/material";
 
 const styles = {
     value: {
-        padding: "1rem 2rem",
         borderTop: "1px solid #e1e1e1",
         color: "#899499"
     }

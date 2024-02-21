@@ -2,21 +2,21 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Alert, Box, Button, Tab } from "@mui/material";
+import { Box, IconButton, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
-import { useSelection } from "../../Data/useSelection";
-import { useTreeState } from "../../Data/useTreeState";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import AppBarDeleteButton from "../../Components/AppBarDeleteButton";
 import SaveButton from "../../Components/Button/SaveButton";
-import LinarProgressCustom from "../../Components/CircularProgress";
 import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
 import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
-import PhraseConstructor from '../PhraseContructor/PhraseConstructor';
+import DialogueGraph from '../../Components/GraphTree/DialogueGraph';
+import Instruction from '../Instruction';
+import { EditDialogueItemType } from '../models/EditType';
+import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
+import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
 
 export interface IDialogueConstructor {
     id: string;
@@ -31,10 +31,9 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [treeState, setTreeState] = useTreeState();
-    const [selection, setSelection] = useSelection();
-    const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const [tab, setTab] = useState<string>("1");
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>(undefined);
 
     const dialogueQueriesApi = useDialogueQueriesApi();
 
@@ -45,15 +44,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         setIsEdited(true);
     }
 
-    const onDelete = async () => {
-        setIsDeleting(true);
-        await dialogueQueriesApi.delete(props.id);
-        localStorage.removeItem(props.id)
-        setDialogueItemConstructor(() => null);
-        setIsDeleting(false);;
-
-    }
-
     const onChangeName = (name: string) => {
         setDialogue(prev => ({
             ...prev,
@@ -61,24 +51,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         }));
 
         setIsEdited(false);
-    }
-
-    const onClickPhrase = (event: any) => {
-        event.stopPropagation();
-        event.preventDefault();
-
-        setTreeState(prev => ({
-            expanded: [...prev.expanded, dialogue.id, dialogue.phrase.id],
-            selected: [dialogue.phrase.id]
-        }));
-
-        setSelection(dialogue.phrase.id);
-
-        setDialogueItemConstructor(() => <PhraseConstructor
-            dialogueId={props.id}
-            id={dialogue.phrase.id}
-            parentId={""}
-        />);
     }
 
     const setIsVoiceSelected = (isSelected: string) => {
@@ -143,6 +115,10 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         )
     }
 
+    function DialogueGraphComponent() {
+        return <DialogueGraph dialogueId={dialogue.id} />
+    }
+
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setTab(newValue);
     };
@@ -187,6 +163,21 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         props.setStates([DialogueItemStateType.UnsavedChanges])
     }, [isEdited]);
 
+    useEffect(() => {
+        if (tab == '1') {
+            setEditDialogueItemType(EditDialogueItemType.DialogueName)
+        }
+        if (tab == '2') {
+            setEditDialogueItemType(EditDialogueItemType.VoiceSettings)
+        }
+        if (tab == '3') {
+            setEditDialogueItemType(EditDialogueItemType.StudentsAccess)
+        }
+        if (tab == '4') {
+            setEditDialogueItemType(EditDialogueItemType.Scenario)
+        }
+    }, [tab]);
+
     if (!dialogue) {
         return null;
     }
@@ -198,60 +189,69 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 '& > :not(style)': { m: 1, width: '100%' },
                 p: 5,
                 mb: 2,
-                display: "flex",
-                flexDirection: "column",
-                height: 800,
-                overflow: "hidden",
-                overflowY: "scroll",
             }}
             autoComplete="off"
         >
-            <AppBarDeleteButton
-                name={`"${dialogue.name}" Settings`}
-                onDelete={onDelete}
-            />
-
-            {isDeleting
-                ? <LinarProgressCustom name="Deleting" />
-                : null
-            }
-            
             <Box sx={{ width: '100%', typography: 'body1' }}>
                 <TabContext value={tab}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleChange} aria-label="lab API tabs example">
-                            <Tab label="Dialogue name" value="1" />
-                            {!dialogue.name
-                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
-                                : null
-                            }
-                            <Tab label="Voice Settings" value="2" />
-                            {!dialogue.voiceSettings
-                                ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
-                                : null
-                            }
-                            <Tab label="Access Settings" value="3" />
-                        </TabList>
+                    <Box display='flex' flexDirection='row' justifyContent='space-between'>
+                        <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
+                            <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                <Tab label="Scene Name" value="1" />
+                                {!dialogue.name
+                                    ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                    : null
+                                }
+                                <Tab label="Voice" value="2" />
+                                {!dialogue?.voiceSettings
+                                    ? <ErrorOutlineOutlinedIcon sx={{ mt: 1.6 }} />
+                                    : null
+                                }
+                                <Tab label="Access" value="3" />
+                                <Tab label="Scenario" value="4" disabled={!dialogueRecoil?.voiceSettings ?? false} />
+                                
+                                <Box display='flex' alignItems='center'>
+                                    <NoteAltOutlinedIcon />
+                                </Box>
+                            </TabList>
+
+                        </Box>
+                        <IconButton onClick={() => setIsOpen(true)} sx={{ margin: 1 }}>
+                            <HelpOutlinedIcon />
+                        </IconButton>
+                        <Instruction
+                            editDialogueItemType={editDialogueItemType}
+                            onClose={() => setIsOpen(false)}
+                            isOpen={isOpen}
+                        />
                     </Box>
+
+
                     <TabPanel value="1">{DialogueNameComponent()}</TabPanel>
                     <TabPanel value="2">{VoiceSettingsComponent()}</TabPanel>
                     <TabPanel value="3">{AccessSettingsComponent()}</TabPanel>
+                    <TabPanel value="4">{DialogueGraphComponent()}</TabPanel>
                 </TabContext>
-            </Box>
 
-            <SaveButton
-                onClick={save}
-                isLoading={isLoading}
-                isDisabled={!dialogue.voiceSettings}
-            />
 
-            {!isEdited
+            </Box >
+
+            {tab != '4'
+                ? <SaveButton
+                    onClick={save}
+                    isLoading={isLoading}
+                    isDisabled={false}
+                />
+                : null
+            }
+
+            {/* {!isEdited
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={reset}>reset all changes</Button>
                 </Box>
                 : <Alert severity="success">The constructor is saved!</Alert>
-            }
-        </Box>
+            } */}
+        </Box >
     )
 }

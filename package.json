@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:5000",
   "dependencies": {
+    "@chatscope/chat-ui-kit-react": "^1.10.1",
     "@emotion/react": "^11.11.3",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",
@@ -15,6 +16,7 @@
     "@mui/lab": "^5.0.0-alpha.157",
     "@mui/material": "^5.15.9",
     "@mui/x-data-grid": "^6.18.3",
+    "@mui/x-date-pickers": "^6.19.4",
     "@mui/x-tree-view": "^6.17.0",
     "@react-spring/web": "^9.7.3",
     "@testing-library/jest-dom": "^5.17.0",
@@ -24,9 +26,12 @@
     "@types/d3": "^7.4.3",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.17",
+    "base-64": "^1.0.0",
     "core-js": "^2.5.7",
     "cors": "^2.8.5",
     "d3": "^7.8.5",
+    "date-fns": "^3.3.1",
+    "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
     "iconify": "^1.4.0",
     "inversify": "^6.0.2",
@@ -42,8 +47,10 @@
     "react-d3-tree": "^3.6.2",
     "react-dom": "^18.2.0",
     "react-elastic-carousel": "^0.11.5",
+    "react-flow-renderer": "^10.3.17",
     "react-folder-tree": "^5.1.1",
     "react-h5-audio-player": "^3.9.0",
+    "react-modern-calendar-datepicker": "^3.1.6",
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
     "react-split-pane": "^0.1.92",
@@ -85,6 +92,7 @@
     ]
   },
   "devDependencies": {
+    "@types/base-64": "^1.0.2",
     "@types/react-avatar-editor": "^13.0.2",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "file-loader": "^6.2.0"

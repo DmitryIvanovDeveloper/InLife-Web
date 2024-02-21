@@ -9,17 +9,23 @@ export default function TensesListInstruction() {
     return (
         <Card>
             <CardActionArea>
+                <CardContent>
+                    <Typography variant="body1" color="text.secondary">
+                        Select the tenseses to the phrase if needed
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        A student can find it in the game.
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        For example:
+                    </Typography>
+                </CardContent>
                 <CardMedia
                     component="img"
                     height="218"
                     image={TensesListPhrase}
                     alt="green iguana"
                 />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary">
-                        Select tenseses used in the phrase
-                    </Typography>
-                </CardContent>
             </CardActionArea>
         </Card>
     );

@@ -4,20 +4,11 @@ import { useDialogue } from "../../Data/useDialogues";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemNode } from "./DialogueItemNode";
-import { NodeType } from "./DialogueitemType";
+import { DialogueItemType } from "./DialogueitemType";
 import { Resizable } from 're-resizable';
 
-
-<Resizable
-    defaultSize={{
-        width: 320,
-        height: 200,
-    }}
-></Resizable>
-
-
 export interface IDialoguesGraphProps {
-    dialogueId: string
+    dialogueId: string;
 }
 
 export default function DialogueGraph(props: IDialoguesGraphProps) {
@@ -32,10 +23,9 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             children: phrase.answers.map(answer => transformAnswer(answer)),
             attributes: {
                 id: phrase.id,
-                nodeType: NodeType.Phrase,
+                nodeType: DialogueItemType.Phrase,
                 parentId: phrase.parentId,
                 dialogueId: diaologueRecoil.id,
-                color: "#80cbc4"
             }
         }
         return node;
@@ -48,10 +38,9 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             attributes: {
                 possibleAnswersLength: answer.texts.length,
                 id: answer.id,
-                nodeType: NodeType.Answer,
+                nodeType: DialogueItemType.Answer,
                 parentId: answer.parentId,
                 dialogueId: diaologueRecoil.id,
-                color: "#81d4fa"
             }
         }
         return node;
@@ -59,14 +48,13 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
 
     useEffect(() => {
         var node: RawNodeDatum = {
-            name: diaologueRecoil.name,
+            name: "",
             children: [transformPhrase(diaologueRecoil.phrase)],
             attributes: {
                 id: diaologueRecoil.id,
-                nodeType: NodeType.Dialogue,
+                nodeType: DialogueItemType.Dialogue,
                 parentId: "",
                 dialogueId: diaologueRecoil.id,
-                color: "#ef9a9a",
             }
         }
 
@@ -75,12 +63,13 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
 
     function node(dialogueItem: CustomNodeElementProps) {
         if (!diaologueRecoil.voiceSettings &&
-            dialogueItem.nodeDatum.attributes?.nodeType == NodeType.Dialogue) {
+            dialogueItem.nodeDatum.attributes?.nodeType == DialogueItemType.Dialogue) {
+
             return <DialogueItemNode customNodeElementProps={dialogueItem}
             />
+
         }
-        if (!!diaologueRecoil.voiceSettings)
-        {
+        if (!!diaologueRecoil.voiceSettings) {
             return <DialogueItemNode customNodeElementProps={dialogueItem} />
         }
 
@@ -89,14 +78,19 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     if (!data) {
         return null;
     }
+
     return (
         <Resizable
             defaultSize={{
                 width: "100%",
-                height: "60%"
+                height: "80vh"
             }}
         >
-            <div style={{ backgroundColor: "#e1f5fe", borderRadius: 15, height: "100%"}}>
+            <div style={{
+                boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
+                borderRadius: 15, 
+                height: "100%"
+            }}>
                 <Tree
                     data={data}
                     nodeSize={nodeSize}

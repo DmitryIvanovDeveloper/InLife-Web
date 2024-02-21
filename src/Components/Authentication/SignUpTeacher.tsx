@@ -45,7 +45,7 @@ export default function SignUpTeacher() {
         var typedResult = await authenticationQueriesApi.signUpTeacher(data);
 
         if (typedResult.status == Status.OK) {
-            navigate(Routes.teacherProfile);
+            navigate(Routes.main);
         }
 
         if (typedResult.status == Status.Conflict) {

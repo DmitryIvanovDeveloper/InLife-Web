@@ -8,7 +8,6 @@ export interface IDialogueNameInfoProps {
 export default function DialogueNameInfo(props: IDialogueNameInfoProps) {
     return (
         <Box>
-            <DialogueNameInsrtuction />
             <TextField
                 fullWidth
                 onChange={(event) => props.onChangeName(event.target.value)}
