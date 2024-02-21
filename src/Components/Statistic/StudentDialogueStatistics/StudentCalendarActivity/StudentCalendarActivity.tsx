@@ -14,13 +14,17 @@ export interface IStudentCalendarActivityProps {
     date: Date;
 }
 export default function StudentCalendarActivity(props: IStudentCalendarActivityProps) {
-    const [highlightedDays] = useState<Date[]>(props.highlightDates)
+    const [highlightedDays, setHighlightedDaysб] = useState<Date[]>(props.highlightDates)
 
     const CustomDay = (props: PickersDayProps<Date>) => {
         const hasHighlight = highlightedDays.find(highlightedDay => isSameDay(new Date(props.day), highlightedDay))
         return <PickersDay {...props} sx={{ backgroundColor:  hasHighlight ? "#8bc34a" : "", color:  hasHighlight ? "white" : ""}} />;
     };
 
+    useEffect(() => {
+        setHighlightedDaysб(props.highlightDates);
+    }, [props.highlightDates]);
+    
     useEffect(() => {
         props.onChange(new Date());
     }, []);
