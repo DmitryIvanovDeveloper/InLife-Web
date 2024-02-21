@@ -34,7 +34,6 @@ export default function StudentList() {
 
     return (
         <List dense sx={{
-            height: "100dvh",
             width: '100%',
             bgcolor: 'background.paper',
             overflow: 'auto'
