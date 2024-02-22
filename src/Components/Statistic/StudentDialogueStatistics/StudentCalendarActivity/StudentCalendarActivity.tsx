@@ -24,11 +24,7 @@ export default function StudentCalendarActivity(props: IStudentCalendarActivityP
     useEffect(() => {
         setHighlightedDaysб(props.highlightDates);
     }, [props.highlightDates]);
-    
-    useEffect(() => {
-        props.onChange(new Date());
-    }, []);
-    
+
     return (
         <Box
             display='flex'

@@ -16,7 +16,7 @@ export interface IDialoguesStatisticFilterProps {
     studentId: string;
 }
 export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilterProps) {
-    const [date, onChangeDate] = useState<Date>(new Date());
+    const [date, onChangeDate] = useState<Date>();
     const [dialogues, _] = useDialogues();
     const [dialogueItemConstructor, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [dialoguesStatistic] = useDialoguesStatistic();
@@ -50,10 +50,17 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
         setDialogueItemConstructor(() => <div></div>)
     };
 
+
     useEffect(() => {
+        onChangeDate(new Date())
+    }, [dialoguesStatistic]);
+
+    useEffect(() => {
+
         setDefaultFilter();
         var dialogueStatisticsByDate = dialoguesStatistic
             .filter(dialogueStatistic => isDateSame(dialogueStatistic.startDate, date as Date));
+            console.log(dialogueStatisticsByDate);
 
         setStatisticsByDate(dialogueStatisticsByDate);
 
@@ -128,7 +135,7 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
                 <StudentCalendarActivity
                     highlightDates={dialoguesStatistic.map(statistic => new Date(statistic.startDate))}
                     onChange={onChangeDate}
-                    date={date}
+                    date={date ?? new Date()}
                 />
                 <DevidedLabel name="" />
 
