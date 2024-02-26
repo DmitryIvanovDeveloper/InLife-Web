@@ -37,8 +37,7 @@ export default function PhraseSettings(props: IPhraseTab) {
                         Phrase
                         <DriveFileRenameOutlineIcon
                             sx={{
-                                backgroundColor: props.editDialogueItemType == EditDialogueItemType.Phrase ? commonStyle.editItemColor : "",
-                                color: props.dialogueItemEditState.isPhraseEdited ? commonStyle.editedItemColor : ""
+                                color: props.dialogueItemEditState.isPhraseEdited ? commonStyle.editedItemColor : commonStyle.default
                             }}
                         />
                     </Button>
@@ -50,8 +49,7 @@ export default function PhraseSettings(props: IPhraseTab) {
                         Comments
                         <MessageIcon
                             sx={{
-                                backgroundColor: props.editDialogueItemType == EditDialogueItemType.Comments ? commonStyle.editItemColor : "",
-                                color: props.dialogueItemEditState.isPhraseCommentsEdited ? commonStyle.editedItemColor : ""
+                                color: props.dialogueItemEditState.isPhraseCommentsEdited ? commonStyle.editedItemColor : commonStyle.default
                             }}
                         />
                     </Button>
@@ -62,8 +60,7 @@ export default function PhraseSettings(props: IPhraseTab) {
                         Tenseses
                         <AvTimerIcon
                             sx={{
-                                backgroundColor: props.editDialogueItemType == EditDialogueItemType.PhraseTenseses ? commonStyle.editItemColor : "",
-                                color: props.dialogueItemEditState.isPhraseTensesesEdited ? commonStyle.editedItemColor : ""
+                                color: props.dialogueItemEditState.isPhraseTensesesEdited ? commonStyle.editedItemColor : commonStyle.default
                             }}
                         />
                     </Button>
@@ -106,5 +103,5 @@ export default function PhraseSettings(props: IPhraseTab) {
 const commonStyle = {
     editedItemColor: "#ff9800",
     editItemColor: "#fafafa",
-    default: ""
+    default: "grey"
 }

@@ -23,6 +23,7 @@ import { Locations } from '../../Data/Locations';
 import MapsUgcIcon from '@mui/icons-material/MapsUgc';
 import usePhraseQueriesApi from '../../ThereGame.Api/Queries/PhraseQueriesApi';
 import { keyframes } from '@mui/system';
+import { useDialogueItemColorsMap } from '../../Data/useDialogueItemColors';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -59,7 +60,8 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [dialogueItemState] = useDialogueItemState();
     const [isPhraseCreating, setIsPhraseCreating] = useState<boolean>(false);
-
+    const [dialogueItemColorsMap] = useDialogueItemColorsMap();
+    
     const phraseQueriesApi = usePhraseQueriesApi();
 
 
@@ -281,6 +283,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                             name={Locations.find(location => location.id == dialogueRecoil.levelId)?.name ?? ""}
                         />
                     </Box>
+                    
                     <Box display='flex' justifyContent='end'>
                         <DialogueLinesTabSettings
                             answers={phraseRecoil.answers}
@@ -293,6 +296,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                         editDialogueItemType={editDialogueItemType}
                         dialogueItemEditState={dialogueItemEditState}
                         currentDialogueLineData={currentDialogueLineData}
+                        color={dialogueItemColorsMap.find(item => item.id == selectDialogueLine.line.id)?.color ?? ""}
                     />
 
                     {!!nextPhraseCaption

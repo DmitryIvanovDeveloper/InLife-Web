@@ -16,6 +16,7 @@ export interface IAnswersActionsButtonsProps {
    editDialogueItemType: EditDialogueItemType | undefined;
    dialogueItemEditState: IDialogueItemEditState;
    currentDialogueLineData: string[];
+   color: string;
 }
 
 export default function DialogueLineSettings(props: IAnswersActionsButtonsProps) {
@@ -31,42 +32,46 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
             : <Grid
                display='flex' direction='row' alignItems='center'
             >
-               <Button onClick={() => props.onEditDialogueItemType(EditDialogueItemType.Answers)}>
+               <Button
+                  sx={{ color: commonStyle.default }}
+                  onClick={() => props.onEditDialogueItemType(EditDialogueItemType.Answers)}>
                   Answers
                   <DriveFileRenameOutlineIcon
                      sx={{
-                        backgroundColor: props.editDialogueItemType == EditDialogueItemType.Answers ? commonStyle.editItemColor : "",
-                        color: props.dialogueItemEditState.isAnswersEdited ? commonStyle.editedItemColor : ""
+                        color: props.dialogueItemEditState.isAnswersEdited ? commonStyle.editedItemColor : props.color
                      }}
                   />
                </Button>
                <Button
+                  sx={{ color: commonStyle.default }}
+
                   onClick={() => props.onEditDialogueItemType(EditDialogueItemType.Translates)}>
                   Translates
                   <TranslateIcon
                      sx={{
-                        backgroundColor: props.editDialogueItemType == EditDialogueItemType.Translates ? commonStyle.editItemColor : "",
-                        color: props.dialogueItemEditState.isAnswersTranslatesEdited ? commonStyle.editedItemColor : ""
+                        color: props.dialogueItemEditState.isAnswersTranslatesEdited ? commonStyle.editedItemColor : props.color
                      }}
                   />
                </Button>
                <Button
+                  sx={{ color: commonStyle.default }}
+
                   onClick={() => props.onEditDialogueItemType(EditDialogueItemType.AnswersTenseses)}>
                   Tenseses
                   <AvTimerIcon
                      sx={{
-                        backgroundColor: props.editDialogueItemType == EditDialogueItemType.AnswersTenseses ? commonStyle.editItemColor : "",
-                        color: props.dialogueItemEditState.isAnswersTensesListEdited ? commonStyle.editedItemColor : ""
+                        color: props.dialogueItemEditState.isAnswersTensesListEdited ? commonStyle.editedItemColor :props.color
                      }}
                   />
                </Button>
                <Button
+                  sx={{ color: commonStyle.default }}
+
                   onClick={() => props.onEditDialogueItemType(EditDialogueItemType.PossibleWords)}>
-                     Words
+                  Words
                   <SpellcheckIcon
                      sx={{
-                        backgroundColor: props.editDialogueItemType == EditDialogueItemType.PossibleWords ? commonStyle.editItemColor : "",
-                        color: props.dialogueItemEditState.isAnswersPossibleWordsEdited ? commonStyle.editedItemColor : ""
+                        color: props.dialogueItemEditState.isAnswersPossibleWordsEdited ? commonStyle.editedItemColor : props.color
                      }} />
                </Button>
                <IconButton
@@ -105,5 +110,6 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
 
 const commonStyle = {
    editedItemColor: "#ff9800",
-   editItemColor: "#fafafa"
+   editItemColor: "#fafafa",
+   default: "grey"
 }

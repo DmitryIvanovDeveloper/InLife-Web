@@ -15,6 +15,7 @@ import { useNpcSelection } from "../../Data/useSelectedNpc";
 import FullScenario from "../../Constructors/PhraseContructor/FullScenario";
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
 import useConstructorActions from "../../Data/ConstructorActions";
+import { useDialogueItemColorsMap } from "../../Data/useDialogueItemColors";
 
 const nodeSize = { x: 200, y: 500 };
 const foreignObjectProps = {
@@ -41,6 +42,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [npc] = useNpcSelection();
     const [isMouseOverNode, setIsMouseOverNode] = useState<boolean>(false);
     const constructorActions = useConstructorActions();
+    const [dialogueItemColorsMap, setDualogueItemsColorMap] = useDialogueItemColorsMap();
 
     const onClick = (id: string, parentId: string, nodeType: DialogueItemType) => {
         if (id == selectDialogueLine.dialogueItemId) {
@@ -130,6 +132,8 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     }
 
     const backgroundColor = (nodeId: string): string => {
+        var item = dialogueItemColorsMap.find(item => item.id == nodeId);
+        return item?.color ?? "white"
         if (dialogueItemState == DialogueItemStateType.UnsavedChanges && nodeId == selectDialogueLine.dialogueItemId) {
             return "#ffe082";
         }
@@ -186,7 +190,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                 <div
                     onMouseEnter={() => setIsMouseOverNode(true)}
                     onMouseLeave={() => setIsMouseOverNode(false)}
-                    style={isMouseOverNode ? defaultStyle : selectedNodeStyle}
+                    style={!isMouseOverNode ? defaultStyle : selectedNodeStyle}
                 >
                     {props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue
                         ? <Box
