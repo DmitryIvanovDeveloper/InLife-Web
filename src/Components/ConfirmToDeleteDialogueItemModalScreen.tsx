@@ -17,7 +17,7 @@ export interface IConfirmToDeleteDialogueItemModalScreen {
 export default function ConfirmToDeleteDialogueItemModalScreen(props: IConfirmToDeleteDialogueItemModalScreen) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const [selectDialogueLine, setSelectDialogieLine] = useSelectDialogueLine();
+    const [selectDialogueLine] = useSelectDialogueLine();
 
     return (
         <React.Fragment>

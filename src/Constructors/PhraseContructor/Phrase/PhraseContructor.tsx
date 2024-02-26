@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useState, useEffect } from "react";
-import {  usePhrase, useDialogue } from "../../../Data/useDialogues";
+import { usePhrase, useDialogue } from "../../../Data/useDialogues";
 import usePhraseQueriesApi from "../../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IAudioSettings from "../../../ThereGame.Business/Models/IAudioSettings";
 import IPhraseModel from "../../../ThereGame.Business/Models/IPhraseModel";
@@ -15,19 +15,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { useConstructorActionsState } from "../../../Data/useConstructorActionsState";
 import useConstructorActions from "../../../Data/ConstructorActions";
 import { useDialogueItemState } from "../../../Data/useDialogueitemState";
+import ModalConstructor from "../../ModalContructor";
 
 export interface IPhraseConstructor {
     dialogueId: string;
     id: string
     parentId: string;
     editDialogueItemType: EditDialogueItemType | undefined;
+    onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType | undefined) => void;
     setStates?: (states: DialogueItemStateType[]) => void;
     onEditedDialogueItemType: (editDialogueItemType: EditDialogueItemType, isEdited: boolean) => void;
     setStatus: (status: Status) => void
 }
 
 export default function PhraseContructor(props: IPhraseConstructor): JSX.Element | null {
-    const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
+    const [constructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
     const phraseQueriesApi = usePhraseQueriesApi();
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
@@ -35,6 +37,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const [sessionPhraseData, setSessionPhraseData] = useState<IPhraseModel>(phraseRecoil);
     const [isEdited, setIsEdited] = useState(true);
     const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
+    const actions = useConstructorActions();
 
     // QueryApi
     const onSave = async () => {
@@ -50,6 +53,8 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             constructorActions.setIsSavePhrase(false);
         }
         setIsEdited(true);
+
+        actions.setIsScenarioUpdated(true);
     }
 
 
@@ -66,7 +71,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             text: phrase
         }));
 
-        
+
         setIsEdited(false);
     }
 
@@ -122,7 +127,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
         localStorage.setItem(props.id, JSON.stringify(sessionPhraseData));
     }, [sessionPhraseData]);
-    
+
     useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
@@ -130,7 +135,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             setIsEdited(true);
             return;
         }
-        
+
         setIsEdited(false);
 
         setSessionPhraseData(JSON.parse(data));
@@ -175,7 +180,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData.text != phraseRecoil.text);
         props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData.comments != phraseRecoil.comments);
         props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData.tensesList) != JSON.stringify(phraseRecoil.tensesList));
-
     }, [sessionPhraseData.tensesList, sessionPhraseData.comments, sessionPhraseData.text]);
 
     useEffect(() => {
@@ -205,42 +209,37 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         if (constructorActionsState.phrase.isReset) {
             reset();
         }
-        
-       
     }, [constructorActionsState.phrase]);
 
+
+
+    const confirm = () => {
+        props.onEditDialogueItemType(props.editDialogueItemType);
+    }
     if (!sessionPhraseData) {
         return null;
     }
 
     return (
-        <Box
-            component="form"
-            sx={{
-                '& > :not(style)': { m: 1, width: '100%' },
-                p: 5,
-                mb: 2,
-                display: "flex",
-                flexDirection: "column",
-                height: 800,
-                overflow: "hidden",
-                overflowY: "scroll",
-            }}
-            autoComplete="off"
-        >
-            {props.editDialogueItemType == EditDialogueItemType.Phrase
-                ? PhraseComponent()
-                : null
-            }
-            {props.editDialogueItemType == EditDialogueItemType.PhraseTenseses
-                ? PhraseTensesListComponent()
-                : null
-            }
-            {props.editDialogueItemType == EditDialogueItemType.Comments
-                ? CommentsComponent()
-                : null
-            }
-
+        <Box>
+            <ModalConstructor
+                element={PhraseComponent()}
+                onClose={confirm}
+                isOpen={props.editDialogueItemType == EditDialogueItemType.Phrase}
+                editDialogueItemType={props.editDialogueItemType}
+            />
+            <ModalConstructor
+                element={PhraseTensesListComponent()}
+                onClose={confirm}
+                isOpen={props.editDialogueItemType == EditDialogueItemType.PhraseTenseses}
+                editDialogueItemType={props.editDialogueItemType}
+            />
+            <ModalConstructor
+                element={CommentsComponent()}
+                onClose={confirm}
+                isOpen={props.editDialogueItemType == EditDialogueItemType.Comments}
+                editDialogueItemType={props.editDialogueItemType}
+            />
         </Box>
     )
 }

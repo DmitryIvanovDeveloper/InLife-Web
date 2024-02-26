@@ -4,7 +4,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import { Box, IconButton, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useDialogue, useDialogueItemConstructor } from "../../Data/useDialogues";
+import { useDialogue } from "../../Data/useDialogues";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
@@ -27,8 +27,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const dialogueRecoil = useDialogue(props.id);
 
     const [dialogue, setDialogue] = useState<IDialogueModel>(dialogueRecoil);
-
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [tab, setTab] = useState<string>("1");

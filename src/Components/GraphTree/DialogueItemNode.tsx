@@ -13,6 +13,8 @@ import ISelectDialogueLine from "../../Constructors/models/ISelectDialogueLine";
 import { useDialogueItemState } from "../../Data/useDialogueitemState";
 import { useNpcSelection } from "../../Data/useSelectedNpc";
 import FullScenario from "../../Constructors/PhraseContructor/FullScenario";
+import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
+import useConstructorActions from "../../Data/ConstructorActions";
 
 const nodeSize = { x: 200, y: 500 };
 const foreignObjectProps = {
@@ -31,19 +33,18 @@ export interface IRenderForeignDialogueItemNodeProps {
 export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
 
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
+    const [dialogueItemState] = useDialogueItemState();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [selectDialogueLine, setSelectDialogueItem] = useSelectDialogueLine();
     const phraseQueriesApi = usePhraseQueriesApi();
     const answerQueriesApi = useAnswerQueriesApi();
     const [npc] = useNpcSelection();
     const [isMouseOverNode, setIsMouseOverNode] = useState<boolean>(false);
+    const constructorActions = useConstructorActions();
 
     const onClick = (id: string, parentId: string, nodeType: DialogueItemType) => {
         if (id == selectDialogueLine.dialogueItemId) {
-
             setDialogueItemConstructor(() => <div />);
-
         }
 
         if (nodeType == DialogueItemType.Dialogue) {
@@ -68,6 +69,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
             }
 
             setSelectDialogueItem(updatedSelectDialogueLine);
+            constructorActions.setSpecificPhrase(id);
         }
 
         if (nodeType == DialogueItemType.Answer) {

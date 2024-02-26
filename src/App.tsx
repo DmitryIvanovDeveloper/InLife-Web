@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import './App.css';
-import DialogueBuilder from './DialogueTree/DialogueBuilder';
+import Main from './DialogueTree/Main';
 import { Routes as LocalRoutes } from './Routes';
 import SignIn from './Components/Authentication/SignIn';
 import SignUpStudent from './Components/Authentication/SignUpStudent';
@@ -46,7 +46,7 @@ export function App() {
                     <Route path={LocalRoutes.signUpStudent} element={<SignUpStudent />} />
                     <Route path={LocalRoutes.studentProfile} element={<StudentProfile />} />
                     <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
-                    <Route path={LocalRoutes.main} element={<DialogueBuilder />} />
+                    <Route path={LocalRoutes.main} element={<Main />} />
                 </Routes>
             </React.StrictMode>
     );

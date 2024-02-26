@@ -38,7 +38,7 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
     }
 
     return (
-            <Box display='flex' justifyContent='flex-end'>
+            <Box display='flex' justifyContent='flex-end' width="100%">
                 <Toolbar>
                 <Typography>{`${teacher?.name} ${teacher?.lastName}`}</Typography>
 

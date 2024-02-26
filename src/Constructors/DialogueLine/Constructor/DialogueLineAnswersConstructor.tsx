@@ -1,7 +1,6 @@
 import { Box, Button, Chip, CircularProgress, Grid, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTeacher } from "../../../Data/useTeacher";
-import DevidedLabel from "../../../Components/Headers/DevidedLabel";
 
 export interface EquivalentTextConstructorProps {
     texts: string[];
@@ -33,7 +32,6 @@ export default function DialogueLineAnswersConstructor(props: EquivalentTextCons
         setIsAdmin(isAdmin);
     }, []);
 
-    console.log(props.texts);
     const onSave = () => {
         if (isUpdate) {
             props.onDialogueLineAnswerChange(selectedTextId.text, selectedTextId.id);

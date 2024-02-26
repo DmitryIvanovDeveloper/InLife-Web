@@ -1,6 +1,6 @@
 import TabContext from '@mui/lab/TabContext';
 import { Alert, Box, Button, CircularProgress, Divider, IconButton, Paper } from "@mui/material";
-import { Component, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDialogue, usePhrase } from "../../Data/useDialogues";
 import { useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
@@ -69,17 +69,8 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         return !data ? defaultDialogueItemState : JSON.parse(data);
     });
 
-    const isEditDialogueItem = (): boolean => {
-        return editDialogueItemType == EditDialogueItemType.Phrase ||
-            editDialogueItemType == EditDialogueItemType.PhraseTenseses ||
-            editDialogueItemType == EditDialogueItemType.Comments
-            ;
-    }
-
-
-
-    const onEditDialogueItemType = (newEditDialogueItemType: EditDialogueItemType) => {
-        if (newEditDialogueItemType == editDialogueItemType) {
+    const onEditDialogueItemType = (newEditDialogueItemType: EditDialogueItemType | undefined) => {
+        if (newEditDialogueItemType == editDialogueItemType || newEditDialogueItemType == undefined) {
             setEditDialogueItemType(undefined);
             return;
         }
@@ -204,7 +195,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
 
     useEffect(() => {
-
         if (dialogueItemEditState.isPhraseEdited) {
             setEditDialogueItemType(EditDialogueItemType.Phrase)
             return;
@@ -245,7 +235,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
             component="form"
             sx={{
                 '& > :not(style)': { m: 1, },
-                p: 5,
+                p: 1,
                 mb: 2,
                 display: "flex",
                 flexDirection: "column",
@@ -270,7 +260,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                     margin: 2,
                 }}
             >
-                {dialogueItemState != DialogueItemStateType.NoErrors
+                {dialogueItemState == DialogueItemStateType.UnsavedChanges
                     ? <Box display='flex' justifyContent='flex-end' flexDirection="row">
                         <Button onClick={() => constructorActions.setIsReset(true)}>Reset unsaved changes</Button>
                     </Box>
@@ -290,16 +280,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                             phraseAudio={phraseRecoil.audioSettings.audioData ?? ""}
                             name={Locations.find(location => location.id == dialogueRecoil.levelId)?.name ?? ""}
                         />
-
-                        {editDialogueItemType != undefined
-                            ? <Box>
-                                <IconButton onClick={() => setIsOpen(true)} >
-                                    <HelpOutlinedIcon />
-                                </IconButton>
-                            </Box>
-                            : null
-                        }
-
                     </Box>
                     <Box display='flex' justifyContent='end'>
                         <DialogueLinesTabSettings
@@ -329,24 +309,24 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 </TabContext>
             </Paper >
 
-            {isEditDialogueItem()
-                ? <PhraseConstructor
-                    dialogueId={props.dialogueId}
-                    id={phraseRecoil.id}
-                    parentId={phraseRecoil.parentId}
-                    editDialogueItemType={editDialogueItemType}
-                    onEditedDialogueItemType={onEditedDialogueItemType}
-                    setStatus={setStatus}
-                />
-                : <DialogueLineContructor
-                    dialogueId={props.dialogueId}
-                    id={selectDialogueLine.line.id}
-                    parentId={phraseRecoil.id}
-                    editDialogueItemType={editDialogueItemType}
-                    onEditedDialogueItemType={onEditedDialogueItemType}
-                    setStatus={setStatus}
-                />
-            }
+            <PhraseConstructor
+                onEditDialogueItemType={onEditDialogueItemType}
+                dialogueId={props.dialogueId}
+                id={phraseRecoil.id}
+                parentId={phraseRecoil.parentId}
+                editDialogueItemType={editDialogueItemType}
+                onEditedDialogueItemType={onEditedDialogueItemType}
+                setStatus={setStatus}
+            />
+            <DialogueLineContructor
+                onEditDialogueItemType={onEditDialogueItemType}
+                dialogueId={props.dialogueId}
+                id={selectDialogueLine.line.id}
+                parentId={phraseRecoil.id}
+                editDialogueItemType={editDialogueItemType}
+                onEditedDialogueItemType={onEditedDialogueItemType}
+                setStatus={setStatus}
+            />
 
 
             {/* {!isEdited || status != Status.OK

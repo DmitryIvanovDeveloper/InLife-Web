@@ -12,7 +12,13 @@ const constructorActionsState: IConstructorActionsState ={
     answer: {
         isSave: false,
         isReset: false
-    }
+    },
+    selectedNpc: {
+        id: "",
+        scenarioId: "",
+        specificPhraseId: ""
+    },
+    isScenarioUpdated: false
 }
 const constructorActionsStateAtom = atom<IConstructorActionsState>({
     key: 'constructorActionsStateAtom',
@@ -27,5 +33,11 @@ export interface IConstructorActionsState {
     answer: {
         isSave: boolean
         isReset: boolean
-    }
+    },
+    selectedNpc: {
+        id: string;
+        scenarioId: string;
+        specificPhraseId: string
+    },
+    isScenarioUpdated: boolean,
 }

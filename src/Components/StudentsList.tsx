@@ -10,7 +10,6 @@ import useDialogueStatisticApi from "../ThereGame.Api/Queries/DialogueStatisticA
 import { useNavigate } from "react-router-dom";
 
 export default function StudentList() {
-    const navigate = useNavigate()
     const [teacher] = useTeacher();
     const [students] = useStudents();
     const [selectedStudentId, setSelectedStudentId] = useState<string>("");
