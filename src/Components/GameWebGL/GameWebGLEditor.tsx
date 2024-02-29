@@ -6,6 +6,7 @@ import { useConstructorActionsState } from "../../Data/useConstructorActionsStat
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import './css/GameWebGL.css';
+import CircularProgressWithLabel from "../CircularProgress/CircularProgressWithLabel";
 
 export interface IGameWebJLEditor {
 }
@@ -15,6 +16,7 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
         isLoaded,
         requestFullscreen,
         unload,
+        loadingProgression,
         UNSAFE__unityInstance
 
     } = useUnityContext({
@@ -65,7 +67,7 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
     return (
         <Box>
             {isPlay
-                ? <Alert severity="info">Sign in in the game to use editor</Alert>
+                ? <Alert severity="info">Sign in the game to use editor</Alert>
                 : null
             }
 
@@ -112,7 +114,7 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
                 </Button>
             </Box>
             {!isLoaded
-                ? null
+                ? <CircularProgressWithLabel value={loadingProgression} />
                 : <Box display='flex' justifyContent='flex-end' marginRight={4}>
                     <Button onClick={() => requestFullscreen(true)}>Full Screen</Button>
                 </Box>
