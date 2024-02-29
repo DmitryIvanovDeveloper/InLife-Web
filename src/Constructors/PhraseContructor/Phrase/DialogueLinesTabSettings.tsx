@@ -6,8 +6,9 @@ import { useSelectDialogueLine } from "../../../Data/useDialogueItemSelection";
 import ISelectDialogueLine from "../../models/ISelectDialogueLine";
 import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
 import { IoMdAddCircle } from "react-icons/io";
-import { useDialogueItemConstructor } from "../../../Data/useDialogues";
 import { useDialogueItemColorsMap } from "../../../Data/useDialogueItemColors";
+import * as React from 'react';
+import { tabsClasses } from '@mui/material/Tabs';
 
 export interface IDialogueLinesProps {
     answers: IAnswerModel[];
@@ -71,12 +72,22 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
 
 
     return (
-        <Grid display='flex' direction='row' alignItems='flex-start' justifyContent='space-between'>
+        <Grid display='flex' direction='row' alignItems='center' justifyContent='space-between' >
             <Grid display='flex' direction='row' alignItems='center'>
-                <TabList onChange={props.setEditDialogueItemType} aria-label="lab API tabs example">
+                <TabList
+                    onChange={props.setEditDialogueItemType}
+                    variant={props.answers.length <= 0 ? 'fullWidth' : "scrollable"}
+                    
+                    aria-label="visible arrows tabs example"
+                    sx={{
+                        [`& .${tabsClasses.scrollButtons}`]: {
+                            '&.Mui-disabled': { opacity: 0.3 },
+                        },
+                    }}
+                >
                     {props.answers.map((answer, index) => (
                         <Tab
-                            sx={{m: 0}}
+                            sx={{ m: 0 }}
                             value={answer?.id}
                             key={answer?.id}
                             label={StoryLineLabel(answer.id, index)}

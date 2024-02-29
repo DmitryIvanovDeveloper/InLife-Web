@@ -21,6 +21,14 @@ export default function ModalConstructor(props: IInstructionProps) {
                 open={props.isOpen}
                 onClose={props.onClose}
                 aria-labelledby="responsive-dialog-title"
+                sx={{
+                    "& .MuiDialog-container": {
+                      "& .MuiPaper-root": {
+                        width: "100%",
+                        maxWidth: "800px",  // Set your width here
+                      },
+                    },
+                  }}
             >
                 <DialogTitle textAlign='end' id="responsive-dialog-title">
                   

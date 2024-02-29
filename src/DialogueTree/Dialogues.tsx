@@ -14,7 +14,7 @@ import { useDialogueItemConstructor } from '../Data/useDialogues';
 import DeskImage from '../Components/Npc/DeskImage';
 import { useNpcSelection } from '../Data/useSelectedNpc';
 import MenuAppBar from '../Components/AppBars/MenuAppBar';
-import GameWebGL from '../Components/GameWebGL/GameWebGL';
+import GameWebGL from '../Components/GameWebGL/GameWebGLEditor';
 import useConstructorActions from '../Data/ConstructorActions';
 
 export interface IDialoguesProps { }

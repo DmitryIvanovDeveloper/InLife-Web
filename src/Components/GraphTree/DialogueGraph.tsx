@@ -19,7 +19,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     const diaologueRecoil = useDialogue(props.dialogueId);
 
 
-    var selectedColor: string[] = [];
+    var selectedColors: string[] = [];
     var colors = [
         "#f44336",
         "#e91e63",
@@ -33,24 +33,18 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         "#5d4037",
         "#757575",
     ]
-
-    const generateColor = () => {
+    function randomColor() {
+        let hex = Math.floor(Math.random() * 0xFFFFFF);
+        let color = "#" + hex.toString(16);
       
-        var num = Math.floor(Math.random() * colors.length);
-
-        var randomColor = colors[num];
-
-        if (!!selectedColor.find(color => color == randomColor)) {
-            return generateColor();
-        }
-        
-        selectedColor.push();
-        return colors[num];
+        return color;
+      }
+    const generateColor = () => {
+        return randomColor();
     };
 
 
     function transformPhrase(phrase: IPhraseModel): RawNodeDatum {
-        selectedColor = [];
 
         var node: RawNodeDatum = {
             name: phrase.text,
@@ -135,7 +129,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                     boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
                     borderRadius: 15,
                     height: "100%",
-
+                    backgroundColor: "#e0f7fa",
                 }}>
                 <Tree
                     data={data}

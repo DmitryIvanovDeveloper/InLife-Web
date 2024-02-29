@@ -32,7 +32,7 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
     }
 
     const logout = () => {
-        localStorage.removeItem("[Teacher] - Token")
+        localStorage.removeItem("Token")
         navigation(Routes.signIn)
         handleClose();
     }

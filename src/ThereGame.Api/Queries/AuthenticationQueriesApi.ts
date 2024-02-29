@@ -18,7 +18,8 @@ export default function useAuthenticationQueriesApi() {
             var response = await authenticationService.signIn(request);
             if (response.status == Status.OK)
             {
-                localStorage.setItem("[Teacher] - Token", response.data.token);
+                localStorage.setItem("Token", response.data.token);
+                localStorage.setItem("Role", response.data.role);
             }
 
             return response;
@@ -30,7 +31,7 @@ export default function useAuthenticationQueriesApi() {
             var response = await authenticationService.signUpTeacher(request);
             if (response.status == Status.OK)
             {
-                localStorage.setItem("[Teacher] - Token", response.data);
+                localStorage.setItem("Token", response.data);
             }
 
 
@@ -43,7 +44,7 @@ export default function useAuthenticationQueriesApi() {
             var response = await authenticationService.signUpStudent(request);
             if (response.status == Status.OK)
             {
-                localStorage.setItem("[Student] - Token", response.data);
+                localStorage.setItem("Token", response.data);
             }
 
             return response.status;
