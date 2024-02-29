@@ -40,7 +40,7 @@ export default function SignIn() {
         setIsLoading(true);
 
         var result = await authenticationQueriesApi.signIn(data);
-        console.log(result);
+
         if (result.status == Status.Unauthorized) {
             setAuthenticationError(StatusDescription.Unauthorized);
         }
@@ -50,7 +50,6 @@ export default function SignIn() {
         if (result.status == Status.OK && result.data.role == RoleType.Teacher) {
             navigate(Routes.main);
         }
-        console.log(result.data.role == RoleType.Student);
 
         if (result.status == Status.OK && result.data.role == RoleType.Student) {
             navigate(Routes.studentProfile);

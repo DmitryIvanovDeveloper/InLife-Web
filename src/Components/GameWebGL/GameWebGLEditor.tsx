@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Unity, useUnityContext, } from "react-unity-webgl";
-import { Box, Button, } from "@mui/material";
+import { Alert, Box, Button, getBottomNavigationActionUtilityClass, } from "@mui/material";
 import useConstructorActions from "../../Data/ConstructorActions";
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
@@ -64,6 +64,11 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
 
     return (
         <Box>
+            {isPlay
+                ? <Alert severity="info">Sign in in the game to use editor</Alert>
+                : null
+            }
+
             <Box
                 sx={{
                     margin: 2,
