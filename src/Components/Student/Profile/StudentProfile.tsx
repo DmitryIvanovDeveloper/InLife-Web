@@ -3,6 +3,8 @@ import Button from '@mui/material/Button';
 import * as React from 'react';
 import AppStore from '../../../Images/Stores/AppStore.png';
 import PlayMarket from '../../../Images/Stores/Google_Play.png';
+import GameWebGL from '../../GameWebGL/GameWebGL';
+import { useEffect } from 'react';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -17,46 +19,57 @@ const style = {
 };
 
 export default function StudentProfile() {
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    function PlayMarketButton(): React.ReactElement {
+        return (
+            <Button
 
-
-    const onGooglePlay = () => {
-        window.open('https://codingbeautydev.com', '_blank', 'noreferrer');
+                disableRipple
+                onClick={() => window.open('https://codingbeautydev.com', '_blank', 'noreferrer')}
+                sx={{ width: 200, m: "4" }}
+                startIcon={<img style={{ margin: 4, width: 200 }} src={PlayMarket} />}
+            >
+            </Button>
+        )
     }
-
-    const onPlayMarket = () => {
-        window.open('https://codingbeautydev.com', '_blank', 'noreferrer');
+    function AppleStoreButton(): React.ReactElement {
+        return (
+            <Button
+                disableRipple
+                onClick={() =>  window.open('https://codingbeautydev.com', '_blank', 'noreferrer')}
+                sx={{ width: 200, m: "4" }}
+                startIcon={<img style={{ margin: 4, width: 200 }} src={AppStore} />}
+            >
+            </Button>
+        )
     }
 
     return (
         <Box
             display='flex'
-            justifyContent='center'
+            flexDirection='column'
             height='100vh'
+            justifyContent='center'
+            sx={{
+                width: "100%",
+            }}
         >
+            <Box
+                display='flex'
+                justifyContent='flex-start'
+                alignItems='flex-end'
+                flexDirection='row'
+            >
+                {/* <PlayMarketButton />
+                <AppleStoreButton /> */}
+            </Box>
+
             <Box
                 display='flex'
                 justifyContent='center'
                 flexDirection='column'
+                alignItems='center'
             >
-                <Button
-                    disableRipple
-                    onClick={onGooglePlay}
-                    sx={{ width: 400 }}
-                    startIcon={<img style={{ margin: 4, width: 400 }} src={PlayMarket} />}
-                >
-                </Button>
-                <Button
-                    
-                    disableRipple
-                    onClick={onPlayMarket}
-                    sx={{ width: 400 }}
-                    startIcon={<img style={{ margin: 4, width: 400 }} src={AppStore} />}
-                >
-                </Button>
-
+                <GameWebGL />
             </Box>
         </Box>
     );

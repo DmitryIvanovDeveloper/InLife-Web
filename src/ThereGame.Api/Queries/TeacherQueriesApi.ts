@@ -7,6 +7,7 @@ import { ITeacherBio } from "../../Components/Profile/ProfileEditor";
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
 import TeacherMapping from "../Util/Mapping/TeacherMapping";
+import { RoleType } from "../../ThereGame.Business/Util/Role";
 
 export default function useTeacherQueriesApi() {
 
@@ -17,14 +18,14 @@ export default function useTeacherQueriesApi() {
     const [students, setStudents] = useStudents();
     
     return {
-        getById: async (): Promise<Status> => {
-            var teacherId = localStorage.getItem("[Teacher] - Token");
-            if (!teacherId)
+        getById: async (): Promise<any> => {
+            var token = localStorage.getItem("Token");
+            if (!token)
             {
                 return Status.Unauthorized;
             }
 
-            var response = await teacherService.getById(teacherId);
+            var response = await teacherService.getById(token);
             if (response.status == Status.OK)
             {
                 var teacher = new TeacherMapping().response(response.data);
@@ -33,7 +34,7 @@ export default function useTeacherQueriesApi() {
                 setStudents(teacher.students)
             }
          
-            return response.status;
+            return response.data;
         },
 
         update: async (data: ITeacherBio, id: string): Promise<Status> => {

@@ -3,6 +3,7 @@ import IAnswerModel from '../ThereGame.Business/Models/IAnswerModel';
 import IDialogueItemModel from '../ThereGame.Business/Models/IDialogueItemModel';
 import { IDialogueModel } from '../ThereGame.Business/Models/IDialogueModel';
 import IPhraseModel from '../ThereGame.Business/Models/IPhraseModel';
+import { ReactElement } from 'react';
 
 export type IUpdatePhraseItemInput = {
     readonly dialogueId?: string
@@ -31,9 +32,9 @@ const dialoguesAtom = atom<IDialogueModel[]>({
     default: [],
 })
 
-const dialogueConstructorAtom = atom<Function>({
+const dialogueConstructorAtom = atom<ReactElement | null>({
     key: 'dialogueConstructorAtom',
-    default: () => {},
+    default: null,
 })
 
 

@@ -4,7 +4,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import DialogueConstructor from "../../Constructors/DialogueConstructor/DialogueConstructor";
 import { useDialogueItemConstructor, useDialogues } from "../../Data/useDialogues";
 import { useTeacher } from "../../Data/useTeacher";
@@ -16,6 +16,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DeleteSceneButton from "../Button/DeleteSceneButton";
 import INpc from "../../Data/Locations";
 import DeskImage from "./DeskImage";
+import useConstructorActions from "../../Data/ConstructorActions";
 
 
 export interface IDialogueTabsProps {
@@ -28,8 +29,9 @@ export default function NpcScenes(props: IDialogueTabsProps) {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [selectedDialogue, setSelectedDialogue] = useState<IDialogueModel | null>(null);
     const [dialogues] = useDialogues()
-    const [isOpenSettings, setIsOpenSettings] = useState<boolean>(true);
+    const [isOpenSettings] = useState<boolean>(true);
     const [isCreating, setIsCreating] = useState<boolean>(false)
+    const constructorActions = useConstructorActions();
 
     const dialogueQueriesApi = useDialogueQueriesApi();
 
@@ -53,11 +55,13 @@ export default function NpcScenes(props: IDialogueTabsProps) {
     const onClick = (clickedDialogue: IDialogueModel) => {
         if (selectedDialogue?.id == clickedDialogue.id) {
             setSelectedDialogue(null);
-            setDialogueItemConstructor(() => <DeskImage image={props.npc.image} />  )
+            setDialogueItemConstructor(<DeskImage image={props.npc.image} />  )
+            localStorage.removeItem("SelectedNpcDialogueId");
             return;
         }
-        setDialogueItemConstructor(() => <div></div>);
-
+        setDialogueItemConstructor(<div></div>);
+        constructorActions.setSelectedScenario(clickedDialogue.id);
+        
         setSelectedDialogue(clickedDialogue);
     }
 
@@ -107,8 +111,6 @@ export default function NpcScenes(props: IDialogueTabsProps) {
                                 }
                             </Box>
                         ))}
-
-
                 </Box>
 
             </ListItem>

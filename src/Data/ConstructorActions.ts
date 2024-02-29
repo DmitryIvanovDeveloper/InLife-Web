@@ -25,6 +25,34 @@ export default function useConstructorActions() {
             updatedState.phrase.isReset = isReset;
 
             setConstructorActionsState(updatedState);
-        }
+        },
+        setSelectedNpc: (npcId: string) => {
+            const updatedState: IConstructorActionsState = JSON.parse(JSON.stringify(constructorActionsState));
+            updatedState.selectedNpc.id = npcId;
+            updatedState.selectedNpc.scenarioId = "";
+            updatedState.selectedNpc.specificPhraseId = "";
+
+
+            setConstructorActionsState(updatedState);
+        },
+        setSelectedScenario: (scenarioId: string) => {
+            const updatedState: IConstructorActionsState = JSON.parse(JSON.stringify(constructorActionsState));
+            updatedState.selectedNpc.scenarioId = scenarioId;
+            updatedState.selectedNpc.specificPhraseId = "";
+
+            setConstructorActionsState(updatedState);
+        },
+        setSpecificPhrase: (specificPhraseId: string) => {
+            const updatedState: IConstructorActionsState = JSON.parse(JSON.stringify(constructorActionsState));
+            updatedState.selectedNpc.specificPhraseId = specificPhraseId;
+
+            setConstructorActionsState(updatedState);
+        },
+        setIsScenarioUpdated: (isUpdated: boolean) => {
+            setConstructorActionsState(prev => ({
+                ...prev,
+                isScenarioUpdated: isUpdated
+            }));
+        },
     }
 }

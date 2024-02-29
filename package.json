@@ -2,7 +2,7 @@
   "name": "theregameweb",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^1.10.1",
     "@emotion/react": "^11.11.3",
@@ -25,6 +25,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/d3": "^7.4.3",
     "@types/react": "^18.2.45",
+    "@types/react-color": "^3.0.11",
     "@types/react-dom": "^18.2.17",
     "base-64": "^1.0.0",
     "core-js": "^2.5.7",
@@ -36,6 +37,7 @@
     "iconify": "^1.4.0",
     "inversify": "^6.0.2",
     "material-ui": "^0.20.2",
+    "mini-css-extract-plugin": "^2.8.0",
     "moment": "^2.30.1",
     "re-resizable": "^6.9.11",
     "react": "^18.2.0",
@@ -57,6 +59,7 @@
     "react-spring": "^9.7.3",
     "react-swipeable-views": "^0.14.0",
     "react-test-renderer": "^18.2.0",
+    "react-unity-webgl": "^9.5.0",
     "recoil": "^0.7.7",
     "reflect-metadata": "^0.1.14",
     "styled-components": "^6.1.1",
@@ -68,7 +71,7 @@
     "webpack": "^5.89.0"
   },
   "scripts": {
-    "start": "CHOKIDAR_USEPOLLING=true react-scripts --max-http-header-size=1024  start",
+    "start": "CHOKIDAR_USEPOLLING=true react-scripts --max-http-header-size=12000  start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -95,6 +98,7 @@
     "@types/base-64": "^1.0.2",
     "@types/react-avatar-editor": "^13.0.2",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
+    "css-loader": "^6.10.0",
     "file-loader": "^6.2.0"
   }
 }

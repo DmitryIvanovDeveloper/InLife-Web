@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box';
-import { useState } from 'react';
-import INpc, { Locations } from '../Data/Locations';
+import { useEffect, useState } from 'react';
+import INpc from '../Data/Locations';
 import NpcList from '../Components/Npc/NpcList';
 import NpcProfile from '../Components/Npc/NpcProfile';
-import { Tab } from '@mui/material';
+import { Tab, Button } from '@mui/material';
 import Typography from '@mui/joy/Typography';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
@@ -14,6 +14,8 @@ import { useDialogueItemConstructor } from '../Data/useDialogues';
 import DeskImage from '../Components/Npc/DeskImage';
 import { useNpcSelection } from '../Data/useSelectedNpc';
 import MenuAppBar from '../Components/AppBars/MenuAppBar';
+import GameWebGL from '../Components/GameWebGL/GameWebGLEditor';
+import useConstructorActions from '../Data/ConstructorActions';
 
 export interface IDialoguesProps { }
 
@@ -24,9 +26,10 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [npc, setNpc] = useNpcSelection();
     const [value, setValue] = useState(0);
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
+    const constructorActions = useConstructorActions();
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setDialogueItemConstructor(() =>  null);
+        setDialogueItemConstructor(() => null);
         setValue(newValue);
     };
 
@@ -34,21 +37,26 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         setValue(index);
     };
     const onSelectNpc = (npc: INpc | null) => {
+        
         if (!npc) {
             setNpc(null);
-            setDialogueItemConstructor(() =>  null)
+            setDialogueItemConstructor(() => null)
             return;
         }
         setNpc(npc);
+        constructorActions.setSelectedNpc(npc.id);
+        localStorage.setItem("SelectedNpcId", npc.id)
         setDialogueItemConstructor(() => <DeskImage image={npc.image} />)
     }
 
     function tabs() {
         return (
-            <Box sx={{ bgcolor: 'background.paper'}}>
-                <MenuAppBar />
+            <Box sx={{ bgcolor: 'background.paper' }}>
+                <Box display='flex' flexDirection="row" justifyContent='space-between'>
+                    <MenuAppBar />
+                </Box>
 
-                <AppBar position="static">
+                <AppBar position="static" >
                     <Tabs
                         value={value}
                         onChange={handleChange}
@@ -57,9 +65,10 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                         variant="fullWidth"
                         aria-label="full width tabs example"
                     >
-                        <Tab sx={{fontWeight: 800}} label="Actors" {...a11yProps(0)} />
-                        <Tab sx={{fontWeight: 800}}label="Students" {...a11yProps(1)} />
+                        <Tab sx={{ fontWeight: 800 }} label="Actors" {...a11yProps(0)} />
+                        <Tab sx={{ fontWeight: 800 }} label="Students" {...a11yProps(1)} />
                     </Tabs>
+
 
                 </AppBar>
 
@@ -100,8 +109,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         </Box>
     );
 }
-
-
 
 interface TabPanelProps {
     children?: React.ReactNode;

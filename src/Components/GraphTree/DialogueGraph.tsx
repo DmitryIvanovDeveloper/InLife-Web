@@ -6,6 +6,7 @@ import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemNode } from "./DialogueItemNode";
 import { DialogueItemType } from "./DialogueitemType";
 import { Resizable } from 're-resizable';
+import { IDialogueItemColorsMap, useDialogueItemColorsMap } from "../../Data/useDialogueItemColors";
 
 export interface IDialoguesGraphProps {
     dialogueId: string;
@@ -14,10 +15,37 @@ export interface IDialoguesGraphProps {
 export default function DialogueGraph(props: IDialoguesGraphProps) {
     const [data, setData] = useState<RawNodeDatum>();
     const nodeSize = { x: 200, y: 200 };
-
+    const [_, setDualogueItemsColorMap] = useDialogueItemColorsMap();
     const diaologueRecoil = useDialogue(props.dialogueId);
 
+
+    var selectedColors: string[] = [];
+    var colors = [
+        "#f44336",
+        "#e91e63",
+        "#9c27b0",
+        "#3f51b5",
+        "#2196f3",
+        "#009688",
+        "#4caf50",
+        "#ff9800",
+        "#e64a19",
+        "#5d4037",
+        "#757575",
+    ]
+    function randomColor() {
+        let hex = Math.floor(Math.random() * 0xFFFFFF);
+        let color = "#" + hex.toString(16);
+      
+        return color;
+      }
+    const generateColor = () => {
+        return randomColor();
+    };
+
+
     function transformPhrase(phrase: IPhraseModel): RawNodeDatum {
+
         var node: RawNodeDatum = {
             name: phrase.text,
             children: phrase.answers.map(answer => transformAnswer(answer)),
@@ -31,7 +59,16 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         return node;
     }
 
+  
     function transformAnswer(answer: IAnswerModel): RawNodeDatum {
+
+        const itemColor: IDialogueItemColorsMap = {
+            id: answer.id,
+            color: generateColor()
+        }
+
+        setDualogueItemsColorMap(prev => [...prev, itemColor]);
+
         var node: RawNodeDatum = {
             name: answer.texts[0],
             children: answer.phrases.map(phrase => transformPhrase(phrase)),
@@ -75,6 +112,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
 
         return <div />
     }
+
     if (!data) {
         return null;
     }
@@ -86,11 +124,13 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 height: "80vh"
             }}
         >
-            <div style={{
-                boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
-                borderRadius: 15, 
-                height: "100%"
-            }}>
+            <div
+                style={{
+                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
+                    borderRadius: 15,
+                    height: "100%",
+                    backgroundColor: "#e0f7fa",
+                }}>
                 <Tree
                     data={data}
                     nodeSize={nodeSize}

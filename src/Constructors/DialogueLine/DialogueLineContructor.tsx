@@ -20,13 +20,15 @@ import useConstructorActions from "../../Data/ConstructorActions";
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
 import { useDialogueItemState } from "../../Data/useDialogueitemState";
 import DialogueLineAnswersConstructor from "./Constructor/DialogueLineAnswersConstructor";
+import ModalConstructor from "../ModalContructor";
 
 export interface IAnswerContructor {
     dialogueId: string,
     id: string,
     parentId: string,
-    editDialogueItemType: EditDialogueItemType | undefined;
+    editDialogueItemType: EditDialogueItemType | undefined
     setStates?: (states: DialogueItemStateType[]) => void;
+    onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType | undefined) => void;
     onEditedDialogueItemType: (editDialogueItemType: EditDialogueItemType, isEdited: boolean) => void;
     setStatus: (status: Status) => void
 }
@@ -34,7 +36,7 @@ export interface IAnswerContructor {
 
 
 export default function DialogueLineContructor(props: IAnswerContructor): JSX.Element | null {
-    const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
+    const [constructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
 
     const answerRecoil = useAnswer(props.dialogueId, props.id);
@@ -47,20 +49,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
     const [isEdited, setIsEdited] = useState(true);
     const [isChatGptLoading, setIsChatGptLoading] = useState<boolean>(false);
     const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
-
-    const onAddPhraseButtonClick = async () => {
-        var status = await phraseQueriesApi.create(props.id);
-        props.setStatus(status);
-
-    }
-    const onChangeText = (event: any) => {
-        setSessionAnswerData(prev => ({
-            ...prev,
-            text: event.target.value
-        }));
-
-        setIsEdited(false);
-    }
+    const actions = useConstructorActions();
 
     const onPossibleWordsChange = (wordsToUse: string) => {
         setSessionAnswerData(prev => ({
@@ -115,7 +104,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
 
         setIsEdited(false);
     }
-    
+
 
     // Translate
     const onAddTranslate = () => {
@@ -191,7 +180,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
             onPossibleWordsChange(data.words_uppercase);
             onSetTenses(data.tenseses);
         });
-        
+
         setIsChatGptLoading(false);
     }
 
@@ -211,8 +200,9 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
             localStorage.removeItem(props.id)
             constructorActions.setIsSaveAnswer(false);
         }
-        
+
         setIsEdited(true);
+        actions.setIsScenarioUpdated(true);
     }
 
     const onDialogueLineAnswerChange = (value: string, index: number) => {
@@ -311,7 +301,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
 
         setSessionAnswerData(JSON.parse(data));
     }, []);
-    
+
     useEffect(() => {
         if (constructorActionsState.answer.isSave) {
             onSave();
@@ -358,6 +348,12 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
         props.onEditedDialogueItemType(EditDialogueItemType.PossibleWords, sessionDialogueLine?.wordsToUse != answerRecoil?.wordsToUse);
     }, [sessionDialogueLine]);
 
+
+    const confirm = () => {
+        props.onEditDialogueItemType(props.editDialogueItemType);
+    }
+
+
     if (!sessionDialogueLine) {
         return null;
     }
@@ -371,22 +367,32 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onAddMistakeExplanation={onAddMistakeExplanation}
             /> */}
 
-            {props.editDialogueItemType == EditDialogueItemType.Answers
-                ? DialogueLineAnswersComponent()
-                : null
-            }
-            {props.editDialogueItemType == EditDialogueItemType.AnswersTenseses
-                ? TensesListComponent()
-                : null
-            }
-            {props.editDialogueItemType == EditDialogueItemType.Translates
-                ? TranslatesComponent()
-                : null
-            }
-            {props.editDialogueItemType == EditDialogueItemType.PossibleWords
-                ? PossibleWordsComponent()
-                : null
-            }
+            <ModalConstructor
+                element={DialogueLineAnswersComponent()}
+                onClose={confirm}
+                isOpen={props.editDialogueItemType == EditDialogueItemType.Answers}
+                editDialogueItemType={props.editDialogueItemType}
+            />
+            <ModalConstructor
+                element={TensesListComponent()}
+                onClose={confirm}
+                isOpen={props.editDialogueItemType == EditDialogueItemType.AnswersTenseses}
+                editDialogueItemType={props.editDialogueItemType}
+
+            />
+            <ModalConstructor
+                element={TranslatesComponent()}
+                onClose={confirm}
+                isOpen={props.editDialogueItemType == EditDialogueItemType.Translates}
+                editDialogueItemType={props.editDialogueItemType}
+
+            />
+            <ModalConstructor
+                element={PossibleWordsComponent()}
+                onClose={confirm}
+                isOpen={props.editDialogueItemType == EditDialogueItemType.PossibleWords}
+                editDialogueItemType={props.editDialogueItemType}
+            />
         </Box>
     )
 }

@@ -17,7 +17,7 @@ const Routes = {
    signUpTeacher: "/auth/sign-up/teacher",
    signUpStudent: "/auth/sign-up/student",
    main: "/teacher/main",
-   studentProfile: "/student/profile",
+   studentProfile: "/game",
    teacherProfileEditor: "/teacher/profile/editor",
    studentDialoguesStatistic: "/student/statistics/dialogues",
 }
