@@ -13,17 +13,15 @@ export default function Main() {
 
     const [dialogueItemConstructor] = useDialogueItemConstructor();
     const teacherQueriesApi = useTeacherQueriesApi();
-    const [isLoading, setIsLoading] = useState<boolean>();
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
         var role = localStorage.getItem("Role");
         if (Number(role) == RoleType.Teacher) {
-            setIsLoading(true);
             teacherQueriesApi.getById().then(result => {
                 navigate(LocalRoutes.main);
-
                 setIsLoading(false);
             });
             return;
