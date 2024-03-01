@@ -19,8 +19,12 @@ export function App() {
 
     //TODO: Refactor
     useEffect(() => {
-        if (!!localStorage.getItem("Token")) {
-
+        if (location.pathname == "/game") {
+            navigate(LocalRoutes.studentProfile);
+            return;
+        }
+        
+        if (hasToken()) {
             var role = localStorage.getItem("Role");
             if (Number(role) == RoleType.Teacher)
             {
@@ -34,15 +38,16 @@ export function App() {
             }
         }
        
-        if (location.pathname == "/") {
-            navigate(LocalRoutes.signIn);
-            return;
-        }
-        if (location.pathname == "/") {
+      
+        if (location.pathname == "/" && !hasToken()) {
             navigate(LocalRoutes.signIn);
             return;
         }
     }, []);
+
+    const hasToken = (): boolean => {
+        return localStorage.getItem("Token") != null;
+    } 
 
     if (isLoading) {
         return (

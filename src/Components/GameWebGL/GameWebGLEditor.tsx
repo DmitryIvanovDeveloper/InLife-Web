@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Unity, useUnityContext, } from "react-unity-webgl";
-import { Alert, Box, Button, getBottomNavigationActionUtilityClass, } from "@mui/material";
+import { Alert, Box, Button, Typography, getBottomNavigationActionUtilityClass, } from "@mui/material";
 import useConstructorActions from "../../Data/ConstructorActions";
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
@@ -113,12 +113,20 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
                     </Box>
                 </Button>
             </Box>
-            {!isLoaded
-                ? <CircularProgressWithLabel value={loadingProgression} />
+            {!isPlay
+                ? null
                 : <Box display='flex' justifyContent='flex-end' marginRight={4}>
                     <Button onClick={() => requestFullscreen(true)}>Full Screen</Button>
                 </Box>
             }
+            {isLoaded || !isPlay
+                ? null
+                : <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' marginRight={4}>
+                    <Typography>Loading ...</Typography>
+                    <CircularProgressWithLabel value={loadingProgression} />
+                </Box>
+            }
+
 
             {!isPlay
                 ? null
