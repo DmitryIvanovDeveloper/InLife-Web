@@ -46,12 +46,12 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
     }, [constructorActionsState.selectedNpc.id]);
 
     useEffect(() => {
-        console.log(constructorActionsState.selectedNpc.scenarioId);
 
         UNSAFE__unityInstance?.SendMessage("WebGLController", "SetSpecificScenario", constructorActionsState.selectedNpc.scenarioId);
     }, [constructorActionsState.selectedNpc.scenarioId]);
 
     useEffect(() => {
+        console.log(constructorActionsState.selectedNpc.specificPhraseId);
         UNSAFE__unityInstance?.SendMessage("WebGLController", "SetSpecificPhrase", constructorActionsState.selectedNpc.specificPhraseId);
     }, [constructorActionsState.selectedNpc.specificPhraseId]);
 
