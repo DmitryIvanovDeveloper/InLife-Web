@@ -42,8 +42,18 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
     }
 
     useEffect(() => {
-        sendMessagesToUnity();
-    }, [constructorActionsState.selectedNpc]);
+        UNSAFE__unityInstance?.SendMessage("WebGLController", "SelectNpc", constructorActionsState.selectedNpc.id);
+    }, [constructorActionsState.selectedNpc.id]);
+
+    useEffect(() => {
+        console.log(constructorActionsState.selectedNpc.scenarioId);
+
+        UNSAFE__unityInstance?.SendMessage("WebGLController", "SetSpecificScenario", constructorActionsState.selectedNpc.scenarioId);
+    }, [constructorActionsState.selectedNpc.scenarioId]);
+
+    useEffect(() => {
+        UNSAFE__unityInstance?.SendMessage("WebGLController", "SetSpecificPhrase", constructorActionsState.selectedNpc.specificPhraseId);
+    }, [constructorActionsState.selectedNpc.specificPhraseId]);
 
     useEffect(() => {
         if (!constructorActionsState.isScenarioUpdated) {
@@ -54,12 +64,6 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
         actions.setIsScenarioUpdated(false);
 
     }, [constructorActionsState.isScenarioUpdated]);
-
-    const sendMessagesToUnity = () => {
-        UNSAFE__unityInstance?.SendMessage("WebGLController", "SelectNpc", constructorActionsState.selectedNpc.id);
-        UNSAFE__unityInstance?.SendMessage("WebGLController", "SetSpecificScenario", constructorActionsState.selectedNpc.scenarioId);
-        UNSAFE__unityInstance?.SendMessage("WebGLController", "SetSpecificPhrase", constructorActionsState.selectedNpc.specificPhraseId);
-    }
 
     return (
         <Box>
