@@ -42,9 +42,6 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
     }
 
     useEffect(() => {
-        if (!isPlay) {
-            return;
-        }
         sendMessagesToUnity();
     }, [constructorActionsState.selectedNpc]);
 
