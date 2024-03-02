@@ -123,37 +123,18 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     }
 
     return (
-        <Box sx={{
-            ml: 10,
-            width: "50%",
-            height: "100vh"
-        }}>
-            {/* <Button onClick={() => props.setIsOpenGraph(true)}>Full Screen</Button> */}
-
-            {/* <Draggable> */}
-                <div
-                    style={{
-
-                        boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
-                        borderRadius: 15,
-                        // backgroundColor: "#e0f7fa",
-                        padding: 10
-                    }}>
-                    <Tree
-                        data={data}
-                        nodeSize={nodeSize}
-                        translate={{ x: 350, y: 50 }}
-                        rootNodeClassName="node__root"
-                        branchNodeClassName="node__branch"
-                        leafNodeClassName="node__leaf"
-                        pathClassFunc={() => "node__link"}
-                        renderCustomNodeElement={(dialogueItem) => {
-                            return node(dialogueItem);
-                        }}
-                        orientation="vertical"
-                    />
-                </div>
-            {/* </Draggable> */}
-        </Box>
+        <Tree
+            data={data}
+            nodeSize={nodeSize}
+            translate={{ x: 350, y: 50 }}
+            rootNodeClassName="node__root"
+            branchNodeClassName="node__branch"
+            leafNodeClassName="node__leaf"
+            pathClassFunc={() => "node__link"}
+            renderCustomNodeElement={(dialogueItem) => {
+                return node(dialogueItem);
+            }}
+            orientation="vertical"
+        />
     )
 }

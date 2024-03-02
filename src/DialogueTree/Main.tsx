@@ -38,7 +38,7 @@ export default function Main() {
                 alignItems: "flex-end",
             }}>
 
-                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between'>
+                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between' height='100vh'>
                     <DialogueGraph />
                     <Constructor />
                 </Grid>
