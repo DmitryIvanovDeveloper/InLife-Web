@@ -1,21 +1,22 @@
 import SplitPane from "react-split-pane";
 import { useDialogueItemConstructor } from "../Data/useDialogues";
 import Dialogues from "./Dialogues";
-import { Box, CircularProgress } from "@mui/material";
+import { AppBar, Box, Button, CircularProgress, Grid } from "@mui/material";
 import GameWebGLEditor from "../Components/GameWebGL/GameWebGLEditor";
 import useTeacherQueriesApi from "../ThereGame.Api/Queries/TeacherQueriesApi";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { RoleType } from "../ThereGame.Business/Util/Role";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Routes as LocalRoutes } from '../Routes';
+import DialogueGraph from "../Components/GraphTree/DialogueGraph";
+import MiniDrawer from "../Components/Sidebar/SIdebar";
+import Constructor from "../Constructors/Constructor";
 
 export default function Main() {
 
-    const [dialogueItemConstructor] = useDialogueItemConstructor();
-    const teacherQueriesApi = useTeacherQueriesApi();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const teacherQueriesApi = useTeacherQueriesApi();
     const navigate = useNavigate();
-    const location = useLocation();
 
     useEffect(() => {
         var role = localStorage.getItem("Role");
@@ -28,26 +29,39 @@ export default function Main() {
         }
     }, []);
 
-    return (
-        //@ts-ignore
-        <SplitPane split="vertical" minSize={250} defaultSize={window.innerWidth / 2} maxSize={window.innerWidth / 2}>
-            {isLoading
-                ? <Box
-                    display='flex'
-                    justifyContent='center'
-                    alignItems='center'
-                    height="100dvh"
-                >
-                    <CircularProgress />
-                </Box>
-                : <Dialogues />
-            }
+    function Canvas(): ReactElement {
+        return (
+            <Grid sx={{
+                mt: 10,
+                width: "100%",
+                flexDirection: 'column',
+                alignItems: "flex-end",
+            }}>
 
-            <Box sx={{ overflow: 'scroll', height: window.screen.height }}>
+                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between'>
+                    <DialogueGraph />
+                    <Constructor />
+                </Grid>
                 <GameWebGLEditor />
-                {dialogueItemConstructor}
+            </Grid>
+
+        )
+    }
+
+    if (isLoading) {
+        return (
+            <Box
+                display='flex'
+                justifyContent='center'
+                alignItems='center'
+                height="100dvh"
+            >
+                <CircularProgress />
             </Box>
-        </SplitPane>
+        )
+    }
+    return (
+        <MiniDrawer barElements={<Dialogues />} elements={<Canvas />} />
     )
 }
 

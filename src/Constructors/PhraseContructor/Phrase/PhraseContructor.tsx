@@ -96,7 +96,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     function PhraseComponent() {
         return (
             <PhraseInfo
-                phrase={sessionPhraseData.text}
+                phrase={sessionPhraseData?.text}
                 onChangeText={onChangeText}
             />
         )
@@ -149,7 +149,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
         var newAudioSettings: IAudioSettings = {
             id: uuidv4(),
-            generationSettings: GetSettings(parsedData.type, parsedData.name, sessionPhraseData.text)
+            generationSettings: GetSettings(parsedData.type, parsedData.name, sessionPhraseData?.text)
         }
 
         return newAudioSettings;
@@ -177,10 +177,10 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     }, [sessionPhraseData]);
 
     useEffect(() => {
-        props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData.text != phraseRecoil.text);
-        props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData.comments != phraseRecoil.comments);
-        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData.tensesList) != JSON.stringify(phraseRecoil.tensesList));
-    }, [sessionPhraseData.tensesList, sessionPhraseData.comments, sessionPhraseData.text]);
+        props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData?.text != phraseRecoil?.text);
+        props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData?.comments != phraseRecoil?.comments);
+        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData?.tensesList) != JSON.stringify(phraseRecoil?.tensesList));
+    }, [sessionPhraseData?.tensesList, sessionPhraseData?.comments, sessionPhraseData?.text]);
 
     useEffect(() => {
         if (isEdited) {
@@ -210,8 +210,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             reset();
         }
     }, [constructorActionsState.phrase]);
-
-
 
     const confirm = () => {
         props.onEditDialogueItemType(props.editDialogueItemType);

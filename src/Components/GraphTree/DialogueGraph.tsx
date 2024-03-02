@@ -7,16 +7,21 @@ import { DialogueItemNode } from "./DialogueItemNode";
 import { DialogueItemType } from "./DialogueitemType";
 import { Resizable } from 're-resizable';
 import { IDialogueItemColorsMap, useDialogueItemColorsMap } from "../../Data/useDialogueItemColors";
+import Draggable from 'react-draggable';
+import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
+import { Box, Button } from "@mui/material";
 
 export interface IDialoguesGraphProps {
-    dialogueId: string;
+    // setIsOpenGraph: (isOpen: boolean) => void
 }
 
 export default function DialogueGraph(props: IDialoguesGraphProps) {
+    const [actionState] = useConstructorActionsState();
+    const diaologueRecoil = useDialogue(actionState.selectedNpc.scenarioId);
+
     const [data, setData] = useState<RawNodeDatum>();
     const nodeSize = { x: 200, y: 200 };
     const [_, setDualogueItemsColorMap] = useDialogueItemColorsMap();
-    const diaologueRecoil = useDialogue(props.dialogueId);
 
 
     var selectedColors: string[] = [];
@@ -36,9 +41,9 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     function randomColor() {
         let hex = Math.floor(Math.random() * 0xFFFFFF);
         let color = "#" + hex.toString(16);
-      
+
         return color;
-      }
+    }
     const generateColor = () => {
         return randomColor();
     };
@@ -47,23 +52,23 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     function transformPhrase(phrase: IPhraseModel): RawNodeDatum {
 
         var node: RawNodeDatum = {
-            name: phrase.text,
-            children: phrase.answers.map(answer => transformAnswer(answer)),
+            name: phrase?.text,
+            children: phrase?.answers.map(answer => transformAnswer(answer)),
             attributes: {
-                id: phrase.id,
+                id: phrase?.id,
                 nodeType: DialogueItemType.Phrase,
-                parentId: phrase.parentId,
-                dialogueId: diaologueRecoil.id,
+                parentId: phrase?.parentId,
+                dialogueId: diaologueRecoil?.id,
             }
         }
         return node;
     }
 
-  
+
     function transformAnswer(answer: IAnswerModel): RawNodeDatum {
 
         const itemColor: IDialogueItemColorsMap = {
-            id: answer.id,
+            id: answer?.id,
             color: generateColor()
         }
 
@@ -74,10 +79,10 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             children: answer.phrases.map(phrase => transformPhrase(phrase)),
             attributes: {
                 possibleAnswersLength: answer.texts.length,
-                id: answer.id,
+                id: answer?.id,
                 nodeType: DialogueItemType.Answer,
-                parentId: answer.parentId,
-                dialogueId: diaologueRecoil.id,
+                parentId: answer?.parentId,
+                dialogueId: diaologueRecoil?.id,
             }
         }
         return node;
@@ -86,12 +91,12 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     useEffect(() => {
         var node: RawNodeDatum = {
             name: "",
-            children: [transformPhrase(diaologueRecoil.phrase)],
+            children: [transformPhrase(diaologueRecoil?.phrase)],
             attributes: {
-                id: diaologueRecoil.id,
+                id: diaologueRecoil?.id,
                 nodeType: DialogueItemType.Dialogue,
                 parentId: "",
-                dialogueId: diaologueRecoil.id,
+                dialogueId: diaologueRecoil?.id,
             }
         }
 
@@ -99,14 +104,14 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     }, [diaologueRecoil]);
 
     function node(dialogueItem: CustomNodeElementProps) {
-        if (!diaologueRecoil.voiceSettings &&
+        if (!diaologueRecoil?.voiceSettings &&
             dialogueItem.nodeDatum.attributes?.nodeType == DialogueItemType.Dialogue) {
 
             return <DialogueItemNode customNodeElementProps={dialogueItem}
             />
 
         }
-        if (!!diaologueRecoil.voiceSettings) {
+        if (!!diaologueRecoil?.voiceSettings) {
             return <DialogueItemNode customNodeElementProps={dialogueItem} />
         }
 
@@ -118,35 +123,37 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     }
 
     return (
-        <Resizable
-            defaultSize={{
-                width: "100%",
-                height: "80vh"
-            }}
-        >
-            <div
-                style={{
-                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
-                    borderRadius: 15,
-                    height: "100%",
-                    backgroundColor: "#e0f7fa",
-                }}>
-                <Tree
-                    data={data}
-                    nodeSize={nodeSize}
-                    translate={{ x: 350, y: 50 }}
-                    rootNodeClassName="node__root"
-                    branchNodeClassName="node__branch"
-                    leafNodeClassName="node__leaf"
-                    pathClassFunc={() => "node__link"}
-                    renderCustomNodeElement={(dialogueItem) => {
-                        return node(dialogueItem);
-                    }}
-                    orientation="vertical"
-                />
-            </div>
-        </Resizable>
+        <Box sx={{
+            ml: 10,
+            width: "50%",
+            height: "100vh"
+        }}>
+            {/* <Button onClick={() => props.setIsOpenGraph(true)}>Full Screen</Button> */}
 
+            {/* <Draggable> */}
+                <div
+                    style={{
 
+                        boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
+                        borderRadius: 15,
+                        // backgroundColor: "#e0f7fa",
+                        padding: 10
+                    }}>
+                    <Tree
+                        data={data}
+                        nodeSize={nodeSize}
+                        translate={{ x: 350, y: 50 }}
+                        rootNodeClassName="node__root"
+                        branchNodeClassName="node__branch"
+                        leafNodeClassName="node__leaf"
+                        pathClassFunc={() => "node__link"}
+                        renderCustomNodeElement={(dialogueItem) => {
+                            return node(dialogueItem);
+                        }}
+                        orientation="vertical"
+                    />
+                </div>
+            {/* </Draggable> */}
+        </Box>
     )
 }

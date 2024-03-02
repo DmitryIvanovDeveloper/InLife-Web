@@ -13,7 +13,7 @@ import { useTeacher } from '../../Data/useTeacher';
 
 export interface IMenuAppBarProps {
 }
-export default function MenuAppBar(props: IMenuAppBarProps) {
+export default function UserMenuAppBar(props: IMenuAppBarProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const navigation = useNavigate();
     const [teacher] = useTeacher()
@@ -38,9 +38,8 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
     }
 
     return (
-            <Box display='flex' justifyContent='flex-end' width="100%">
-                <Toolbar>
-                <Typography>{`${teacher?.name} ${teacher?.lastName}`}</Typography>
+            <Box display='flex' alignItems='center'>
+                <Typography variant="h6" noWrap>{`${teacher?.name} ${teacher?.lastName}`}</Typography>
 
                     <IconButton
                         size="large"
@@ -69,7 +68,6 @@ export default function MenuAppBar(props: IMenuAppBarProps) {
                         <MenuItem onClick={editProfile}>Edit Profile</MenuItem>
                         <MenuItem onClick={logout}>Logout</MenuItem>
                     </Menu>
-                </Toolbar>
             </Box>
     );
 }

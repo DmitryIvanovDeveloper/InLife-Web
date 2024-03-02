@@ -13,8 +13,6 @@ import StudentList from '../Components/StudentsList';
 import { useDialogueItemConstructor } from '../Data/useDialogues';
 import DeskImage from '../Components/Npc/DeskImage';
 import { useNpcSelection } from '../Data/useSelectedNpc';
-import MenuAppBar from '../Components/AppBars/MenuAppBar';
-import GameWebGL from '../Components/GameWebGL/GameWebGLEditor';
 import useConstructorActions from '../Data/ConstructorActions';
 
 export interface IDialoguesProps { }
@@ -29,7 +27,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const constructorActions = useConstructorActions();
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setDialogueItemConstructor(() => null);
         setValue(newValue);
     };
 
@@ -51,10 +48,8 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     function tabs() {
         return (
-            <Box sx={{ bgcolor: 'background.paper' }}>
-                <Box display='flex' flexDirection="row" justifyContent='space-between'>
-                    <MenuAppBar />
-                </Box>
+            <Box sx={{ bgcolor: 'background.paper',}} >
+             
 
                 <AppBar position="static" >
                     <Tabs
@@ -76,6 +71,7 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={value}
                     onChangeIndex={handleChangeIndex}
+                    
                 >
                     <TabPanel value={value} index={0} dir={theme.direction}>
                         <NpcList onSelectNpc={onSelectNpc} />

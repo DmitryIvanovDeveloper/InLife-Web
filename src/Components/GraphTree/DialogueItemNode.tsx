@@ -43,22 +43,8 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [dialogueItemColorsMap, setDualogueItemsColorMap] = useDialogueItemColorsMap();
 
     const onClick = (id: string, parentId: string, nodeType: DialogueItemType) => {
-        if (id == selectDialogueLine.dialogueItemId) {
-            setDialogueItemConstructor(() => <div />);
-        }
-
-        if (nodeType == DialogueItemType.Dialogue) {
-            setDialogueItemConstructor(() => null)
-        }
 
         if (nodeType == DialogueItemType.Phrase) {
-            setDialogueItemConstructor(() =>
-                <Constructor
-                    id={id}
-                    dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
-                    parentId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
-                />);
-
             const updatedSelectDialogueLine: ISelectDialogueLine = {
                 dialogueItemId: id,
                 line: {
@@ -73,13 +59,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         }
 
         if (nodeType == DialogueItemType.Answer) {
-            setDialogueItemConstructor(() =>
-                <Constructor
-                    id={parentId}
-                    dialogueId={props.customNodeElementProps.nodeDatum.attributes?.dialogueId as string}
-                    parentId={parentId}
-                />);
-
+         
             const updatedSelectDialogueLine: ISelectDialogueLine = {
                 dialogueItemId: parentId,
                 line: {

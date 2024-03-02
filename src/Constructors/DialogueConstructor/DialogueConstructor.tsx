@@ -113,10 +113,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         )
     }
 
-    function DialogueGraphComponent() {
-        return <DialogueGraph dialogueId={dialogue.id} />
-    }
-
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setTab(newValue);
     };
@@ -171,9 +167,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         if (tab == '3') {
             setEditDialogueItemType(EditDialogueItemType.StudentsAccess)
         }
-        if (tab == '4') {
-            setEditDialogueItemType(EditDialogueItemType.Scenario)
-        }
     }, [tab]);
 
     if (!dialogue) {
@@ -206,11 +199,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                                     : null
                                 }
                                 <Tab label="Access" value="3" />
-                                <Tab label="Scenario" value="4" disabled={!dialogueRecoil?.voiceSettings ?? false} />
-                                
-                                <Box display='flex' alignItems='center'>
-                                    <NoteAltOutlinedIcon />
-                                </Box>
                             </TabList>
 
                         </Box>
@@ -228,7 +216,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                     <TabPanel value="1">{DialogueNameComponent()}</TabPanel>
                     <TabPanel value="2">{VoiceSettingsComponent()}</TabPanel>
                     <TabPanel value="3">{AccessSettingsComponent()}</TabPanel>
-                    <TabPanel value="4">{DialogueGraphComponent()}</TabPanel>
                 </TabContext>
 
 

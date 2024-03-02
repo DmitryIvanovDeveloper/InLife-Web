@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Grid, IconButton } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, IconButton, List, ListItem, ListItemText } from "@mui/material";
 import { EditDialogueItemType } from "../models/EditType";
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
 import { IDialogueItemEditState } from "../models/IPhraseSettingsState";
@@ -10,6 +10,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import Message from "../../Components/ChatElement/Message";
 import useConstructorActions from "../../Data/ConstructorActions";
 import { useState } from "react";
+import VirtualizedList from "../../Components/List/VirtializedList.tsx/VirtualizedList";
 
 export interface IAnswersActionsButtonsProps {
    onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType) => void;
@@ -60,7 +61,7 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                   Tenseses
                   <AvTimerIcon
                      sx={{
-                        color: props.dialogueItemEditState.isAnswersTensesListEdited ? commonStyle.editedItemColor :props.color
+                        color: props.dialogueItemEditState.isAnswersTensesListEdited ? commonStyle.editedItemColor : props.color
                      }}
                   />
                </Button>
@@ -89,21 +90,16 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                </IconButton>
             </Grid>
          }
-
-         <Box>
-            <Grid display='flex' direction='column' alignItems='end'>
-               {props.currentDialogueLineData.map(answer => (
-                  <Box>
-                     <Message
-                        title={`student [possible answer]`}
-                        position={"right"}
-                        type={"text"}
-                        text={answer}
-                     />
-                  </Box>
-               ))}
-            </Grid>
-         </Box>
+         <List sx={{ width: '100%', height: "360px", overflowY: 'scroll' }}>
+            {props.currentDialogueLineData.map(answer => (
+                <Message
+                title={`student [possible answer]`}
+                position={"right"}
+                type={"text"}
+                text={answer}
+             />
+            ))}
+         </List>
       </Box>
    )
 }

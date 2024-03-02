@@ -31,7 +31,6 @@ export default function ModalConstructor(props: IInstructionProps) {
                   }}
             >
                 <DialogTitle textAlign='end' id="responsive-dialog-title">
-                  
                     <Button onClick={() => setIsInstructionOpen(true)}>  About<HelpOutlineIcon /></Button>
                     <Instruction 
                         editDialogueItemType={props.editDialogueItemType} 
