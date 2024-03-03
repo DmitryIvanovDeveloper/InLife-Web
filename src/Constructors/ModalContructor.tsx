@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogActions, useMediaQuery, useTheme, Button, DialogContent, DialogContentText, IconButton } from "@mui/material"
+import { Dialog, DialogTitle, DialogActions, useMediaQuery, useTheme, Button, DialogContent, DialogContentText, IconButton, Typography, Box, Avatar } from "@mui/material"
 import React, { useState } from "react"
 import Instruction from "./Instruction";
 import { EditDialogueItemType } from "./models/EditType";
@@ -8,7 +8,9 @@ export interface IInstructionProps {
     element: React.ReactElement;
     isOpen: boolean;
     editDialogueItemType: EditDialogueItemType | undefined
-    onClose: () => void
+    onClose: () => void,
+    description?: string,
+    avatar?: string
 }
 export default function ModalConstructor(props: IInstructionProps) {
     const theme = useTheme();
@@ -31,7 +33,15 @@ export default function ModalConstructor(props: IInstructionProps) {
                   }}
             >
                 <DialogTitle textAlign='end' id="responsive-dialog-title">
+                    <Box display='flex' justifyContent='space-between'>
+                    <Box  display='flex' justifyContent='space-between' alignItems='center'>
+                        <Avatar src={props.avatar} />
+                        <Typography sx={{ml: 1, mr: 1}} variant="h6">{props.description}</Typography>
+                    </Box>
+                   
                     <Button onClick={() => setIsInstructionOpen(true)}>  About<HelpOutlineIcon /></Button>
+
+                    </Box>
                     <Instruction 
                         editDialogueItemType={props.editDialogueItemType} 
                         isOpen={isInstructionOpen} 

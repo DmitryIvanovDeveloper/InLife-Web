@@ -45,12 +45,11 @@ export default function Main() {
                     <DialogueGraph /> 
                     <Constructor />
                 </Grid>
-                <GameWebGLEditor />
+                {/* <GameWebGLEditor /> */}
             </Grid>
 
         )
     }
-    
 
     if (isLoading) {
         return (

@@ -25,7 +25,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const theme = useTheme();
     const [npc, setNpc] = useNpcSelection();
     const [value, setValue] = useState(0);
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const constructorActions = useConstructorActions();
 
     const handleChange = (event: React.SyntheticEvent, value: number) => {
@@ -51,8 +50,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     function tabs() {
         return (
             <Box sx={{ bgcolor: 'background.paper',}} >
-             
-
                 <AppBar position="static" >
                     <Tabs
                         value={value}
@@ -65,7 +62,6 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                         <Tab sx={{ fontWeight: 800 }} label="Actors" {...a11yProps(0)} />
                         <Tab sx={{ fontWeight: 800 }} label="Students" {...a11yProps(1)} />
                     </Tabs>
-
 
                 </AppBar>
 

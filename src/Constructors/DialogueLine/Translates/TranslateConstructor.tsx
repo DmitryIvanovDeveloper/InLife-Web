@@ -1,6 +1,6 @@
 import { Box, Button, Grid, TextField } from "@mui/material";
-import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
-import DevidedLabel from "../../Components/Headers/DevidedLabel";
+import ITranslateModel from "../../../ThereGame.Business/Models/ITranslateModel";
+import DevidedLabel from "../../../Components/Headers/DevidedLabel";
 import Translate from "./Translate";
 
 export interface ITranslateConstructor {

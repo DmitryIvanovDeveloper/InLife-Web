@@ -10,12 +10,14 @@ import { IDialogueItemColorsMap, useDialogueItemColorsMap } from "../../Data/use
 import Draggable from 'react-draggable';
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
 import { Box, Button } from "@mui/material";
+import useConstructorActions from "../../Data/ConstructorActions";
 
 export interface IDialoguesGraphProps {
 }
 
 export default function DialogueGraph(props: IDialoguesGraphProps) {
     const [actionState] = useConstructorActionsState();
+    const actions = useConstructorActions();
     const diaologueRecoil = useDialogue(actionState.selectedNpc.scenarioId);
 
     const [data, setData] = useState<RawNodeDatum>();
@@ -46,6 +48,13 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     const generateColor = () => {
         return randomColor();
     };
+
+    useEffect(() => {
+        if (!data || !diaologueRecoil) {
+            return;
+        }
+        actions.setSpecificPhrase(diaologueRecoil.phrase.id);
+    }, [data])
 
 
     function transformPhrase(phrase: IPhraseModel): RawNodeDatum {

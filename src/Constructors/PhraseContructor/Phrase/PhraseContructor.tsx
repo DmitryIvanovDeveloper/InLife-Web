@@ -38,16 +38,18 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const [isEdited, setIsEdited] = useState(true);
     const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
     const actions = useConstructorActions();
+    const [isPhraseInstructionOpen, setIsPhraseInstructionOpen] = useState<boolean>(false);
+    const [isSaveInstructionOpen, setIsGenerationPhraseOpen] = useState<boolean>(false);
 
     // QueryApi
     const onSave = async () => {
         const updatedsessionPhraseData = JSON.parse(JSON.stringify(sessionPhraseData));
 
         updatedsessionPhraseData.audioSettings = getSettings();
+        setIsGenerationPhraseOpen(true);
 
         var status = await phraseQueriesApi.update(updatedsessionPhraseData);
         props.setStatus(status);
-
         if (status == Status.OK) {
             localStorage.removeItem(props.id);
             constructorActions.setIsSavePhrase(false);
@@ -141,7 +143,18 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setSessionPhraseData(JSON.parse(data));
     }, [phraseRecoil])
 
+    const onLastInstructionDone = () => {
+        if (sessionPhraseData.text != phraseRecoil.text) {
+            onSave();
+        }
+         setIsPhraseInstructionOpen(false);
+        props.onEditDialogueItemType(undefined);
+    }
 
+    const confirm = () => {
+        props.onEditDialogueItemType(undefined);
+        // onSave();
+    }
     // UseEffects
 
     const getSettings = () => {
@@ -176,11 +189,11 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
     }, [sessionPhraseData]);
 
-    useEffect(() => {
-        props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData?.text != phraseRecoil?.text);
-        props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData?.comments != phraseRecoil?.comments);
-        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData?.tensesList) != JSON.stringify(phraseRecoil?.tensesList));
-    }, [sessionPhraseData?.tensesList, sessionPhraseData?.comments, sessionPhraseData?.text]);
+    // useEffect(() => {
+    //     props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData?.text != phraseRecoil?.text);
+    //     props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData?.comments != phraseRecoil?.comments);
+    //     props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData?.tensesList) != JSON.stringify(phraseRecoil?.tensesList));
+    // }, [sessionPhraseData?.tensesList, sessionPhraseData?.comments, sessionPhraseData?.text]);
 
     useEffect(() => {
         if (isEdited) {
@@ -211,20 +224,62 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         }
     }, [constructorActionsState.phrase]);
 
-    const confirm = () => {
-        props.onEditDialogueItemType(props.editDialogueItemType);
-    }
+    useEffect(() => {
+        if (!phraseRecoil) {
+            return;
+        }
+
+        var isOpen = !phraseRecoil.text &&
+            !phraseRecoil.answers.length &&
+            !!dialogueRecoil.voiceSettings &&
+            !!dialogueRecoil.name
+        ;
+
+        setIsPhraseInstructionOpen(isOpen);
+    }, [phraseRecoil]);
+
+    useEffect(() => {
+        if (!props.editDialogueItemType) {
+            return;
+        }
+
+        setIsPhraseInstructionOpen(false);
+    }, [props.editDialogueItemType]);
+
     if (!sessionPhraseData) {
         return null;
+    }
+
+    if (isPhraseInstructionOpen) {
+        return (
+            <ModalConstructor
+                element={PhraseComponent()}
+                isOpen={isPhraseInstructionOpen}
+                editDialogueItemType={EditDialogueItemType.Phrase}
+                onClose={() => onLastInstructionDone()}
+                description='What i should to say?'
+            />
+        )
+    }
+
+    if (isSaveInstructionOpen) {
+       return <ModalConstructor
+            element={<div></div>}
+            isOpen={isSaveInstructionOpen}
+            editDialogueItemType={EditDialogueItemType.Phrase}
+            onClose={() => setIsGenerationPhraseOpen(false)}
+            description='Got it! I need some time to rehearse it. Please wait...'
+        />
     }
 
     return (
         <Box>
             <ModalConstructor
                 element={PhraseComponent()}
-                onClose={confirm}
+                onClose={() => onLastInstructionDone()}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Phrase}
                 editDialogueItemType={props.editDialogueItemType}
+                description="What i should to say?"
             />
             <ModalConstructor
                 element={PhraseTensesListComponent()}

@@ -11,7 +11,7 @@ import { EditDialogueItemType } from './models/EditType';
 import DialogueLineContructor from './DialogueLine/DialogueLineContructor';
 import { IDialogueItemEditState } from './models/IPhraseSettingsState';
 import PhraseSettings from './PhraseContructor/Phrase/PhraseSettings';
-import DialogueLineSettings from './PhraseContructor/DialogueLineSettings';
+import DialogueLineSettings from './DialogueLine/DialogueLineSettings';
 import React from 'react';
 import Instruction from './Instruction';
 import { useDialogueItemState } from '../Data/useDialogueitemState';
@@ -24,8 +24,7 @@ import usePhraseQueriesApi from '../ThereGame.Api/Queries/PhraseQueriesApi';
 import { keyframes } from '@mui/system';
 import { useDialogueItemColorsMap } from '../Data/useDialogueItemColors';
 import { useConstructorActionsState } from '../Data/useConstructorActionsState';
-import Draggable from 'react-draggable';
-import { Resizable } from 're-resizable';
+import ModalConstructor from './ModalContructor';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -53,8 +52,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const constructorActions = useConstructorActions();
 
     const [status, setStatus] = useState<Status>(Status.OK);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-
     const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>(undefined);
     const [currentDialogueLineData, setCurrentDialogueLineData] = useState<string[]>([]);
     const [nextPhraseCaption, setNextPharseCaption] = useState<string>("");
@@ -63,7 +60,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const [dialogueItemState] = useDialogueItemState();
     const [isPhraseCreating, setIsPhraseCreating] = useState<boolean>(false);
     const [dialogueItemColorsMap] = useDialogueItemColorsMap();
-
     const phraseQueriesApi = usePhraseQueriesApi();
 
     //TODO: Refactor
@@ -196,7 +192,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         setDialogueItemEditState(JSON.parse(data));
     }, []);
 
-
     useEffect(() => {
         if (dialogueItemEditState.isPhraseEdited) {
             setEditDialogueItemType(EditDialogueItemType.Phrase)
@@ -229,7 +224,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     }, []);
 
     return (
-
         <Box
             sx={{
                 display: "flex",
@@ -238,7 +232,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 borderRadius: 10
             }}
         >
-
             <Instruction
                 editDialogueItemType={editDialogueItemType}
                 onClose={() => setIsOpen(false)}
@@ -340,7 +333,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 ? <Alert severity="error">The phrase is not generated to audio!</Alert>
                 : null
             }
-
         </Box>
     )
 }

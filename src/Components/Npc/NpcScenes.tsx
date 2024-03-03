@@ -4,7 +4,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import DialogueConstructor from "../../Constructors/DialogueConstructor/DialogueConstructor";
 import { useDialogueItemConstructor, useDialogues } from "../../Data/useDialogues";
 import { useTeacher } from "../../Data/useTeacher";
@@ -26,7 +26,6 @@ export interface IDialogueTabsProps {
 export default function NpcScenes(props: IDialogueTabsProps) {
     const [success, setSuccess] = useState(false);
     const [teacher] = useTeacher();
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [selectedDialogue, setSelectedDialogue] = useState<IDialogueModel | null>(null);
     const [dialogues] = useDialogues()
     const [isOpenSettings] = useState<boolean>(true);
@@ -55,7 +54,6 @@ export default function NpcScenes(props: IDialogueTabsProps) {
     const onClick = (clickedDialogue: IDialogueModel) => {
         if (selectedDialogue?.id == clickedDialogue.id) {
             setSelectedDialogue(null);
-            // setDialogueItemConstructor(<DeskImage image={props.npc.image} />  );
             localStorage.removeItem("SelectedNpcDialogueId");
             return;
         }

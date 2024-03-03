@@ -43,7 +43,6 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
     const [dialogueItemColorsMap, setDualogueItemsColorMap] = useDialogueItemColorsMap();
 
     const onClick = (id: string, parentId: string, nodeType: DialogueItemType) => {
-
         if (nodeType == DialogueItemType.Phrase) {
             const updatedSelectDialogueLine: ISelectDialogueLine = {
                 dialogueItemId: id,
