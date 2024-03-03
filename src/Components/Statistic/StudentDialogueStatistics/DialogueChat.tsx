@@ -29,7 +29,6 @@ export default function DialogueChat(props: IDialogueChatProps) {
             setNpc(npc)
         }
         var expectedStudent = students.find(student => student.id == props.studentId)
-        console.log(students);
 
         setStudent(expectedStudent);
     }, [props.dialogueId]);
@@ -49,10 +48,15 @@ export default function DialogueChat(props: IDialogueChatProps) {
         <Box>
             <Box
                 sx={{
+                    position: 'absolute',
+                    right: 15,
                     backgroundColor: "#e0f2f1",
-                    borderRadius: 1,
                     padding: 2,
-                    margin: 2,
+                    marginTop: 10,
+                    display: "flex",
+                    flexDirection: "column",
+                    width: '40%',
+                    borderRadius: 2
                 }}
             >
                 {sort(props.statisticHistoty).map(history => (

@@ -11,11 +11,14 @@ import { Routes as LocalRoutes } from '../Routes';
 import DialogueGraph from "../Components/GraphTree/DialogueGraph";
 import MiniDrawer from "../Components/Sidebar/SIdebar";
 import Constructor from "../Constructors/Constructor";
+import StudentDialogueStatistics from "../Components/Statistic/StudentDialogueStatistics/StudentDialogueStatistics";
 
 export default function Main() {
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isSelectedStudents, setIsSelectedStudents] = useState<boolean>(false);
     const teacherQueriesApi = useTeacherQueriesApi();
+    const [itemConstructor, set] = useDialogueItemConstructor();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,8 +41,8 @@ export default function Main() {
                 alignItems: "flex-end",
             }}>
 
-                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between' height='100vh'>
-                    <DialogueGraph />
+                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between' height='100vh' >
+                    <DialogueGraph /> 
                     <Constructor />
                 </Grid>
                 <GameWebGLEditor />
@@ -47,6 +50,7 @@ export default function Main() {
 
         )
     }
+    
 
     if (isLoading) {
         return (
@@ -61,7 +65,7 @@ export default function Main() {
         )
     }
     return (
-        <MiniDrawer barElements={<Dialogues />} elements={<Canvas />} />
+        <MiniDrawer barElements={<Dialogues setIsSelectedStudents={setIsSelectedStudents}/>} elements={!isSelectedStudents ? <Canvas /> : itemConstructor} />
     )
 }
 

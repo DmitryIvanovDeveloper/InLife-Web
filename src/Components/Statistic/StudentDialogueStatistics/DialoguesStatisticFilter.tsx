@@ -32,7 +32,6 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
 
     const onSelectDialogue = (event: React.SyntheticEvent, newDialogue: IDialogueModel) => {
         setSelectedDialogue(newDialogue);
-        setDialogueItemConstructor(() => <div></div>)
     };
 
     const onSelectTime = (event: React.SyntheticEvent, statistic: IStudentDialogueStatisticModel) => {
@@ -60,7 +59,6 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
         setDefaultFilter();
         var dialogueStatisticsByDate = dialoguesStatistic
             .filter(dialogueStatistic => isDateSame(dialogueStatistic.startDate, date as Date));
-            console.log(dialogueStatisticsByDate);
 
         setStatisticsByDate(dialogueStatisticsByDate);
 
@@ -145,7 +143,7 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
                         bgcolor: 'background.paper', 
                         display: 'flex', 
                         overflow: 'sroll',
-                         height: "100vh" 
+                        height: "100vh" 
                     }}
                 >
                     <Tabs

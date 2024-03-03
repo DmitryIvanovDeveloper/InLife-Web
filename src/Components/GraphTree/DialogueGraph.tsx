@@ -12,7 +12,6 @@ import { useConstructorActionsState } from "../../Data/useConstructorActionsStat
 import { Box, Button } from "@mui/material";
 
 export interface IDialoguesGraphProps {
-    // setIsOpenGraph: (isOpen: boolean) => void
 }
 
 export default function DialogueGraph(props: IDialoguesGraphProps) {
@@ -20,7 +19,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     const diaologueRecoil = useDialogue(actionState.selectedNpc.scenarioId);
 
     const [data, setData] = useState<RawNodeDatum>();
-    const nodeSize = { x: 200, y: 200 };
+    const nodeSize = { x: 200, y: 220 };
     const [_, setDualogueItemsColorMap] = useDialogueItemColorsMap();
 
 
@@ -126,11 +125,12 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         <Tree
             data={data}
             nodeSize={nodeSize}
-            translate={{ x: 350, y: 50 }}
+            translate={{ x: 550, y: 50 }}
             rootNodeClassName="node__root"
             branchNodeClassName="node__branch"
             leafNodeClassName="node__leaf"
             pathClassFunc={() => "node__link"}
+            zoom={1}
             renderCustomNodeElement={(dialogueItem) => {
                 return node(dialogueItem);
             }}

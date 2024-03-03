@@ -89,7 +89,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 export interface IMiniDrawerProps {
     barElements: ReactElement
-    elements: ReactElement
+    elements: ReactElement | null
 }
 
 export default function MiniDrawer(props: IMiniDrawerProps) {
@@ -111,10 +111,8 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
     }, []);
 
     return (
-        <Box >
-
-            <AppBar position="absolute" open={open}>
-
+        <Box>
+            <AppBar position="absolute" open={open} >
                 <Toolbar>
                     <IconButton
                         color="inherit"
@@ -146,7 +144,7 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                 <Divider />
                 {open ? props.barElements : null}
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1,  filter: open ? "blur(6px)" : "none" }}>
+            <Box component="main" sx={{ flexGrow: 1,  filter: open ? "none" : "none" }}>
                 {props.elements}
             </Box>
         </Box>

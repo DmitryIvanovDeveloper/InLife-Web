@@ -55,11 +55,10 @@ export default function NpcScenes(props: IDialogueTabsProps) {
     const onClick = (clickedDialogue: IDialogueModel) => {
         if (selectedDialogue?.id == clickedDialogue.id) {
             setSelectedDialogue(null);
-            setDialogueItemConstructor(<DeskImage image={props.npc.image} />  )
+            // setDialogueItemConstructor(<DeskImage image={props.npc.image} />  );
             localStorage.removeItem("SelectedNpcDialogueId");
             return;
         }
-        setDialogueItemConstructor(<div></div>);
         constructorActions.setSelectedScenario(clickedDialogue.id);
         
         setSelectedDialogue(clickedDialogue);

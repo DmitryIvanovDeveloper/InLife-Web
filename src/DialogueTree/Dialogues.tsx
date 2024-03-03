@@ -15,7 +15,9 @@ import DeskImage from '../Components/Npc/DeskImage';
 import { useNpcSelection } from '../Data/useSelectedNpc';
 import useConstructorActions from '../Data/ConstructorActions';
 
-export interface IDialoguesProps { }
+export interface IDialoguesProps {
+    setIsSelectedStudents: (isSelectedStudents: boolean) => void; 
+}
 
 //TODO Rename
 export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
@@ -26,8 +28,10 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
     const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const constructorActions = useConstructorActions();
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+    const handleChange = (event: React.SyntheticEvent, value: number) => {
+        setValue(value);
+       
+        props.setIsSelectedStudents(value == 1);
     };
 
     const handleChangeIndex = (index: number) => {
@@ -37,13 +41,11 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
         
         if (!npc) {
             setNpc(null);
-            setDialogueItemConstructor(() => null)
             return;
         }
         setNpc(npc);
         constructorActions.setSelectedNpc(npc.id);
         localStorage.setItem("SelectedNpcId", npc.id)
-        setDialogueItemConstructor(() => <DeskImage image={npc.image} />)
     }
 
     function tabs() {

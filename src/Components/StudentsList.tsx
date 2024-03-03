@@ -7,12 +7,13 @@ import { useTeacher } from "../Data/useTeacher";
 import { Routes } from "../Routes";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import useDialogueStatisticApi from "../ThereGame.Api/Queries/DialogueStatisticApi";
-import { useNavigate } from "react-router-dom";
+import { useDialogueItemConstructor } from "../Data/useDialogues";
 
 export default function StudentList() {
     const [teacher] = useTeacher();
     const [students] = useStudents();
     const [selectedStudentId, setSelectedStudentId] = useState<string>("");
+    const [dialogueItemConstructor, setDialogueItemConstrucor] = useDialogueItemConstructor();
     const dialogueStatisticApi = useDialogueStatisticApi();
     const [isLoading, setIsLodaing] = useState<boolean>();
 
@@ -29,6 +30,7 @@ export default function StudentList() {
 
     const onSelect = (selectedStudentId: string) => {
         setSelectedStudentId(selectedStudentId);
+        setDialogueItemConstrucor(<div></div>);
     }
 
     return (
@@ -41,9 +43,7 @@ export default function StudentList() {
             
             <ListItem
                 disablePadding
-
             >
-
                 <Box display='flex' flexDirection='column' width='100%'>
 
                     {students
@@ -56,7 +56,7 @@ export default function StudentList() {
                                         sx={{
                                             margin: 1
                                         }}
-                                        onClick={() => setSelectedStudentId("")}
+                                        onClick={() => onSelect("")}
                                     >
 
                                         <ArrowBackIosNewIcon />

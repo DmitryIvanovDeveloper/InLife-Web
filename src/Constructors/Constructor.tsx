@@ -66,7 +66,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
     const phraseQueriesApi = usePhraseQueriesApi();
 
-
     //TODO: Refactor
     const [dialogueItemEditState, setDialogueItemEditState] = useState<IDialogueItemEditState>(() => {
         var data = localStorage.getItem(`${actionState.selectedNpc.specificPhraseId} Constructor-Edit-State`);
@@ -229,129 +228,103 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         }
     }, []);
 
-    useEffect(() => {
-        var data = localStorage.getItem(`Position`);
-        if (!data) {
-            return;
-        }
-        var lastPosition = JSON.parse(data)
-        // setPosition(lastPosition);
-    }, []);
-
-    const eventLogger = (event: any) => {
-        setPosition({ x: event.x, y: event.y })
-
-        localStorage.setItem(`Position`, JSON.stringify(position));
-        console.log(event.y);
-    };
-
-    // if (!phraseRecoil) {
-    //     return null;
-    // }
-
     return (
 
         <Box
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                width: '40%'
+                width: '40%',
+                borderRadius: 10
             }}
         >
-            {/* <Resizable
-                defaultSize={{
-                    width: "100%",
-                    height: "300px"
+
+            <Instruction
+                editDialogueItemType={editDialogueItemType}
+                onClose={() => setIsOpen(false)}
+                isOpen={isOpen}
+            />
+
+            <Paper elevation={0}
+                sx={{
+                    backgroundColor: "#e0f2f1",
+                    borderRadius: 3,
+                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 10px 15px",
+
                 }}
-            > */}
-                {/* <Draggable
-                // position={position}
-                > */}
+            >
+                {dialogueItemState == DialogueItemStateType.UnsavedChanges
+                    ? <Box display='flex' justifyContent='flex-end' flexDirection="row">
+                        <Button onClick={() => constructorActions.setIsReset(true)}>Reset unsaved changes</Button>
+                    </Box>
+                    : null
+                }
 
-                    <Instruction
-                        editDialogueItemType={editDialogueItemType}
-                        onClose={() => setIsOpen(false)}
-                        isOpen={isOpen}
-                    />
+                <TabContext value={selectDialogueLine.line.id}>
 
-                    <Paper elevation={0}
-                        sx={{
-                            backgroundColor: "#e0f2f1",
-                            borderRadius: 1,
-                        }}
-                    >
-                        {dialogueItemState == DialogueItemStateType.UnsavedChanges
-                            ? <Box display='flex' justifyContent='flex-end' flexDirection="row">
-                                <Button onClick={() => constructorActions.setIsReset(true)}>Reset unsaved changes</Button>
-                            </Box>
-                            : null
-                        }
+                    <DeleteDialogueItemButton />
 
-                        <TabContext value={selectDialogueLine.line.id}>
+                    <Box display='flex' flexDirection="row" justifyContent='space-between'>
+                        <PhraseSettings
+                            onEditDialogueItemType={onEditDialogueItemType}
+                            editDialogueItemType={editDialogueItemType}
+                            dialogueItemEditState={dialogueItemEditState}
+                            phraseCaption={phraseRecoil?.text}
+                            phraseAudio={phraseRecoil?.audioSettings.audioData ?? ""}
+                            name={Locations.find(location => location.id == dialogueRecoil?.levelId)?.name ?? ""}
+                        />
+                    </Box>
 
-                            <DeleteDialogueItemButton />
+                    <Box display='flex' justifyContent='end'>
+                        <DialogueLinesTabSettings
+                            answers={phraseRecoil?.answers ?? []}
+                            setEditDialogueItemType={() => setEditDialogueItemType(undefined)}
+                        />
+                    </Box>
 
-                            <Box display='flex' flexDirection="row" justifyContent='space-between'>
-                                <PhraseSettings
-                                    onEditDialogueItemType={onEditDialogueItemType}
-                                    editDialogueItemType={editDialogueItemType}
-                                    dialogueItemEditState={dialogueItemEditState}
-                                    phraseCaption={phraseRecoil?.text}
-                                    phraseAudio={phraseRecoil?.audioSettings.audioData ?? ""}
-                                    name={Locations.find(location => location.id == dialogueRecoil?.levelId)?.name ?? ""}
-                                />
-                            </Box>
-
-                            <Box display='flex' justifyContent='end'>
-                                <DialogueLinesTabSettings
-                                    answers={phraseRecoil?.answers ?? []}
-                                    setEditDialogueItemType={() => setEditDialogueItemType(undefined)}
-                                />
-                            </Box>
-
-                            <DialogueLineSettings
-                                onEditDialogueItemType={onEditDialogueItemType}
-                                editDialogueItemType={editDialogueItemType}
-                                dialogueItemEditState={dialogueItemEditState}
-                                currentDialogueLineData={currentDialogueLineData}
-                                color={dialogueItemColorsMap.find(item => item.id == selectDialogueLine.line.id)?.color ?? ""}
-                            />
-
-                            {!!phraseRecoil?.answers?.length
-                                ? <Message
-                                    title={Locations.find(location => location.id == dialogueRecoil?.levelId)?.name ?? ""}
-                                    position={"left"}
-                                    type={"text"}
-                                    text={nextPhraseCaption}
-                                />
-                                : null
-                            }
-                            {CreateNextPhraseComponent()}
-
-                        </TabContext>
-                    </Paper >
-
-                    <PhraseConstructor
+                    <DialogueLineSettings
                         onEditDialogueItemType={onEditDialogueItemType}
-                        dialogueId={actionState.selectedNpc.scenarioId}
-                        id={phraseRecoil?.id}
-                        parentId={phraseRecoil?.parentId}
                         editDialogueItemType={editDialogueItemType}
-                        onEditedDialogueItemType={onEditedDialogueItemType}
-                        setStatus={setStatus}
-                    />
-                    <DialogueLineContructor
-                        onEditDialogueItemType={onEditDialogueItemType}
-                        dialogueId={actionState.selectedNpc.scenarioId}
-                        id={selectDialogueLine.line.id}
-                        parentId={phraseRecoil?.id}
-                        editDialogueItemType={editDialogueItemType}
-                        onEditedDialogueItemType={onEditedDialogueItemType}
-                        setStatus={setStatus}
+                        dialogueItemEditState={dialogueItemEditState}
+                        currentDialogueLineData={currentDialogueLineData}
+                        color={dialogueItemColorsMap.find(item => item.id == selectDialogueLine.line.id)?.color ?? ""}
                     />
 
+                    {!!phraseRecoil?.answers?.length
+                        ? <Message
+                            title={Locations.find(location => location.id == dialogueRecoil?.levelId)?.name ?? ""}
+                            position={"left"}
+                            type={"text"}
+                            text={nextPhraseCaption}
+                        />
+                        : null
+                    }
+                    {CreateNextPhraseComponent()}
 
-                    {/* {!isEdited || status != Status.OK
+                </TabContext>
+            </Paper >
+
+            <PhraseConstructor
+                onEditDialogueItemType={onEditDialogueItemType}
+                dialogueId={actionState.selectedNpc.scenarioId}
+                id={phraseRecoil?.id}
+                parentId={phraseRecoil?.parentId}
+                editDialogueItemType={editDialogueItemType}
+                onEditedDialogueItemType={onEditedDialogueItemType}
+                setStatus={setStatus}
+            />
+            <DialogueLineContructor
+                onEditDialogueItemType={onEditDialogueItemType}
+                dialogueId={actionState.selectedNpc.scenarioId}
+                id={selectDialogueLine.line.id}
+                parentId={phraseRecoil?.id}
+                editDialogueItemType={editDialogueItemType}
+                onEditedDialogueItemType={onEditedDialogueItemType}
+                setStatus={setStatus}
+            />
+
+
+            {/* {!isEdited || status != Status.OK
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={onReset}>reset all changes</Button>
@@ -359,21 +332,15 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 : <Alert severity="success">The constructor is saved!</Alert>
             } */}
 
-                    {status != Status.OK
-                        ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
-                        : null
-                    }
-                    {!phraseRecoil?.audioSettings?.audioData && !!phraseRecoil?.text
-                        ? <Alert severity="error">The phrase is not generated to audio!</Alert>
-                        : null
-                    }
-                {/* </Draggable> */}
-            {/* </Resizable > */}
+            {status != Status.OK
+                ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
+                : null
+            }
+            {!phraseRecoil?.audioSettings?.audioData && !!phraseRecoil?.text
+                ? <Alert severity="error">The phrase is not generated to audio!</Alert>
+                : null
+            }
+
         </Box>
     )
-}
-
-const commonStyle = {
-    editedItemColor: "#ff9800",
-    editItemColor: "#fafafa"
 }
