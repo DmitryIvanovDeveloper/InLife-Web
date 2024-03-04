@@ -3,6 +3,7 @@ import { useState } from "react";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ConfirmToDeleteScenarioModalScreen from "../ConfirmToDeleteScenarioModalScreen";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
+import useConstructorActions from "../../Data/ConstructorActions";
 
 export interface IDeleteDialogueItemButtonProps {
     dialogueId: string;
@@ -12,12 +13,15 @@ export interface IDeleteDialogueItemButtonProps {
 export default function DeleteSceneButton(props: IDeleteDialogueItemButtonProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
-
+    const actions = useConstructorActions();
+    
     const dialogueQueriesApi = useDialogueQueriesApi();
 
     const onDelete = async () => {
         setIsDeleting(true);
         await dialogueQueriesApi.delete(props.dialogueId);
+        actions.setSpecificPhrase("");
+        actions.setSelectedScenario("");
         setIsDeleting(false)
     }
 

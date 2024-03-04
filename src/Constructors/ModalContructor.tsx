@@ -3,6 +3,8 @@ import React, { useState } from "react"
 import Instruction from "./Instruction";
 import { EditDialogueItemType } from "./models/EditType";
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { useConstructorActionsState } from "../Data/useConstructorActionsState";
+import { Locations } from "../Data/Locations";
 
 export interface IInstructionProps {
     element: React.ReactElement;
@@ -16,6 +18,7 @@ export default function ModalConstructor(props: IInstructionProps) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [isInstructionOpen, setIsInstructionOpen] = useState<boolean>(false);
+    const [actionsState] = useConstructorActionsState();
     
     return (
             <Dialog
@@ -35,7 +38,7 @@ export default function ModalConstructor(props: IInstructionProps) {
                 <DialogTitle textAlign='end' id="responsive-dialog-title">
                     <Box display='flex' justifyContent='space-between'>
                     <Box  display='flex' justifyContent='space-between' alignItems='center'>
-                        <Avatar src={props.avatar} />
+                        <Avatar sx={{width: '100px', height: '100px'}} src={Locations.find(npc => npc.id == actionsState.selectedNpc.id)?.avatar} />
                         <Typography sx={{ml: 1, mr: 1}} variant="h6">{props.description}</Typography>
                     </Box>
                    

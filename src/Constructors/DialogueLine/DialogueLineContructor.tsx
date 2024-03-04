@@ -27,6 +27,8 @@ export interface IAnswerContructor {
     id: string,
     parentId: string,
     editDialogueItemType: EditDialogueItemType | undefined
+    currentPhraseText: string;
+    
     setStates?: (states: DialogueItemStateType[]) => void;
     onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType | undefined) => void;
     onEditedDialogueItemType: (editDialogueItemType: EditDialogueItemType, isEdited: boolean) => void;
@@ -378,7 +380,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={isDialogueLineInstructionOpen}
                 editDialogueItemType={props.editDialogueItemType}
-                description="Alright! What a student can to say or answer me? Please add it to list"
+                description={`Alright! My pharse is '${props.currentPhraseText}'. \r\n What a student can to say or answer me? Please add it to list`}
             />
         )
     }
@@ -410,7 +412,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Answers}
                 editDialogueItemType={props.editDialogueItemType}
-                description="Alright! What a student can to say or answer me? Please add it to list"
+                description={`Alright! My pharse is '${props.currentPhraseText ?? 'empty'}'. \r\n What a student can to say or answer me? Please add it to list`}
             />
             <ModalConstructor
                 element={TensesListComponent()}

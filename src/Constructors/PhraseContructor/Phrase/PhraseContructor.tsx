@@ -40,7 +40,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const actions = useConstructorActions();
     const [isPhraseInstructionOpen, setIsPhraseInstructionOpen] = useState<boolean>(false);
     const [isSaveInstructionOpen, setIsGenerationPhraseOpen] = useState<boolean>(false);
-
     // QueryApi
     const onSave = async () => {
         const updatedsessionPhraseData = JSON.parse(JSON.stringify(sessionPhraseData));
@@ -232,7 +231,8 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         var isOpen = !phraseRecoil.text &&
             !phraseRecoil.answers.length &&
             !!dialogueRecoil.voiceSettings &&
-            !!dialogueRecoil.name
+            !!dialogueRecoil.name &&
+            !!constructorActionsState.selectedNpc.scenarioId
         ;
 
         setIsPhraseInstructionOpen(isOpen);

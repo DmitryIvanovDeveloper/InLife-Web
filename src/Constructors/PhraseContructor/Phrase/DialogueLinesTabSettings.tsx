@@ -10,11 +10,12 @@ import { useDialogueItemColorsMap } from "../../../Data/useDialogueItemColors";
 import * as React from 'react';
 import { tabsClasses } from '@mui/material/Tabs';
 import ModalConstructor from "../../ModalContructor";
-import TabContext from "@mui/lab/TabContext";
+import { useConstructorActionsState } from "../../../Data/useConstructorActionsState";
 
 export interface IDialogueLinesProps {
     answers: IAnswerModel[];
     setEditDialogueItemType: () => void;
+    hasInstruction: boolean;
 }
 
 export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
@@ -24,14 +25,18 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
     const answerQueriesApi = useAnswerQueriesApi();
     const [isDialogueLineInstructionOpen, setIsDialogueLineInstructionOpen] = useState<boolean>(false);
     const [isSaveInstructionOpen, setIsSaveInstructionOpen] = useState<boolean>(false);
+    const [actions] = useConstructorActionsState();
 
     const onCreateAnswers = async () => {
+        if (!selectDialogueLine.dialogueItemId) {
+            return;
+        }
+
         setIsDialogueLineInstructionOpen(false)
         setIsSaveInstructionOpen(true);
         setIsCreating(true);
         await answerQueriesApi.create(selectDialogueLine.dialogueItemId);
         setIsCreating(false);
-        setIsSaveInstructionOpen(false);
     }
 
     const onSelectTab = (id: string, index: number) => {
@@ -104,7 +109,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
     }
 
     useEffect(() => {
-        if (!!selectDialogueLine.line.id) {
+        if (!!selectDialogueLine.dialogueItemId) {
             return;
         }
 
@@ -112,19 +117,18 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
     }, [selectDialogueLine.line]);
 
     useEffect(() => {
-        var isOpen = !!selectDialogueLine.dialogueItemId && !props.answers.length
+        var isOpen = props.hasInstruction
         setIsDialogueLineInstructionOpen(isOpen);
-    }, [selectDialogueLine.dialogueItemId, props.answers]);
+    }, [props.hasInstruction]);
 
     if (isDialogueLineInstructionOpen) {
         return (
             <ModalConstructor
                 element={Tabs()}
-
                 isOpen={isDialogueLineInstructionOpen}
                 editDialogueItemType={undefined}
                 onClose={() => setIsDialogueLineInstructionOpen(false)}
-                description='If you need a student answer then let`s think abount `Story Line! I can say different phrases depending on it. if you need it, create new one!'
+                description={`If you need a student answer me then lets think abount 'Story Line'! I can say different phrases depending on it. if you need it, create new one or you can do it later in my notebook`}
             />
         )
     }
@@ -135,7 +139,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
                 isOpen={isSaveInstructionOpen}
                 editDialogueItemType={undefined}
                 onClose={() => setIsSaveInstructionOpen(false)}
-                description='Awesome! I need to prapare some things'
+                description='Awesome! I want to color a new one'
             />
         )
     }

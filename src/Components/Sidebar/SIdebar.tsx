@@ -13,6 +13,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { ReactElement, useEffect } from 'react';
 import UserMenuAppBar from '../AppBars/UserMenuAppBar';
+import { useConstructorActionsState } from '../../Data/useConstructorActionsState';
 
 const drawerWidth = 700;
 
@@ -95,6 +96,7 @@ export interface IMiniDrawerProps {
 export default function MiniDrawer(props: IMiniDrawerProps) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [actionState] = useConstructorActionsState();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -144,8 +146,12 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                 <Divider />
                 {open ? props.barElements : null}
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1,  filter: open ? "none" : "none" }}>
-                {props.elements}
+            <Box component="main" sx={{ flexGrow: 1, filter: open ? "none" : "none" }}>
+                {!!actionState.selectedNpc.scenarioId
+                    ? props.elements
+                    : null
+                }
+
             </Box>
         </Box>
     );

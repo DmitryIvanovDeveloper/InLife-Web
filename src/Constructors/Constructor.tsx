@@ -1,6 +1,6 @@
 import TabContext from '@mui/lab/TabContext';
 import { Alert, Box, Button, CircularProgress, Divider, IconButton, Paper } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useDialogue, usePhrase } from "../Data/useDialogues";
 import { useSelectDialogueLine } from "../Data/useDialogueItemSelection";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
@@ -25,6 +25,7 @@ import { keyframes } from '@mui/system';
 import { useDialogueItemColorsMap } from '../Data/useDialogueItemColors';
 import { useConstructorActionsState } from '../Data/useConstructorActionsState';
 import ModalConstructor from './ModalContructor';
+import Hint from '../Components/Hints/Hint';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -50,7 +51,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const dialogueRecoil = useDialogue(actionState.selectedNpc.scenarioId);
     const phraseRecoil = usePhrase(actionState.selectedNpc.scenarioId, actionState.selectedNpc.specificPhraseId);
     const constructorActions = useConstructorActions();
-
     const [status, setStatus] = useState<Status>(Status.OK);
     const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>(undefined);
     const [currentDialogueLineData, setCurrentDialogueLineData] = useState<string[]>([]);
@@ -61,6 +61,8 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const [isPhraseCreating, setIsPhraseCreating] = useState<boolean>(false);
     const [dialogueItemColorsMap] = useDialogueItemColorsMap();
     const phraseQueriesApi = usePhraseQueriesApi();
+    const [hint, setHint] = useState<ReactElement | null>(null)
+    const actions = useConstructorActions();
 
     //TODO: Refactor
     const [dialogueItemEditState, setDialogueItemEditState] = useState<IDialogueItemEditState>(() => {
@@ -144,11 +146,30 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
             </IconButton>
         )
     }
+    
+
+    const hasStoryLineInstructions = ():boolean => {
+        return dialogueRecoil?.phrase?.id == phraseRecoil?.id && !!dialogueRecoil.phrase.text && phraseRecoil?.answers.length == 0
+    }
     // UseEffects
 
     useEffect(() => {
+        if (!phraseRecoil) {
+            return;
+        }
+        if (phraseRecoil.answers.length == 1 && !phraseRecoil.answers[0].texts.length) {
+            setSelectDialogueLine(prev => ({
+                ...prev,
+                line: {
+                    name: "",
+                    id: phraseRecoil.answers[0].id 
+                }
+            }));
+        }
+    }, [phraseRecoil]);
+    useEffect(() => {
         if (!phraseRecoil?.answers?.length) {
-            setCurrentDialogueLineData([])
+            setCurrentDialogueLineData([]);
             return;
         }
 
@@ -160,6 +181,21 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         setCurrentDialogueLineData(answer.texts);
 
     }, [selectDialogueLine.line.id]);
+    
+    useEffect(() => {
+        if (!actionState.selectedNpc.scenarioId || !!actionState.selectedNpc.specificPhraseId) {
+            return;
+        }
+
+        setSelectDialogueLine(prev => ({
+            ...prev,
+            dialogueItemId: dialogueRecoil.phrase.id
+        }))
+
+        setTimeout(() => {
+            setHint(<Hint />);
+        }, 5000);
+    }, [actionState.selectedNpc.scenarioId]);
 
     useEffect(() => {
         var expectedAnswer = phraseRecoil?.answers.find(answer => answer?.id == selectDialogueLine.line.id)
@@ -178,7 +214,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         }))
 
     }, [selectDialogueLine.line.id])
-
 
     useEffect(() => {
         localStorage.setItem(`${actionState.selectedNpc.specificPhraseId} Constructor-Edit-State`, JSON.stringify(dialogueItemEditState));
@@ -223,6 +258,11 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         }
     }, []);
 
+    if (!dialogueRecoil?.name || !dialogueRecoil?.voiceSettings) {
+        return null;
+    }
+    
+   
     return (
         <Box
             sx={{
@@ -232,6 +272,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 borderRadius: 10
             }}
         >
+            {hint}
             <Instruction
                 editDialogueItemType={editDialogueItemType}
                 onClose={() => setIsOpen(false)}
@@ -272,6 +313,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                         <DialogueLinesTabSettings
                             answers={phraseRecoil?.answers ?? []}
                             setEditDialogueItemType={() => setEditDialogueItemType(undefined)}
+                            hasInstruction={hasStoryLineInstructions()}
                         />
                     </Box>
 
@@ -313,7 +355,8 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 parentId={phraseRecoil?.id}
                 editDialogueItemType={editDialogueItemType}
                 onEditedDialogueItemType={onEditedDialogueItemType}
-                setStatus={setStatus}
+                setStatus={setStatus} 
+                currentPhraseText={phraseRecoil?.text}
             />
 
 

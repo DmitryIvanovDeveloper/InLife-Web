@@ -205,7 +205,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 isOpen={true}
                 editDialogueItemType={EditDialogueItemType.DialogueName}
                 onClose={() => setIsDialogueNameOpen(false)}
-                description='What is the scenario name?'
+                description='Amazing! It`s new scenario! What is the scenario name?'
             />
         )
     }

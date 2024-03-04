@@ -12,6 +12,7 @@ import DialogueGraph from "../Components/GraphTree/DialogueGraph";
 import MiniDrawer from "../Components/Sidebar/SIdebar";
 import Constructor from "../Constructors/Constructor";
 import StudentDialogueStatistics from "../Components/Statistic/StudentDialogueStatistics/StudentDialogueStatistics";
+import { useConstructorActionsState } from "../Data/useConstructorActionsState";
 
 export default function Main() {
 
@@ -45,7 +46,7 @@ export default function Main() {
                     <DialogueGraph /> 
                     <Constructor />
                 </Grid>
-                {/* <GameWebGLEditor /> */}
+                <GameWebGLEditor />
             </Grid>
 
         )
