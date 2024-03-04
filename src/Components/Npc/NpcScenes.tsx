@@ -103,7 +103,7 @@ export default function NpcScenes(props: IDialogueTabsProps) {
                                 </ListItemButton>
 
                                 {dialogue.id == selectedDialogue?.id
-                                    ? <DeleteSceneButton name={dialogue.name} dialogueId={dialogue.id} />
+                                    ? <DeleteSceneButton name={dialogue.name} dialogueId={dialogue.id} onDelete={() => onClick(selectedDialogue)}/>
                                     : null
                                 }
                             </Box>

@@ -13,16 +13,21 @@ import MiniDrawer from "../Components/Sidebar/SIdebar";
 import Constructor from "../Constructors/Constructor";
 import StudentDialogueStatistics from "../Components/Statistic/StudentDialogueStatistics/StudentDialogueStatistics";
 import { useConstructorActionsState } from "../Data/useConstructorActionsState";
+import { useGameWebGL } from "../Data/useGameWebGL";
 
 export default function Main() {
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isSelectedStudents, setIsSelectedStudents] = useState<boolean>(false);
     const teacherQueriesApi = useTeacherQueriesApi();
-    const [itemConstructor, set] = useDialogueItemConstructor();
+    const [itemConstructor] = useDialogueItemConstructor();
     const navigate = useNavigate();
 
+    const [_, setGameWwebGL] = useGameWebGL();
+    
     useEffect(() => {
+        setGameWwebGL(<GameWebGLEditor /> );
+
         var role = localStorage.getItem("Role");
         if (Number(role) == RoleType.Teacher) {
             teacherQueriesApi.getById().then(result => {
@@ -41,14 +46,11 @@ export default function Main() {
                 flexDirection: 'column',
                 alignItems: "flex-end",
             }}>
-
                 <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between' height='100vh' >
-                    <DialogueGraph /> 
+                    <DialogueGraph />
                     <Constructor />
                 </Grid>
-                <GameWebGLEditor />
             </Grid>
-
         )
     }
 
@@ -65,7 +67,7 @@ export default function Main() {
         )
     }
     return (
-        <MiniDrawer barElements={<Dialogues setIsSelectedStudents={setIsSelectedStudents}/>} elements={!isSelectedStudents ? <Canvas /> : itemConstructor} />
+        <MiniDrawer barElements={<Dialogues setIsSelectedStudents={setIsSelectedStudents} />} elements={!isSelectedStudents ? <Canvas /> : itemConstructor} />
     )
 }
 

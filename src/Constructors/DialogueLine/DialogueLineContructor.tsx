@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { LanguageType } from "../../Data/LanguageType";
 import { useAnswer } from "../../Data/useDialogues";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
-import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
@@ -61,52 +60,6 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
 
         setIsEdited(false);
     }
-    // Mistake Explanation
-    const onExplanationChange = (event: any, index: number) => {
-        var explanation = [...sessionDialogueLine.mistakeExplanations];
-
-        if (event.target.id == 'word') {
-            explanation[index].word = event.target.value;
-        }
-        if (event.target.id == 'mistake explanation') {
-            explanation[index].explanation = event.target.value;
-        }
-
-        setSessionAnswerData(prev => ({
-            ...prev,
-            mistakeExplanations: explanation
-        }));
-    }
-
-    const onAddMistakeExplanation = () => {
-        const mistakeExplanation: IMistakeExplanationModel = {
-            parentId: props.id,
-            word: "",
-            explanation: "",
-            id: uuidv4()
-        }
-
-        setSessionAnswerData(prev => ({
-            ...prev,
-            mistakeExplanations: [
-                ...prev.mistakeExplanations,
-                mistakeExplanation
-            ]
-        }));
-
-        setIsEdited(false);
-    }
-
-    const onDeleteMistakeExplanation = (id: string) => {
-        setSessionAnswerData(prev => ({
-            ...prev,
-            mistakeExplanations: [...sessionDialogueLine.mistakeExplanations]
-                .filter(explanation => explanation.id != id)
-        }));
-
-        setIsEdited(false);
-    }
-
 
     // Translate
     const onAddTranslate = () => {
@@ -198,6 +151,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
 
     const onSave = async () => {
         setIsSaveInstructionOpen(true);
+        actions.setIsScenarioUpdated(true);
         var status = await answerQueriesApi.update(sessionDialogueLine);
         if (status == Status.OK) {
             localStorage.removeItem(props.id)
@@ -380,7 +334,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={isDialogueLineInstructionOpen}
                 editDialogueItemType={props.editDialogueItemType}
-                description={`Alright! My pharse is '${props.currentPhraseText}'. \r\n What a student can to say or answer me? Please add it to list`}
+                description={`Alright! ${!props.currentPhraseText ? `It looks like i say nothing first` : `My pharse is '${props.currentPhraseText}'`} .What a student can to ${!props.currentPhraseText ? 'say' :  `answer`} me on the Storyline? Please add it to list`}
             />
         )
     }
@@ -412,7 +366,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Answers}
                 editDialogueItemType={props.editDialogueItemType}
-                description={`Alright! My pharse is '${props.currentPhraseText ?? 'empty'}'. \r\n What a student can to say or answer me? Please add it to list`}
+                description={`Alright! ${!props.currentPhraseText ? `So, i say nothing` : `My pharse is '${props.currentPhraseText}'`} .What a student can to ${!props.currentPhraseText ? 'say' :  `answer`} me on the Storyline? Please add it to list`}
             />
             <ModalConstructor
                 element={TensesListComponent()}

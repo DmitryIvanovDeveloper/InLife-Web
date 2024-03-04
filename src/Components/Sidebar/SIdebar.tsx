@@ -14,8 +14,9 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { ReactElement, useEffect } from 'react';
 import UserMenuAppBar from '../AppBars/UserMenuAppBar';
 import { useConstructorActionsState } from '../../Data/useConstructorActionsState';
+import { useGameWebGL } from '../../Data/useGameWebGL';
 
-const drawerWidth = 700;
+const drawerWidth = 500;
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
@@ -97,6 +98,7 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [actionState] = useConstructorActionsState();
+    const [gameWwebGL] = useGameWebGL();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -148,10 +150,13 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, filter: open ? "none" : "none" }}>
                 {!!actionState.selectedNpc.scenarioId
-                    ? props.elements
+                    ? <Box>
+                        {props.elements}
+
+                    </Box>
                     : null
                 }
-
+                {gameWwebGL}
             </Box>
         </Box>
     );

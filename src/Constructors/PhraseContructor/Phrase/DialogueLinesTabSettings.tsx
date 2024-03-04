@@ -11,6 +11,7 @@ import * as React from 'react';
 import { tabsClasses } from '@mui/material/Tabs';
 import ModalConstructor from "../../ModalContructor";
 import { useConstructorActionsState } from "../../../Data/useConstructorActionsState";
+import useConstructorActions from "../../../Data/ConstructorActions";
 
 export interface IDialogueLinesProps {
     answers: IAnswerModel[];
@@ -25,13 +26,15 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
     const answerQueriesApi = useAnswerQueriesApi();
     const [isDialogueLineInstructionOpen, setIsDialogueLineInstructionOpen] = useState<boolean>(false);
     const [isSaveInstructionOpen, setIsSaveInstructionOpen] = useState<boolean>(false);
-    const [actions] = useConstructorActionsState();
+    const actions = useConstructorActions();
+    const [actionsState] = useConstructorActionsState();
 
     const onCreateAnswers = async () => {
         if (!selectDialogueLine.dialogueItemId) {
             return;
         }
 
+        actions.setIsScenarioUpdated(true);
         setIsDialogueLineInstructionOpen(false)
         setIsSaveInstructionOpen(true);
         setIsCreating(true);
@@ -128,7 +131,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
                 isOpen={isDialogueLineInstructionOpen}
                 editDialogueItemType={undefined}
                 onClose={() => setIsDialogueLineInstructionOpen(false)}
-                description={`If you need a student answer me then lets think abount 'Story Line'! I can say different phrases depending on it. if you need it, create new one or you can do it later in my notebook`}
+                description={`Fine! If you need a student to answer me, then let's think about "Storyline"! Depending on this, I can say different phrases. if you need it, create a new one or you can do it later in my notebook or on my diagram`}
             />
         )
     }

@@ -45,26 +45,37 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
     }
 
     useEffect(() => {
+        if (!isPlay) {
+            return; 
+        }
+
         UNSAFE__unityInstance?.SendMessage("WebGLController", "SelectNpc", constructorActionsState.selectedNpc.id);
     }, [constructorActionsState.selectedNpc.id]);
 
     useEffect(() => {
-
+        if (!isPlay) {
+            return; 
+        }
+        UNSAFE__unityInstance?.SendMessage("WebGLController", "SelectNpc", constructorActionsState.selectedNpc.id);
         UNSAFE__unityInstance?.SendMessage("WebGLController", "SetSpecificScenario", constructorActionsState.selectedNpc.scenarioId);
     }, [constructorActionsState.selectedNpc.scenarioId]);
 
     useEffect(() => {
+        if (!isPlay) {
+            return; 
+        }
+        UNSAFE__unityInstance?.SendMessage("WebGLController", "SelectNpc", constructorActionsState.selectedNpc.id);
         UNSAFE__unityInstance?.SendMessage("WebGLController", "SetSpecificPhrase", constructorActionsState.selectedNpc.specificPhraseId);
     }, [constructorActionsState.selectedNpc.specificPhraseId]);
 
     useEffect(() => {
-        if (!constructorActionsState.isScenarioUpdated) {
+        console.log(constructorActionsState.isScenarioUpdated);
+        if (!constructorActionsState.isScenarioUpdated || !isPlay) {
             return;
         }
-
+        UNSAFE__unityInstance?.SendMessage("WebGLController", "SelectNpc", constructorActionsState.selectedNpc.id);
         UNSAFE__unityInstance?.SendMessage("WebGLController", "OnUpdate");
         actions.setIsScenarioUpdated(false);
-
     }, [constructorActionsState.isScenarioUpdated]);
 
     return (
@@ -76,19 +87,12 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
                 ml: 9,
             }}
         >
-            {/* {isPlay
-                ? <Alert severity="info">Sign in the game to use editor</Alert>
-                : null
-            } */}
-
-
             {isLoaded || !isPlay
                 ? null
                 : <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center' marginRight={4}>
                     <CircularProgressWithLabel value={loadingProgression} />
                 </Box>
             }
-
 
             <Box sx={{
                 margin: 2,
@@ -97,45 +101,52 @@ export default function GameWebGLEditor(props: IGameWebJLEditor) {
                 <Box
                     sx={{
                         display: 'flex',
-                        justifyContent: 'flex-start',
-                        marginRight: "4px"
+                        justifyContent: 'space-between',
+                        marginRight: "4px",
+                        alignItems: 'center'
                     }}
                 >
-                    <Button onClick={() => requestFullscreen(true)}>Full Screen</Button>
-                    <Button
-                        variant='contained'
-                        onClick={() => setIsPlayHandler(!isPlay)}
-                        sx={{ alignItems: 'center' }}
-                        color="success"
-                    >
-                        <Box
-                            display='flex'
-                            flexDirection="row"
-                            alignItems='center'
+                    <Box>
+                        <Button
+                            variant='contained'
+                            onClick={() => setIsPlayHandler(!isPlay)}
+                            sx={{ alignItems: 'center' }}
+                            color="success"
                         >
-                            {isPlay
-                                ? <Box
-                                    display='flex'
-                                    flexDirection="row"
-                                    justifyContent='space-between'
-                                    fontWeight='600'
-                                >
-                                    Stop Game
-                                    <StopCircleIcon sx={{ ml: 1 }} />
-                                </Box>
-                                : <Box
-                                    display='flex'
-                                    flexDirection="row"
-                                    justifyContent='space-between'
-                                    fontWeight='600'
-                                >
-                                    Play Game
-                                    <PlayCircleIcon sx={{ ml: 1 }} />
-                                </Box>
+                            <Box
+                                display='flex'
+                                flexDirection="row"
+                                alignItems='center'
+                            >
+                                {isPlay
+                                    ? <Box
+                                        display='flex'
+                                        flexDirection="row"
+                                        justifyContent='space-between'
+                                        fontWeight='600'
+                                    >
+                                        Stop Game
+                                        <StopCircleIcon sx={{ ml: 1 }} />
+                                    </Box>
+                                    : <Box
+                                        display='flex'
+                                        flexDirection="row"
+                                        justifyContent='space-between'
+                                        fontWeight='600'
+                                    >
+                                        Play Game
+                                        <PlayCircleIcon sx={{ ml: 1 }} />
+                                    </Box>
 
-                            }
-                        </Box>
-                    </Button>
+                                }
+                            </Box>
+                        </Button>
+                        <Button onClick={() => requestFullscreen(true)}>Full Screen</Button>
+                    </Box>
+                    {isPlay
+                        ? <Typography sx={{mr: 1}}>Please sign in to use the scenario</Typography>
+                        : null
+                    }
                 </Box>
                 {!isPlay
                     ? null

@@ -4,22 +4,34 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ConfirmToDeleteScenarioModalScreen from "../ConfirmToDeleteScenarioModalScreen";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import useConstructorActions from "../../Data/ConstructorActions";
+import { useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
 
 export interface IDeleteDialogueItemButtonProps {
     dialogueId: string;
     name: string;
+    onDelete: () => void;
 }
 
 export default function DeleteSceneButton(props: IDeleteDialogueItemButtonProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
     const actions = useConstructorActions();
-    
+    const [_, setSelectDialogueLine] = useSelectDialogueLine();
+
     const dialogueQueriesApi = useDialogueQueriesApi();
 
     const onDelete = async () => {
         setIsDeleting(true);
         await dialogueQueriesApi.delete(props.dialogueId);
+        props.onDelete();
+        setSelectDialogueLine({
+            dialogueItemId: "",
+            line: {
+                id: "",
+                name: ""
+            },
+            nextDialogueItemId: ""
+        });
         actions.setSpecificPhrase("");
         actions.setSelectedScenario("");
         setIsDeleting(false)
@@ -35,7 +47,7 @@ export default function DeleteSceneButton(props: IDeleteDialogueItemButtonProps)
     }
 
     return (
-        <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: 'center'}}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: 'center' }}>
             {isDeleting
                 ? <CircularProgress color='error' size={20} />
                 : <Box>

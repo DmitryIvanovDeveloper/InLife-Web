@@ -205,7 +205,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 isOpen={true}
                 editDialogueItemType={EditDialogueItemType.DialogueName}
                 onClose={() => setIsDialogueNameOpen(false)}
-                description='Amazing! It`s new scenario! What is the scenario name?'
+                description='Amazing! Here is new scenario. What is the scenario name?'
             />
         )
     }
@@ -218,7 +218,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 isOpen={true}
                 editDialogueItemType={EditDialogueItemType.VoiceSettings}
                 onClose={() => onLastInstructionDone()}
-                description='I can speak any voice for the scenario'
+                description='I can speak any voice for the scenario. Please choose!'
             />
         )
     }
