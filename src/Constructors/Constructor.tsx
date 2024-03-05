@@ -26,6 +26,7 @@ import { useDialogueItemColorsMap } from '../Data/useDialogueItemColors';
 import { useConstructorActionsState } from '../Data/useConstructorActionsState';
 import Hint from '../Components/Hints/Hint';
 import Notebook from '../Images/Notebook.png';
+import DevidedLabel from '../Components/Headers/DevidedLabel';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -62,7 +63,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const [dialogueItemColorsMap] = useDialogueItemColorsMap();
     const phraseQueriesApi = usePhraseQueriesApi();
     const [hint, setHint] = useState<ReactElement | null>(null)
-    const actions = useConstructorActions();
 
     //TODO: Refactor
     const [dialogueItemEditState, setDialogueItemEditState] = useState<IDialogueItemEditState>(() => {
@@ -267,7 +267,8 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 p: 0,
                 m: 0,
                 display: 'flex',
-                width: '650px'
+                width: '650px',
+
             }}>
 
 
@@ -333,8 +334,8 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                                 />
                             </Box>
                         </Box>
-                        <Box sx={{ mr: 1 }}>
 
+                        <Box sx={{ mr: 1 }}>
                             <Box display='flex' justifyContent='end'>
                                 <DialogueLinesTabSettings
                                     answers={phraseRecoil?.answers ?? []}

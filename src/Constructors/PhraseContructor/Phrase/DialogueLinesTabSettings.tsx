@@ -60,18 +60,22 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
     }
 
     function StoryLineLabel(id: string, index: number) {
+        var mark = dialogueItemColorsMap.find(item => item.id == id)?.color;
+
         return (
             <Box>
-                <Typography>Story Line</Typography>
-                <Typography
+                <Typography>Story Line {index + 1}</Typography>
+                <Box
+                    component='image'
                     sx={{
-                        backgroundColor: dialogueItemColorsMap.find(item => item.id == id)?.color ?? "",
                         borderRadius: 2,
-                        color: 'white'
+                        content: {
+                            xs: `url(${mark})`, //img src from xs up to md
+                            md: `url(${mark})`,  //img src from md and up
+                        },
                     }}
                 >
-                    {index + 1}
-                </Typography>
+                </Box>
             </Box>
         )
     }
@@ -87,6 +91,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
                     [`& .${tabsClasses.scrollButtons}`]: {
                         '&.Mui-disabled': { opacity: 0.3 },
                     },
+                    width: '580px'
                 }}
             >
                 {props.answers.map((answer, index) => (
@@ -102,7 +107,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
                 ))}
                 {isCreating
                     ? <CircularProgress color='error' size={20} />
-                    : <IconButton sx={{ p: 0, backgroundColor: 'none'}} onClick={onCreateAnswers}>
+                    : <IconButton sx={{ p: 0, backgroundColor: 'none' }} onClick={onCreateAnswers}>
                         <IoMdAddCircle />
                     </IconButton>
                 }
@@ -151,7 +156,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
         <Grid display='flex' direction='row' alignItems='center' justifyContent='space-between' >
             <Grid display='flex' direction='row' alignItems='center'>
                 {Tabs()}
-                
+
             </Grid>
         </Grid>
     )

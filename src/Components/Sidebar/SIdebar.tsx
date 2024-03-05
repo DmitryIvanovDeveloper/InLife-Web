@@ -98,7 +98,7 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [actionState] = useConstructorActionsState();
-    const [gameWwebGL] = useGameWebGL();
+    const [gameWebGL] = useGameWebGL();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -153,7 +153,7 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                     ? <Box>
 
                         {props.elements}
-                        {gameWwebGL}
+                        {gameWebGL}
                     </Box>
                     : null
                 }

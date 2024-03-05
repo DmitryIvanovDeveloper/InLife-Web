@@ -1,19 +1,19 @@
-import { Avatar, Box, Button, CircularProgress } from "@mui/material";
-import { Component, useState } from "react";
+import { Avatar, Box, Button, CircularProgress, Typography } from "@mui/material";
+import { useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
 import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import { useSelectDialogueLine as useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
-import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import { IoMdAddCircle } from "react-icons/io";
-import Constructor from "../../Constructors/Constructor";
 import { DialogueItemType } from "./DialogueitemType";
 import ISelectDialogueLine from "../../Constructors/models/ISelectDialogueLine";
 import { useDialogueItemState } from "../../Data/useDialogueitemState";
 import { useNpcSelection } from "../../Data/useSelectedNpc";
 import useConstructorActions from "../../Data/ConstructorActions";
 import { useDialogueItemColorsMap } from "../../Data/useDialogueItemColors";
+import Stratch from '../../Images/Stratch.png';
+import MarkPurple from '../../Images/Marks/Mark Purple.png';
 
 const nodeSize = { x: 200, y: 500 };
 const foreignObjectProps = {
@@ -58,7 +58,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         }
 
         if (nodeType == DialogueItemType.Answer) {
-         
+
             const updatedSelectDialogueLine: ISelectDialogueLine = {
                 dialogueItemId: parentId,
                 line: {
@@ -108,30 +108,14 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         return "";
     }
 
-    const getColor = (nodeId: string): string => {
-        var item = dialogueItemColorsMap.find(item => item.id == nodeId);
-        return item?.color ?? "white"
-    }
-
     const dialogueItemLabel = (name: string): string => {
         return !name ? name : `${name.substring(0, 35)}...`
     }
 
-    const defaultStyle = {
-        borderRadius: "5px",
-        backgroundColor: getColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
-        margin: 3,
-        padding: 10,
-        borderColor: getNodeColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
-        boxShadow: "none"
-    }
-
-    const selectedNodeStyle = {
-        border: "1px solid transparent",
-        borderRadius: "10px",
-        borderColor: getNodeColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
-        boxShadow: "rgba(0, 8, 162, 0.8) 0px 1px 1px",
-        backgroundColor: getColor(props.customNodeElementProps.nodeDatum.attributes?.id as string),
+    const getMark = (id: string): string => {
+        var item = dialogueItemColorsMap.find(item => item.id == id);
+        
+        return item?.color ?? ""
     }
 
     //TODO: Refactor
@@ -145,85 +129,99 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                         props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType
                     )}
                 {...foreignObjectProps}
-                style={{ overflow: "visible" }}
+                style={{ overflow: "visible", }}
             >
-                <Box
-                    sx={selectDialogueLine.dialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id
-                        ? {
-                            width: '100%',
-                            backgroundColor: 'red',
-                            borderRadius: "10px",
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center'
-                        }
-                        : null
-                    }
-                >
-                    <Box
-                        sx={{ width: "90%", }}
-                        onMouseEnter={() => setIsMouseOverNode(true)}
-                        onMouseLeave={() => setIsMouseOverNode(false)}
-                        style={selectDialogueLine.line.id == props.customNodeElementProps.nodeDatum.attributes?.id
-                            ? selectedNodeStyle
-                            : {
-                                boxShadow: "rgba(0, 8, 162, 0.8) 0px 1px 1px",
-                                backgroundColor: 'white',
-                                borderRadius: "10px",
-                            }
-                        }
-                    >
-                        <Box style={defaultStyle}></Box>
+                <Box >
+                    <Box 
+                        position='absolute'
+                        sx={{
+                            backgroundColor: "white",
+                            padding: 1,
+                            display: "flex",
+                        }}>
 
                         <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center'
-                            }}
+                            onMouseEnter={() => setIsMouseOverNode(true)}
+                            onMouseLeave={() => setIsMouseOverNode(false)}
                         >
-                            {props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue
-                                ? <Box
-                                    width='90%'
-                                    display='flex'
-                                    justifyContent='center'
-                                    boxShadow='none'
-                                >
-                                    <Avatar src={nodeAvatar(props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)} sx={{ mt: 1 }} />
-                                </Box>
-                                : null
-                            }
-                        </Box>
+                            <Box
+                                sx={{
+                                    mt: 1,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                {props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue &&
+                                    props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Answer
+                                    ? <Box
+                                        width='100%'
+                                        display='flex'
+                                        justifyContent='center'
+                                        boxShadow='none'
+                                    >
+                                        <Avatar src={nodeAvatar(props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)} sx={{ mt: 1 }} />
+                                    </Box>
+                                    : null
+                                }
+                            </Box>
 
-                        <Box>
-                            <h3 style={{ textAlign: "center" }}>{
-                                dialogueItemLabel(props.customNodeElementProps.nodeDatum.name)}
-                            </h3>
+                            <Box>
+                                <Typography sx={{ p: 1 }} variant="h6" align="center">{
+                                    dialogueItemLabel(props.customNodeElementProps.nodeDatum.name)}
+                                </Typography>
+                            </Box>
                         </Box>
                     </Box>
+
+                    {/* <Box display='flex' justifyContent="center">
+                        {isLoading
+                            ? <CircularProgress size={30} />
+                            : (selectDialogueLine.line.id == props.customNodeElementProps.nodeDatum.attributes?.id ||
+                                selectDialogueLine.dialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id ||
+                                selectDialogueLine.nextDialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id) &&
+                                props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue
+                                ? <Button>
+                                    <IoMdAddCircle style={{ position: 'fixed', marginTop: 25 }} size={30} onClick={() =>
+                                        onCreateNewNode(props.customNodeElementProps.nodeDatum.attributes?.id as string,
+                                            props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)}
+                                    />
+                                </Button>
+                                : null
+                        }
+                    </Box> */}
+
+                    <Box
+                        component='image'
+                        sx={{
+                            ml: 2,
+                            width: "30%",
+                            content: {
+                                xs: `url(${getMark(props.customNodeElementProps.nodeDatum.attributes?.id as string)})`, //img src from xs up to md
+                                md: `url(${getMark(props.customNodeElementProps.nodeDatum.attributes?.id as string)})`,  //img src from md and up
+                            },
+                            backgroundRepeat: "no-repeat",
+                            position: 'absolute',
+                        }}
+
+                    />
+                      <Box
+                        component='image'
+                        sx={{
+                            width: "100%",
+                            content: {
+                                xs: `url(${Stratch})`, //img src from xs up to md
+                                md: `url(${Stratch})`,  //img src from md and up
+                            },
+                            backgroundRepeat: "no-repeat",
+                            position: 'absolute',
+                        }}
+
+                    />
                 </Box>
 
-                <Box display='flex' justifyContent="center">
-                    {isLoading
-                        ? <CircularProgress size={30} />
-                        : (selectDialogueLine.line.id == props.customNodeElementProps.nodeDatum.attributes?.id ||
-                            selectDialogueLine.dialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id ||
-                            selectDialogueLine.nextDialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id) &&
-                            props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue
-                            ? <Button>
-                                <IoMdAddCircle style={{ position: 'fixed', marginTop: 25 }} size={30} onClick={() =>
-                                    onCreateNewNode(props.customNodeElementProps.nodeDatum.attributes?.id as string,
-                                        props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)}
-                                />
-                            </Button>
-                            : null
-                    }
-                </Box>
             </foreignObject>
         </g>
     );
-
-
-
 }
 

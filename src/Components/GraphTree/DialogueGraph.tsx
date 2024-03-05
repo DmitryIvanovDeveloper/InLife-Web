@@ -5,11 +5,15 @@ import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemNode } from "./DialogueItemNode";
 import { DialogueItemType } from "./DialogueitemType";
-import { Resizable } from 're-resizable';
 import { IDialogueItemColorsMap, useDialogueItemColorsMap } from "../../Data/useDialogueItemColors";
-import Draggable from 'react-draggable';
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
-import { Box, Button } from "@mui/material";
+import MarkPurple from '../../Images/Marks/Mark Purple.png';
+import MarkRed from '../../Images/Marks/Mark Red.png';
+import MarkSkyBlue from '../../Images/Marks/Mark SkyBlue.png';
+import Green from '../../Images/Marks/Mark Green.png';
+import Yellow from '../../Images/Marks/Mark Yellow.png';
+import Blue from '../../Images/Marks/Mark Blue.png';
+import Orange from '../../Images/Marks/Mark Orange.png';
 import useConstructorActions from "../../Data/ConstructorActions";
 
 export interface IDialoguesGraphProps {
@@ -24,31 +28,35 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     const nodeSize = { x: 200, y: 220 };
     const [_, setDualogueItemsColorMap] = useDialogueItemColorsMap();
 
+    var usedMarks: string[] = [];
 
-    var selectedColors: string[] = [];
-    var colors = [
-        "#f44336",
-        "#e91e63",
-        "#9c27b0",
-        "#3f51b5",
-        "#2196f3",
-        "#009688",
-        "#4caf50",
-        "#ff9800",
-        "#e64a19",
-        "#5d4037",
-        "#757575",
+    var marks: string[] = [
+        MarkPurple,
+        MarkRed,
+        MarkSkyBlue,
+        Green,
+        Yellow,
+        Blue,
+        Orange,
     ]
-    function randomColor() {
-        let hex = Math.floor(Math.random() * 0xFFFFFF);
-        let color = "#" + hex.toString(16);
 
-        return color;
+    function getRandomMark(): string {
+        var num = Math.floor(Math.random() * marks.length);
+        var randomMark = marks[num];
+
+        if (marks.length == usedMarks.length) {
+            usedMarks = [];
+        }
+        
+        if (usedMarks.includes(randomMark)) {
+
+            return getRandomMark();
+        }
+
+        usedMarks.push(randomMark);
+        return marks[num];
     }
-    const generateColor = () => {
-        return randomColor();
-    };
-
+  
     useEffect(() => {
         if (!data || !diaologueRecoil) {
             return;
@@ -58,7 +66,6 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
 
 
     function transformPhrase(phrase: IPhraseModel): RawNodeDatum {
-
         var node: RawNodeDatum = {
             name: phrase?.text,
             children: phrase?.answers.map(answer => transformAnswer(answer)),
@@ -77,7 +84,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
 
         const itemColor: IDialogueItemColorsMap = {
             id: answer?.id,
-            color: generateColor()
+            color: getRandomMark()
         }
 
         setDualogueItemsColorMap(prev => [...prev, itemColor]);
@@ -105,6 +112,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 nodeType: DialogueItemType.Dialogue,
                 parentId: "",
                 dialogueId: diaologueRecoil?.id,
+                name: diaologueRecoil.name,
             }
         }
 
