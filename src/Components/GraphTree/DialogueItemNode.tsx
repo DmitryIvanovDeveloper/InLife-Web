@@ -1,21 +1,25 @@
-import { Avatar, Box, Button, CircularProgress, Typography } from "@mui/material";
-import { useState } from "react";
+import { Avatar, Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
+import { ReactElement, useState } from "react";
 import { CustomNodeElementProps } from "react-d3-tree";
-import { useDialogueItemConstructor } from "../../Data/useDialogues";
 import { useSelectDialogueLine as useSelectDialogueLine } from "../../Data/useDialogueItemSelection";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
-import { IoMdAddCircle } from "react-icons/io";
 import { DialogueItemType } from "./DialogueitemType";
 import ISelectDialogueLine from "../../Constructors/models/ISelectDialogueLine";
-import { useDialogueItemState } from "../../Data/useDialogueitemState";
 import { useNpcSelection } from "../../Data/useSelectedNpc";
 import useConstructorActions from "../../Data/ConstructorActions";
 import { useDialogueItemColorsMap } from "../../Data/useDialogueItemColors";
 import Stratch from '../../Images/Stratch.png';
-import MarkPurple from '../../Images/Marks/Mark Purple.png';
+import Star from '../../Images/Marks/klipartz.com.png';
+import Select from '../../Images/Marks/pngwing.com.png';
+import Pencil from '../../Images/Pencil.png';
+import PencilUnselected from '../../Images/PencilUnselected.png';
+import Sharpener from '../../Images/Sharpener.png';
+import SharpenerUnselect from '../../Images/SharpenerUselect.png';
+import { useSelectedNodeToEditState } from "../../Data/useSelectedNodeToEdit";
+import ModalConstructor from "../../Constructors/ModalContructor";
 
-const nodeSize = { x: 200, y: 500 };
+const nodeSize = { x: 200, y: 200 };
 const foreignObjectProps = {
     width: nodeSize.x,
     height: nodeSize.y,
@@ -30,19 +34,21 @@ export interface IRenderForeignDialogueItemNodeProps {
 }
 
 export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
-
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
-    const [dialogueItemState] = useDialogueItemState();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [selectDialogueLine, setSelectDialogueItem] = useSelectDialogueLine();
     const phraseQueriesApi = usePhraseQueriesApi();
     const answerQueriesApi = useAnswerQueriesApi();
     const [npc] = useNpcSelection();
-    const [isMouseOverNode, setIsMouseOverNode] = useState<boolean>(false);
+    const [isMouseOverCreateNode, setIsMouseOverCreateNode] = useState<boolean>(false);
     const constructorActions = useConstructorActions();
-    const [dialogueItemColorsMap, setDualogueItemsColorMap] = useDialogueItemColorsMap();
+    const [dialogueItemColorsMap] = useDialogueItemColorsMap();
+    const [selectItemIdToEdit, setSelectItenToEdit] = useSelectedNodeToEditState();
+    const [isMouseOverDeleteButton, setIsMouseOverDeleteButton] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const onClick = (id: string, parentId: string, nodeType: DialogueItemType) => {
+        setSelectItenToEdit(id);
+
         if (nodeType == DialogueItemType.Phrase) {
             const updatedSelectDialogueLine: ISelectDialogueLine = {
                 dialogueItemId: id,
@@ -72,36 +78,37 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         }
     }
 
-    const onCreateNewNode = async (id: string, nodeType: DialogueItemType) => {
-        if (!id) {
-            return;
-        }
-
+    const onCreateNewNode = async () => {
         setIsLoading(true);
-        if (nodeType == DialogueItemType.Phrase) {
-            await answerQueriesApi.create(id);
+        if (props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType == DialogueItemType.Phrase) {
+            await answerQueriesApi.create(props.customNodeElementProps.nodeDatum.attributes?.id as string);
         }
 
-        if (nodeType == DialogueItemType.Answer) {
-            await phraseQueriesApi.create(id);
+        if (props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType == DialogueItemType.Answer) {
+            await phraseQueriesApi.create(props.customNodeElementProps.nodeDatum.attributes?.id as string);
         }
         setIsLoading(false);
     }
 
-    const getNodeColor = (nodeId?: string): string => {
-        if (nodeId == selectDialogueLine.dialogueItemId) {
-            return "black";
-        }
-
-        if (nodeId == selectDialogueLine.nextDialogueItemId) {
-            return "#4caf50";
-        }
-
-        return "white";
+    const removeConfirm = () => {
+        
     }
 
-    const nodeAvatar = (nodeType: DialogueItemType): string | undefined => {
-        if (nodeType == DialogueItemType.Phrase) {
+    const onRemoveNode = async () => {
+        setIsOpen(false);
+        setIsLoading(true);
+        if (props.customNodeElementProps.nodeDatum.attributes?.nodeType == DialogueItemType.Phrase) {
+            await phraseQueriesApi.delete(props.customNodeElementProps.nodeDatum.attributes?.id as string);
+        }
+
+        if (props.customNodeElementProps.nodeDatum.attributes?.nodeType == DialogueItemType.Answer) {
+            await answerQueriesApi.delete(props.customNodeElementProps.nodeDatum.attributes?.id as string);
+        }
+        setIsLoading(false);
+    }
+
+    const nodeAvatar = (): string | undefined => {
+        if (props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType == DialogueItemType.Phrase) {
             return npc?.avatar
         }
 
@@ -112,10 +119,76 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         return !name ? name : `${name.substring(0, 35)}...`
     }
 
-    const getMark = (id: string): string => {
-        var item = dialogueItemColorsMap.find(item => item.id == id);
-        
+    const getMark = (): string => {
+        var item = dialogueItemColorsMap.find(item => item.id == props.customNodeElementProps.nodeDatum.attributes?.id);
+
         return item?.color ?? ""
+    }
+    const isEdit = (): boolean => {
+        return selectItemIdToEdit == props.customNodeElementProps.nodeDatum.attributes?.id as string;
+    }
+
+    function PencilButton(): ReactElement {
+        return (
+            <Box
+                onMouseEnter={() => setIsMouseOverCreateNode(true)}
+                onMouseLeave={() => setIsMouseOverCreateNode(false)}
+                component='button'
+                onClick={() => onCreateNewNode()
+                 }
+            >
+                <Tooltip title="Create">
+                    <Box
+                        component='image'
+                        sx={{
+                            width: "30%",
+                            content: {
+                                xs: `url(${isMouseOverCreateNode ? Pencil : PencilUnselected})`, //img src from xs up to md
+                                md: `url(${isMouseOverCreateNode ? Pencil : PencilUnselected})`,  //img src from md and up
+                            },
+                            backgroundRepeat: "no-repeat",
+                            position: 'absolute',
+                            bottom: -20,
+                        }}
+                    >
+                    </Box>
+                </Tooltip>
+            </Box >
+        )
+    }
+
+    function SharpenerButton(): ReactElement {
+        return (
+            <Tooltip title="Delete">
+                <Box
+                    onMouseEnter={() => setIsMouseOverDeleteButton(true)}
+                    onMouseLeave={() => setIsMouseOverDeleteButton(false)}
+                    component='button'
+                    onClick={() => setIsOpen(true)}
+                >
+                    <Box
+                        component='image'
+                        sx={{
+                            width: "30%",
+                            content: {
+                                xs: `url(${isMouseOverDeleteButton ? Sharpener: SharpenerUnselect})`, //img src from xs up to md
+                                md: `url(${isMouseOverDeleteButton ? Sharpener: SharpenerUnselect})`,  //img src from md and up
+                            },
+                            backgroundRepeat: "no-repeat",
+                            position: 'absolute',
+                            top: -30
+                        }}
+                    >
+                    </Box>
+                </Box>
+            </Tooltip>
+        )
+    }
+
+    const getOnDeleteLabel = () => {
+        return  props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType == DialogueItemType.Phrase 
+            ?  "It looks like the phrase with 'Storylines' you don't need any more! Need i to forget it?"
+            : "It looks like the phrase with the 'Storyline' you don't need any more! Need i to forget it?"
     }
 
     //TODO: Refactor
@@ -131,8 +204,21 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                 {...foreignObjectProps}
                 style={{ overflow: "visible", }}
             >
-                <Box >
-                    <Box 
+                 <ModalConstructor element={
+                <Button
+                    onClick={() => onRemoveNode()}
+                    fullWidth>Forget
+                </Button>
+            }
+                isOpen={isOpen}
+                editDialogueItemType={undefined}
+                onClose={() => setIsOpen(false)}
+                description={getOnDeleteLabel()}
+                specificButtonName="Close"
+            />
+                <Box
+                >
+                    <Box
                         position='absolute'
                         sx={{
                             backgroundColor: "white",
@@ -141,8 +227,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                         }}>
 
                         <Box
-                            onMouseEnter={() => setIsMouseOverNode(true)}
-                            onMouseLeave={() => setIsMouseOverNode(false)}
+
                         >
                             <Box
                                 sx={{
@@ -160,7 +245,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                                         justifyContent='center'
                                         boxShadow='none'
                                     >
-                                        <Avatar src={nodeAvatar(props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)} sx={{ mt: 1 }} />
+                                        <Avatar src={nodeAvatar()} sx={{ mt: 1 }} />
                                     </Box>
                                     : null
                                 }
@@ -174,38 +259,54 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                         </Box>
                     </Box>
 
-                    {/* <Box display='flex' justifyContent="center">
-                        {isLoading
-                            ? <CircularProgress size={30} />
-                            : (selectDialogueLine.line.id == props.customNodeElementProps.nodeDatum.attributes?.id ||
-                                selectDialogueLine.dialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id ||
-                                selectDialogueLine.nextDialogueItemId == props.customNodeElementProps.nodeDatum.attributes?.id) &&
-                                props.customNodeElementProps.nodeDatum.attributes?.nodeType != DialogueItemType.Dialogue
-                                ? <Button>
-                                    <IoMdAddCircle style={{ position: 'fixed', marginTop: 25 }} size={30} onClick={() =>
-                                        onCreateNewNode(props.customNodeElementProps.nodeDatum.attributes?.id as string,
-                                            props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType)}
-                                    />
-                                </Button>
-                                : null
-                        }
-                    </Box> */}
 
+                    <Box
+                        component='image'
+                        sx={{
+                            ml: 2,
+                            width: "100%",
+                            content: {
+                                xs: `url(${props.customNodeElementProps.nodeDatum.attributes?.id == selectDialogueLine.line.id ? Select : ""})`, //img src from xs up to md
+                                md: `url(${props.customNodeElementProps.nodeDatum.attributes?.id == selectDialogueLine.line.id ? Select : ""})`,  //img src from md and up
+                            },
+                            backgroundRepeat: "no-repeat",
+                            position: 'absolute',
+                            right: 0,
+                            top: 0
+                        }}
+
+                    />
                     <Box
                         component='image'
                         sx={{
                             ml: 2,
                             width: "30%",
                             content: {
-                                xs: `url(${getMark(props.customNodeElementProps.nodeDatum.attributes?.id as string)})`, //img src from xs up to md
-                                md: `url(${getMark(props.customNodeElementProps.nodeDatum.attributes?.id as string)})`,  //img src from md and up
+                                xs: `url(${props.customNodeElementProps.nodeDatum.attributes?.id == selectDialogueLine.dialogueItemId ? Star : ""})`, //img src from xs up to md
+                                md: `url(${props.customNodeElementProps.nodeDatum.attributes?.id == selectDialogueLine.dialogueItemId ? Star : ""})`,  //img src from md and up
+                            },
+                            backgroundRepeat: "no-repeat",
+                            position: 'absolute',
+                            right: 0,
+                            top: 0
+                        }}
+
+                    />
+                    <Box
+                        component='image'
+                        sx={{
+                            ml: 2,
+                            width: "30%",
+                            content: {
+                                xs: `url(${getMark()})`, //img src from xs up to md
+                                md: `url(${getMark()})`,  //img src from md and up
                             },
                             backgroundRepeat: "no-repeat",
                             position: 'absolute',
                         }}
 
                     />
-                      <Box
+                    <Box
                         component='image'
                         sx={{
                             width: "100%",
@@ -220,8 +321,18 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                     />
                 </Box>
 
+                <Box display='flex' justifyContent="center">
+                    {isLoading
+                        ? <CircularProgress size={30} />
+                        : isEdit()
+                            ? <Box>
+                                <SharpenerButton />
+                                <PencilButton />
+                            </Box>
+                            : null
+                    }
+                </Box>
             </foreignObject>
-        </g>
+        </g >
     );
 }
-

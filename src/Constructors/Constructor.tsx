@@ -26,7 +26,6 @@ import { useDialogueItemColorsMap } from '../Data/useDialogueItemColors';
 import { useConstructorActionsState } from '../Data/useConstructorActionsState';
 import Hint from '../Components/Hints/Hint';
 import Notebook from '../Images/Notebook.png';
-import DevidedLabel from '../Components/Headers/DevidedLabel';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -48,9 +47,10 @@ const blink = keyframes`
 
 export default function Constructor(props: IPhraseConstructor): JSX.Element | null {
     const [actionState] = useConstructorActionsState();
+    const [selectedDialogueLine] = useSelectDialogueLine();
 
     const dialogueRecoil = useDialogue(actionState.selectedNpc.scenarioId);
-    const phraseRecoil = usePhrase(actionState.selectedNpc.scenarioId, actionState.selectedNpc.specificPhraseId);
+    const phraseRecoil = usePhrase(actionState.selectedNpc.scenarioId, selectedDialogueLine.dialogueItemId);
     const constructorActions = useConstructorActions();
     const [status, setStatus] = useState<Status>(Status.OK);
     const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>(undefined);
@@ -168,14 +168,15 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                     id: phraseRecoil.answers[0].id
                 }
             }));
+            setCurrentDialogueLineData(phraseRecoil?.answers[0].texts);
 
             return;
         }
 
         setCurrentDialogueLineData(answer.texts);
 
-    }, [selectDialogueLine.line.id]);
-
+    }, [selectDialogueLine]);
+    
     useEffect(() => {
         if (!actionState.selectedNpc.scenarioId || !!actionState.selectedNpc.specificPhraseId) {
             return;
@@ -258,7 +259,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
 
     return (
-        // <AspectRatio ratio='3/4'>
         <Box
             sx={{
                 position: 'absolute',
@@ -385,25 +385,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                     setStatus={setStatus}
                     currentPhraseText={phraseRecoil?.text}
                 />
-
-                {/* {!isEdited || status != Status.OK
-                ? <Box>
-                    <Alert severity="warning">The constructor has unsaved changes</Alert>
-                    <Button onClick={onReset}>reset all changes</Button>
-                </Box>
-                : <Alert severity="success">The constructor is saved!</Alert>
-            } */}
-
-                {status != Status.OK
-                    ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
-                    : null
-                }
-                {!phraseRecoil?.audioSettings?.audioData && !!phraseRecoil?.text
-                    ? <Alert severity="error">The phrase is not generated to audio!</Alert>
-                    : null
-                }
             </Box>
         </Box >
-        // </AspectRatio>
     )
 }

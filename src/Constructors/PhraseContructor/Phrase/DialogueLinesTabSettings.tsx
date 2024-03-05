@@ -91,7 +91,8 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
                     [`& .${tabsClasses.scrollButtons}`]: {
                         '&.Mui-disabled': { opacity: 0.3 },
                     },
-                    width: '580px'
+                    width: '580px',
+                    ml: 10
                 }}
             >
                 {props.answers.map((answer, index) => (

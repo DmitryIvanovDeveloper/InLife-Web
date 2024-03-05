@@ -14,6 +14,8 @@ import Green from '../../Images/Marks/Mark Green.png';
 import Yellow from '../../Images/Marks/Mark Yellow.png';
 import Blue from '../../Images/Marks/Mark Blue.png';
 import Orange from '../../Images/Marks/Mark Orange.png';
+import Salat from '../../Images/Marks/Mar Salat.png';
+import Brawn from '../../Images/Marks/Mark Brown.png';
 import useConstructorActions from "../../Data/ConstructorActions";
 
 export interface IDialoguesGraphProps {
@@ -25,7 +27,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     const diaologueRecoil = useDialogue(actionState.selectedNpc.scenarioId);
 
     const [data, setData] = useState<RawNodeDatum>();
-    const nodeSize = { x: 200, y: 220 };
+    const nodeSize = { x: 220, y: 250 };
     const [_, setDualogueItemsColorMap] = useDialogueItemColorsMap();
 
     var usedMarks: string[] = [];
@@ -38,6 +40,8 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
         Yellow,
         Blue,
         Orange,
+        Salat,
+        Brawn
     ]
 
     function getRandomMark(): string {
