@@ -1,5 +1,5 @@
 import TabContext from '@mui/lab/TabContext';
-import { Alert, Box, Button, CircularProgress, Divider, IconButton, Paper } from "@mui/material";
+import { Alert, Box, Button, CircularProgress, Divider, IconButton, Paper, Typography } from "@mui/material";
 import { ReactElement, useEffect, useState } from "react";
 import { useDialogue, usePhrase } from "../Data/useDialogues";
 import { useSelectDialogueLine } from "../Data/useDialogueItemSelection";
@@ -24,8 +24,8 @@ import usePhraseQueriesApi from '../ThereGame.Api/Queries/PhraseQueriesApi';
 import { keyframes } from '@mui/system';
 import { useDialogueItemColorsMap } from '../Data/useDialogueItemColors';
 import { useConstructorActionsState } from '../Data/useConstructorActionsState';
-import ModalConstructor from './ModalContructor';
 import Hint from '../Components/Hints/Hint';
+import Notebook from '../Images/Notebook.png';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -141,32 +141,18 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
             return null;
         }
         return (
-            <IconButton onClick={onCreatePhrase}>
+            <IconButton sx={{ ml: 1 }} onClick={onCreatePhrase}>
                 <MapsUgcIcon />
             </IconButton>
         )
     }
-    
 
-    const hasStoryLineInstructions = ():boolean => {
+
+    const hasStoryLineInstructions = (): boolean => {
         return dialogueRecoil?.phrase?.id == phraseRecoil?.id && !!dialogueRecoil.phrase.text && phraseRecoil?.answers.length == 0
     }
     // UseEffects
 
-    useEffect(() => {
-        if (!phraseRecoil) {
-            return;
-        }
-        if (phraseRecoil.answers.length == 1 && !phraseRecoil.answers[0].texts.length) {
-            setSelectDialogueLine(prev => ({
-                ...prev,
-                line: {
-                    name: "",
-                    id: phraseRecoil.answers[0].id 
-                }
-            }));
-        }
-    }, [phraseRecoil]);
     useEffect(() => {
         if (!phraseRecoil?.answers?.length) {
             setCurrentDialogueLineData([]);
@@ -175,13 +161,21 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
         var answer = phraseRecoil?.answers.find(answer => answer?.id == selectDialogueLine.line.id);
         if (!answer) {
+            setSelectDialogueLine(prev => ({
+                ...prev,
+                line: {
+                    name: "",
+                    id: phraseRecoil.answers[0].id
+                }
+            }));
+
             return;
         }
 
         setCurrentDialogueLineData(answer.texts);
 
     }, [selectDialogueLine.line.id]);
-    
+
     useEffect(() => {
         if (!actionState.selectedNpc.scenarioId || !!actionState.selectedNpc.specificPhraseId) {
             return;
@@ -261,32 +255,56 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     if (!dialogueRecoil?.name || !dialogueRecoil?.voiceSettings) {
         return null;
     }
-    
-   
+
+
     return (
+        // <AspectRatio ratio='3/4'>
         <Box
             sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: '40%',
-                borderRadius: 10
-            }}
-        >
-            {hint}
-            <Instruction
-                editDialogueItemType={editDialogueItemType}
-                onClose={() => setIsOpen(false)}
-                isOpen={isOpen}
+                position: 'absolute',
+                right: 0,
+                top: 60,
+                p: 0,
+                m: 0,
+                display: 'flex',
+                width: '650px'
+            }}>
+
+
+            <Box
+                component='image'
+                sx={{
+                    width: '100%',
+                    maxWidth: '950px',
+                    maxHeight: '100vh',
+                    content: {
+                        xs: `url(${Notebook})`, //img src from xs up to md
+                        md: `url(${Notebook})`,  //img src from md and up
+                    },
+                }}
             />
 
-            <Paper elevation={0}
+            <Box
                 sx={{
-                    backgroundColor: "#e0f2f1",
-                    borderRadius: 3,
-                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 10px 15px",
-
+                    position: "absolute",
+                    top: 100,
+                    right: 20,
+                    width: '90%',
+                    display: "flex",
+                    justifyContent: 'center',
+                    flexDirection: "column",
+                    alignItems: 'stretch',
+                    maxHeight: '90vh',
+                    pr: 2
                 }}
             >
+                {/* {hint} */}
+                <Instruction
+                    editDialogueItemType={editDialogueItemType}
+                    onClose={() => setIsOpen(false)}
+                    isOpen={isOpen}
+                />
+
                 {dialogueItemState == DialogueItemStateType.UnsavedChanges
                     ? <Box display='flex' justifyContent='flex-end' flexDirection="row">
                         <Button onClick={() => constructorActions.setIsReset(true)}>Reset unsaved changes</Button>
@@ -294,73 +312,80 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                     : null
                 }
 
-                <TabContext value={selectDialogueLine.line.id}>
-
-                    <DeleteDialogueItemButton />
-
-                    <Box display='flex' flexDirection="row" justifyContent='space-between'>
-                        <PhraseSettings
-                            onEditDialogueItemType={onEditDialogueItemType}
-                            editDialogueItemType={editDialogueItemType}
-                            dialogueItemEditState={dialogueItemEditState}
-                            phraseCaption={phraseRecoil?.text}
-                            phraseAudio={phraseRecoil?.audioSettings.audioData ?? ""}
-                            name={Locations.find(location => location.id == dialogueRecoil?.levelId)?.name ?? ""}
-                        />
+                <Box display="flex" justifyContent='center'>
+                    <Typography sx={{ mt: 1, color: " rgb(83 83 83);" }} align='center' variant='h5'>Notebook</Typography>
+                    <Box display="flex" justifyContent='end'>
+                        <DeleteDialogueItemButton />
                     </Box>
+                </Box>
 
-                    <Box display='flex' justifyContent='end'>
-                        <DialogueLinesTabSettings
-                            answers={phraseRecoil?.answers ?? []}
-                            setEditDialogueItemType={() => setEditDialogueItemType(undefined)}
-                            hasInstruction={hasStoryLineInstructions()}
-                        />
+                <TabContext value={selectDialogueLine.line.id} >
+                    <Box sx={{ alignItems: 'center' }}>
+                        <Box sx={{ ml: 1 }}>
+                            <Box display='flex' flexDirection="row" justifyContent='space-between'>
+                                <PhraseSettings
+                                    onEditDialogueItemType={onEditDialogueItemType}
+                                    editDialogueItemType={editDialogueItemType}
+                                    dialogueItemEditState={dialogueItemEditState}
+                                    phraseCaption={phraseRecoil?.text}
+                                    phraseAudio={phraseRecoil?.audioSettings.audioData ?? ""}
+                                    name={Locations.find(location => location.id == dialogueRecoil?.levelId)?.name ?? ""}
+                                />
+                            </Box>
+                        </Box>
+                        <Box sx={{ mr: 1 }}>
+
+                            <Box display='flex' justifyContent='end'>
+                                <DialogueLinesTabSettings
+                                    answers={phraseRecoil?.answers ?? []}
+                                    setEditDialogueItemType={() => setEditDialogueItemType(undefined)}
+                                    hasInstruction={hasStoryLineInstructions()}
+                                />
+                            </Box>
+
+                            <DialogueLineSettings
+                                onEditDialogueItemType={onEditDialogueItemType}
+                                editDialogueItemType={editDialogueItemType}
+                                dialogueItemEditState={dialogueItemEditState}
+                                currentDialogueLineData={currentDialogueLineData}
+                                color={dialogueItemColorsMap.find(item => item.id == selectDialogueLine.line.id)?.color ?? ""}
+                            />
+
+                            {!!phraseRecoil?.answers?.length
+                                ? <Message
+                                    title={Locations.find(location => location.id == dialogueRecoil?.levelId)?.name ?? ""}
+                                    position={"left"}
+                                    type={"text"}
+                                    text={nextPhraseCaption}
+                                />
+                                : null
+                            }
+                            {CreateNextPhraseComponent()}
+                        </Box>
                     </Box>
-
-                    <DialogueLineSettings
-                        onEditDialogueItemType={onEditDialogueItemType}
-                        editDialogueItemType={editDialogueItemType}
-                        dialogueItemEditState={dialogueItemEditState}
-                        currentDialogueLineData={currentDialogueLineData}
-                        color={dialogueItemColorsMap.find(item => item.id == selectDialogueLine.line.id)?.color ?? ""}
-                    />
-
-                    {!!phraseRecoil?.answers?.length
-                        ? <Message
-                            title={Locations.find(location => location.id == dialogueRecoil?.levelId)?.name ?? ""}
-                            position={"left"}
-                            type={"text"}
-                            text={nextPhraseCaption}
-                        />
-                        : null
-                    }
-                    {CreateNextPhraseComponent()}
-
                 </TabContext>
-            </Paper >
 
-            <PhraseConstructor
-                onEditDialogueItemType={onEditDialogueItemType}
-                dialogueId={actionState.selectedNpc.scenarioId}
-                id={phraseRecoil?.id}
-                parentId={phraseRecoil?.parentId}
-                editDialogueItemType={editDialogueItemType}
-                onEditedDialogueItemType={onEditedDialogueItemType}
-                setStatus={setStatus}
-            />
-            <DialogueLineContructor
-                onEditDialogueItemType={onEditDialogueItemType}
-                dialogueId={actionState.selectedNpc.scenarioId}
-                id={selectDialogueLine.line.id}
-                parentId={phraseRecoil?.id}
-                editDialogueItemType={editDialogueItemType}
-                onEditedDialogueItemType={onEditedDialogueItemType}
-                setStatus={setStatus} 
-                currentPhraseText={phraseRecoil?.text}
-            />
+                <PhraseConstructor
+                    onEditDialogueItemType={onEditDialogueItemType}
+                    dialogueId={actionState.selectedNpc.scenarioId}
+                    id={phraseRecoil?.id}
+                    parentId={phraseRecoil?.parentId}
+                    editDialogueItemType={editDialogueItemType}
+                    onEditedDialogueItemType={onEditedDialogueItemType}
+                    setStatus={setStatus}
+                />
+                <DialogueLineContructor
+                    onEditDialogueItemType={onEditDialogueItemType}
+                    dialogueId={actionState.selectedNpc.scenarioId}
+                    id={selectDialogueLine.line.id}
+                    parentId={phraseRecoil?.id}
+                    editDialogueItemType={editDialogueItemType}
+                    onEditedDialogueItemType={onEditedDialogueItemType}
+                    setStatus={setStatus}
+                    currentPhraseText={phraseRecoil?.text}
+                />
 
-
-            {/* {!isEdited || status != Status.OK
+                {/* {!isEdited || status != Status.OK
                 ? <Box>
                     <Alert severity="warning">The constructor has unsaved changes</Alert>
                     <Button onClick={onReset}>reset all changes</Button>
@@ -368,14 +393,16 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 : <Alert severity="success">The constructor is saved!</Alert>
             } */}
 
-            {status != Status.OK
-                ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
-                : null
-            }
-            {!phraseRecoil?.audioSettings?.audioData && !!phraseRecoil?.text
-                ? <Alert severity="error">The phrase is not generated to audio!</Alert>
-                : null
-            }
-        </Box>
+                {status != Status.OK
+                    ? <Alert severity="error">Something went wrong! Please try leter!</Alert>
+                    : null
+                }
+                {!phraseRecoil?.audioSettings?.audioData && !!phraseRecoil?.text
+                    ? <Alert severity="error">The phrase is not generated to audio!</Alert>
+                    : null
+                }
+            </Box>
+        </Box >
+        // </AspectRatio>
     )
 }

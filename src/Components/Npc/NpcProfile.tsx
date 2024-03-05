@@ -1,6 +1,5 @@
 import { Avatar, Box, IconButton, Typography } from "@mui/material";
 import INpc from "../../Data/Locations";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import NpcScenes from "./NpcScenes";
 import DevidedLabel from "../Headers/DevidedLabel";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';

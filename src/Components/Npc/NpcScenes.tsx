@@ -17,6 +17,7 @@ import DeleteSceneButton from "../Button/DeleteSceneButton";
 import INpc from "../../Data/Locations";
 import DeskImage from "./DeskImage";
 import useConstructorActions from "../../Data/ConstructorActions";
+import SaveButton from "../Button/SaveButton";
 
 
 export interface IDialogueTabsProps {
@@ -61,6 +62,15 @@ export default function NpcScenes(props: IDialogueTabsProps) {
         
         setSelectedDialogue(clickedDialogue);
     }
+
+    useEffect(() => {
+        var newScenario = dialogues.find(dialogue => !dialogue.name && !dialogue.voiceSettings);
+        if (!newScenario) {
+            return;
+        }
+
+        onClick(newScenario);
+    }, [dialogues]);
 
     return (
         <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -114,14 +124,7 @@ export default function NpcScenes(props: IDialogueTabsProps) {
             {!!selectedDialogue
                 ? null
                 : <Box sx={{ display: "flex", flexDirection: "row", justifyContent: 'end', margin: "20px" }}>
-                    <Fab
-                        aria-label="save"
-                        color="primary"
-                        sx={buttonSx}
-                        onClick={onCreate}
-                    >
-                        {isCreating ? <CheckIcon /> : <AddIcon />}
-                    </Fab>
+                    <SaveButton onClick={onCreate} isLoading={isCreating} isDisabled={false} />
                 </Box>
             }
             {!isOpenSettings

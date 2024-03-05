@@ -16,7 +16,6 @@ import { useConstructorActionsState } from "../../../Data/useConstructorActionsS
 import useConstructorActions from "../../../Data/ConstructorActions";
 import { useDialogueItemState } from "../../../Data/useDialogueitemState";
 import ModalConstructor from "../../ModalContructor";
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
 
 export interface IPhraseConstructor {
@@ -82,7 +81,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             ...prev,
             text: phrase
         }));
-
 
         setIsEdited(false);
     }
@@ -309,12 +307,15 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.PhraseTenseses}
                 editDialogueItemType={props.editDialogueItemType}
+                description="Oh! What if a student doesn't understand the tenses I used in this phrase? Give him a hint!"
             />
             <ModalConstructor
                 element={CommentsComponent()}
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Comments}
                 editDialogueItemType={props.editDialogueItemType}
+                description=" Maybe I’m using something special in my phrase, and the student needs to pay more attention to it!
+                Write about it here."
             />
 
 

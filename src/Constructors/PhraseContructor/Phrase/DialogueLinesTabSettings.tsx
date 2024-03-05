@@ -102,7 +102,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
                 ))}
                 {isCreating
                     ? <CircularProgress color='error' size={20} />
-                    : <IconButton onClick={onCreateAnswers}>
+                    : <IconButton sx={{ p: 0, backgroundColor: 'none'}} onClick={onCreateAnswers}>
                         <IoMdAddCircle />
                     </IconButton>
                 }

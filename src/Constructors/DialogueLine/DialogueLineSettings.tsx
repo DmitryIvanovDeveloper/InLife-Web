@@ -9,8 +9,6 @@ import AvTimerIcon from '@mui/icons-material/AvTimer';
 import SaveIcon from '@mui/icons-material/Save';
 import Message from "../../Components/ChatElement/Message";
 import useConstructorActions from "../../Data/ConstructorActions";
-import { useState } from "react";
-import VirtualizedList from "../../Components/List/VirtializedList.tsx/VirtualizedList";
 
 export interface IAnswersActionsButtonsProps {
    onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType) => void;
@@ -21,10 +19,8 @@ export interface IAnswersActionsButtonsProps {
 }
 
 export default function DialogueLineSettings(props: IAnswersActionsButtonsProps) {
-
-   const [constructorActionsState, setConstructorActionsState] = useConstructorActionsState();
+   const [constructorActionsState] = useConstructorActionsState();
    const constructorActions = useConstructorActions();
-
 
    return (
       <Box display='flex' flexDirection='column' alignItems='flex-end'>
@@ -90,7 +86,7 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                </IconButton>
             </Grid>
          }
-         <List sx={{ width: '100%', height: "360px", overflowY: 'scroll' }}>
+         <List sx={{ width: '100%', height: "225px", overflowY: 'auto' }}>
             {props.currentDialogueLineData.map(answer => (
                 <Message
                 title={`student [possible answer]`}

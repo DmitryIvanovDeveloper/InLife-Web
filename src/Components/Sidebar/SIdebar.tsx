@@ -148,15 +148,15 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                 <Divider />
                 {open ? props.barElements : null}
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, filter: open ? "none" : "none" }}>
+            <Box component="main" sx={{ flexGrow: 1, filter: open ? "blur(5px)" : "none" }}>
                 {!!actionState.selectedNpc.scenarioId
                     ? <Box>
-                        {props.elements}
 
+                        {props.elements}
+                        {gameWwebGL}
                     </Box>
                     : null
                 }
-                {gameWwebGL}
             </Box>
         </Box>
     );

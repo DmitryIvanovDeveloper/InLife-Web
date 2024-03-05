@@ -11,8 +11,6 @@ import { Routes as LocalRoutes } from '../Routes';
 import DialogueGraph from "../Components/GraphTree/DialogueGraph";
 import MiniDrawer from "../Components/Sidebar/SIdebar";
 import Constructor from "../Constructors/Constructor";
-import StudentDialogueStatistics from "../Components/Statistic/StudentDialogueStatistics/StudentDialogueStatistics";
-import { useConstructorActionsState } from "../Data/useConstructorActionsState";
 import { useGameWebGL } from "../Data/useGameWebGL";
 
 export default function Main() {
