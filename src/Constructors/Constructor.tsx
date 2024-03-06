@@ -63,7 +63,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const [dialogueItemColorsMap] = useDialogueItemColorsMap();
     const [hint, setHint] = useState<ReactElement | null>(null)
     const [checked, setChecked] = React.useState(false);
-    
+
     const containerRef = React.useRef<HTMLElement>(null);
     
     //TODO: Refactor
@@ -314,10 +314,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                         }
 
                         <Box display="flex" justifyContent='center'>
-                            <Typography sx={{ mt: 1, color: " rgb(83 83 83);" }} align='center' variant='h5'>Notebook</Typography>
-                            <Box display="flex" justifyContent='end'>
-                                <DeleteDialogueItemButton />
-                            </Box>
+                            <Typography sx={{ mt: 1, color: " rgb(83 83 83);" }} align='center' variant='h5' fontFamily='cursive'>Notebook</Typography>
                         </Box>
 
                         <TabContext value={selectDialogueLine.line.id} >

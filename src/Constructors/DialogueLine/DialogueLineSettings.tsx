@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Grid, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import { Box, Button, CircularProgress, Grid, IconButton, List, ListItem, ListItemText, Typography } from "@mui/material";
 import { EditDialogueItemType } from "../models/EditType";
 import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
 import { IDialogueItemEditState } from "../models/IPhraseSettingsState";
@@ -86,14 +86,13 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                </IconButton>
             </Grid>
          }
-         <List sx={{ width: '100%', height: "225px", overflowY: 'auto' }}>
+         <List sx={{ width: '100%', height: "320px", overflowY: 'auto', mr: 1 }}>
+            <style>
+               @import url('https://fonts.cdnfonts.com/css/pencil-2');
+            </style>
             {props.currentDialogueLineData.map(answer => (
-                <Message
-                title={`student [possible answer]`}
-                position={"right"}
-                type={"text"}
-                text={answer}
-             />
+
+               <Typography fontSize='25px' align='right' fontFamily='Pencil'>{answer}</Typography>
             ))}
          </List>
       </Box>
