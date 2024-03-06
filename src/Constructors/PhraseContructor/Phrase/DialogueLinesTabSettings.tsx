@@ -113,7 +113,7 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
                 isOpen={isDialogueLineInstructionOpen}
                 editDialogueItemType={undefined}
                 onClose={() => setIsDialogueLineInstructionOpen(false)}
-                description={`Fine! If you need a student to answer me, then let's think about "Storyline"! Depending on this, I can say different phrases. if you need it, create a new one or you can do it later in my notebook or on my diagram`}
+                description={`Fine! If you need a student to answer me, then let's think about "storyline"! Depending on it, I can say different phrases. Create new one! Just select a node on my drawn diagram and tap on pencil. `}
             />
         )
     }

@@ -193,8 +193,8 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
 
     const getOnDeleteLabel = () => {
         return  props.customNodeElementProps.nodeDatum.attributes?.nodeType as DialogueItemType == DialogueItemType.Phrase 
-            ?  "It looks like the phrase with 'Storylines' you don't need any more! Need i to forget it?"
-            : "It looks like the phrase with the 'Storyline' you don't need any more! Need i to forget it?"
+            ?  "It looks like the phrase with 'storylines' you don't need any more! Need i to forget it?"
+            : "It looks like the phrase with the 'storyline' you don't need any more! Need i to forget it?"
     }
 
     //TODO: Refactor

@@ -48,7 +48,7 @@ export default function PhraseInfo(props: IPhraseInfoProps) {
                 isOpen={isOpen}
                 editDialogueItemType={undefined}
                 onClose={() => setIsOpen(false)}
-                description="It looks like the phrase with 'Storylines' you don't need any more! Need i to forget it?"
+                description="It looks like the phrase with 'storylines' you don't need any more! Need i to forget it?"
                 specificButtonName="Close"
             />
         </Box>

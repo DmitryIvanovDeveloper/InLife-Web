@@ -333,7 +333,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={isDialogueLineInstructionOpen}
                 editDialogueItemType={props.editDialogueItemType}
-                description={`Alright! ${!props.currentPhraseText ? `It looks like i say nothing first` : `My pharse is <${props.currentPhraseText}>`} .What a student can to ${!props.currentPhraseText ? 'say' :  `answer`} me on the Storyline? Please add it to list`}
+                description={`Alright! ${!props.currentPhraseText ? `It looks like i say nothing first` : `My pharse is <${props.currentPhraseText}>`} .What a student can to ${!props.currentPhraseText ? 'say' :  `answer`} me on the storyline? Please add it to list`}
             />
         )
     }
@@ -365,7 +365,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Answers}
                 editDialogueItemType={props.editDialogueItemType}
-                description={`Alright! ${!props.currentPhraseText ? `So, i say nothing` : `My pharse is <${props.currentPhraseText}>`} .What a student can to ${!props.currentPhraseText ? 'say' :  `answer`} me on the Storyline? Please add it to list`}
+                description={`Alright! ${!props.currentPhraseText ? `So, i say nothing` : `My pharse is <${props.currentPhraseText}>`} .What a student can to ${!props.currentPhraseText ? 'say' :  `answer`} me on the storyline? Please add it to list`}
             />
             <ModalConstructor
                 element={TensesListComponent()}
