@@ -14,7 +14,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { ReactElement, useEffect, useState } from 'react';
 import UserMenuAppBar from '../AppBars/UserMenuAppBar';
 import { useConstructorActionsState } from '../../Data/useConstructorActionsState';
-import { useGameWebGL } from '../../Data/useGameWebGL';
 
 const drawerWidth = 500;
 
@@ -99,7 +98,6 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
     const [open, setOpen] = useState(false);
     const [currentComponent, setCurrentComponent] = useState<ReactElement | null>();
     const [actionState] = useConstructorActionsState();
-    const [gameWebGL] = useGameWebGL();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -172,7 +170,6 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                 {!!actionState.selectedNpc.scenarioId
                     ? <Box>
                         {props.elements}
-                        {gameWebGL}
                     </Box>
                     : !!actionState.selectedStudentId
                         ? currentComponent

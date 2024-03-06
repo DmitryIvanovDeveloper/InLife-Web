@@ -1,7 +1,6 @@
-import SplitPane from "react-split-pane";
 import { useDialogueItemConstructor } from "../Data/useDialogues";
 import Dialogues from "./Dialogues";
-import { AppBar, Box, Button, CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import GameWebGLEditor from "../Components/GameWebGL/GameWebGLEditor";
 import useTeacherQueriesApi from "../ThereGame.Api/Queries/TeacherQueriesApi";
 import { ReactElement, useEffect, useState } from "react";
@@ -11,7 +10,6 @@ import { Routes as LocalRoutes } from '../Routes';
 import DialogueGraph from "../Components/GraphTree/DialogueGraph";
 import MiniDrawer from "../Components/Sidebar/SIdebar";
 import Constructor from "../Constructors/Constructor";
-import { useGameWebGL } from "../Data/useGameWebGL";
 
 export default function Main() {
 
@@ -21,10 +19,8 @@ export default function Main() {
     const [itemConstructor] = useDialogueItemConstructor();
     const navigate = useNavigate();
 
-    const [_, setGameWwebGL] = useGameWebGL();
-    
     useEffect(() => {
-        setGameWwebGL(<GameWebGLEditor /> );
+        // setGameWwebGL();
 
         var role = localStorage.getItem("Role");
         if (Number(role) == RoleType.Teacher) {
@@ -44,7 +40,7 @@ export default function Main() {
                 flexDirection: 'column',
                 alignItems: "flex-end",
             }}>
-                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between' height='90dvh' sx={{overflowY: 'hidden'}} >
+                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between' height='90dvh' sx={{ overflowY: 'hidden' }} >
                     <DialogueGraph />
                     <Constructor />
                 </Grid>
@@ -65,7 +61,10 @@ export default function Main() {
         )
     }
     return (
-        <MiniDrawer barElements={<Dialogues setIsSelectedStudents={setIsSelectedStudents} />} elements={!isSelectedStudents ? <Canvas /> : itemConstructor} />
+        <Box>
+            <MiniDrawer barElements={<Dialogues setIsSelectedStudents={setIsSelectedStudents} />} elements={!isSelectedStudents ? <Canvas /> : itemConstructor} />
+            <GameWebGLEditor />
+        </Box>
     )
 }
 
