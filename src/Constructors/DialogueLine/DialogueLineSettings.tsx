@@ -86,7 +86,7 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                </IconButton>
             </Grid>
          }
-         <List sx={{ width: '100%', height: "320px", overflowY: 'auto', mr: 1 }}>
+         <List sx={{ width: '90%', height: "320px", overflowY: 'auto', p: 1 }}>
             <style>
                @import url('https://fonts.cdnfonts.com/css/pencil-2');
             </style>

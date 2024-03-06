@@ -88,7 +88,7 @@ export default function PhraseSettings(props: IPhraseTab) {
             <style>
                 @import url('https://fonts.cdnfonts.com/css/pencil-2');
             </style>
-            <Typography fontSize='30px' fontFamily='Pencil' marginLeft="5px">{props.phraseCaption}</Typography>
+            <Typography fontSize='30px' fontFamily='Pencil' paddingLeft="5px">{props.phraseCaption}</Typography>
             {/* <Message
                 title={props.name}
                 position={"left"}
