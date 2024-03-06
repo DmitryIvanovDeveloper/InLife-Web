@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import UserMenuAppBar from '../AppBars/UserMenuAppBar';
 import { useConstructorActionsState } from '../../Data/useConstructorActionsState';
 import { useGameWebGL } from '../../Data/useGameWebGL';
@@ -96,7 +96,8 @@ export interface IMiniDrawerProps {
 
 export default function MiniDrawer(props: IMiniDrawerProps) {
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [currentComponent, setCurrentComponent] = useState<ReactElement | null>();
     const [actionState] = useConstructorActionsState();
     const [gameWebGL] = useGameWebGL();
 
@@ -105,8 +106,16 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
     };
 
     const handleDrawerClose = () => {
+        if (!!actionState.selectedStudentId) {
+            return;
+        }
         setOpen(false);
     };
+
+    useEffect(() => {
+        console.log(actionState.selectedStudentId);
+        setCurrentComponent(props.elements)
+    }, [actionState.selectedStudentId]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -114,10 +123,12 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
         }, 500)
     }, []);
 
+
     return (
-        <Box>
-            <AppBar position="absolute" open={open} >
-                <Toolbar>
+        <Box sx={{ overflow: 'hidden' }}>
+
+            <AppBar sx={{ overflow: 'hidden' }} position="absolute" open={open} >
+                <Toolbar sx={{ overflow: 'hidden' }}>
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -128,9 +139,11 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                             ...(open && { display: 'none' }),
                         }}
                     >
+
                         <MenuIcon />
                     </IconButton>
-                    <Box width="100%" display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
+
+                    <Box sx={{ overflow: 'hidden' }} width="100%" display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
                         <Typography variant="h6" noWrap>
                             Scenario
                         </Typography>
@@ -139,23 +152,31 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
 
                 </Toolbar>
             </AppBar>
+
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        {!!actionState.selectedStudentId
+                            ? null
+                            : theme.direction === 'rtl'
+                                ? <ChevronRightIcon />
+                                : <ChevronLeftIcon />}
+
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
                 {open ? props.barElements : null}
             </Drawer>
-            <Box component="main" sx={{ flexGrow: 1, filter: open ? "blur(5px)" : "none" }}>
+
+            <Box component="main" sx={{ flexGrow: 1, filter: open ? "blur(0px)" : "none", overflow: 'hidden' }}>
                 {!!actionState.selectedNpc.scenarioId
                     ? <Box>
-
                         {props.elements}
                         {gameWebGL}
                     </Box>
-                    : null
+                    : !!actionState.selectedStudentId
+                        ? currentComponent
+                        : null
                 }
             </Box>
         </Box>

@@ -1,17 +1,15 @@
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import INpc from '../Data/Locations';
 import NpcList from '../Components/Npc/NpcList';
 import NpcProfile from '../Components/Npc/NpcProfile';
-import { Tab, Button } from '@mui/material';
+import { Tab } from '@mui/material';
 import Typography from '@mui/joy/Typography';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import StudentList from '../Components/StudentsList';
-import { useDialogueItemConstructor } from '../Data/useDialogues';
-import DeskImage from '../Components/Npc/DeskImage';
 import { useNpcSelection } from '../Data/useSelectedNpc';
 import useConstructorActions from '../Data/ConstructorActions';
 
@@ -21,7 +19,6 @@ export interface IDialoguesProps {
 
 //TODO Rename
 export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
-
     const theme = useTheme();
     const [npc, setNpc] = useNpcSelection();
     const [value, setValue] = useState(0);
@@ -29,17 +26,19 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
 
     const handleChange = (event: React.SyntheticEvent, value: number) => {
         setValue(value);
-       
+
+        constructorActions.setSelectedStudentId("");
         props.setIsSelectedStudents(value == 1);
     };
 
     const handleChangeIndex = (index: number) => {
         setValue(index);
     };
+
     const onSelectNpc = (npc: INpc | null) => {
-        
         if (!npc) {
             setNpc(null);
+            constructorActions.setSelectedScenario("");
             return;
         }
         setNpc(npc);

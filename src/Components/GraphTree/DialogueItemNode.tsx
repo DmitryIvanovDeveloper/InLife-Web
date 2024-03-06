@@ -125,6 +125,10 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         return item?.color ?? ""
     }
     const isEdit = (): boolean => {
+        if (props.customNodeElementProps.nodeDatum.attributes?.nodeType == DialogueItemType.Dialogue) {
+            return false;
+        }
+
         return selectItemIdToEdit == props.customNodeElementProps.nodeDatum.attributes?.id as string;
     }
 
@@ -149,6 +153,7 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                             backgroundRepeat: "no-repeat",
                             position: 'absolute',
                             bottom: -20,
+                            cursor: "pointer",
                         }}
                     >
                     </Box>
@@ -176,7 +181,8 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
                             },
                             backgroundRepeat: "no-repeat",
                             position: 'absolute',
-                            top: -30
+                            top: -30,
+                            cursor: "pointer",
                         }}
                     >
                     </Box>

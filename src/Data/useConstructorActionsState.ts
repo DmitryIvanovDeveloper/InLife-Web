@@ -18,7 +18,8 @@ const constructorActionsState: IConstructorActionsState ={
         scenarioId: "",
         specificPhraseId: ""
     },
-    isScenarioUpdated: false
+    isScenarioUpdated: false,
+    selectedStudentId: ""
 }
 const constructorActionsStateAtom = atom<IConstructorActionsState>({
     key: 'constructorActionsStateAtom',
@@ -40,4 +41,5 @@ export interface IConstructorActionsState {
         specificPhraseId: string
     },
     isScenarioUpdated: boolean,
+    selectedStudentId: string
 }

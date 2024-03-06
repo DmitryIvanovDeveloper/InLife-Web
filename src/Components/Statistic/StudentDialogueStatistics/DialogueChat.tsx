@@ -1,14 +1,15 @@
 
-import {  Box } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Box, Grid, List, Slide } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 import INpc, { Locations } from '../../../Data/Locations';
 import { useDialogue } from '../../../Data/useDialogues';
 import { useStudents } from '../../../Data/useStudents';
 import { IDialogueHistory } from '../../../ThereGame.Business/Models/IStudentDialogueStatisticModel';
 import IStudentModel from '../../../ThereGame.Business/Models/IStudentModel';
-import 'react-chat-elements/dist/main.css'
 import Message from '../../ChatElement/Message';
+import Notebook from '../../../Images/Notebook.png'
+import 'react-chat-elements/dist/main.css'
+import { v4 as uuidv4 } from 'uuid';
 
 export interface IDialogueChatProps {
     studentId?: string;
@@ -21,17 +22,9 @@ export default function DialogueChat(props: IDialogueChatProps) {
     const [students] = useStudents();
     const [student, setStudent] = useState<IStudentModel>();
     const [npc, setNpc] = useState<INpc | null>();
+    const [checked, setChecked] = useState(false);
 
-
-    useEffect(() => {
-        var npc = Locations.find(location => location.id == dialogueRecoil.levelId)
-        if (!!npc) {
-            setNpc(npc)
-        }
-        var expectedStudent = students.find(student => student.id == props.studentId)
-
-        setStudent(expectedStudent);
-    }, [props.dialogueId]);
+    const containerRef = useRef<HTMLElement>(null);
 
     const sort = (array: any[] | undefined): any[] => {
         if (!array) {
@@ -44,41 +37,101 @@ export default function DialogueChat(props: IDialogueChatProps) {
         })
     }
 
+    useEffect(() => {
+        var npc = Locations.find(location => location.id == dialogueRecoil.levelId)
+        if (!!npc) {
+            setNpc(npc)
+        }
+        var expectedStudent = students.find(student => student.id == props.studentId)
+
+        setStudent(expectedStudent);
+    }, [props.dialogueId]);
+
+    useEffect(() => {
+        setChecked(false);
+        var timeout = setTimeout(() => {
+            setChecked(true);
+            clearTimeout(timeout);
+        }, 1000);
+    }, [props.statisticHistoty]);
+    
     return (
-        <Box>
+        <Grid  height='90dvh' >
             <Box
+                ref={containerRef}
                 sx={{
                     position: 'absolute',
-                    right: 15,
-                    backgroundColor: "#e0f2f1",
-                    padding: 2,
-                    marginTop: 10,
-                    display: "flex",
-                    flexDirection: "column",
-                    width: '40%',
-                    borderRadius: 2
+                    right: 0,
+                    top: 60,
+                    p: 0,
+                    m: 0,
+                    display: 'flex',
+                    width: '650px',
                 }}
             >
-                {sort(props.statisticHistoty).map(history => (
+                <Slide
+                    direction='left'
+                    in={checked} container={containerRef.current}
+                    easing={{
+                        enter: "linear",
+                        exit: "linear"
+                    }}>
                     <Box>
-                        <Message
-                            title={npc?.name ?? ""}
-                            position={"left"}
-                            type={"text"}
-                            text={history.phrase}
+
+                        <Box
+                            component='image'
+                            sx={{
+                                width: '100%',
+                                maxWidth: '950px',
+                                content: {
+                                    xs: `url(${Notebook})`, //img src from xs up to md
+                                    md: `url(${Notebook})`,  //img src from md and up
+                                },
+                            }}
                         />
-                        {sort(history.answers).map(answer => (
-                            <Message
-                                title={`${student?.name} ${student?.lastName}`}
-                                position={"right"}
-                                type={"text"}
-                                text={answer.text}
-                            />
-                        ))}
+                        <Box
+                            sx={{
+                                position: "absolute",
+                                top: 120,
+                                right: 25,
+                                width: '88%',
+                                display: "flex",
+                                justifyContent: 'center',
+                                flexDirection: "column",
+                                alignItems: 'stretch',
+                                pr: 2,
+                                overflow: "auto"
+                            }}
+                        >
+                            <List style={{ maxHeight: '650px', overflow: 'auto' }}>
+                                {sort(props.statisticHistoty).map(history => (
+                                    <Box
+                                        key={uuidv4()}
+                                    >
+                                        <Message
+                                            title={npc?.name ?? ""}
+                                            position={"left"}
+                                            type={"text"}
+                                            text={history.phrase}
+                                        />
+                                        {sort(history.answers).map(answer => (
+                                            <Message
+                                                key={uuidv4()}
+
+                                                title={`${student?.name} ${student?.lastName}`}
+                                                position={"right"}
+                                                type={"text"}
+                                                text={answer.text}
+                                            />
+                                        ))}
+                                    </Box>
+                                ))}
+                            </List>
+                        </Box>
                     </Box>
-                ))}
+                </Slide>
             </Box>
-        </Box>
+        </Grid>
     )
 }
 

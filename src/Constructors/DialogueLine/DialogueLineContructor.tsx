@@ -5,7 +5,6 @@ import { LanguageType } from "../../Data/LanguageType";
 import { useAnswer } from "../../Data/useDialogues";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
-import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import ChatGptService from "../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";

@@ -5,12 +5,10 @@ import { useEffect, useState } from "react";
 import { useSelectDialogueLine } from "../../../Data/useDialogueItemSelection";
 import ISelectDialogueLine from "../../models/ISelectDialogueLine";
 import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
-import { IoMdAddCircle } from "react-icons/io";
 import { useDialogueItemColorsMap } from "../../../Data/useDialogueItemColors";
 import * as React from 'react';
 import { tabsClasses } from '@mui/material/Tabs';
 import ModalConstructor from "../../ModalContructor";
-import { useConstructorActionsState } from "../../../Data/useConstructorActionsState";
 import useConstructorActions from "../../../Data/ConstructorActions";
 
 export interface IDialogueLinesProps {
@@ -21,26 +19,11 @@ export interface IDialogueLinesProps {
 
 export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
     const [selectDialogueLine, setSelectDialogueLine] = useSelectDialogueLine();
-    const [isCreating, setIsCreating] = useState<boolean>(false);
     const [dialogueItemColorsMap] = useDialogueItemColorsMap();
     const answerQueriesApi = useAnswerQueriesApi();
     const [isDialogueLineInstructionOpen, setIsDialogueLineInstructionOpen] = useState<boolean>(false);
     const [isSaveInstructionOpen, setIsSaveInstructionOpen] = useState<boolean>(false);
     const actions = useConstructorActions();
-    const [actionsState] = useConstructorActionsState();
-
-    const onCreateAnswers = async () => {
-        if (!selectDialogueLine.dialogueItemId) {
-            return;
-        }
-
-        actions.setIsScenarioUpdated(true);
-        setIsDialogueLineInstructionOpen(false)
-        setIsSaveInstructionOpen(true);
-        setIsCreating(true);
-        await answerQueriesApi.create(selectDialogueLine.dialogueItemId);
-        setIsCreating(false);
-    }
 
     const onSelectTab = (id: string, index: number) => {
         if (!id) {
@@ -106,13 +89,6 @@ export default function DialogueLinesTabSettings(props: IDialogueLinesProps) {
                         }}
                     />
                 ))}
-                {isCreating
-                    ? <CircularProgress color='error' size={20} />
-                    : <IconButton sx={{ p: 0, backgroundColor: 'none' }} onClick={onCreateAnswers}>
-                        <IoMdAddCircle />
-                    </IconButton>
-                }
-
             </TabList>
         )
     }

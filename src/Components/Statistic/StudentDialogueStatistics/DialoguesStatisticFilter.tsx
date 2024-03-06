@@ -1,4 +1,4 @@
-import { Avatar, Box, CircularProgress, Tab, Tabs, Typography, withStyles } from "@mui/material";
+import { Avatar, Box, Tab, Tabs } from "@mui/material";
 import StudentCalendarActivity from "./StudentCalendarActivity/StudentCalendarActivity";
 import { useDialogueItemConstructor, useDialogues } from "../../../Data/useDialogues";
 import IStudentDialogueStatisticModel from "../../../ThereGame.Business/Models/IStudentDialogueStatisticModel";
@@ -35,13 +35,12 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
     };
 
     const onSelectTime = (event: React.SyntheticEvent, statistic: IStudentDialogueStatisticModel) => {
-        setSelectedStatistic(statistic);
-
         setDialogueItemConstructor(() => <DialogueChat
             studentId={props?.studentId}
             dialogueId={statistic.dialogueId}
             statisticHistoty={statistic.dialogueHistory}
         />)
+        setSelectedStatistic(statistic);
     };
 
     const onSelectNpc = (event: React.SyntheticEvent, npc: INpc) => {
@@ -253,42 +252,10 @@ const convertSecondsToMinutes = (seconds: number): string => {
     return minute.toString().padStart(2, '0') + ":" + rest_seconds.toString().padStart(2, '0');
 }
 
-function getUnique(array, key): IDialogueModel[] {
-    if (typeof key !== 'function') {
-        const property = key;
-        key = function (item) { return item[property]; };
-    }
-    return Array.from(array.reduce(function (map, item) {
-        const k = key(item);
-        if (!map.has(k)) map.set(k, item);
-        return map;
-    }, new Map()).values());
-}
-
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
     value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`vertical-tabpanel-${index}`}
-            aria-labelledby={`vertical-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
 }
 
 function a11yProps(index: number) {

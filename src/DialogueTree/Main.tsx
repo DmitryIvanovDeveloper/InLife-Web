@@ -44,7 +44,7 @@ export default function Main() {
                 flexDirection: 'column',
                 alignItems: "flex-end",
             }}>
-                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between' height='100vh' >
+                <Grid width='100%' display='flex' flexDirection='row' justifyContent='space-between' height='90dvh' sx={{overflowY: 'hidden'}} >
                     <DialogueGraph />
                     <Constructor />
                 </Grid>
