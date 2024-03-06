@@ -5,66 +5,90 @@ import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import IPhraseModel from "../../ThereGame.Business/Models/IPhraseModel";
 import { DialogueItemNode } from "./DialogueItemNode";
 import { DialogueItemType } from "./DialogueitemType";
-import { Resizable } from 're-resizable';
 import { IDialogueItemColorsMap, useDialogueItemColorsMap } from "../../Data/useDialogueItemColors";
+import { useConstructorActionsState } from "../../Data/useConstructorActionsState";
+import MarkPurple from '../../Images/Marks/Mark Purple.png';
+import MarkRed from '../../Images/Marks/Mark Red.png';
+import MarkSkyBlue from '../../Images/Marks/Mark SkyBlue.png';
+import Green from '../../Images/Marks/Mark Green.png';
+import Yellow from '../../Images/Marks/Mark Yellow.png';
+import Blue from '../../Images/Marks/Mark Blue.png';
+import Orange from '../../Images/Marks/Mark Orange.png';
+import Salat from '../../Images/Marks/Mar Salat.png';
+import Brawn from '../../Images/Marks/Mark Brown.png';
+import useConstructorActions from "../../Data/ConstructorActions";
 
 export interface IDialoguesGraphProps {
-    dialogueId: string;
 }
 
 export default function DialogueGraph(props: IDialoguesGraphProps) {
+    const [actionState] = useConstructorActionsState();
+    const actions = useConstructorActions();
+    const diaologueRecoil = useDialogue(actionState.selectedNpc.scenarioId);
+
     const [data, setData] = useState<RawNodeDatum>();
-    const nodeSize = { x: 200, y: 200 };
+    const nodeSize = { x: 220, y: 250 };
     const [_, setDualogueItemsColorMap] = useDialogueItemColorsMap();
-    const diaologueRecoil = useDialogue(props.dialogueId);
 
+    var usedMarks: string[] = [];
 
-    var selectedColors: string[] = [];
-    var colors = [
-        "#f44336",
-        "#e91e63",
-        "#9c27b0",
-        "#3f51b5",
-        "#2196f3",
-        "#009688",
-        "#4caf50",
-        "#ff9800",
-        "#e64a19",
-        "#5d4037",
-        "#757575",
+    var marks: string[] = [
+        MarkPurple,
+        MarkRed,
+        MarkSkyBlue,
+        Green,
+        Yellow,
+        Blue,
+        Orange,
+        Salat,
+        Brawn
     ]
-    function randomColor() {
-        let hex = Math.floor(Math.random() * 0xFFFFFF);
-        let color = "#" + hex.toString(16);
-      
-        return color;
-      }
-    const generateColor = () => {
-        return randomColor();
-    };
+
+    function getRandomMark(): string {
+        var num = Math.floor(Math.random() * marks.length);
+        var randomMark = marks[num];
+
+        if (marks.length == usedMarks.length) {
+            usedMarks = [];
+        }
+        
+        if (usedMarks.includes(randomMark)) {
+
+            return getRandomMark();
+        }
+
+        usedMarks.push(randomMark);
+        return marks[num];
+    }
+  
+    useEffect(() => {
+        if (!data || !diaologueRecoil) {
+            return;
+        }
+        actions.setSpecificPhrase(diaologueRecoil.phrase.id);
+    }, [data])
 
 
     function transformPhrase(phrase: IPhraseModel): RawNodeDatum {
-
         var node: RawNodeDatum = {
-            name: phrase.text,
-            children: phrase.answers.map(answer => transformAnswer(answer)),
+            name: phrase?.text,
+            children: phrase?.answers.map(answer => transformAnswer(answer)),
             attributes: {
-                id: phrase.id,
+                id: phrase?.id,
                 nodeType: DialogueItemType.Phrase,
-                parentId: phrase.parentId,
-                dialogueId: diaologueRecoil.id,
+                parentId: phrase?.parentId,
+                dialogueId: diaologueRecoil?.id,
             }
         }
         return node;
     }
 
-  
+
     function transformAnswer(answer: IAnswerModel): RawNodeDatum {
 
         const itemColor: IDialogueItemColorsMap = {
-            id: answer.id,
-            color: generateColor()
+            id: answer?.id,
+            color: getRandomMark()
         }
 
         setDualogueItemsColorMap(prev => [...prev, itemColor]);
@@ -74,10 +98,10 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
             children: answer.phrases.map(phrase => transformPhrase(phrase)),
             attributes: {
                 possibleAnswersLength: answer.texts.length,
-                id: answer.id,
+                id: answer?.id,
                 nodeType: DialogueItemType.Answer,
-                parentId: answer.parentId,
-                dialogueId: diaologueRecoil.id,
+                parentId: answer?.parentId,
+                dialogueId: diaologueRecoil?.id,
             }
         }
         return node;
@@ -86,12 +110,13 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     useEffect(() => {
         var node: RawNodeDatum = {
             name: "",
-            children: [transformPhrase(diaologueRecoil.phrase)],
+            children: [transformPhrase(diaologueRecoil?.phrase)],
             attributes: {
-                id: diaologueRecoil.id,
+                id: diaologueRecoil?.id,
                 nodeType: DialogueItemType.Dialogue,
                 parentId: "",
-                dialogueId: diaologueRecoil.id,
+                dialogueId: diaologueRecoil?.id,
+                name: diaologueRecoil.name,
             }
         }
 
@@ -99,14 +124,14 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     }, [diaologueRecoil]);
 
     function node(dialogueItem: CustomNodeElementProps) {
-        if (!diaologueRecoil.voiceSettings &&
+        if (!diaologueRecoil?.voiceSettings &&
             dialogueItem.nodeDatum.attributes?.nodeType == DialogueItemType.Dialogue) {
 
             return <DialogueItemNode customNodeElementProps={dialogueItem}
             />
 
         }
-        if (!!diaologueRecoil.voiceSettings) {
+        if (!!diaologueRecoil?.voiceSettings) {
             return <DialogueItemNode customNodeElementProps={dialogueItem} />
         }
 
@@ -118,35 +143,19 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
     }
 
     return (
-        <Resizable
-            defaultSize={{
-                width: "100%",
-                height: "80vh"
+        <Tree
+            data={data}
+            nodeSize={nodeSize}
+            translate={{ x: 550, y: 50 }}
+            rootNodeClassName="node__root"
+            branchNodeClassName="node__branch"
+            leafNodeClassName="node__leaf"
+            pathClassFunc={() => "node__link"}
+            zoom={1}
+            renderCustomNodeElement={(dialogueItem) => {
+                return node(dialogueItem);
             }}
-        >
-            <div
-                style={{
-                    boxShadow: "rgba(0, 0, 0, 0.35) 0px 1px 5px",
-                    borderRadius: 15,
-                    height: "100%",
-                    backgroundColor: "#e0f7fa",
-                }}>
-                <Tree
-                    data={data}
-                    nodeSize={nodeSize}
-                    translate={{ x: 350, y: 50 }}
-                    rootNodeClassName="node__root"
-                    branchNodeClassName="node__branch"
-                    leafNodeClassName="node__leaf"
-                    pathClassFunc={() => "node__link"}
-                    renderCustomNodeElement={(dialogueItem) => {
-                        return node(dialogueItem);
-                    }}
-                    orientation="vertical"
-                />
-            </div>
-        </Resizable>
-
-
+            orientation="vertical"
+        />
     )
 }

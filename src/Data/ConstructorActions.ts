@@ -54,5 +54,11 @@ export default function useConstructorActions() {
                 isScenarioUpdated: isUpdated
             }));
         },
+        setSelectedStudentId: (id: string) => {
+            setConstructorActionsState(prev => ({
+                ...prev,
+                selectedStudentId: id
+            }));
+        },
     }
 }

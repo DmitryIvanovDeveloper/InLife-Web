@@ -4,9 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { LanguageType } from "../../Data/LanguageType";
 import { useAnswer } from "../../Data/useDialogues";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
-import usePhraseQueriesApi from "../../ThereGame.Api/Queries/PhraseQueriesApi";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
-import { IMistakeExplanationModel } from "../../ThereGame.Business/Models/IExplanationModel";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
 import ChatGptService from "../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";
@@ -27,13 +25,13 @@ export interface IAnswerContructor {
     id: string,
     parentId: string,
     editDialogueItemType: EditDialogueItemType | undefined
+    currentPhraseText: string;
+    
     setStates?: (states: DialogueItemStateType[]) => void;
     onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType | undefined) => void;
     onEditedDialogueItemType: (editDialogueItemType: EditDialogueItemType, isEdited: boolean) => void;
     setStatus: (status: Status) => void
 }
-
-
 
 export default function DialogueLineContructor(props: IAnswerContructor): JSX.Element | null {
     const [constructorActionsState] = useConstructorActionsState();
@@ -42,7 +40,6 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
     const answerRecoil = useAnswer(props.dialogueId, props.id);
 
     const answerQueriesApi = useAnswerQueriesApi();
-    const phraseQueriesApi = usePhraseQueriesApi();
 
     const [sessionDialogueLine, setSessionAnswerData] = useState<IAnswerModel>(answerRecoil);
 
@@ -50,6 +47,9 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
     const [isChatGptLoading, setIsChatGptLoading] = useState<boolean>(false);
     const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
     const actions = useConstructorActions();
+
+    const [isDialogueLineInstructionOpen, setIsDialogueLineInstructionOpen] = useState<boolean>(false);
+    const [isSaveInstructionOpen, setIsSaveInstructionOpen] = useState<boolean>(false);
 
     const onPossibleWordsChange = (wordsToUse: string) => {
         setSessionAnswerData(prev => ({
@@ -59,52 +59,6 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
 
         setIsEdited(false);
     }
-    // Mistake Explanation
-    const onExplanationChange = (event: any, index: number) => {
-        var explanation = [...sessionDialogueLine.mistakeExplanations];
-
-        if (event.target.id == 'word') {
-            explanation[index].word = event.target.value;
-        }
-        if (event.target.id == 'mistake explanation') {
-            explanation[index].explanation = event.target.value;
-        }
-
-        setSessionAnswerData(prev => ({
-            ...prev,
-            mistakeExplanations: explanation
-        }));
-    }
-
-    const onAddMistakeExplanation = () => {
-        const mistakeExplanation: IMistakeExplanationModel = {
-            parentId: props.id,
-            word: "",
-            explanation: "",
-            id: uuidv4()
-        }
-
-        setSessionAnswerData(prev => ({
-            ...prev,
-            mistakeExplanations: [
-                ...prev.mistakeExplanations,
-                mistakeExplanation
-            ]
-        }));
-
-        setIsEdited(false);
-    }
-
-    const onDeleteMistakeExplanation = (id: string) => {
-        setSessionAnswerData(prev => ({
-            ...prev,
-            mistakeExplanations: [...sessionDialogueLine.mistakeExplanations]
-                .filter(explanation => explanation.id != id)
-        }));
-
-        setIsEdited(false);
-    }
-
 
     // Translate
     const onAddTranslate = () => {
@@ -195,12 +149,14 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
     // QueriesApi
 
     const onSave = async () => {
+        setIsSaveInstructionOpen(true);
+        actions.setIsScenarioUpdated(true);
         var status = await answerQueriesApi.update(sessionDialogueLine);
         if (status == Status.OK) {
             localStorage.removeItem(props.id)
             constructorActions.setIsSaveAnswer(false);
         }
-
+        setIsSaveInstructionOpen(false);
         setIsEdited(true);
         actions.setIsScenarioUpdated(true);
     }
@@ -342,15 +298,27 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
 
 
     useEffect(() => {
-        props.onEditedDialogueItemType(EditDialogueItemType.Answers, JSON.stringify(sessionDialogueLine?.texts) != JSON.stringify(answerRecoil?.texts));
-        props.onEditedDialogueItemType(EditDialogueItemType.Translates, JSON.stringify(sessionDialogueLine?.translates) != JSON.stringify(answerRecoil?.translates));
-        props.onEditedDialogueItemType(EditDialogueItemType.AnswersTenseses, JSON.stringify(sessionDialogueLine?.tensesList) != JSON.stringify(answerRecoil?.tensesList));
-        props.onEditedDialogueItemType(EditDialogueItemType.PossibleWords, sessionDialogueLine?.wordsToUse != answerRecoil?.wordsToUse);
+        // props.onEditedDialogueItemType(EditDialogueItemType.Answers, JSON.stringify(sessionDialogueLine?.texts) != JSON.stringify(answerRecoil?.texts));
+        // props.onEditedDialogueItemType(EditDialogueItemType.Translates, JSON.stringify(sessionDialogueLine?.translates) != JSON.stringify(answerRecoil?.translates));
+        // props.onEditedDialogueItemType(EditDialogueItemType.AnswersTenseses, JSON.stringify(sessionDialogueLine?.tensesList) != JSON.stringify(answerRecoil?.tensesList));
+        // props.onEditedDialogueItemType(EditDialogueItemType.PossibleWords, sessionDialogueLine?.wordsToUse != answerRecoil?.wordsToUse);
     }, [sessionDialogueLine]);
 
+    useEffect(() => {
+        if (!answerRecoil) {
+            return;
+        }
+        var isOpen = !answerRecoil.texts.length;
+        setIsDialogueLineInstructionOpen(isOpen);
+    }, [answerRecoil]);
 
     const confirm = () => {
+        if (JSON.stringify(answerRecoil.texts) != JSON.stringify(sessionDialogueLine.texts)) {
+            onSave();
+        }
+
         props.onEditDialogueItemType(props.editDialogueItemType);
+        setIsDialogueLineInstructionOpen(false);
     }
 
 
@@ -358,6 +326,31 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
         return null;
     }
 
+    if (isDialogueLineInstructionOpen) {
+        return (
+            <ModalConstructor
+                element={DialogueLineAnswersComponent()}
+                onClose={confirm}
+                isOpen={isDialogueLineInstructionOpen}
+                editDialogueItemType={props.editDialogueItemType}
+                description={`Alright! ${!props.currentPhraseText ? `It looks like i say nothing first` : `My pharse is <${props.currentPhraseText}>`} .What a student can to ${!props.currentPhraseText ? 'say' :  `answer`} me on the storyline? Please add it to list`}
+            />
+        )
+    }
+
+   
+    if (isSaveInstructionOpen) {
+        return (
+            <ModalConstructor
+                element={<div></div>}
+                onClose={() => setIsSaveInstructionOpen(false)}
+                isOpen={isSaveInstructionOpen}
+                editDialogueItemType={props.editDialogueItemType}
+                description="Great! I need to write this down in my notes"
+            />
+        )
+    }
+    
     return (
         <Box>
             {/* <MistakeExplanationConstructor    // Don't remove
@@ -372,12 +365,15 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Answers}
                 editDialogueItemType={props.editDialogueItemType}
+                description={`Alright! ${!props.currentPhraseText ? `So, i say nothing` : `My pharse is <${props.currentPhraseText}>`} .What a student can to ${!props.currentPhraseText ? 'say' :  `answer`} me on the storyline? Please add it to list`}
             />
             <ModalConstructor
                 element={TensesListComponent()}
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.AnswersTenseses}
                 editDialogueItemType={props.editDialogueItemType}
+                description=" The student wondered what tense of sentence he could use to answer?
+                Give him a hint here!"
 
             />
             <ModalConstructor
@@ -385,6 +381,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Translates}
                 editDialogueItemType={props.editDialogueItemType}
+                description="I have an idea! What if you let a student make a translation to answer me? Just create a list."
 
             />
             <ModalConstructor
@@ -392,6 +389,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.PossibleWords}
                 editDialogueItemType={props.editDialogueItemType}
+                description="You can write here words that a student can use to answer!"
             />
         </Box>
     )

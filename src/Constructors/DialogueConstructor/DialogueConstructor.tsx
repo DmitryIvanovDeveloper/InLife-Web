@@ -2,7 +2,7 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { Box, IconButton, Tab } from "@mui/material";
+import { Box, Tab } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDialogue } from "../../Data/useDialogues";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
@@ -12,11 +12,9 @@ import SaveButton from "../../Components/Button/SaveButton";
 import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
 import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
-import DialogueGraph from '../../Components/GraphTree/DialogueGraph';
-import Instruction from '../Instruction';
 import { EditDialogueItemType } from '../models/EditType';
-import HelpOutlinedIcon from '@mui/icons-material/HelpOutlined';
-import NoteAltOutlinedIcon from '@mui/icons-material/NoteAltOutlined';
+import ModalConstructor from '../ModalContructor';
+import Instruction from '../Instruction';
 
 export interface IDialogueConstructor {
     id: string;
@@ -30,10 +28,14 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     const [isEdited, setIsEdited] = useState<boolean>(true);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [tab, setTab] = useState<string>("1");
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const [isVoiceInstructionOpen, setIsVoiceInstructionOpen] = useState<boolean>(false);
+    const [isDialogueNamenOpen, setIsDialogueNameOpen] = useState<boolean>(false);
     const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>(undefined);
 
     const dialogueQueriesApi = useDialogueQueriesApi();
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
 
     const save = async () => {
         setIsLoading(true);
@@ -59,6 +61,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
         setIsEdited(false);
     }
+
     const publish = async () => {
         setDialogue(prev => ({
             ...prev,
@@ -113,13 +116,18 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         )
     }
 
-    function DialogueGraphComponent() {
-        return <DialogueGraph dialogueId={dialogue.id} />
-    }
-
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setTab(newValue);
     };
+
+    const onLastInstructionDone = () => {
+        if (!dialogue.voiceSettings) {
+            return;
+        }
+        setIsVoiceInstructionOpen(false);
+        save();
+    }
+
 
     useEffect(() => {
         var data = localStorage.getItem(props.id);
@@ -171,13 +179,48 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         if (tab == '3') {
             setEditDialogueItemType(EditDialogueItemType.StudentsAccess)
         }
-        if (tab == '4') {
-            setEditDialogueItemType(EditDialogueItemType.Scenario)
-        }
     }, [tab]);
+
+    useEffect(() => {
+        if (!dialogueRecoil) {
+            return;  
+        }
+
+        setIsDialogueNameOpen(!dialogueRecoil.name);
+        setIsVoiceInstructionOpen(!dialogueRecoil.voiceSettings);
+    }, [dialogueRecoil]);
+
+
 
     if (!dialogue) {
         return null;
+    }
+
+
+
+    if (isDialogueNamenOpen) {
+        return (
+            <ModalConstructor
+                element={DialogueNameComponent()}
+                isOpen={true}
+                editDialogueItemType={EditDialogueItemType.DialogueName}
+                onClose={() => setIsDialogueNameOpen(false)}
+                description='Amazing! Here is new scenario. What is the scenario name?'
+            />
+        )
+    }
+
+
+    if (isVoiceInstructionOpen) {
+        return (
+            <ModalConstructor
+                element={VoiceSettingsComponent()}
+                isOpen={true}
+                editDialogueItemType={EditDialogueItemType.VoiceSettings}
+                onClose={() => onLastInstructionDone()}
+                description='I can speak any voice for the scenario. Please choose!'
+            />
+        )
     }
 
     return (
@@ -206,32 +249,22 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                                     : null
                                 }
                                 <Tab label="Access" value="3" />
-                                <Tab label="Scenario" value="4" disabled={!dialogueRecoil?.voiceSettings ?? false} />
-                                
-                                <Box display='flex' alignItems='center'>
-                                    <NoteAltOutlinedIcon />
-                                </Box>
                             </TabList>
 
                         </Box>
-                        <IconButton onClick={() => setIsOpen(true)} sx={{ margin: 1 }}>
-                            <HelpOutlinedIcon />
-                        </IconButton>
-                        <Instruction
-                            editDialogueItemType={editDialogueItemType}
-                            onClose={() => setIsOpen(false)}
-                            isOpen={isOpen}
-                        />
                     </Box>
 
 
                     <TabPanel value="1">{DialogueNameComponent()}</TabPanel>
                     <TabPanel value="2">{VoiceSettingsComponent()}</TabPanel>
                     <TabPanel value="3">{AccessSettingsComponent()}</TabPanel>
-                    <TabPanel value="4">{DialogueGraphComponent()}</TabPanel>
                 </TabContext>
 
-
+                <Instruction
+                    editDialogueItemType={editDialogueItemType}
+                    onClose={() => setIsOpen(false)}
+                    isOpen={isOpen}
+                />
             </Box >
 
             {tab != '4'

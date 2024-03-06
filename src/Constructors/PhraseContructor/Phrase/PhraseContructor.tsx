@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
 import { useState, useEffect } from "react";
 import { usePhrase, useDialogue } from "../../../Data/useDialogues";
 import usePhraseQueriesApi from "../../../ThereGame.Api/Queries/PhraseQueriesApi";
@@ -16,6 +16,7 @@ import { useConstructorActionsState } from "../../../Data/useConstructorActionsS
 import useConstructorActions from "../../../Data/ConstructorActions";
 import { useDialogueItemState } from "../../../Data/useDialogueitemState";
 import ModalConstructor from "../../ModalContructor";
+import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -31,23 +32,27 @@ export interface IPhraseConstructor {
 export default function PhraseContructor(props: IPhraseConstructor): JSX.Element | null {
     const [constructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
-    const phraseQueriesApi = usePhraseQueriesApi();
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const dialogueRecoil = useDialogue(props.dialogueId);
     const [sessionPhraseData, setSessionPhraseData] = useState<IPhraseModel>(phraseRecoil);
     const [isEdited, setIsEdited] = useState(true);
     const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
     const actions = useConstructorActions();
+    const [isPhraseInstructionOpen, setIsPhraseInstructionOpen] = useState<boolean>(false);
+    const [isSaveInstructionOpen, setIsGenerationPhraseOpen] = useState<boolean>(false);
+    const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
+    const answerQueriesApi = useAnswerQueriesApi();
+    const phraseQueriesApi = usePhraseQueriesApi();
     // QueryApi
     const onSave = async () => {
         const updatedsessionPhraseData = JSON.parse(JSON.stringify(sessionPhraseData));
 
         updatedsessionPhraseData.audioSettings = getSettings();
+        setIsGenerationPhraseOpen(true);
 
         var status = await phraseQueriesApi.update(updatedsessionPhraseData);
         props.setStatus(status);
-
         if (status == Status.OK) {
             localStorage.removeItem(props.id);
             constructorActions.setIsSavePhrase(false);
@@ -55,6 +60,12 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsEdited(true);
 
         actions.setIsScenarioUpdated(true);
+    }
+
+    const onDelete = async () => {
+        setIsPhraseInstructionOpen(false);
+        setIsDeleting(true);
+        await phraseQueriesApi.delete(phraseRecoil.id);
     }
 
 
@@ -70,7 +81,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             ...prev,
             text: phrase
         }));
-
 
         setIsEdited(false);
     }
@@ -96,8 +106,10 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     function PhraseComponent() {
         return (
             <PhraseInfo
-                phrase={sessionPhraseData.text}
+                phrase={sessionPhraseData?.text}
                 onChangeText={onChangeText}
+                setIsClickedOnDelete={onDelete}
+                hasDeleteButton={dialogueRecoil?.phrase.id != sessionPhraseData?.id}
             />
         )
     }
@@ -141,7 +153,18 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setSessionPhraseData(JSON.parse(data));
     }, [phraseRecoil])
 
+    const onLastInstructionDone = () => {
+        if (sessionPhraseData.text != phraseRecoil.text) {
+            onSave();
+        }
+        setIsPhraseInstructionOpen(false);
+        props.onEditDialogueItemType(undefined);
+    }
 
+    const confirm = () => {
+        props.onEditDialogueItemType(undefined);
+        // onSave();
+    }
     // UseEffects
 
     const getSettings = () => {
@@ -149,7 +172,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
         var newAudioSettings: IAudioSettings = {
             id: uuidv4(),
-            generationSettings: GetSettings(parsedData.type, parsedData.name, sessionPhraseData.text)
+            generationSettings: GetSettings(parsedData.type, parsedData.name, sessionPhraseData?.text)
         }
 
         return newAudioSettings;
@@ -176,11 +199,11 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
     }, [sessionPhraseData]);
 
-    useEffect(() => {
-        props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData.text != phraseRecoil.text);
-        props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData.comments != phraseRecoil.comments);
-        props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData.tensesList) != JSON.stringify(phraseRecoil.tensesList));
-    }, [sessionPhraseData.tensesList, sessionPhraseData.comments, sessionPhraseData.text]);
+    // useEffect(() => {
+    //     props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData?.text != phraseRecoil?.text);
+    //     props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData?.comments != phraseRecoil?.comments);
+    //     props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData?.tensesList) != JSON.stringify(phraseRecoil?.tensesList));
+    // }, [sessionPhraseData?.tensesList, sessionPhraseData?.comments, sessionPhraseData?.text]);
 
     useEffect(() => {
         if (isEdited) {
@@ -211,35 +234,91 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         }
     }, [constructorActionsState.phrase]);
 
+    useEffect(() => {
+        if (!phraseRecoil) {
+            return;
+        }
 
+        var isOpen = !phraseRecoil.text &&
+            !phraseRecoil.answers.length &&
+            !!dialogueRecoil.voiceSettings &&
+            !!dialogueRecoil.name &&
+            !!constructorActionsState.selectedNpc.scenarioId
+            ;
 
-    const confirm = () => {
-        props.onEditDialogueItemType(props.editDialogueItemType);
-    }
+        setIsPhraseInstructionOpen(isOpen);
+    }, [phraseRecoil]);
+
+    useEffect(() => {
+        if (!props.editDialogueItemType) {
+            return;
+        }
+
+        setIsPhraseInstructionOpen(false);
+    }, [props.editDialogueItemType]);
+
     if (!sessionPhraseData) {
         return null;
+    }
+
+    if (isPhraseInstructionOpen) {
+        return (
+            <ModalConstructor
+                element={PhraseComponent()}
+                isOpen={isPhraseInstructionOpen}
+                editDialogueItemType={EditDialogueItemType.Phrase}
+                onClose={() => onLastInstructionDone()}
+                description={`Let's continue. \r\n What should I say, or can I say nothing and let a student to speak?`}
+            />
+        )
+    }
+
+    if (isSaveInstructionOpen) {
+        return <ModalConstructor
+            element={<div></div>}
+            isOpen={isSaveInstructionOpen}
+            editDialogueItemType={EditDialogueItemType.Phrase}
+            onClose={() => setIsGenerationPhraseOpen(false)}
+            description='Got it! I need some time to rehearse it. Please wait...'
+        />
+    }
+
+    if (isDeleting) {
+        return <ModalConstructor
+            element={<div></div>}
+            isOpen={true}
+            editDialogueItemType={EditDialogueItemType.Phrase}
+            onClose={() => {}}
+            description='It took me so long to learn this...! I need time to forget this'
+        />
     }
 
     return (
         <Box>
             <ModalConstructor
                 element={PhraseComponent()}
-                onClose={confirm}
+                onClose={() => onLastInstructionDone()}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Phrase}
                 editDialogueItemType={props.editDialogueItemType}
+                description="Any changes? What should i to correct?"
             />
             <ModalConstructor
                 element={PhraseTensesListComponent()}
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.PhraseTenseses}
                 editDialogueItemType={props.editDialogueItemType}
+                description="Oh! What if a student doesn't understand the tenses I used in this phrase? Give him a hint!"
             />
             <ModalConstructor
                 element={CommentsComponent()}
                 onClose={confirm}
                 isOpen={props.editDialogueItemType == EditDialogueItemType.Comments}
                 editDialogueItemType={props.editDialogueItemType}
+                description=" Maybe I’m using something special in my phrase, and the student needs to pay more attention to it!
+                Write about it here."
             />
+
+
         </Box>
     )
 }

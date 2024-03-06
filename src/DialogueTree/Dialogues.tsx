@@ -1,61 +1,54 @@
 import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import INpc from '../Data/Locations';
 import NpcList from '../Components/Npc/NpcList';
 import NpcProfile from '../Components/Npc/NpcProfile';
-import { Tab, Button } from '@mui/material';
+import { Tab } from '@mui/material';
 import Typography from '@mui/joy/Typography';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Tabs from '@mui/material/Tabs';
 import StudentList from '../Components/StudentsList';
-import { useDialogueItemConstructor } from '../Data/useDialogues';
-import DeskImage from '../Components/Npc/DeskImage';
 import { useNpcSelection } from '../Data/useSelectedNpc';
-import MenuAppBar from '../Components/AppBars/MenuAppBar';
-import GameWebGL from '../Components/GameWebGL/GameWebGLEditor';
 import useConstructorActions from '../Data/ConstructorActions';
 
-export interface IDialoguesProps { }
+export interface IDialoguesProps {
+    setIsSelectedStudents: (isSelectedStudents: boolean) => void; 
+}
 
 //TODO Rename
 export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
-
     const theme = useTheme();
     const [npc, setNpc] = useNpcSelection();
     const [value, setValue] = useState(0);
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const constructorActions = useConstructorActions();
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setDialogueItemConstructor(() => null);
-        setValue(newValue);
+    const handleChange = (event: React.SyntheticEvent, value: number) => {
+        setValue(value);
+
+        constructorActions.setSelectedStudentId("");
+        props.setIsSelectedStudents(value == 1);
     };
 
     const handleChangeIndex = (index: number) => {
         setValue(index);
     };
+
     const onSelectNpc = (npc: INpc | null) => {
-        
         if (!npc) {
             setNpc(null);
-            setDialogueItemConstructor(() => null)
+            constructorActions.setSelectedScenario("");
             return;
         }
         setNpc(npc);
         constructorActions.setSelectedNpc(npc.id);
         localStorage.setItem("SelectedNpcId", npc.id)
-        setDialogueItemConstructor(() => <DeskImage image={npc.image} />)
     }
 
     function tabs() {
         return (
-            <Box sx={{ bgcolor: 'background.paper' }}>
-                <Box display='flex' flexDirection="row" justifyContent='space-between'>
-                    <MenuAppBar />
-                </Box>
-
+            <Box sx={{ bgcolor: 'background.paper',}} >
                 <AppBar position="static" >
                     <Tabs
                         value={value}
@@ -69,13 +62,13 @@ export default function Dialogues(props: IDialoguesProps): JSX.Element | null {
                         <Tab sx={{ fontWeight: 800 }} label="Students" {...a11yProps(1)} />
                     </Tabs>
 
-
                 </AppBar>
 
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={value}
                     onChangeIndex={handleChangeIndex}
+                    
                 >
                     <TabPanel value={value} index={0} dir={theme.direction}>
                         <NpcList onSelectNpc={onSelectNpc} />

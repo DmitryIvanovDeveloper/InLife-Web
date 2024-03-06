@@ -7,14 +7,18 @@ import { useTeacher } from "../Data/useTeacher";
 import { Routes } from "../Routes";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import useDialogueStatisticApi from "../ThereGame.Api/Queries/DialogueStatisticApi";
-import { useNavigate } from "react-router-dom";
+import { useDialogueItemConstructor } from "../Data/useDialogues";
+import { useActionData } from "react-router-dom";
+import useConstructorActions from "../Data/ConstructorActions";
 
 export default function StudentList() {
     const [teacher] = useTeacher();
     const [students] = useStudents();
     const [selectedStudentId, setSelectedStudentId] = useState<string>("");
+    const [dialogueItemConstructor, setDialogueItemConstrucor] = useDialogueItemConstructor();
     const dialogueStatisticApi = useDialogueStatisticApi();
     const [isLoading, setIsLodaing] = useState<boolean>();
+    const actions = useConstructorActions();
 
     useEffect(() => {
         if (!selectedStudentId) {
@@ -28,7 +32,9 @@ export default function StudentList() {
     }, [selectedStudentId]);
 
     const onSelect = (selectedStudentId: string) => {
+        actions.setSelectedStudentId(selectedStudentId)
         setSelectedStudentId(selectedStudentId);
+        setDialogueItemConstrucor(<div></div>);
     }
 
     return (
@@ -41,9 +47,7 @@ export default function StudentList() {
             
             <ListItem
                 disablePadding
-
             >
-
                 <Box display='flex' flexDirection='column' width='100%'>
 
                     {students
@@ -56,7 +60,7 @@ export default function StudentList() {
                                         sx={{
                                             margin: 1
                                         }}
-                                        onClick={() => setSelectedStudentId("")}
+                                        onClick={() => onSelect("")}
                                     >
 
                                         <ArrowBackIosNewIcon />

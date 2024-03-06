@@ -32,8 +32,6 @@ export default function TensesListConstructor(props: IPhraseInfoProps) {
 
     return (
         <Box sx={{ borderRadius: 2, paddingTop: "20px", paddingBottom: "20px", justifyContent: 'center' }}>
-            <DevidedLabel name="Tenses"/>
-
             {Tenseses.map(tenses => (
                 <Button
                     variant={!clickedButtons?.find(button => button == tenses) ? "outlined" : "contained"}

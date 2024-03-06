@@ -23,7 +23,7 @@ export default function AudioMessage(props: IAudioMessageProps) {
 
         setTimeout(() => {
             setIsReloading(false);
-        }, 0)
+        }, 1)
     }, [props.audioUrl])
 
     return (

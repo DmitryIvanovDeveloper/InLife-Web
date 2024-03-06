@@ -4,7 +4,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import DialogueConstructor from "../../Constructors/DialogueConstructor/DialogueConstructor";
 import { useDialogueItemConstructor, useDialogues } from "../../Data/useDialogues";
 import { useTeacher } from "../../Data/useTeacher";
@@ -17,6 +17,7 @@ import DeleteSceneButton from "../Button/DeleteSceneButton";
 import INpc from "../../Data/Locations";
 import DeskImage from "./DeskImage";
 import useConstructorActions from "../../Data/ConstructorActions";
+import SaveButton from "../Button/SaveButton";
 
 
 export interface IDialogueTabsProps {
@@ -26,7 +27,6 @@ export interface IDialogueTabsProps {
 export default function NpcScenes(props: IDialogueTabsProps) {
     const [success, setSuccess] = useState(false);
     const [teacher] = useTeacher();
-    const [_, setDialogueItemConstructor] = useDialogueItemConstructor();
     const [selectedDialogue, setSelectedDialogue] = useState<IDialogueModel | null>(null);
     const [dialogues] = useDialogues()
     const [isOpenSettings] = useState<boolean>(true);
@@ -55,15 +55,22 @@ export default function NpcScenes(props: IDialogueTabsProps) {
     const onClick = (clickedDialogue: IDialogueModel) => {
         if (selectedDialogue?.id == clickedDialogue.id) {
             setSelectedDialogue(null);
-            setDialogueItemConstructor(<DeskImage image={props.npc.image} />  )
             localStorage.removeItem("SelectedNpcDialogueId");
             return;
         }
-        setDialogueItemConstructor(<div></div>);
         constructorActions.setSelectedScenario(clickedDialogue.id);
         
         setSelectedDialogue(clickedDialogue);
     }
+
+    useEffect(() => {
+        var newScenario = dialogues.find(dialogue => !dialogue.name && !dialogue.voiceSettings);
+        if (!newScenario) {
+            return;
+        }
+
+        onClick(newScenario);
+    }, [dialogues]);
 
     return (
         <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
@@ -106,7 +113,7 @@ export default function NpcScenes(props: IDialogueTabsProps) {
                                 </ListItemButton>
 
                                 {dialogue.id == selectedDialogue?.id
-                                    ? <DeleteSceneButton name={dialogue.name} dialogueId={dialogue.id} />
+                                    ? <DeleteSceneButton name={dialogue.name} dialogueId={dialogue.id} onDelete={() => onClick(selectedDialogue)}/>
                                     : null
                                 }
                             </Box>
@@ -117,14 +124,7 @@ export default function NpcScenes(props: IDialogueTabsProps) {
             {!!selectedDialogue
                 ? null
                 : <Box sx={{ display: "flex", flexDirection: "row", justifyContent: 'end', margin: "20px" }}>
-                    <Fab
-                        aria-label="save"
-                        color="primary"
-                        sx={buttonSx}
-                        onClick={onCreate}
-                    >
-                        {isCreating ? <CheckIcon /> : <AddIcon />}
-                    </Fab>
+                    <SaveButton onClick={onCreate} isLoading={isCreating} isDisabled={false} />
                 </Box>
             }
             {!isOpenSettings

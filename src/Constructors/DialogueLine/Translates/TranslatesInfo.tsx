@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import ITranslateModel from "../../../ThereGame.Business/Models/ITranslateModel";
-import TranslateConstructor from "../TranslateConstructor";
+import TranslateConstructor from "./TranslateConstructor";
 import TranslatesInstructions from "./TranslatesInstructions";
 
 export interface IPossibleWordsToUseInfoProps {

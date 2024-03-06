@@ -10,6 +10,8 @@ import useConstructorActions from "../../../Data/ConstructorActions";
 import Message from "../../../Components/ChatElement/Message";
 import AudioMessage from "../../../Components/ChatElement/AudioMessage";
 import 'react-h5-audio-player/lib/styles.css';
+import { useEffect, useState } from "react";
+
 
 export interface IPhraseTab {
     onEditDialogueItemType: (editDIalogueItemType: EditDialogueItemType) => void;
@@ -23,7 +25,11 @@ export interface IPhraseTab {
 export default function PhraseSettings(props: IPhraseTab) {
     const [constructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
+    const [audioPhrase, setAudioPhrase] = useState<string>("");
 
+    useEffect(() => {
+        setAudioPhrase(props.phraseAudio);
+    }, [props.phraseAudio]);
     return (
         <Box >
             {constructorActionsState.phrase.isSave
@@ -79,23 +85,22 @@ export default function PhraseSettings(props: IPhraseTab) {
                     </IconButton>
                 </Grid>
             }
-
-            <Message
+            <style>
+                @import url('https://fonts.cdnfonts.com/css/pencil-2');
+            </style>
+            <Typography fontSize='30px' fontFamily='Pencil' paddingLeft="5px">{props.phraseCaption}</Typography>
+            {/* <Message
                 title={props.name}
                 position={"left"}
                 type={"text"}
-                text={props.phraseCaption}
+                text={}
+            /> */}
+            <AudioMessage
+                position={"left"}
+                type={"audio"}
+                title={props.name}
+                audioUrl={audioPhrase}
             />
-            {constructorActionsState.phrase.isSave
-                ? <Typography>Generating audio by AI...</Typography>
-                : <AudioMessage
-                    position={"left"}
-                    type={"audio"}
-                    title={props.name}
-                    audioUrl={props.phraseAudio}
-                />
-            }
-
         </Box>
     )
 }
