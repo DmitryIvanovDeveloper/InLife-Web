@@ -62,7 +62,7 @@ export default function Main() {
     }
     return (
         <Box>
-            <MiniDrawer barElements={<Dialogues setIsSelectedStudents={setIsSelectedStudents} />} elements={!isSelectedStudents ? <Canvas /> : itemConstructor} />
+            <MiniDrawer barElements={<Dialogues setIsSelectedStudents={setIsSelectedStudents} />} elements={<Canvas />} />
             <GameWebGLEditor />
         </Box>
     )

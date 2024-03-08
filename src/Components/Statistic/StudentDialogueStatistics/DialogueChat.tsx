@@ -56,7 +56,7 @@ export default function DialogueChat(props: IDialogueChatProps) {
     }, [props.statisticHistoty]);
     
     return (
-        <Grid  height='90dvh' >
+        <Grid  height='100dvh' >
             <Box
                 ref={containerRef}
                 sx={{

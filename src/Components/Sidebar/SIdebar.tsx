@@ -14,6 +14,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { ReactElement, useEffect, useState } from 'react';
 import UserMenuAppBar from '../AppBars/UserMenuAppBar';
 import { useConstructorActionsState } from '../../Data/useConstructorActionsState';
+import { useDialogueItemConstructor } from '../../Data/useDialogues';
 
 const drawerWidth = 500;
 
@@ -98,6 +99,7 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
     const [open, setOpen] = useState(false);
     const [currentComponent, setCurrentComponent] = useState<ReactElement | null>();
     const [actionState] = useConstructorActionsState();
+    const [itemConstructor] = useDialogueItemConstructor();
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -121,7 +123,7 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
         }, 500)
     }, []);
 
-
+    console.log(actionState.selectedStudentId);
     return (
         <Box sx={{ overflow: 'hidden' }}>
 
@@ -172,7 +174,7 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                         {props.elements}
                     </Box>
                     : !!actionState.selectedStudentId
-                        ? currentComponent
+                        ? itemConstructor
                         : null
                 }
             </Box>
