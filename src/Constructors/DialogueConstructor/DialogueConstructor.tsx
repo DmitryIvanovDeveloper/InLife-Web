@@ -32,6 +32,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
     const [isVoiceInstructionOpen, setIsVoiceInstructionOpen] = useState<boolean>(false);
     const [isDialogueNamenOpen, setIsDialogueNameOpen] = useState<boolean>(false);
+    const [isStudentAccessSettingsOpen, setStudentAccessSettingsOpen] = useState<boolean>(false);
     const [editDialogueItemType, setEditDialogueItemType] = useState<EditDialogueItemType | undefined>(undefined);
 
     const dialogueQueriesApi = useDialogueQueriesApi();
@@ -106,7 +107,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         )
     }
 
-    function AccessSettingsComponent() {
+    function StudentAccessSettingsComponent() {
         return (
             <AccessSettingsInfo
                 studentsId={dialogue.studentsId}
@@ -122,10 +123,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
     };
 
     const onLastInstructionDone = () => {
-        if (!dialogue.voiceSettings) {
-            return;
-        }
-        setIsVoiceInstructionOpen(false);
+        setStudentAccessSettingsOpen(false);
         save();
     }
 
@@ -189,8 +187,8 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
         setIsDialogueNameOpen(!dialogueRecoil.name);
         setIsVoiceInstructionOpen(!dialogueRecoil.voiceSettings);
+        setStudentAccessSettingsOpen(!dialogueRecoil.studentsId.length)
     }, [dialogueRecoil]);
-
 
 
     if (!dialogue) {
@@ -218,8 +216,24 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 element={VoiceSettingsComponent()}
                 isOpen={true}
                 editDialogueItemType={EditDialogueItemType.VoiceSettings}
-                onClose={() => onLastInstructionDone()}
+                onClose={() => {
+                    if (!dialogue.voiceSettings) {
+                        return;
+                    }
+                    setIsVoiceInstructionOpen(false);
+                }}
                 description='I can speak any voice for the scenario. Please choose!'
+            />
+        )
+    }
+    if (isStudentAccessSettingsOpen) {
+        return (
+            <ModalConstructor
+                element={StudentAccessSettingsComponent()}
+                isOpen={isStudentAccessSettingsOpen}
+                editDialogueItemType={EditDialogueItemType.StudentsAccess}
+                onClose={() => onLastInstructionDone()}
+                description='Select students to access the scenario'
             />
         )
     }
@@ -258,7 +272,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
                     <TabPanel value="1">{DialogueNameComponent()}</TabPanel>
                     <TabPanel value="2">{VoiceSettingsComponent()}</TabPanel>
-                    <TabPanel value="3">{AccessSettingsComponent()}</TabPanel>
+                    <TabPanel value="3">{StudentAccessSettingsComponent()}</TabPanel>
                 </TabContext>
 
                 <Instruction

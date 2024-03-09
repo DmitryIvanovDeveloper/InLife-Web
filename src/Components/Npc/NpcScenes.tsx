@@ -32,16 +32,6 @@ export default function NpcScenes(props: IDialogueTabsProps) {
 
     const dialogueQueriesApi = useDialogueQueriesApi();
 
-    const buttonSx = {
-        ...(success && {
-            bgcolor: green[500],
-            '&:hover': {
-                bgcolor: green[700],
-            },
-        }),
-    };
-
-
     const onCreate = async () => {
         setIsCreating(true);
         await dialogueQueriesApi.create(props.npc.id);
@@ -69,6 +59,7 @@ export default function NpcScenes(props: IDialogueTabsProps) {
         onClick(newScenario);
     }, [dialogues]);
 
+    
     return (
         <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
             <ListItem
@@ -106,7 +97,6 @@ export default function NpcScenes(props: IDialogueTabsProps) {
                                             <Avatar alt="Remy Sharp" src={teacher?.students.find(student => student.id == studentId)?.avatar} />
                                         ))}
                                     </AvatarGroup>
-
                                 </ListItemButton>
 
                                 {dialogue.id == selectedDialogue?.id
@@ -124,7 +114,7 @@ export default function NpcScenes(props: IDialogueTabsProps) {
                     <ActionButton onClick={onCreate} isLoading={isCreating} isDisabled={false} icon={<AddIcon />}/>
                 </Box>
             }
-            {!isOpenSettings
+            {!isOpenSettings || !selectedDialogue
                 ? null
                 : <DialogueConstructor id={selectedDialogue?.id ?? ""} />
             }

@@ -60,7 +60,7 @@ export default function useDialogueQueriesApi() {
                 name: '',
                 phrase: phrase,
                 teacherId: teacher?.id,
-                studentsId: teacher.students.map(student => student.id),
+                studentsId: [],
             }
 
             var requestData = new DialogueMapping().requestToCreateDialogue(dialogue);
