@@ -47,6 +47,7 @@ const blink = keyframes`
 
 export default function Constructor(props: IPhraseConstructor): JSX.Element | null {
     const [actionState] = useConstructorActionsState();
+
     const [selectedDialogueLine] = useSelectDialogueLine();
 
     const dialogueRecoil = useDialogue(actionState.selectedNpc.scenarioId);
@@ -246,7 +247,7 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         }
     }, []);
 
-    if (!dialogueRecoil?.name || !dialogueRecoil?.voiceSettings) {
+    if (!dialogueRecoil || !dialogueRecoil?.name || !dialogueRecoil?.voiceSettings) {
         return null;
     }
 

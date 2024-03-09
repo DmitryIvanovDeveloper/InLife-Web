@@ -116,7 +116,7 @@ export default function DialogueGraph(props: IDialoguesGraphProps) {
                 nodeType: DialogueItemType.Dialogue,
                 parentId: "",
                 dialogueId: diaologueRecoil?.id,
-                name: diaologueRecoil.name,
+                name: diaologueRecoil?.name,
             }
         }
 

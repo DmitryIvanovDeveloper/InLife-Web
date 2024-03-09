@@ -16,7 +16,6 @@ export default function Main() {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isSelectedStudents, setIsSelectedStudents] = useState<boolean>(false);
     const teacherQueriesApi = useTeacherQueriesApi();
-    const [itemConstructor] = useDialogueItemConstructor();
     const navigate = useNavigate();
 
     useEffect(() => {

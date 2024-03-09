@@ -173,9 +173,11 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                     ? <Box>
                         {props.elements}
                     </Box>
-                    : !!actionState.selectedStudentId
-                        ? itemConstructor
-                        : null
+                    : null
+                }
+                {!!actionState.selectedStudentId
+                    ? itemConstructor
+                    : null
                 }
             </Box>
         </Box>

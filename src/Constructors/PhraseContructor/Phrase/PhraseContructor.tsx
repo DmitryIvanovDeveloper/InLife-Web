@@ -235,7 +235,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     }, [constructorActionsState.phrase]);
 
     useEffect(() => {
-        if (!phraseRecoil) {
+        if (!dialogueRecoil || !phraseRecoil) {
             return;
         }
 
