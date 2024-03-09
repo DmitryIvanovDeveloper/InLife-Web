@@ -268,7 +268,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 isOpen={isPhraseInstructionOpen}
                 editDialogueItemType={EditDialogueItemType.Phrase}
                 onClose={() => onLastInstructionDone()}
-                description={`Let's continue. \r\n What should I say, or can I say nothing and let a student to speak?`}
+                description={`Let's continue. \r\n What should I say, or can I say nothing and let a student speak?`}
             />
         )
     }

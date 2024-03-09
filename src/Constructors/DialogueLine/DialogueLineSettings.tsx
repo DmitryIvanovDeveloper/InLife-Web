@@ -38,7 +38,7 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                      }}
                   />
                </Button>
-               <Button
+               {/* <Button
                   sx={{ color: commonStyle.default }}
 
                   onClick={() => props.onEditDialogueItemType(EditDialogueItemType.Translates)}>
@@ -48,8 +48,8 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                         color: props.dialogueItemEditState.isAnswersTranslatesEdited ? commonStyle.editedItemColor : props.color
                      }}
                   />
-               </Button>
-               <Button
+               </Button> */}
+               {/* <Button
                   sx={{ color: commonStyle.default }}
 
                   onClick={() => props.onEditDialogueItemType(EditDialogueItemType.AnswersTenseses)}>
@@ -59,8 +59,8 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                         color: props.dialogueItemEditState.isAnswersTensesListEdited ? commonStyle.editedItemColor : props.color
                      }}
                   />
-               </Button>
-               <Button
+               </Button> */}
+               {/* <Button
                   sx={{ color: commonStyle.default }}
 
                   onClick={() => props.onEditDialogueItemType(EditDialogueItemType.PossibleWords)}>
@@ -69,8 +69,8 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                      sx={{
                         color: props.dialogueItemEditState.isAnswersPossibleWordsEdited ? commonStyle.editedItemColor : props.color
                      }} />
-               </Button>
-               <IconButton
+               </Button> */}
+               {/* <IconButton
                   sx={{
                      color: props.dialogueItemEditState.isAnswersEdited ||
                         props.dialogueItemEditState.isAnswersTranslatesEdited ||
@@ -82,7 +82,7 @@ export default function DialogueLineSettings(props: IAnswersActionsButtonsProps)
                   onClick={() => constructorActions.setIsSaveAnswer(true)}>
 
                   <SaveIcon />
-               </IconButton>
+               </IconButton> */}
             </Grid>
          }
          <List sx={{ width: '90%', height: "320px", overflowY: 'auto', p: 1 }}>

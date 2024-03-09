@@ -48,7 +48,7 @@ export default function PhraseSettings(props: IPhraseTab) {
                         />
                     </Button>
 
-                    <Button
+                    {/* <Button
 
                         onClick={() => props.onEditDialogueItemType(EditDialogueItemType.Comments)}
                     >
@@ -58,8 +58,8 @@ export default function PhraseSettings(props: IPhraseTab) {
                                 color: props.dialogueItemEditState.isPhraseCommentsEdited ? commonStyle.editedItemColor : commonStyle.default
                             }}
                         />
-                    </Button>
-                    <Button
+                    </Button> */}
+                    {/* <Button
 
                         onClick={() => props.onEditDialogueItemType(EditDialogueItemType.PhraseTenseses)}
                     >
@@ -69,8 +69,8 @@ export default function PhraseSettings(props: IPhraseTab) {
                                 color: props.dialogueItemEditState.isPhraseTensesesEdited ? commonStyle.editedItemColor : commonStyle.default
                             }}
                         />
-                    </Button>
-                    <IconButton
+                    </Button> */}
+                    {/* <IconButton
                         sx={{
                             color: props.dialogueItemEditState.isPhraseCommentsEdited ||
                                 props.dialogueItemEditState.isPhraseEdited ||
@@ -82,7 +82,7 @@ export default function PhraseSettings(props: IPhraseTab) {
                         onClick={() => constructorActions.setIsSavePhrase(true)}
                     >
                         <SaveIcon />
-                    </IconButton>
+                    </IconButton> */}
                 </Grid>
             }
             <style>
