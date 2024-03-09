@@ -90,10 +90,6 @@ export function DialogueItemNode(props: IRenderForeignDialogueItemNodeProps) {
         setIsLoading(false);
     }
 
-    const removeConfirm = () => {
-        
-    }
-
     const onRemoveNode = async () => {
         setIsOpen(false);
         setIsLoading(true);

@@ -15,8 +15,8 @@ export default function AccessSettingsInfo(props: IAccessSettingsInfoProps) {
     return (
         <Box>
             <Box sx={{ mt: 3 }}>
-                <Switcher setIsChecked={props.publish} checked={props.isPublished} />
-                <DevidedLabel name={""} />
+                {/* <Switcher setIsChecked={props.publish} checked={props.isPublished} /> */}
+                {/* <DevidedLabel name={""} /> */}
                 <Box
                     display='flex'
                     justifyContent='center'
