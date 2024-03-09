@@ -1,24 +1,21 @@
-import { Avatar, AvatarGroup, Box, CircularProgress, Fab, IconButton, Tab, Tabs } from "@mui/material";
+import { Avatar, AvatarGroup, Box, IconButton} from "@mui/material";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DialogueConstructor from "../../Constructors/DialogueConstructor/DialogueConstructor";
-import { useDialogueItemConstructor, useDialogues } from "../../Data/useDialogues";
+import { useDialogues } from "../../Data/useDialogues";
 import { useTeacher } from "../../Data/useTeacher";
-import AddIcon from '@mui/icons-material/Add';
-import CheckIcon from '@mui/icons-material/Check';
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { green } from '@mui/material/colors';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DeleteSceneButton from "../Button/DeleteSceneButton";
 import INpc from "../../Data/Locations";
-import DeskImage from "./DeskImage";
 import useConstructorActions from "../../Data/ConstructorActions";
-import SaveButton from "../Button/SaveButton";
-
+import ActionButton from "../Button/ActionButton";
+import AddIcon from '@mui/icons-material/Add';
 
 export interface IDialogueTabsProps {
     npc: INpc
@@ -124,7 +121,7 @@ export default function NpcScenes(props: IDialogueTabsProps) {
             {!!selectedDialogue
                 ? null
                 : <Box sx={{ display: "flex", flexDirection: "row", justifyContent: 'end', margin: "20px" }}>
-                    <SaveButton onClick={onCreate} isLoading={isCreating} isDisabled={false} />
+                    <ActionButton onClick={onCreate} isLoading={isCreating} isDisabled={false} icon={<AddIcon />}/>
                 </Box>
             }
             {!isOpenSettings

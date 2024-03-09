@@ -8,13 +8,14 @@ import { useDialogue } from "../../Data/useDialogues";
 import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
 import { DialogueItemStateType } from "../../ThereGame.Business/Util/DialogueItemStateType";
-import SaveButton from "../../Components/Button/SaveButton";
+import ActionButton from "../../Components/Button/ActionButton";
 import AccessSettingsInfo from "./AccessSettings/AccessSettingsInfo";
 import DialogueNameInfo from "./DialogueName/DialogueNameInfo";
 import VoiceSettingsInfo from "./VoiceSettings/VoiceSettingsInfo";
 import { EditDialogueItemType } from '../models/EditType';
 import ModalConstructor from '../ModalContructor';
 import Instruction from '../Instruction';
+import SaveIcon from '@mui/icons-material/Save';
 
 export interface IDialogueConstructor {
     id: string;
@@ -268,10 +269,11 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             </Box >
 
             {tab != '4'
-                ? <SaveButton
+                ? <ActionButton
                     onClick={save}
                     isLoading={isLoading}
                     isDisabled={false}
+                    icon={<SaveIcon />}
                 />
                 : null
             }

@@ -1,18 +1,19 @@
 import CheckIcon from '@mui/icons-material/Check';
-import SaveIcon from '@mui/icons-material/Add';
+
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Fab from '@mui/material/Fab';
 import { green } from '@mui/material/colors';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 
 export interface ISaveButtonProps {
+    icon: ReactElement;
     onClick: () => void;
     isLoading: boolean;
     isDisabled: boolean;
 }
-export default function SaveButton(props: ISaveButtonProps) {
+export default function ActionButton(props: ISaveButtonProps) {
 
     const [success, setSuccess] = React.useState(false);
 
@@ -44,7 +45,7 @@ export default function SaveButton(props: ISaveButtonProps) {
                     onClick={() => props.onClick()}
                     disabled={props.isDisabled}
                 >
-                    {props.isLoading ? <CheckIcon /> : <SaveIcon />}
+                    {props.isLoading ? <CheckIcon /> : props.icon}
                 </Fab>
                 {props.isLoading && (
                     <CircularProgress
