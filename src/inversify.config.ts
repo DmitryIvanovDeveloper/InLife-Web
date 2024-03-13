@@ -12,6 +12,8 @@ import TeacherService from "./ThereGame.Infrastructure/Services/TeacherService";
 import { TYPES } from "./types";
 import IStudentDialogueStatisticService from "./ThereGame.Business/Domain/Util/Services/IDialogueStatisticService";
 import StudentDialogueStatisticService from "./ThereGame.Infrastructure/Services/Dialogue/DialogueStatisticService";
+import IWordService from "./ThereGame.Business/Domain/Util/Services/IWordService";
+import WordService from "./ThereGame.Infrastructure/Services/WordsService";
 
 export const appContainer = new Container();
 
@@ -22,4 +24,5 @@ appContainer.bind<IAnswerService>(TYPES.AnswerService).to(AnswerService).inSingl
 appContainer.bind<IAuthenticationService>(TYPES.AuthenticationService).to(AuthenticationService).inSingletonScope();
 appContainer.bind<ITeacherService>(TYPES.TeacherService).to(TeacherService).inSingletonScope();
 appContainer.bind<IStudentDialogueStatisticService>(TYPES.DialogueStatisticService).to(StudentDialogueStatisticService).inSingletonScope();
+appContainer.bind<IWordService>(TYPES.WordsService).to(WordService).inSingletonScope();
 

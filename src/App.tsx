@@ -11,6 +11,7 @@ import StudentProfile from './Components/Student/Profile/StudentProfile';
 import useTeacherQueriesApi from './ThereGame.Api/Queries/TeacherQueriesApi';
 import { Box, CircularProgress } from '@mui/material';
 import { RoleType } from './ThereGame.Business/Util/Role';
+import FlashCards from './Components/FlashCards/FiashCards';
 
 export function App() {
     const navigate = useNavigate();
@@ -64,7 +65,7 @@ export function App() {
                     <Route path={LocalRoutes.signUpStudent} element={<SignUpStudent />} />
                     <Route path={LocalRoutes.studentProfile} element={<StudentProfile />} />
                     <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
-                    <Route path={LocalRoutes.main} element={<Main />} />
+                    <Route path={LocalRoutes.main} element={<FlashCards />} />
                 </Routes>
             </React.StrictMode>
     );

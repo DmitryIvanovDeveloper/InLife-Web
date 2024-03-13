@@ -5,6 +5,7 @@ const TYPES = {
     AuthenticationService: Symbol.for("AuthenticationService"),
     TeacherService: Symbol.for("TeacherService"),
     DialogueStatisticService: Symbol.for("DialogueStatisticService"),
+    WordsService: Symbol.for("WordsService"),
 }
 
 export { TYPES }
