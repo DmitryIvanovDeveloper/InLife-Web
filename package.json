@@ -54,6 +54,7 @@
     "react-flow-renderer": "^10.3.17",
     "react-folder-tree": "^5.1.1",
     "react-h5-audio-player": "^3.9.0",
+    "react-images-uploading": "^3.1.7",
     "react-modern-calendar-datepicker": "^3.1.6",
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",

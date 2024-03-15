@@ -65,7 +65,7 @@ export function App() {
                     <Route path={LocalRoutes.signUpStudent} element={<SignUpStudent />} />
                     <Route path={LocalRoutes.studentProfile} element={<StudentProfile />} />
                     <Route path={LocalRoutes.teacherProfileEditor} element={<ProfileEditor />} />
-                    <Route path={LocalRoutes.main} element={<FlashCards />} />
+                    <Route path={LocalRoutes.main} element={<Main />} />
                 </Routes>
             </React.StrictMode>
     );

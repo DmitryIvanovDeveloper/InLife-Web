@@ -27,15 +27,6 @@ body {
   margin-bottom: .25rem;
 }
 
-.btn {
-  background-color: hsl(200, 100%, 50%);
-  color: white;
-  padding: .5em 1em;
-  border-radius: .3em;
-  border: none;
-  cursor: pointer;
-}
-
 .btn:hover {
   background-color: hsl(200, 100%, 40%);
 }
@@ -73,7 +64,6 @@ body {
 .card .front,
 .card .back {
   position: absolute;
-  padding: 1rem;
   backface-visibility: hidden;
 }
 

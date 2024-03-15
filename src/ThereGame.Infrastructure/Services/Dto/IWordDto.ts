@@ -1,16 +1,22 @@
 import { LanguageType } from "../../../Data/LanguageType";
 
-export default interface IWordResponseDto
-{
+export default interface IWordDto{
     id: string;
     word: string;
-    translates: IWordTrasnalteResponseDto[];
+    pictures: string[];
+    translates: IWordTrasnalteDto[];
 }
 
-export interface IWordTrasnalteResponseDto {
-    
+export interface IWordTrasnalteDto {
     id: string;
     wordId: string;
     language: LanguageType;
     translates: string[];
+}
+
+export interface IWordRequestDto{
+    id: string;
+    word: string;
+    pictures: string[];
+    translatesData: IWordTrasnalteDto[];
 }

@@ -43,7 +43,7 @@ export default function MyEditor({ image, width, height }: AvatarEditorProps) {
 
     return (
         <Avatar
-        sizes="100px"
+         sizes="100px"
         >
             <AvatarEditor
                 ref={editor}

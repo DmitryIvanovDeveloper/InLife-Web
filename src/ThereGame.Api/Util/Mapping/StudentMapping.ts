@@ -1,7 +1,7 @@
 import IStudentModel from "../../../ThereGame.Business/Models/IStudentModel";
 import IStudentDto from "./IStudentRequestDto";
 
-export default class IStudentMapping {
+export default class StudentMapping {
     public request(student: IStudentModel): IStudentDto {
         return {
             id: student.id,

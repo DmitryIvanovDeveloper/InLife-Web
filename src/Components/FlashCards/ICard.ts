@@ -1,6 +1,6 @@
 export default interface ICard {
     id: string;
     question: string;
-    answer: string;
+    answers: string[];
     options: number
 }

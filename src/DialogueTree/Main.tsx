@@ -19,8 +19,6 @@ export default function Main() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // setGameWwebGL();
-
         var role = localStorage.getItem("Role");
         if (Number(role) == RoleType.Teacher) {
             teacherQueriesApi.getById().then(result => {

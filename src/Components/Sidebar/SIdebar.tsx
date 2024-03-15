@@ -106,14 +106,10 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
     };
 
     const handleDrawerClose = () => {
-        if (!!actionState.selectedStudentId) {
-            return;
-        }
         setOpen(false);
     };
 
     useEffect(() => {
-        console.log(actionState.selectedStudentId);
         setCurrentComponent(props.elements)
     }, [actionState.selectedStudentId]);
 
@@ -123,7 +119,6 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
         }, 500)
     }, []);
 
-    console.log(actionState.selectedStudentId);
     return (
         <Box sx={{ overflow: 'hidden' }}>
 
@@ -156,11 +151,10 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
-                        {!!actionState.selectedStudentId
-                            ? null
-                            : theme.direction === 'rtl'
-                                ? <ChevronRightIcon />
-                                : <ChevronLeftIcon />}
+                        {theme.direction === 'rtl'
+                            ? <ChevronRightIcon />
+                            : <ChevronLeftIcon />
+                        }
 
                     </IconButton>
                 </DrawerHeader>
@@ -168,7 +162,7 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
                 {open ? props.barElements : null}
             </Drawer>
 
-            <Box component="main" sx={{ flexGrow: 1, filter: open ? "blur(0px)" : "none", overflow: 'hidden' }}>
+            <Box component="main" sx={{ flexGrow: 1, filter: open ? "blur(0px)" : "none", overflow: 'hidden', position: 'relative' }}>
                 {!!actionState.selectedNpc.scenarioId
                     ? <Box>
                         {props.elements}

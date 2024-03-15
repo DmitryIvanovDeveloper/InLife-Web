@@ -9,6 +9,7 @@ const RoutesAPI = {
     authSignUpTeacher: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/teachers`,
     authSignUpStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/students`,
     words: `${process.env.REACT_APP_SERVER}/api/words`,
+    studentsVocabularyBlocks: `${process.env.REACT_APP_SERVER}/api/vocabularyBlocks`,
     
     chatGPT: "https://api.openai.com/v1/chat/completions"
 }
