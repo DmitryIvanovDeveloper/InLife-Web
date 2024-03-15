@@ -43,7 +43,8 @@ export default function FlashCards(props: IFlashCardsProps) {
 
 
     useEffect(() => {
-        var expectedBlockData = wordsState.filter(ws => vocabularyBlocks.find(vb => vb.id == selectedVocabularyBlockIndex)?.wordsId.includes(ws.id));
+        var expectedBlockData = wordsState
+            .filter(ws => vocabularyBlocks.sort((a, b) => a.order - b.order).find(vb => vb.id == selectedVocabularyBlockIndex)?.wordsId.includes(ws.id));
         var cards = expectedBlockData.map(card => {
             var wordDtaByLanguage = card.wordTranslates.find(wt => wt.language == LanguageType.Russian);
             return {
@@ -178,8 +179,8 @@ export default function FlashCards(props: IFlashCardsProps) {
                     onDeleteCard={deleteStudentCard}
                     onCreateBlock={onCreateBlock}
                 />
-                <WordsList onSelectWord={onEditCard} onAddWord={onUpdateVocabularyBlock} />
 
+                <WordsList onSelectWord={onEditCard} onAddWord={onUpdateVocabularyBlock} />
             </Box>
 
 
