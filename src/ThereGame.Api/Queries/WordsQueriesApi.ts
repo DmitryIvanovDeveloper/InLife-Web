@@ -14,7 +14,6 @@ export default function useWordsQueriesApi() {
     const getWordsData = async (): Promise<IWordModel[]> => {
 
         var response = await wordsService.get();
-        console.log(response)
         if (response.status == Status.OK)
         {
             var data = new WordMapping().response(response.data);

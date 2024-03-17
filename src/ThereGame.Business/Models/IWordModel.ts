@@ -1,8 +1,10 @@
 import { LanguageType } from "../../Data/LanguageType";
+import { SpeechPart } from "./SpeechPart";
 
 export default interface WordModel{
     id: string;
     word: string;
+    speechPart: SpeechPart;
     pictures: string[]
     wordTranslates: IWordTrasnalteModel[];
 }

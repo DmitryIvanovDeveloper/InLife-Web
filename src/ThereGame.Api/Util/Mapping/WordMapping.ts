@@ -1,5 +1,4 @@
-import ITranslateModel from "../../../ThereGame.Business/Models/ITranslateModel"
-import IWordModel, { IWordTrasnalteModel } from "../../../ThereGame.Business/Models/IWordModel"
+import IWordModel from "../../../ThereGame.Business/Models/IWordModel"
 import IWordDto, { IWordRequestDto } from "../../../ThereGame.Infrastructure/Services/Dto/IWordDto"
 
 export default class WordMapping {
@@ -9,6 +8,7 @@ export default class WordMapping {
             return {
                 id: wordDto.id,
                 word: wordDto.word,
+                speechPart: wordDto.speechPart,
                 pictures: wordDto.pictures,
                 wordTranslates: wordDto.translates.map(translateDto => {
                     return {
@@ -25,6 +25,7 @@ export default class WordMapping {
         return {
             id: wordDto.id,
             word: wordDto.word,
+            speechPart: wordDto.speechPart,
             pictures: wordDto.pictures,
             translatesData: wordDto.wordTranslates.map(translateDto => {
                 return {

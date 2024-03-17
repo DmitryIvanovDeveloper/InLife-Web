@@ -5,5 +5,5 @@ export default interface IStudentVocabularyRequestD {
     studentId: string,
     name: string;
     wordsId: string[];
-    order: number;
+    createdAt: Date;
 }

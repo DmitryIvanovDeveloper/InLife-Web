@@ -8,10 +8,11 @@ export interface IFlashcardProps {
     flashcard: ICard;
     onEdit: (cardId: string) => void;
     onDelete: (cardId: string) => void;
+    isCardSideFront: boolean;
 }
 
 export default function Flashcard(props: IFlashcardProps) {
-    const [flip, setFlip] = useState(false)
+    const [flip, setFlip] = useState(props.isCardSideFront)
     const [height, setHeight] = useState<number>(0)
 
     const frontEl = useRef<HTMLInputElement>(null);
@@ -28,6 +29,10 @@ export default function Flashcard(props: IFlashcardProps) {
     }
 
     useEffect(setMaxHeight, [props.flashcard.question, props.flashcard.answers, props.flashcard.options])
+    
+    useEffect(() => {
+        setFlip(props.isCardSideFront)
+    }, [props.isCardSideFront])
 
     useEffect(() => {
         window.addEventListener('resize', setMaxHeight)

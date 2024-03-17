@@ -5,19 +5,22 @@ import NewCard from './NewCard';
 import useWordsQueriesApi from '../../ThereGame.Api/Queries/WordsQueriesApi';
 import ICard from './ICard';
 import useStudentQueriesApi from '../../ThereGame.Api/Queries/StudentQueriesApi';
-import './FlashCards.css'
 import { useWordsState } from '../../Data/useWords';
 import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStudentVocabularyBlock';
 import VocabularyBlockTabs from './VocabularyBlockTabs';
 import { LanguageType } from '../../Data/LanguageType';
 import WordsList from '../WordsList/WordsList';
+import DevidedLabel from '../Headers/DevidedLabel';
+import './FlashCards.css'
+import GameWebGLSettings from '../GameWebGL/GameWebGLSettings';
+import { useSelectedStudentVocabularyBlockCards } from '../../Data/useSelectedStudentVocabularyBlockCards';
+import GameBuildLetterseWebGLEditor from '../GameWebGL/GameBuildLettersWebGLEditor';
 
 export interface IFlashCardsProps {
     studentId: string;
 }
 
 export default function FlashCards(props: IFlashCardsProps) {
-    const [flashcards, setFlashCards] = useState<ICard[]>([])
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [editCardId, setEditCardId] = useState<string>("");
@@ -29,7 +32,9 @@ export default function FlashCards(props: IFlashCardsProps) {
     const [selectedVocabularyBlockIndex, setSelectedVocabularyBlockIndex] = useState<string>("");
     const [selectedVocabularyBlockData, setSelectedVocabularyBlockData] = useState<ICard[]>([]);
     const [isCreateCard, setIsCreateCard] = useState<boolean>(false);
-
+    const [selectedStudentVocabularyBlockCards, setSelectedStudentVocabularyBlockCards] = useSelectedStudentVocabularyBlockCards();
+    const [isPlay, setIsPlay] = useState<boolean>(false);
+    
     useEffect(() => {
         wordQueriesApi.get()
     }, []);
@@ -42,19 +47,29 @@ export default function FlashCards(props: IFlashCardsProps) {
     }, []);
 
 
+    const sorByDate = (vocabularyBlocks: IStudentVocabularyBlockModel[]) => {
+        return vocabularyBlocks.sort((a,b) => {
+            return new Date(a.createdAt).getTime() - 
+                new Date(b.createdAt).getTime()
+        })
+    }
     useEffect(() => {
         var expectedBlockData = wordsState
-            .filter(ws => vocabularyBlocks.sort((a, b) => a.order - b.order).find(vb => vb.id == selectedVocabularyBlockIndex)?.wordsId.includes(ws.id));
+            .filter(ws => sorByDate(vocabularyBlocks).find(vb => vb.id == selectedVocabularyBlockIndex)?.wordsId.includes(ws.id));
+
         var cards = expectedBlockData.map(card => {
             var wordDtaByLanguage = card.wordTranslates.find(wt => wt.language == LanguageType.Russian);
             return {
                 id: card.id,
                 question: card.word,
                 answers: wordDtaByLanguage?.translates ?? [],
-                options: 0
+                options: 0,
+                pictures: card.pictures
             }
         })
+
         setSelectedVocabularyBlockData(cards)
+        setSelectedStudentVocabularyBlockCards(cards);
     }, [vocabularyBlocks, selectedVocabularyBlockIndex])
 
 
@@ -120,7 +135,7 @@ export default function FlashCards(props: IFlashCardsProps) {
             studentId: expectedVocabularyBlock.studentId,
             name: name ?? expectedVocabularyBlock.name,
             wordsId: wordsId,
-            order: expectedVocabularyBlock.order
+            createdAt: expectedVocabularyBlock.createdAt
         }
 
         const data = await studentQueriesApi.updateVocabularyBlock(vocabularyBlock);
@@ -131,11 +146,14 @@ export default function FlashCards(props: IFlashCardsProps) {
         const data = await studentQueriesApi.createVocabularyBlock(props.studentId, vocabularyBlocks.length);
         setVocabularyBlocks(data);
     }
+    const onDeleteBlock = async () => {
+        const data = await studentQueriesApi.deleteVocabularyBlock(selectedVocabularyBlockIndex, props.studentId);
+        setVocabularyBlocks(data);
+    }
 
     const deleteStudentCard = (id: string) => {
         onUpdateVocabularyBlock(id);
     }
-
 
     useEffect(() => {
         var id = localStorage.getItem("last vb");
@@ -155,20 +173,19 @@ export default function FlashCards(props: IFlashCardsProps) {
         <Box
             width='100%'
             height='100vh'
-            display='flex'
-            flexDirection='row'
+            
         >
-            <Box
-                width="900px"
-            >
-
-            </Box>
+            <Button>Play</Button>
+            <GameBuildLetterseWebGLEditor settings={new GameWebGLSettings().getBuilRandomLettersSettings()} setIsPlay={setIsPlay}/>
+            <DevidedLabel  name="Vocabulary Blocks"/>
 
             <Box
                 width="100%"
                 marginTop='100px'
                 marginLeft='40px'
                 display='flex'
+                justifyContent='center'
+
             >
                 <VocabularyBlockTabs
                     vocabularyBlocks={vocabularyBlocks}
@@ -178,11 +195,12 @@ export default function FlashCards(props: IFlashCardsProps) {
                     onEditCard={setEditCardId}
                     onDeleteCard={deleteStudentCard}
                     onCreateBlock={onCreateBlock}
+                    onDeleteBlock={onDeleteBlock}
+                    isCardSideFront={isPlay} 
                 />
 
                 <WordsList onSelectWord={onEditCard} onAddWord={onUpdateVocabularyBlock} />
             </Box>
-
 
             <Fab
                 aria-label="save"

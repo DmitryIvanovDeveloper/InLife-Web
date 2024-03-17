@@ -60,6 +60,16 @@ export default function useStudentQueriesApi() {
             await wordsService.createVocabularyBlocks(dto, token);
 
             return await getVocabularyBlocks(studentId);
+        },
+        deleteVocabularyBlock: async (vocabularyId: string, studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
+
+            var token = localStorage.getItem("Token");
+            if (!token || !vocabularyId) {
+                return [];
+            }
+
+            await wordsService.deleteVocabularyBlocks(vocabularyId, token);
+            return await getVocabularyBlocks(studentId);
         }
     }
 }

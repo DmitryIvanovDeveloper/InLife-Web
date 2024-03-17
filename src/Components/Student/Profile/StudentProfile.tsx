@@ -3,8 +3,9 @@ import Button from '@mui/material/Button';
 import * as React from 'react';
 import AppStore from '../../../Images/Stores/AppStore.png';
 import PlayMarket from '../../../Images/Stores/Google_Play.png';
-import GameWebGL from '../../GameWebGL/GameWebGL';
+import GameInlifeWebGL from '../../GameWebGL/GameWebGL';
 import { useEffect } from 'react';
+import GameWebGLSettings from '../../GameWebGL/GameWebGLSettings';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -69,7 +70,7 @@ export default function StudentProfile() {
                 flexDirection='column'
                 alignItems='center'
             >
-                <GameWebGL />
+                <GameInlifeWebGL settings={new GameWebGLSettings().getInLifeSettings()}/>
             </Box>
         </Box>
     );

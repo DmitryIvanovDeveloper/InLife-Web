@@ -51,7 +51,7 @@ export default class WordService implements IWordService {
     async update(teacherId: string, request: IWordRequestDto): Promise<TypedResult<Status>> {
         try {
             var response = await fetch(RoutesAPI.words, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'X-THEREGAME-AUTH': `${teacherId}`,
                     'Content-Type': 'application/json',

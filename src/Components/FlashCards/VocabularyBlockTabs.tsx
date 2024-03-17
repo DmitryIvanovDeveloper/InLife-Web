@@ -5,6 +5,8 @@ import Box from '@mui/material/Box';
 import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStudentVocabularyBlock';
 import Flashcard from './Flashcard';
 import ICard from './ICard';
+import { Grid, Typography } from '@mui/material';
+import DevidedLabel from '../Headers/DevidedLabel';
 
 
 
@@ -16,6 +18,9 @@ export interface IVocabularyBlockTabsProps {
     onEditCard: (id: string) => void;
     onDeleteCard: (id: string) => void;
     onCreateBlock: () => void;
+    onDeleteBlock: () => void;
+    isCardSideFront: boolean;
+
 }
 
 export default function VocabularyBlockTabs(props: IVocabularyBlockTabsProps) {
@@ -25,9 +30,24 @@ export default function VocabularyBlockTabs(props: IVocabularyBlockTabsProps) {
         props.setSelectedVocabularyBlockIndex(newValue);
     };
 
+    function BlockName(name: string, date: Date) {
+       var updatedDate = new Date(date)
+        return (
+            <Box>
+                <Typography>{name}</Typography>
+                <Typography>{`${updatedDate.toISOString().substring(0, 10)}`}</Typography>
+            </Box>
+
+        )
+
+    }
+
     return (
-        <Box sx={{ width: '100%' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex' }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent: 'center', minWidth: "100%" }}>
+                <Tab onClick={props.onDeleteBlock} label={"-"} />
+
                 <Tabs
                     value={props.selectedVocabularyBlockIndex}
                     onChange={handleChange}
@@ -36,23 +56,31 @@ export default function VocabularyBlockTabs(props: IVocabularyBlockTabsProps) {
                     aria-label="scrollable auto tabs example"
                 >
                     {props.vocabularyBlocks.map((vb, index) => (
-                        <Tab label={vb.name} value={vb.id} />
+                        <Tab
+                            label={BlockName(vb.name, vb.createdAt)}
+                            value={vb.id} />
                     ))}
 
-                    
+
                 </Tabs>
                 <Tab onClick={props.onCreateBlock} label={"+"} />
 
             </Box>
-            {props.cards.map((data, index) => (
-                <Flashcard
-                    flashcard={data}
-                    onEdit={props.onEditCard}
-                    onDelete={props.onDeleteCard}
-                />
+            <Grid container width='50%' >
+                {props.cards.map((data, index) => (
+                    <Grid xs={4} item margin={1}>
+                        <Flashcard
+                            isCardSideFront={props.isCardSideFront}
+                            flashcard={data}
+                            onEdit={props.onEditCard}
+                            onDelete={props.onDeleteCard}
+                        />
 
+                    </Grid>
 
-            ))}
+                ))}
+            </Grid>
+
         </Box>
     );
 }

@@ -4,6 +4,7 @@ import TypedResult from "../../../../ThereGame.Infrastructure/Statuses/Result";
 import { Status } from "../../../../ThereGame.Infrastructure/Statuses/Status";
 
 export default interface IStudentService {
+    deleteVocabularyBlocks(vocabularyId: string, token: string): Promise<TypedResult<Status>>;
     updateVocabularyBlock(request: IStudentVocabularyBlocksDto, id: string): Promise<TypedResult<Status>>
     getVocabularyBlocks(teacherId: string, studemtId: string): Promise<TypedResult<Status>>
     createVocabularyBlocks(dto: ICreateStudentVocabularyBlockDto, teacherId: string): Promise<TypedResult<Status>>

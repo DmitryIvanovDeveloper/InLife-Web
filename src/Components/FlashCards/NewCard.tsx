@@ -10,11 +10,14 @@ import { useWordsState } from "../../Data/useWords";
 import useWordsQueriesApi from "../../ThereGame.Api/Queries/WordsQueriesApi";
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import ImageLoader from "./ImageLoader";
+import { SpeechPart } from "../../ThereGame.Business/Models/SpeechPart";
+import SpeechPartSelect from "../Select/SpeechPartSelect";
 
 
 const defaultWordModel: IWordModel = {
     id: "",
     word: "",
+    speechPart: SpeechPart.Unknown,
     pictures: [],
     wordTranslates: [{
         id: "",
@@ -32,11 +35,9 @@ export interface INewCardProps {
 
 export default function NewCard(props: INewCardProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [categoty, setCategoty] = useState('');
     const [wordData, setWordData] = useState<IWordModel>(defaultWordModel);
     const [wordsData] = useWordsState();
     const [matchedWordData, setMatchedWordData] = useState<IWordModel[]>([]);
-    const studentQueriesApi = useStudentQueriesApi();
     const wordQueriesApi = useWordsQueriesApi();
 
     useEffect(() => {
@@ -50,6 +51,7 @@ export default function NewCard(props: INewCardProps) {
             id: wordId,
             word: "",
             pictures: [],
+            speechPart: SpeechPart.Unknown,
             wordTranslates: [{
                 id: uuidv4(),
                 wordId: wordId,
@@ -62,10 +64,18 @@ export default function NewCard(props: INewCardProps) {
         setWordData(defaultWordData);
     }, []);
 
-    const handleChange = (event: SelectChangeEvent) => {
-        setCategoty(event.target.value);
+    const onChangeSpeechPart = (speechPart: SpeechPart) => {
+
+        
+        setWordData(prev => ({
+            ...prev,
+            speechPart: speechPart
+        }))
     };
 
+    useEffect(() => {
+        console.log(SpeechPart[wordData.speechPart]);
+    }, [wordData.speechPart]);
     const onWordChange = (word: string) => {
         setWordData(prev => ({
             ...prev,
@@ -130,12 +140,10 @@ export default function NewCard(props: INewCardProps) {
     }, [wordData.word]);
 
     const onUpdateVocabularyBlock = async () => {
-        await wordQueriesApi.create(wordData);
-
-
-        // await studentQueriesApi.updateVocabularyBlock(studentVocabularyBlock)
-        return;
-
+        if (!props.cardData) {
+            await wordQueriesApi.create(wordData);
+            return;
+        }
         await wordQueriesApi.update(wordData);
     }
 
@@ -163,6 +171,10 @@ export default function NewCard(props: INewCardProps) {
             pictures: [...prev.pictures, picture.data_url]
         }));
     }
+
+    const getSpeechPartKeys = () => {
+        return Object.keys(SpeechPart).filter((v) => isNaN(Number(v)))
+    }
     return (
         <Box display='flex' flexDirection='column'>
             <Box sx={{ m: 1 }}>
@@ -171,10 +183,6 @@ export default function NewCard(props: INewCardProps) {
                     : <Typography>Edit Card</Typography>
                 }
             </Box>
-
-            <ImageLoader
-                setImage={onAddPicture}
-            />
 
             <Grid>
                 {matchedWordData.map(md => (
@@ -188,6 +196,10 @@ export default function NewCard(props: INewCardProps) {
                 ))}
 
             </Grid>
+            <ImageLoader
+                setImage={onAddPicture}
+            />
+
 
             <Card sx={{ display: 'flex', flexDirection: 'column' }}>
                 <ImageList variant="woven" sx={{ width: "100%", maxHeight: 300, minHeight: 150 }} cols={3} rowHeight={164}>
@@ -199,7 +211,7 @@ export default function NewCard(props: INewCardProps) {
 
                             <ImageListItem key={uuidv4()} >
                                 <img
-                                    style={{width: 150, height: 150}}
+                                    style={{ width: 150, height: 150 }}
                                     srcSet={`${picture}`}
                                     src={`${picture}`}
                                     loading="lazy"
@@ -209,6 +221,9 @@ export default function NewCard(props: INewCardProps) {
 
                     ))}
                 </ImageList>
+
+              <SpeechPartSelect setSelectedSpeechPart={onChangeSpeechPart} selectedSpeechPart={wordData.speechPart} />
+
                 <TextField
                     value={wordData.word} onChange={(event) => onWordChange(event.target.value)} sx={{ m: 1, }} label='word'></TextField>
                 <Box>

@@ -9,7 +9,7 @@ export default class StudentVocabularyBlockMapping {
             studentId: studentVocabularyBlock.studentId,
             name: studentVocabularyBlock.name,
             wordsId: studentVocabularyBlock.wordsId,
-            order: studentVocabularyBlock.order,
+            createdAt: studentVocabularyBlock.createdAt,
         }
     }
     public response(studentVocabularyBlocks: IStudentVocabularyBlocksDto[]): IStudentVocabularyBlockModel[] {
@@ -19,7 +19,7 @@ export default class StudentVocabularyBlockMapping {
                 studentId: sv.studentId,
                 name: sv.name,
                 wordsId: sv.wordsId,
-                order: sv.order
+                createdAt: sv.createdAt
             }
         })
       

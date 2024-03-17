@@ -3,9 +3,12 @@ import { Unity, useUnityContext, } from "react-unity-webgl";
 import { Box, Button, CircularProgress, CircularProgressProps, Typography, } from "@mui/material";
 import './css/GameWebGL.css';
 import CircularProgressWithLabel from "../CircularProgress/CircularProgressWithLabel";
+import { IGameWebGLSettings } from "./GameWebGLSettings";
+
 export interface IGameWebJL {
+    settings: IGameWebGLSettings
 }
-export default function GameWebGL(props: IGameWebJL) {
+export default function GameInlifeWebGL(props: IGameWebJL) {
     const {
         unityProvider,
         isLoaded,
@@ -15,10 +18,7 @@ export default function GameWebGL(props: IGameWebJL) {
         UNSAFE__unityInstance
 
     } = useUnityContext({
-        loaderUrl: "/unity/InLifeWebGl.loader.js",
-        dataUrl: "/unity/InLifeWebGl.data",
-        frameworkUrl: "/unity/InLifeWebGl.framework.js",
-        codeUrl: "/unity/InLifeWebGl.wasm",
+       ...props.settings,
         webglContextAttributes: {
             preserveDrawingBuffer: true,
         },

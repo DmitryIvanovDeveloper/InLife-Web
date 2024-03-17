@@ -1,9 +1,10 @@
-import { Box, Button, IconButton, List, ListItem, Stack } from '@mui/material';
+import { Avatar, Box, Button, IconButton, List, ListItem, Stack } from '@mui/material';
 import React from 'react';
 import ImageUploading from 'react-images-uploading';
+import UploadIco from '../../Images/photo.png';
 
 export interface IImageCardUploaderProps {
-    setImage: (images: string) => void;
+    setImage: (images: string) => void
 }
 export default function ImageCardUploader(props: IImageCardUploaderProps) {
 
@@ -12,7 +13,11 @@ export default function ImageCardUploader(props: IImageCardUploaderProps) {
     };
 
     return (
-        <div className="App">
+        <Box
+            display='flex' 
+            justifyContent='flex-end'
+        >
+       
             <ImageUploading
                 value={[]}
                 onChange={onChange}
@@ -27,15 +32,22 @@ export default function ImageCardUploader(props: IImageCardUploaderProps) {
                     // write your building UI
                     <Box className="upload__image-wrapper">
                         <Button
+                           sx={{
+                            backgroundImage:   `url(${UploadIco})`,
+                            backgroundRepeat: "no-repeat",
+                            height: '65px',
+                            width: '50px',
+                            backgroundSize: 'cover'
+                        }}
                             style={isDragging ? { color: 'red' } : undefined}
                             onClick={onImageUpload}
                             {...dragProps}
                         >
-                            Click or Drop here
+                            
                         </Button>
                     </Box>
                 )}
             </ImageUploading>
-        </div>
+        </Box>
     );
 }

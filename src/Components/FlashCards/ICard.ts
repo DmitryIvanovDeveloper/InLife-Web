@@ -3,4 +3,5 @@ export default interface ICard {
     question: string;
     answers: string[];
     options: number
+    pictures: string[];
 }

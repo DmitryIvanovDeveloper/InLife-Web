@@ -1,23 +1,35 @@
-import { Box, List, CardActionArea, Card, useThemeProps, Button, Grid, Typography, IconButton } from "@mui/material";
+import { Box, List, CardActionArea, Card, useThemeProps, Button, Grid, Typography, IconButton, TextField } from "@mui/material";
 import { useWordsState } from "../../Data/useWords";
-import { useState } from "react";
-import Draggable from "react-draggable";
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-import ActionButton from "../Button/ActionButton";
+import { useEffect, useState } from "react";
+import IWordModel from "../../ThereGame.Business/Models/IWordModel";
 export interface IWordsList {
     onSelectWord: (id: string) => void;
     onAddWord: (id: string) => void;
 }
 export default function WordsList(props: IWordsList) {
     const [wordsState] = useWordsState();
-    const [isMouseOverButton, setIsMouseOverButton] = useState<boolean>(false);
+    const [serchWord, setSearchWord] = useState<string>("");
+    const [matchedWordData, setMatchedWordData] = useState<IWordModel[]>([]);
+
+    useEffect(() => {
+        const matchedWordData = wordsState.filter(value => value.word.toLowerCase().includes(serchWord.toLowerCase()))
+        setMatchedWordData(matchedWordData);
+    }, [serchWord]);
+
+    useEffect(() => {
+        setMatchedWordData(wordsState);
+    }, [wordsState]);
 
     return (
-       
+        <Box sx={{ mt: "60px", height: '10vh' }}>
+            <TextField
+                label='search'
+                onChange={(event) => setSearchWord(event.target.value)}
+            />
             <List
-                sx={{ mt: "50px", overflow: 'auto', width: '200px', p: 1 }}
+                sx={{ overflow: 'auto', width: '200px', height: '70vh', }}
             >
-                {wordsState.map(card => (
+                {matchedWordData.map(card => (
                     <CardActionArea onClick={() => props.onAddWord(card.id)} sx={{ width: '100px', }}>
                         <Card sx={{ p: 1, height: "50px", display: "flex", alignItems: 'center', justifyContent: "center" }}>
                             <Typography alignItems='center' align="center" variant="h6">{card.word}</Typography>
@@ -25,5 +37,7 @@ export default function WordsList(props: IWordsList) {
                     </CardActionArea>
                 ))}
             </List>
+        </Box>
+
     )
 }
