@@ -2,15 +2,15 @@ import { injectable } from "inversify";
 import { RoutesAPI } from "../../Routes";
 import TypedResult from "../Statuses/Result";
 import { Status } from "../Statuses/Status";
-import IStudentService from "../../ThereGame.Business/Domain/Util/Services/IStudentService";
+import IVocabularyBlockService from "../../ThereGame.Business/Domain/Util/Services/IVocabularyBlockService";
 import ICreateStudentVocabularyBlockDto from "./Dto/ICreateStudentVocabularyBlockDto";
 import IStudentVocabularyBlocksDto from "./Dto/IStudentVocabularyBlocksDto";
 import "reflect-metadata";
 
 @injectable()
-export default class StudentService implements IStudentService {
+export default class VocabularyBlockService implements IVocabularyBlockService {
   
-    async createVocabularyBlocks(request: ICreateStudentVocabularyBlockDto, teacherId: string): Promise<TypedResult<Status>> {
+    async create(request: ICreateStudentVocabularyBlockDto, teacherId: string): Promise<TypedResult<Status>> {
         try {
             var response = await fetch(RoutesAPI.studentsVocabularyBlocks
                 , {
@@ -33,7 +33,7 @@ export default class StudentService implements IStudentService {
         }
     }
     
-    async updateVocabularyBlock(request: IStudentVocabularyBlocksDto, id: string): Promise<TypedResult<Status>> {
+    async update(request: IStudentVocabularyBlocksDto, id: string): Promise<TypedResult<Status>> {
         try {
             var response = await fetch(RoutesAPI.studentsVocabularyBlocks
                 , {
@@ -56,7 +56,7 @@ export default class StudentService implements IStudentService {
         }
     }
 
-    async getVocabularyBlocks(teacherId: string, studentId: string): Promise<TypedResult<Status>> {
+    async get(teacherId: string, studentId: string): Promise<TypedResult<Status>> {
         try {
             var response = await fetch(`${RoutesAPI.studentsVocabularyBlocks}?id=${studentId}`, {
                 headers: {
@@ -77,7 +77,7 @@ export default class StudentService implements IStudentService {
         }
     }
 
-    async deleteVocabularyBlocks(vocabularyId: string, token: string): Promise<TypedResult<Status>> {
+    async delete(vocabularyId: string, token: string): Promise<TypedResult<Status>> {
         try {
             var response = await fetch(`${RoutesAPI.studentsVocabularyBlocks}?id=${vocabularyId}`
                 , {

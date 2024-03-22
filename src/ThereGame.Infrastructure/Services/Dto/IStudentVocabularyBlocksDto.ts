@@ -1,9 +1,16 @@
-import IWordDto, { IWordRequestDto } from "./IWordDto";
-
-export default interface IStudentVocabularyRequestD {
+export default interface IStudentVocabularyRequestDto {
     id: string;
     studentId: string,
     name: string;
     wordsId: string[];
     createdAt: Date;
+    quizlGameStatistics?: IQuizleGameStatisticDto[]
+}
+
+export interface IQuizleGameStatisticDto {
+    id: string;
+    quizlGameId: string;
+    answers: string[];
+    createdAt: Date;
+    vocabularyBlockId: string;
 }

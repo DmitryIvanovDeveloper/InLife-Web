@@ -5,16 +5,21 @@ import IWordModel from "../../ThereGame.Business/Models/IWordModel";
 export interface IWordsList {
     onSelectWord: (id: string) => void;
     onAddWord: (id: string) => void;
+    onCreateNewWord: () => void;
+    
 }
 export default function WordsList(props: IWordsList) {
     const [wordsState] = useWordsState();
-    const [serchWord, setSearchWord] = useState<string>("");
+    const [searchWord, setSearchWord] = useState<string>("");
     const [matchedWordData, setMatchedWordData] = useState<IWordModel[]>([]);
 
     useEffect(() => {
-        const matchedWordData = wordsState.filter(value => value.word.toLowerCase().includes(serchWord.toLowerCase()))
+        const matchedWordData = wordsState.filter(value => value.word.toLowerCase().includes(searchWord.toLowerCase()))
+        if (!matchedWordData.length) {
+            localStorage.setItem("new word", searchWord);
+        }
         setMatchedWordData(matchedWordData);
-    }, [serchWord]);
+    }, [searchWord]);
 
     useEffect(() => {
         setMatchedWordData(wordsState);
@@ -26,6 +31,10 @@ export default function WordsList(props: IWordsList) {
                 label='search'
                 onChange={(event) => setSearchWord(event.target.value)}
             />
+                 {!matchedWordData.length
+                    ? <Button onClick={props.onCreateNewWord}>Create new word</Button>
+                    : null
+                }
             <List
                 sx={{ overflow: 'auto', width: '200px', height: '70vh', }}
             >
@@ -36,6 +45,7 @@ export default function WordsList(props: IWordsList) {
                         </Card>
                     </CardActionArea>
                 ))}
+           
             </List>
         </Box>
 

@@ -10,6 +10,7 @@ const RoutesAPI = {
     authSignUpStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/students`,
     words: `${process.env.REACT_APP_SERVER}/api/words`,
     studentsVocabularyBlocks: `${process.env.REACT_APP_SERVER}/api/vocabularyBlocks`,
+    quizlGames: `${process.env.REACT_APP_SERVER}/api/quizlGames`,
     
     chatGPT: "https://api.openai.com/v1/chat/completions"
 }

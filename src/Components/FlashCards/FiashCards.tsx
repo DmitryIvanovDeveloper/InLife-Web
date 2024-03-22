@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef, ReactElement } from 'react';
 import { Avatar, Box, Button, Card, CardActionArea, Dialog, DialogActions, DialogContent, DialogContentText, Fab, Grid, List, Typography, useMediaQuery, useTheme } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import NewCard from './NewCard';
+import NewCard from './NewCard/NewCard';
 import useWordsQueriesApi from '../../ThereGame.Api/Queries/WordsQueriesApi';
 import ICard from './ICard';
 import useStudentQueriesApi from '../../ThereGame.Api/Queries/StudentQueriesApi';
 import { useWordsState } from '../../Data/useWords';
 import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStudentVocabularyBlock';
-import VocabularyBlockTabs from './VocabularyBlockTabs';
+import VocabularyBlockTabs from '../VocabularyBlocks/VocabularyBlockTabs';
 import { LanguageType } from '../../Data/LanguageType';
 import WordsList from '../WordsList/WordsList';
 import DevidedLabel from '../Headers/DevidedLabel';
@@ -15,6 +14,8 @@ import './FlashCards.css'
 import GameWebGLSettings from '../GameWebGL/GameWebGLSettings';
 import { useSelectedStudentVocabularyBlockCards } from '../../Data/useSelectedStudentVocabularyBlockCards';
 import GameBuildLetterseWebGLEditor from '../GameWebGL/GameBuildLettersWebGLEditor';
+import QuizlBuilder from '../QuizlBuilder/QuizlBuilder';
+import VocablularyBlockStatistics from '../VocabularyBlocks/VocabularyBlockStatistics';
 
 export interface IFlashCardsProps {
     studentId: string;
@@ -34,18 +35,18 @@ export default function FlashCards(props: IFlashCardsProps) {
     const [isCreateCard, setIsCreateCard] = useState<boolean>(false);
     const [selectedStudentVocabularyBlockCards, setSelectedStudentVocabularyBlockCards] = useSelectedStudentVocabularyBlockCards();
     const [isPlay, setIsPlay] = useState<boolean>(false);
+    const [isShowCreateNEwWordButton, setIsShowCreateNEwWordButton] = useState<boolean>(false);
     
     useEffect(() => {
         wordQueriesApi.get()
     }, []);
 
     useEffect(() => {
-        studentQueriesApi.getVocabularyBlocks(props.studentId)
+        studentQueriesApi.get(props.studentId)
             .then(data => {
                 setVocabularyBlocks(data);
             });
     }, []);
-
 
     const sorByDate = (vocabularyBlocks: IStudentVocabularyBlockModel[]) => {
         return vocabularyBlocks.sort((a,b) => {
@@ -53,6 +54,7 @@ export default function FlashCards(props: IFlashCardsProps) {
                 new Date(b.createdAt).getTime()
         })
     }
+
     useEffect(() => {
         var expectedBlockData = wordsState
             .filter(ws => sorByDate(vocabularyBlocks).find(vb => vb.id == selectedVocabularyBlockIndex)?.wordsId.includes(ws.id));
@@ -84,7 +86,7 @@ export default function FlashCards(props: IFlashCardsProps) {
                     "& .MuiDialog-container": {
                         "& .MuiPaper-root": {
                             width: "100%",
-                            maxWidth: "800px",  // Set your width here
+                            maxWidth: "900px",  // Set your width here
                         },
                     },
                 }}
@@ -135,19 +137,20 @@ export default function FlashCards(props: IFlashCardsProps) {
             studentId: expectedVocabularyBlock.studentId,
             name: name ?? expectedVocabularyBlock.name,
             wordsId: wordsId,
-            createdAt: expectedVocabularyBlock.createdAt
+            createdAt: expectedVocabularyBlock.createdAt,
+            quizlGameStatistics: expectedVocabularyBlock.quizlGameStatistics
         }
 
-        const data = await studentQueriesApi.updateVocabularyBlock(vocabularyBlock);
+        const data = await studentQueriesApi.update(vocabularyBlock);
         setVocabularyBlocks(data);
     }
 
     const onCreateBlock = async () => {
-        const data = await studentQueriesApi.createVocabularyBlock(props.studentId, vocabularyBlocks.length);
+        const data = await studentQueriesApi.create(props.studentId, vocabularyBlocks.length);
         setVocabularyBlocks(data);
     }
     const onDeleteBlock = async () => {
-        const data = await studentQueriesApi.deleteVocabularyBlock(selectedVocabularyBlockIndex, props.studentId);
+        const data = await studentQueriesApi.delete(selectedVocabularyBlockIndex, props.studentId);
         setVocabularyBlocks(data);
     }
 
@@ -164,17 +167,18 @@ export default function FlashCards(props: IFlashCardsProps) {
         setSelectedVocabularyBlockIndex(id);
     }, [vocabularyBlocks]);
 
-    if (!!editCardId || isCreateCard) {
-        return (
-            <Modal />
-        )
-    }
+   
     return (
         <Box
             width='100%'
             height='100vh'
             
         >
+            {!!editCardId || isCreateCard
+                ? <Modal />
+                : null
+            }
+            
             <Button>Play</Button>
             <GameBuildLetterseWebGLEditor settings={new GameWebGLSettings().getBuilRandomLettersSettings()} setIsPlay={setIsPlay}/>
             <DevidedLabel  name="Vocabulary Blocks"/>
@@ -198,18 +202,12 @@ export default function FlashCards(props: IFlashCardsProps) {
                     onDeleteBlock={onDeleteBlock}
                     isCardSideFront={isPlay} 
                 />
+            <VocablularyBlockStatistics quizlGameStatistics={vocabularyBlocks.find(vb => vb.id == selectedVocabularyBlockIndex)?.quizlGameStatistics ?? []}/>
 
-                <WordsList onSelectWord={onEditCard} onAddWord={onUpdateVocabularyBlock} />
+                <WordsList onSelectWord={onEditCard} onAddWord={onUpdateVocabularyBlock} onCreateNewWord={() => setIsCreateCard(true)}/>
             </Box>
-
-            <Fab
-                aria-label="save"
-                color="primary"
-                onClick={() => setIsCreateCard(true)}
-                sx={{ position: 'absolute', right: 0, bottom: 0 }}
-            >
-                {<AddIcon />}
-            </Fab>
+           
+           <QuizlBuilder onCreateNewWord={() => setIsCreateCard(true)}/>
         </Box>
 
     )

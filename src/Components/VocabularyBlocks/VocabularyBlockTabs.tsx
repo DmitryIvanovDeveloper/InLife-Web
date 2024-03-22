@@ -3,8 +3,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStudentVocabularyBlock';
-import Flashcard from './Flashcard';
-import ICard from './ICard';
+import Flashcard from '../FlashCards/Flashcard';
+import ICard from '../FlashCards/ICard';
 import { Grid, Typography } from '@mui/material';
 import DevidedLabel from '../Headers/DevidedLabel';
 

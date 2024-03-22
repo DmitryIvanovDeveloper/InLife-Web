@@ -13,3 +13,18 @@ export const Tenseses = [
     "Future Perfect Continuous",
     "Conditional"
 ];
+
+export enum TensesesType {
+    PresentSimple,
+    PresentContinuous,
+    PresentPerfect,
+    PresentPerfectContinuous,
+    PastSimple,
+    PastContinuous,
+    PastPerfect,
+    PastPerfectContinuous,
+    FutureSimple,
+    FuturePerfect,
+    FutureContinuous,
+    FuturePerfectContinuous,
+};

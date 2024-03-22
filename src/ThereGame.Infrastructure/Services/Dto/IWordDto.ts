@@ -5,7 +5,9 @@ export default interface IWordDto{
     id: string;
     word: string;
     pictures: string[];
-    speechPart: SpeechPart;
+    speechParts: SpeechPart[];
+    forms: string;
+    quizlGamesId: string[],
     translates: IWordTrasnalteDto[];
 }
 
@@ -19,7 +21,9 @@ export interface IWordTrasnalteDto {
 export interface IWordRequestDto{
     id: string;
     word: string;
-    speechPart: SpeechPart;
+    speechParts: SpeechPart[];
     pictures: string[];
+    forms: string;
+    quizlGamesId: string[],
     translatesData: IWordTrasnalteDto[];
 }

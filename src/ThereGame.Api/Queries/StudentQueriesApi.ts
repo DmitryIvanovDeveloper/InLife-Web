@@ -1,6 +1,6 @@
 import { appContainer } from "../../inversify.config";
 import { TYPES } from "../../types";
-import IStudentService from "../../ThereGame.Business/Domain/Util/Services/IStudentService";
+import IVocabularyBlockService from "../../ThereGame.Business/Domain/Util/Services/IVocabularyBlockService";
 import { Status } from "../../ThereGame.Infrastructure/Statuses/Status";
 import IStudentVocabularyBlockModel from "../../ThereGame.Business/Models/IStudentVocabularyBlock";
 import StudentVocabularyBlockMapping from "../Util/Mapping/StudentVocabularyBlockMapping";
@@ -9,14 +9,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 export default function useStudentQueriesApi() {
 
-    const wordsService = appContainer.get<IStudentService>(TYPES.StudentService);
+    const wordsService = appContainer.get<IVocabularyBlockService>(TYPES.VocabularyBlockService);
 
-    const getVocabularyBlocks = async (studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
+    const get = async (studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
         var token = localStorage.getItem("Token");
         if (!token || !studentId) {
             return [];
         }
-        const result = await wordsService.getVocabularyBlocks(token, studentId);
+        const result = await wordsService.get(token, studentId);
         if (result.status == Status.OK) {
             return new StudentVocabularyBlockMapping().response(result.data);
 
@@ -24,8 +24,9 @@ export default function useStudentQueriesApi() {
 
         return []
     }
+
     return {
-        updateVocabularyBlock: async (studentVocabularyBlock: IStudentVocabularyBlockModel): Promise<IStudentVocabularyBlockModel[]> => {
+        update: async (studentVocabularyBlock: IStudentVocabularyBlockModel): Promise<IStudentVocabularyBlockModel[]> => {
             var token = localStorage.getItem("Token");
             if (!token) {
                 return[];
@@ -34,16 +35,16 @@ export default function useStudentQueriesApi() {
 
             const studentVocabularyRequest = new StudentVocabularyBlockMapping().request(studentVocabularyBlock);
 
-            await wordsService.updateVocabularyBlock(studentVocabularyRequest, token);
-            return await getVocabularyBlocks(studentVocabularyBlock.studentId);
+            await wordsService.update(studentVocabularyRequest, token);
+            return await get(studentVocabularyBlock.studentId);
 
         },
 
-        getVocabularyBlocks: async (studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
-            return getVocabularyBlocks(studentId);
+        get: async (studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
+            return get(studentId);
         },
 
-        createVocabularyBlock: async (studentId: string, blocksLength: number): Promise<IStudentVocabularyBlockModel[]> => {
+        create: async (studentId: string, blocksLength: number): Promise<IStudentVocabularyBlockModel[]> => {
 
             var token = localStorage.getItem("Token");
             if (!token || !studentId) {
@@ -57,19 +58,19 @@ export default function useStudentQueriesApi() {
                 name: `Block ${blocksLength + 1}`
             }
 
-            await wordsService.createVocabularyBlocks(dto, token);
+            await wordsService.create(dto, token);
 
-            return await getVocabularyBlocks(studentId);
+            return await get(studentId);
         },
-        deleteVocabularyBlock: async (vocabularyId: string, studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
+        delete: async (vocabularyId: string, studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
 
             var token = localStorage.getItem("Token");
             if (!token || !vocabularyId) {
                 return [];
             }
 
-            await wordsService.deleteVocabularyBlocks(vocabularyId, token);
-            return await getVocabularyBlocks(studentId);
+            await wordsService.delete(vocabularyId, token);
+            return await get(studentId);
         }
     }
 }

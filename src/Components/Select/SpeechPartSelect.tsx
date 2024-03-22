@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import NativeSelect from '@mui/material/NativeSelect';
 import InputBase from '@mui/material/InputBase';
 import { SpeechPart } from '../../ThereGame.Business/Models/SpeechPart';
+import { useEffect } from 'react';
+import { Box, Button } from '@mui/material';
 
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
     'label + &': {
@@ -42,16 +42,42 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 }));
 
 export interface IStyledSelectProp {
-    setSelectedSpeechPart: (speechPart: SpeechPart) => void;
-    selectedSpeechPart: SpeechPart;
+    setSelectedSpeechParts: (speechParts: SpeechPart[]) => void;
+    selectedSpeechParts: SpeechPart[];
 }
 
 export default function SpeechPartSelect(props: IStyledSelectProp) {
 
-    const handleChange = (event: { target: { value: string } }) => {
+    const [speechParts, setSpeechParts] = React.useState<SpeechPart[]>([SpeechPart.Unknown]);
 
-        props.setSelectedSpeechPart(parseInt(event.target.value));
+    useEffect(() => {
+
+        if (!props.selectedSpeechParts.length) {
+            return;
+        }
+
+        setSpeechParts(props.selectedSpeechParts);
+    }, [props.selectedSpeechParts]);
+
+    const handleChange = (event: { target: { value: string } }, index: number) => {
+
+        var updatedSpeechParts = [...speechParts];
+
+        if (parseInt(event.target.value) == SpeechPart.Unknown) {
+            updatedSpeechParts = updatedSpeechParts.splice(index, 1)
+        }
+        else 
+        {
+            updatedSpeechParts[index] = parseInt(event.target.value);
+        }
+
+        props.setSelectedSpeechParts(updatedSpeechParts);
     };
+
+    useEffect(() => {
+
+     
+    }, [speechParts]);
 
 
     const getSpeechPartKeys = () => {
@@ -59,20 +85,24 @@ export default function SpeechPartSelect(props: IStyledSelectProp) {
     }
 
     return (
-        <div>
-            <FormControl sx={{ m: 1 }} variant="standard">
-                <InputLabel htmlFor="demo-customized-select-native">Speech part</InputLabel>
-                <NativeSelect
-                    id="demo-customized-select-native"
-                    value={props.selectedSpeechPart}
-                    onChange={handleChange}
-                    input={<BootstrapInput />}
-                >
-                      {getSpeechPartKeys().map(speechPart => (
-                        <option value={SpeechPart[speechPart]}>{speechPart}</option>
-                    ))}
-                </NativeSelect>
-            </FormControl>
-        </div>
+        <Box>
+            {speechParts.map((speechPart, index) => (
+                <FormControl sx={{ m: 1 }} variant="standard">
+                    <InputLabel htmlFor="demo-customized-select-native">Speech part</InputLabel>
+                    <NativeSelect
+                        id="demo-customized-select-native"
+                        value={speechPart}
+                        multiline
+                        onChange={(event) => handleChange(event, index)}
+                        input={<BootstrapInput />}
+                    >
+                        {getSpeechPartKeys().map(speechPart => (
+                            <option value={SpeechPart[speechPart]}>{speechPart}</option>
+                        ))}
+                    </NativeSelect>
+                </FormControl>
+            ))}
+            <Button onClick={() => setSpeechParts([...speechParts, SpeechPart.Unknown])}>Add speech paprt</Button>
+        </Box>
     );
 }

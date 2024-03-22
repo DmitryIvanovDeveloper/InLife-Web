@@ -16,4 +16,5 @@ export enum SpeechPart {
     Preposition,
     Pronouns,
     Verb,
+    PhrasalVerb,
 }

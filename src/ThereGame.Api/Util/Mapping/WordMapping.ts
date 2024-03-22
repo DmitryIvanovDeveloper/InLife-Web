@@ -8,8 +8,10 @@ export default class WordMapping {
             return {
                 id: wordDto.id,
                 word: wordDto.word,
-                speechPart: wordDto.speechPart,
+                speechParts: wordDto.speechParts,
                 pictures: wordDto.pictures,
+                forms: wordDto.forms,
+                quizlGamesId: wordDto.quizlGamesId,
                 wordTranslates: wordDto.translates.map(translateDto => {
                     return {
                         id: translateDto.id,
@@ -25,8 +27,10 @@ export default class WordMapping {
         return {
             id: wordDto.id,
             word: wordDto.word,
-            speechPart: wordDto.speechPart,
+            speechParts: wordDto.speechParts,
             pictures: wordDto.pictures,
+            forms: wordDto.forms,
+            quizlGamesId: wordDto.quizlGamesId,
             translatesData: wordDto.wordTranslates.map(translateDto => {
                 return {
                     id: translateDto.id,
