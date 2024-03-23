@@ -9,6 +9,7 @@ import VocabularyBlockStatistic from "./VocabularyBlockStatistic";
 import { DayCalendarSkeleton } from "@mui/x-date-pickers";
 import StudentCalendarActivity from "../Statistic/StudentDialogueStatistics/StudentCalendarActivity/StudentCalendarActivity";
 import AppBarCustom from "../AppBarCustom";
+import { isDateSame } from "../../ThereGame.Infrastructure/Helpers/DatesCompare";
 
 export interface IVocabularyBlockStatisticsProps {
     quizlGameStatistics: IQuizleGameStatisticModel[];
@@ -29,16 +30,21 @@ export default function VocablularyBlockStatistics(props: IVocabularyBlockStatis
             return;
         }
 
-        var quizleGamesId: string[] = props.quizlGameStatistics.map(statistic => statistic.quizlGameId);
-
-        quizlQueriesApi.get(quizleGamesId)
+        const uniqueQuizlGameIds = [...new Set(props.quizlGameStatistics.map(item => item.quizlGameId))]
+      
+        
+        quizlQueriesApi.get(uniqueQuizlGameIds)
             .then(result => {
                 setQuizleGames(result);
             })
-            ;
+        ;
 
     }, [props.quizlGameStatistics]);
 
+    useEffect(() => {
+        console.log(quizleGames);
+
+    }, [quizleGames]);
 
     return (
         <Box width='100%' display='flex' justifyContent='center'>
@@ -66,7 +72,7 @@ export default function VocablularyBlockStatistics(props: IVocabularyBlockStatis
                         {quizleGames.map(quizleGame => (
                             <VocabularyBlockStatistic
                                 quizleGame={quizleGame}
-                                quizlGameStatistics={props.quizlGameStatistics}
+                                quizlGameStatistics={props.quizlGameStatistics.filter(statistic => isDateSame(statistic.createdAt, selectedDate))}
                                 selectedDate={selectedDate}
                             />
                         ))}
