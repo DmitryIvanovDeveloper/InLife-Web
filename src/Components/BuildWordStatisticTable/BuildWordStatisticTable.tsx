@@ -1,9 +1,11 @@
 import { Box, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Typography } from "@mui/material"
-import ITranslateWordsGameStatistic from "../../ThereGame.Business/Models/ITranslateWordsGameStatistic"
+import AppBarCustom from "../AppBarCustom"
+import StudentCalendarActivity from "../Statistic/StudentDialogueStatistics/StudentCalendarActivity/StudentCalendarActivity"
 import { useEffect, useState } from "react"
 import { useWordsState } from "../../Data/useWords"
 import { isDateSame } from "../../ThereGame.Infrastructure/Helpers/DatesCompare"
 import WordModel from "../../ThereGame.Business/Models/IWordModel"
+import IBuildWordsGameStatistic from "../../ThereGame.Business/Models/IBuildWordsGameStatistic"
 
 
 export interface ICompactStatistic{
@@ -21,31 +23,28 @@ export interface IAnswersData {
 }
 
 
-export interface ITranslateWordGameTableProps {
-    translateWordsGameStatistics: ITranslateWordsGameStatistic[]
+export interface IBuildWordGameTableProps {
+    buildWordsGameStatistics: IBuildWordsGameStatistic[]
     selectedDate: Date;
 }
 
-export default function TranslateWordGameTable(props: ITranslateWordGameTableProps) {
+export default function BuildWordGameTable(props: IBuildWordGameTableProps) {
 
     const [wordsState] = useWordsState();
 
     const [compactStatistics, setCompactStatistic] = useState<ICompactStatistic[]>([]);
 
-
     useEffect(() => {
         
         //TODO: Refactoring
-        const uniqueWordsGameIds = [...new Set(props.translateWordsGameStatistics
+        const uniqueWordsGameIds = [...new Set(props.buildWordsGameStatistics
             .filter(statistic => isDateSame(statistic.createdAt, props.selectedDate))
             .map(item => item.wordId))]
-
-            console.log(props.translateWordsGameStatistics);
 
         var compactStatistics: ICompactStatistic[] = uniqueWordsGameIds.map(uniqueWordId => {
 
 
-            var expectedStatissticsByWordId = props.translateWordsGameStatistics
+            var expectedStatissticsByWordId = props.buildWordsGameStatistics
                 .filter(statistic => statistic.wordId == uniqueWordId)
             ;
 
@@ -83,7 +82,7 @@ export default function TranslateWordGameTable(props: ITranslateWordGameTablePro
         })
 
         setCompactStatistic(compactStatistics);
-    }, [props]);
+    }, [props.selectedDate, props]);
     
     return (
         <Box width='100%' display='flex' justifyContent='center'>
@@ -107,7 +106,7 @@ export default function TranslateWordGameTable(props: ITranslateWordGameTablePro
                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                          >
                              <TableCell align="right">
-                                    <Typography  sx={{ m: 0.2 }}>{compactStatistic.word?.wordTranslates[0].translates[0]}</Typography>
+                                    <Typography  sx={{ m: 0.2 }}>{compactStatistic.word?.word}</Typography>
                              </TableCell>
          
                              <TableCell align="right">

@@ -23,7 +23,8 @@ export default class StudentVocabularyBlockMapping {
                 wordsId: sv.wordsId,
                 createdAt: sv.createdAt,
                 quizlGameStatistics: this.mapQuizlGameStatistic(sv.quizlGameStatistics ?? []),
-                translateWordsGameStatistic: this.mapTranslateWordsGameStatistic(sv.translateWordsGameStatistics ?? [])
+                translateWordsGameStatistics: this.mapTranslateWordsGameStatistic(sv.translateWordsGameStatistics ?? []),
+                buildWordsGameStatistics: this.mapBuildWordsGameStatistic(sv.buildWordsGameStatistics ?? [])
             }
         })
     }
@@ -40,6 +41,17 @@ export default class StudentVocabularyBlockMapping {
         })
     }
     private mapTranslateWordsGameStatistic(statisticsDto: ITranslateWordGameStatisticDto[]): ITranslateWordsGameStatistic[] {
+        return statisticsDto.map(statisticDto => {
+            return {
+                id: statisticDto.id,
+                wordId: statisticDto.wordId,
+                answers: statisticDto.answers,
+                createdAt: statisticDto.createdAt,
+                vocabularyBlockId: statisticDto.vocabularyBlockId,
+            }
+        })
+    }
+    private mapBuildWordsGameStatistic(statisticsDto: ITranslateWordGameStatisticDto[]): ITranslateWordsGameStatistic[] {
         return statisticsDto.map(statisticDto => {
             return {
                 id: statisticDto.id,

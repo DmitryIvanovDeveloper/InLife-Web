@@ -1,12 +1,12 @@
 import React, { useState, useEffect, ReactElement } from 'react';
-import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
 import NewCard from './NewCard/NewCard';
 import useWordsQueriesApi from '../../ThereGame.Api/Queries/WordsQueriesApi';
 import ICard from './ICard';
 import useStudentQueriesApi from '../../ThereGame.Api/Queries/StudentQueriesApi';
 import { useWordsState } from '../../Data/useWords';
 import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStudentVocabularyBlock';
-import VocabularyBlockTabs from '../VocabularyBlocks/VocabularyBlockTabs';
+import VocabularyBlocks from '../VocabularyBlocks/VocabularyBlock';
 import { LanguageType } from '../../Data/LanguageType';
 import WordsList from '../WordsList/WordsList';
 import DevidedLabel from '../Headers/DevidedLabel';
@@ -17,6 +17,9 @@ import QuizlBuilder from '../QuizlBuilder/QuizlBuilder';
 import TranslateWordGameTable from '../TranslateWordsGameStatisticTable/TranslateWordStatisticTable';
 
 import './FlashCards.css'
+import BuildWordGameTable from '../BuildWordStatisticTable/BuildWordStatisticTable';
+import QuizleGameStatisticTableData from '../QuizleGameStatisticTable/QuizleGameStatisticTableData';
+import QuizlGameStatisticTable from '../QuizleGameStatisticTable/QuizlGameStatisticTable';
 
 export interface IFlashCardsProps {
     studentId: string;
@@ -36,7 +39,8 @@ export default function FlashCards(props: IFlashCardsProps) {
     const [isCreateCard, setIsCreateCard] = useState<boolean>(false);
     const [selectedStudentVocabularyBlockCards, setSelectedStudentVocabularyBlockCards] = useSelectedStudentVocabularyBlockCards();
     const [isPlay, setIsPlay] = useState<boolean>(false);
-    
+    const [selectedTabBlockData, setSelectedTabBlockData] = useState<boolean>(false);
+
     useEffect(() => {
         wordQueriesApi.get()
     }, []);
@@ -49,8 +53,8 @@ export default function FlashCards(props: IFlashCardsProps) {
     }, []);
 
     const sorByDate = (vocabularyBlocks: IStudentVocabularyBlockModel[]) => {
-        return vocabularyBlocks.sort((a,b) => {
-            return new Date(a.createdAt).getTime() - 
+        return vocabularyBlocks.sort((a, b) => {
+            return new Date(a.createdAt).getTime() -
                 new Date(b.createdAt).getTime()
         })
     }
@@ -139,7 +143,7 @@ export default function FlashCards(props: IFlashCardsProps) {
             wordsId: wordsId,
             createdAt: expectedVocabularyBlock.createdAt,
             quizlGameStatistics: expectedVocabularyBlock.quizlGameStatistics,
-            translateWordsGameStatistic: expectedVocabularyBlock.translateWordsGameStatistic,
+            translateWordsGameStatistics: expectedVocabularyBlock.translateWordsGameStatistics,
         }
 
         const data = await studentQueriesApi.update(vocabularyBlock);
@@ -168,31 +172,29 @@ export default function FlashCards(props: IFlashCardsProps) {
         setSelectedVocabularyBlockIndex(id);
     }, [vocabularyBlocks]);
 
-   
+
     return (
         <Box
             width='100%'
             height='100vh'
-            
+
         >
             {!!editCardId || isCreateCard
                 ? <Modal />
                 : null
             }
-            
+
             <Button>Play</Button>
-            <GameBuildLetterseWebGLEditor settings={new GameWebGLSettings().getBuilRandomLettersSettings()} setIsPlay={setIsPlay}/>
-            <DevidedLabel  name="Vocabulary Blocks"/>
+            <DevidedLabel name="Vocabulary Blocks" />
 
             <Box
                 width="100%"
-                marginTop='100px'
                 marginLeft='40px'
                 display='flex'
                 justifyContent='center'
 
             >
-                <VocabularyBlockTabs
+                <VocabularyBlocks
                     vocabularyBlocks={vocabularyBlocks}
                     setSelectedVocabularyBlockIndex={setSelectedVocabularyBlockIndex}
                     selectedVocabularyBlockIndex={selectedVocabularyBlockIndex}
@@ -201,15 +203,14 @@ export default function FlashCards(props: IFlashCardsProps) {
                     onDeleteCard={deleteStudentCard}
                     onCreateBlock={onCreateBlock}
                     onDeleteBlock={onDeleteBlock}
-                    isCardSideFront={isPlay} 
+                    isCardSideFront={isPlay}
+                    onUpdateVocabularyBlock={onUpdateVocabularyBlock} 
+                    setIsCreateCard={setIsCreateCard}
                 />
-
-                {/* <QuizleGameStatisticData quizlGameStatistics={vocabularyBlocks.find(vb => vb.id == selectedVocabularyBlockIndex)?.quizlGameStatistics ?? []}/> */}
-                <TranslateWordGameTable translateWordsGameStatistics={vocabularyBlocks.find(vb => vb.id == selectedVocabularyBlockIndex)?.translateWordsGameStatistic ?? []} />
-                <WordsList onSelectWord={onEditCard} onAddWord={onUpdateVocabularyBlock} onCreateNewWord={() => setIsCreateCard(true)}/>
+             
             </Box>
-           
-           <QuizlBuilder onCreateNewWord={() => setIsCreateCard(true)}/>
+
+            <QuizlBuilder onCreateNewWord={() => setIsCreateCard(true)} />
         </Box>
 
     )

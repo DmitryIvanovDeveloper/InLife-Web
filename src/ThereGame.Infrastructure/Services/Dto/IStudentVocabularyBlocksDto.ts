@@ -6,6 +6,7 @@ export default interface IStudentVocabularyRequestDto {
     createdAt: Date;
     quizlGameStatistics?: IQuizleGameStatisticDto[];
     translateWordsGameStatistics?: ITranslateWordGameStatisticDto[]
+    buildWordsGameStatistics?: IBuuildWordGameStatisticDto[]
 }
 
 export interface IQuizleGameStatisticDto {
@@ -17,6 +18,14 @@ export interface IQuizleGameStatisticDto {
 }
 
 export interface ITranslateWordGameStatisticDto {
+    id: string;
+    wordId: string;
+    answers: string[];
+    createdAt: Date;
+    vocabularyBlockId: string;
+}
+
+export interface IBuuildWordGameStatisticDto {
     id: string;
     wordId: string;
     answers: string[];

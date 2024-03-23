@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi";
 import IQuizleGameStatisticModel from "../../ThereGame.Business/Models/IQuizleGameStatistic";
 import IQuizleGameModel from "../../ThereGame.Business/Models/IQuizleWordModel";
-import StudentCalendarActivity from "../Statistic/StudentDialogueStatistics/StudentCalendarActivity/StudentCalendarActivity";
 import AppBarCustom from "../AppBarCustom";
 import { isDateSame } from "../../ThereGame.Infrastructure/Helpers/DatesCompare";
 import QuizleGameStatisticTableData from "./QuizleGameStatisticTableData";
 
 export interface IVocabularyBlockStatisticsProps {
     quizlGameStatistics: IQuizleGameStatisticModel[];
+    selectedDate: Date;
 }
 
 
@@ -18,17 +18,22 @@ export default function QuizlGameStatisticTable(props: IVocabularyBlockStatistic
 
     const [quizleGames, setQuizleGames] = useState<IQuizleGameModel[]>([]);
 
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-
-
     useEffect(() => {
 
         if (!props.quizlGameStatistics.length) {
             return;
         }
 
-        const uniqueQuizlGameIds = [...new Set(props.quizlGameStatistics.map(item => item.quizlGameId))]
-      
+        const uniqueQuizlGameIds = [
+            ...new Set(props.quizlGameStatistics
+                .filter(statistic => isDateSame(statistic.createdAt, props.selectedDate))
+                .map(item => item.quizlGameId))
+            ];
+        
+        if (!uniqueQuizlGameIds.length) {
+            setQuizleGames([]);
+            return;
+        }
         
         quizlQueriesApi.get(uniqueQuizlGameIds)
             .then(result => {
@@ -36,36 +41,27 @@ export default function QuizlGameStatisticTable(props: IVocabularyBlockStatistic
             })
         ;
 
-    }, [props.quizlGameStatistics]);
+    }, [props.quizlGameStatistics, props.selectedDate]);
 
     return (
         <Box width='100%' display='flex' justifyContent='center'>
             <Paper sx={{ height: '400px', overflow: 'auto' }}>
                 <TableContainer component={Paper}>
-            <AppBarCustom name="Quizl"/>
-
-                    <Table aria-label="simple table" sx={{ width: 650 }}>
+                    <Table aria-label="simple table" sx={{ width: 800 }}>
 
                         <TableHead>
                             <TableRow>
-                                <TableCell>
-                                    <StudentCalendarActivity 
-                                        onChange={setSelectedDate} 
-                                        highlightDates={props.quizlGameStatistics.map(s => s.createdAt)} 
-                                        date={selectedDate}
-                                />
-                                </TableCell>
-                                <TableCell align="right">Exercise</TableCell>
-                                <TableCell align="right">Answers</TableCell>
-                                <TableCell align="right">Correct</TableCell>
-                                <TableCell align="right">Uncorrect</TableCell>
+                                <TableCell>Exercise</TableCell>
+                                <TableCell>Answers</TableCell>
+                                <TableCell>Correct</TableCell>
+                                <TableCell>Uncorrect</TableCell>
                             </TableRow>
                         </TableHead>
                         {quizleGames.map(quizleGame => (
                             <QuizleGameStatisticTableData
                                 quizleGame={quizleGame}
-                                quizlGameStatistics={props.quizlGameStatistics.filter(statistic => isDateSame(statistic.createdAt, selectedDate))}
-                                selectedDate={selectedDate}
+                                quizlGameStatistics={props.quizlGameStatistics}
+                                selectedDate={props.selectedDate}
                             />
                         ))}
 
