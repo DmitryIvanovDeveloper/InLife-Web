@@ -39,7 +39,6 @@ export default function VocabularyBlockTabs(props: IVocabularyBlockTabsProps) {
             </Box>
 
         )
-
     }
 
     return (
@@ -77,7 +76,6 @@ export default function VocabularyBlockTabs(props: IVocabularyBlockTabsProps) {
                         />
 
                     </Grid>
-
                 ))}
             </Grid>
 

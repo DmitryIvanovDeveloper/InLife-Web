@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, ReactElement } from 'react';
-import { Avatar, Box, Button, Card, CardActionArea, Dialog, DialogActions, DialogContent, DialogContentText, Fab, Grid, List, Typography, useMediaQuery, useTheme } from '@mui/material';
+import React, { useState, useEffect, ReactElement } from 'react';
+import {Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, useMediaQuery, useTheme } from '@mui/material';
 import NewCard from './NewCard/NewCard';
 import useWordsQueriesApi from '../../ThereGame.Api/Queries/WordsQueriesApi';
 import ICard from './ICard';
@@ -10,12 +10,13 @@ import VocabularyBlockTabs from '../VocabularyBlocks/VocabularyBlockTabs';
 import { LanguageType } from '../../Data/LanguageType';
 import WordsList from '../WordsList/WordsList';
 import DevidedLabel from '../Headers/DevidedLabel';
-import './FlashCards.css'
 import GameWebGLSettings from '../GameWebGL/GameWebGLSettings';
 import { useSelectedStudentVocabularyBlockCards } from '../../Data/useSelectedStudentVocabularyBlockCards';
 import GameBuildLetterseWebGLEditor from '../GameWebGL/GameBuildLettersWebGLEditor';
 import QuizlBuilder from '../QuizlBuilder/QuizlBuilder';
-import VocablularyBlockStatistics from '../VocabularyBlocks/VocabularyBlockStatistics';
+import TranslateWordGameTable from '../TranslateWordsGameStatisticTable/TranslateWordStatisticTable';
+
+import './FlashCards.css'
 
 export interface IFlashCardsProps {
     studentId: string;
@@ -35,7 +36,6 @@ export default function FlashCards(props: IFlashCardsProps) {
     const [isCreateCard, setIsCreateCard] = useState<boolean>(false);
     const [selectedStudentVocabularyBlockCards, setSelectedStudentVocabularyBlockCards] = useSelectedStudentVocabularyBlockCards();
     const [isPlay, setIsPlay] = useState<boolean>(false);
-    const [isShowCreateNEwWordButton, setIsShowCreateNEwWordButton] = useState<boolean>(false);
     
     useEffect(() => {
         wordQueriesApi.get()
@@ -138,7 +138,8 @@ export default function FlashCards(props: IFlashCardsProps) {
             name: name ?? expectedVocabularyBlock.name,
             wordsId: wordsId,
             createdAt: expectedVocabularyBlock.createdAt,
-            quizlGameStatistics: expectedVocabularyBlock.quizlGameStatistics
+            quizlGameStatistics: expectedVocabularyBlock.quizlGameStatistics,
+            translateWordsGameStatistic: expectedVocabularyBlock.translateWordsGameStatistic,
         }
 
         const data = await studentQueriesApi.update(vocabularyBlock);
@@ -202,8 +203,9 @@ export default function FlashCards(props: IFlashCardsProps) {
                     onDeleteBlock={onDeleteBlock}
                     isCardSideFront={isPlay} 
                 />
-            <VocablularyBlockStatistics quizlGameStatistics={vocabularyBlocks.find(vb => vb.id == selectedVocabularyBlockIndex)?.quizlGameStatistics ?? []}/>
 
+                {/* <QuizleGameStatisticData quizlGameStatistics={vocabularyBlocks.find(vb => vb.id == selectedVocabularyBlockIndex)?.quizlGameStatistics ?? []}/> */}
+                <TranslateWordGameTable translateWordsGameStatistics={vocabularyBlocks.find(vb => vb.id == selectedVocabularyBlockIndex)?.translateWordsGameStatistic ?? []} />
                 <WordsList onSelectWord={onEditCard} onAddWord={onUpdateVocabularyBlock} onCreateNewWord={() => setIsCreateCard(true)}/>
             </Box>
            

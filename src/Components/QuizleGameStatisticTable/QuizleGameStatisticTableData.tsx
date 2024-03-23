@@ -24,9 +24,8 @@ export interface IVocabularyBlockStatisticProps {
 
 
 
-export default function VocabularyBlockStatistic(props: IVocabularyBlockStatisticProps) {
+export default function QuizleGameStatisticTableData(props: IVocabularyBlockStatisticProps) {
     const [wordsState] = useWordsState();
-    const [quizleWords, setQuizleWord] = useState<IQuizlWordModel[]>([]);
 
     const [data, setData] = useState<ITable>();
 

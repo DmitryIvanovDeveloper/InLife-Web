@@ -1,4 +1,5 @@
 import IQuizleGameStatisticModel from "./IQuizleGameStatistic";
+import ITranslateWordsGameStatistic from "./ITranslateWordsGameStatistic";
 
 export default interface IStudentVocabularyBlockModel {
     id: string;
@@ -7,4 +8,5 @@ export default interface IStudentVocabularyBlockModel {
     createdAt: Date,
     wordsId: string[]
     quizlGameStatistics?: IQuizleGameStatisticModel[]
+    translateWordsGameStatistic?: ITranslateWordsGameStatistic[]
 }

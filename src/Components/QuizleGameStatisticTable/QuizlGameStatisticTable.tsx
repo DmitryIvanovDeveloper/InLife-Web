@@ -3,20 +3,17 @@ import { useEffect, useState } from "react";
 import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi";
 import IQuizleGameStatisticModel from "../../ThereGame.Business/Models/IQuizleGameStatistic";
 import IQuizleGameModel from "../../ThereGame.Business/Models/IQuizleWordModel";
-import { useWordsState } from "../../Data/useWords";
-import { SpeechPart } from "../../ThereGame.Business/Models/SpeechPart";
-import VocabularyBlockStatistic from "./VocabularyBlockStatistic";
-import { DayCalendarSkeleton } from "@mui/x-date-pickers";
 import StudentCalendarActivity from "../Statistic/StudentDialogueStatistics/StudentCalendarActivity/StudentCalendarActivity";
 import AppBarCustom from "../AppBarCustom";
 import { isDateSame } from "../../ThereGame.Infrastructure/Helpers/DatesCompare";
+import QuizleGameStatisticTableData from "./QuizleGameStatisticTableData";
 
 export interface IVocabularyBlockStatisticsProps {
     quizlGameStatistics: IQuizleGameStatisticModel[];
 }
 
 
-export default function VocablularyBlockStatistics(props: IVocabularyBlockStatisticsProps) {
+export default function QuizlGameStatisticTable(props: IVocabularyBlockStatisticsProps) {
     const quizlQueriesApi = useQuizlQueriesApi();
 
     const [quizleGames, setQuizleGames] = useState<IQuizleGameModel[]>([]);
@@ -40,11 +37,6 @@ export default function VocablularyBlockStatistics(props: IVocabularyBlockStatis
         ;
 
     }, [props.quizlGameStatistics]);
-
-    useEffect(() => {
-        console.log(quizleGames);
-
-    }, [quizleGames]);
 
     return (
         <Box width='100%' display='flex' justifyContent='center'>
@@ -70,7 +62,7 @@ export default function VocablularyBlockStatistics(props: IVocabularyBlockStatis
                             </TableRow>
                         </TableHead>
                         {quizleGames.map(quizleGame => (
-                            <VocabularyBlockStatistic
+                            <QuizleGameStatisticTableData
                                 quizleGame={quizleGame}
                                 quizlGameStatistics={props.quizlGameStatistics.filter(statistic => isDateSame(statistic.createdAt, selectedDate))}
                                 selectedDate={selectedDate}

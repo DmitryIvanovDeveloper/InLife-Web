@@ -19,7 +19,6 @@ export default function useStudentQueriesApi() {
         const result = await wordsService.get(token, studentId);
         if (result.status == Status.OK) {
             return new StudentVocabularyBlockMapping().response(result.data);
-
         }
 
         return []
