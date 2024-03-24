@@ -40,8 +40,6 @@ export default function TranslateWordGameTable(props: ITranslateWordGameTablePro
             .filter(statistic => isDateSame(statistic.createdAt, props.selectedDate))
             .map(item => item.wordId))]
 
-            console.log(props.translateWordsGameStatistics);
-
         var compactStatistics: ICompactStatistic[] = uniqueWordsGameIds.map(uniqueWordId => {
 
 

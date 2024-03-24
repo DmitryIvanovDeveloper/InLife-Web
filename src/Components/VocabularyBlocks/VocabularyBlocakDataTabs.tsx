@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { ReactElement } from 'react';
+import { List } from '@mui/material';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -43,11 +44,11 @@ function a11yProps(index: number) {
 }
 
 export interface IVocabularyBlocakDataTabsProps {
-    cards: ReactElement;
-    gamesStatistics: ReactElement;
+  cards: ReactElement;
+  gamesStatistics: ReactElement;
 }
 
-export default function VocabularyBlocakDataTabs(props: IVocabularyBlocakDataTabsProps) {
+export default function VocabularyBlockDataTabs(props: IVocabularyBlocakDataTabsProps) {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
@@ -60,7 +61,7 @@ export default function VocabularyBlocakDataTabs(props: IVocabularyBlocakDataTab
   };
 
   return (
-    <Box sx={{ bgcolor: 'background.paper', width: "100%" }}>
+    <Box sx={{ bgcolor: 'background.paper', width: "100%"}}>
       <AppBar position="static">
         <Tabs
           value={value}
@@ -80,7 +81,9 @@ export default function VocabularyBlocakDataTabs(props: IVocabularyBlocakDataTab
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
+          <List sx={{overflow: 'auto', height: "70vh", overflowX: 'hidden',}}>
             {props.cards}
+          </List>
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
           {props.gamesStatistics}

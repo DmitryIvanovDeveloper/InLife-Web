@@ -4,4 +4,8 @@ export default interface ICard {
     answers: string[];
     options: number
     pictures: string[];
+    quizleGamesId: string[];
+    playedQuizlGame: number;
+    playedWordTranslate: number;
+    playedBuildWord: number;
 }

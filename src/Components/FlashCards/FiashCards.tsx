@@ -8,18 +8,10 @@ import { useWordsState } from '../../Data/useWords';
 import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStudentVocabularyBlock';
 import VocabularyBlocks from '../VocabularyBlocks/VocabularyBlock';
 import { LanguageType } from '../../Data/LanguageType';
-import WordsList from '../WordsList/WordsList';
 import DevidedLabel from '../Headers/DevidedLabel';
-import GameWebGLSettings from '../GameWebGL/GameWebGLSettings';
 import { useSelectedStudentVocabularyBlockCards } from '../../Data/useSelectedStudentVocabularyBlockCards';
-import GameBuildLetterseWebGLEditor from '../GameWebGL/GameBuildLettersWebGLEditor';
-import QuizlBuilder from '../QuizlBuilder/QuizlBuilder';
-import TranslateWordGameTable from '../TranslateWordsGameStatisticTable/TranslateWordStatisticTable';
 
 import './FlashCards.css'
-import BuildWordGameTable from '../BuildWordStatisticTable/BuildWordStatisticTable';
-import QuizleGameStatisticTableData from '../QuizleGameStatisticTable/QuizleGameStatisticTableData';
-import QuizlGameStatisticTable from '../QuizleGameStatisticTable/QuizlGameStatisticTable';
 
 export interface IFlashCardsProps {
     studentId: string;
@@ -39,7 +31,6 @@ export default function FlashCards(props: IFlashCardsProps) {
     const [isCreateCard, setIsCreateCard] = useState<boolean>(false);
     const [selectedStudentVocabularyBlockCards, setSelectedStudentVocabularyBlockCards] = useSelectedStudentVocabularyBlockCards();
     const [isPlay, setIsPlay] = useState<boolean>(false);
-    const [selectedTabBlockData, setSelectedTabBlockData] = useState<boolean>(false);
 
     useEffect(() => {
         wordQueriesApi.get()
@@ -63,14 +54,25 @@ export default function FlashCards(props: IFlashCardsProps) {
         var expectedBlockData = wordsState
             .filter(ws => sorByDate(vocabularyBlocks).find(vb => vb.id == selectedVocabularyBlockIndex)?.wordsId.includes(ws.id));
 
+            const statistic = vocabularyBlocks.find(vb => vb.id == selectedVocabularyBlockIndex);
+
         var cards = expectedBlockData.map(card => {
             var wordDtaByLanguage = card.wordTranslates.find(wt => wt.language == LanguageType.Russian);
+
+            const a = statistic?.quizlGameStatistics?.filter(qs => card.quizlGamesId.includes(qs.quizlGameId));
+            const b = statistic?.translateWordsGameStatistics?.filter(qs => qs.wordId == wordDtaByLanguage?.wordId);
+            const c = statistic?.buildWordsGameStatistics?.filter(qs => qs.wordId == wordDtaByLanguage?.wordId);
+
             return {
                 id: card.id,
                 question: card.word,
                 answers: wordDtaByLanguage?.translates ?? [],
                 options: 0,
-                pictures: card.pictures
+                pictures: card.pictures,
+                quizleGamesId: card.quizlGamesId,
+                playedQuizlGame: a?.length ?? 0,
+                playedWordTranslate: b?.length ?? 0,
+                playedBuildWord: c?.length ?? 0,
             }
         })
 
@@ -209,8 +211,6 @@ export default function FlashCards(props: IFlashCardsProps) {
                 />
              
             </Box>
-
-            <QuizlBuilder onCreateNewWord={() => setIsCreateCard(true)} />
         </Box>
 
     )

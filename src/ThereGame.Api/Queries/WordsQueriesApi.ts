@@ -35,8 +35,9 @@ export default function useWordsQueriesApi() {
                 return undefined;
             }
             var data = new WordMapping().request(cardData);
-            console.log(data);
-            var response = await wordsService.update(token, data);
+
+            await wordsService.update(token, data);
+            
             await getWordsData();
         },
         create: async (cardData: IWordModel): Promise<any> => {

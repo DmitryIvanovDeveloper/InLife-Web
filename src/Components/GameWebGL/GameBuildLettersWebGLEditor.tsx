@@ -64,8 +64,6 @@ export default function GameBuildLetterseWebGLEditor(props: IGameWebJLEditor) {
             }
         });
 
-        console.log( JSON.stringify(wordData));
-
         UNSAFE__unityInstance?.SendMessage("WebGLManager", "SetWords", JSON.stringify(wordData));
     }, [selectedStudentVocabularyBlockCards]);
 

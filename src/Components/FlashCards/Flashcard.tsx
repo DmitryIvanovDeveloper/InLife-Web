@@ -3,6 +3,11 @@ import ICard from './ICard'
 import { Box, Card, Grid, IconButton, Typography } from '@mui/material'
 import CreateIcon from '@mui/icons-material/Create';
 import SignalCellularNodataRoundedIcon from '@mui/icons-material/SignalCellularNodataRounded';
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
+import AbcIcon from '@mui/icons-material/Abc';
+
+import QuizlGamesPanel from '../QuizlGame/QuizlGamesPanel';
+import TranslateIcon from '@mui/icons-material/Translate';
 
 export interface IFlashcardProps {
     flashcard: ICard;
@@ -14,6 +19,8 @@ export interface IFlashcardProps {
 export default function Flashcard(props: IFlashcardProps) {
     const [flip, setFlip] = useState(props.isCardSideFront)
     const [height, setHeight] = useState<number>(0)
+    const [isShowQuizleGames, setIsShowQuizlGames] = useState<boolean>(false);
+
 
     const frontEl = useRef<HTMLInputElement>(null);
     const backEl = useRef<HTMLInputElement>(null);
@@ -29,7 +36,7 @@ export default function Flashcard(props: IFlashcardProps) {
     }
 
     useEffect(setMaxHeight, [props.flashcard.question, props.flashcard.answers, props.flashcard.options])
-    
+
     useEffect(() => {
         setFlip(props.isCardSideFront)
     }, [props.isCardSideFront])
@@ -39,22 +46,57 @@ export default function Flashcard(props: IFlashcardProps) {
         return () => window.removeEventListener('resize', setMaxHeight)
     }, [])
 
+    const onShowQuizleGame = async () => {
+
+    }
+
+
 
     return (
-        <Card sx={{maxWidth: "300px" }}>
-
+        <Card sx={{ maxWidth: "300px" }}>
+            {isShowQuizleGames
+                ? <QuizlGamesPanel
+                    quizleGamesId={props.flashcard.quizleGamesId}
+                    onClose={() => setIsShowQuizlGames(false)}
+                />
+                : null
+            }
             <Grid container justifyContent="flex-end" alignItems="flex-end">
                 <IconButton sx={{ p: 0 }} onClick={() => props.onDelete(props.flashcard.id)}>
                     <SignalCellularNodataRoundedIcon sx={{ rotate: "270deg", color: "red", p: 0 }} />
                 </IconButton>
-            </Grid>
-            <Box  sx={{ pl: 2, pr: 2, pb: 2, maxWidth: "300px" }}>
 
-                <Box>
+
+            </Grid>
+            <Box sx={{ pl: 2, pr: 2, pb: 2, maxWidth: "300px"  }}>
+
+                <Box display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
                     <IconButton onClick={() => props.onEdit(props.flashcard.id)}>
                         <CreateIcon />
                     </IconButton>
+
+                    <Box display='flex' flexDirection='row' justifyContent='center' alignItems='center'>
+                        <IconButton onClick={() => setIsShowQuizlGames(true)}>
+                            <VideogameAssetIcon />
+                        </IconButton>
+                        <Typography color='green' variant='h6'>{props.flashcard.playedQuizlGame}</Typography>
+
+                    </Box>
+
+                    <Box marginLeft={1} display='flex' flexDirection='row' justifyContent='center' alignItems='center'>
+                        <TranslateIcon />
+                        <Typography color='green' variant='h6'>{props.flashcard.playedWordTranslate}</Typography>
+                    </Box>
+
+
+                    <Box marginLeft={1} display='flex' flexDirection='row' justifyContent='center' alignItems='center'>
+                        <AbcIcon />
+                        <Typography color='green' variant='h6'>{props.flashcard.playedBuildWord}</Typography>
+                    </Box>
                 </Box>
+
+
+
 
                 <Box
                     className={`card ${flip ? 'flip' : ''}`}

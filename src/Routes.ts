@@ -11,6 +11,7 @@ const RoutesAPI = {
     words: `${process.env.REACT_APP_SERVER}/api/words`,
     studentsVocabularyBlocks: `${process.env.REACT_APP_SERVER}/api/vocabularyBlocks`,
     quizlGames: `${process.env.REACT_APP_SERVER}/api/quizlGames`,
+    quizlGamesWord: `${process.env.REACT_APP_SERVER}/api/quizlGames/word`,
     
     chatGPT: "https://api.openai.com/v1/chat/completions"
 }

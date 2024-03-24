@@ -25,7 +25,6 @@ export default function DragAndResize(props: IDragAndResizeProps) {
         setPosition({ x: event.x, y: event.y })
         
         localStorage.setItem(`Position`, JSON.stringify(position));
-        console.log(event.y);
     };
 
 

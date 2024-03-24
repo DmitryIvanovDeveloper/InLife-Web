@@ -11,11 +11,14 @@ import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi"
 
 export interface IQuizlBuilder {
     onCreateNewWord: () => void
+    setOnClose: () => void;
+    quizlGame: IQuizlWordModel[]
 }
 
 export default function QuizlBuilder(props: IQuizlBuilder) {
     const theme = useTheme();
 
+    console.log(props.quizlGame)
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const [wordsData] = useWordsState();
@@ -24,16 +27,27 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
     const [hiddenWordId, setHiddenWord] = useState<string>("");
     const [isShowCreateNewWord, setIsShowCreateNewWord] = useState<boolean>(false);
     const [quizlWords, setQuizlGame] = useState<IQuizlWordModel[]>([]);
-    const [text, setText] = useState<string>("");
-    const quizGameQueriesApi = useQuizlQueriesApi();
+    const [text, setText] = useState<string>(props.quizlGame.map(game => game.word).join(' '));
+    const quizlGameQueriesApi = useQuizlQueriesApi();
     const [isSaveError, setIsSaveError] = useState<boolean>(false);
+    const [allowesWords, setAllowesWords] = useState<string[]>([]);
+    const [isGameExist, setIsGameExsit] = useState<boolean>(false);
+
 
     useEffect(() => {
-    
+        setHiddenWord(props.quizlGame.find(qg => qg.isHidden)?.wordId ?? "")
+        setQuizlGame(props.quizlGame);
+
+    }, [props.quizlGame]);
+
+    useEffect(() => {
+        if (!text) {
+            return;
+        }
         var splittedText = text.split(" ").filter(e => e);
 
         const quizleWords: IQuizlWordModel[] = splittedText.map((textedWord, index) => {
-            
+
             var updatedWord = removeTextPunctiation(textedWord);
             var expectedWord = wordsData.find(word => findMatchedWordData(word, updatedWord));
 
@@ -60,11 +74,28 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
         })
 
         setQuizlGame(quizleWords.filter(qw => !!qw.wordId));
-    
+
     }, [text]);
 
+    useEffect(() => {
+        const allowedWords = quizlWords.map(qw => {
+            var a = wordsData.find(wordData => wordData.id == qw.wordId)
+ 
+            return a?.speechParts.includes(SpeechPart.Verb) ||
+                a?.speechParts.includes(SpeechPart.Auxiliary)
+                ? a.id
+                : ""
+                ;
+        });
+
+        var filtred = allowedWords.filter(data => data);
+
+        setAllowesWords(filtred);
+
+    }, [quizlWords, wordsData]);
+
     const findMatchedWordData = (word: WordModel, textedWord: string): WordModel | null => {
-        
+
         if (word.word == textedWord ||
             (word.speechParts.includes(SpeechPart.Verb) && isVerbForm(word, textedWord)) ||
             (word.speechParts.includes(SpeechPart.Auxiliary) && isAuxiliaryVerbForm(word, textedWord)) ||
@@ -120,8 +151,16 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
     }
 
     const onHideWord = (index: number) => {
+
         const updatedQuizleWords = [...quizlWords];
+
         updatedQuizleWords[index].isHidden = !updatedQuizleWords[index].isHidden;
+
+        if (!!hiddenWordId) {
+            const expectedIndex = updatedQuizleWords.findIndex(qw => qw.wordId == hiddenWordId);
+            updatedQuizleWords[expectedIndex].isHidden = false;
+        }
+
         setHiddenWord(updatedQuizleWords[index].isHidden ? updatedQuizleWords[index].wordId : "");
 
         var hiddenWord = updatedQuizleWords.find(uq => uq.isHidden);
@@ -133,24 +172,52 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
         setQuizlGame(updatedQuizleWords);
     }
 
+    const checkIsQuizleGameAlreadyExist = async () => {
+        const result = await quizlGameQueriesApi.getAllByWordId(hiddenWordId);
+        const existingData = result.find(game => JSON.stringify(quizlWords) == game.data);
+
+        return existingData != null;
+    }
+
     const onSave = async () => {
         if (!hiddenWordId) {
             setIsSaveError(true)
             return;
         }
+
+
+        const isAlreadyExist = await checkIsQuizleGameAlreadyExist();
+        if (isAlreadyExist) {
+            setIsGameExsit(true);
+            return;
+        }
+
+        props.setOnClose();
+        setIsOpen(false);
+
         const game: IQuizleGameModel = {
             id: uuidv4(),
             data: JSON.stringify(quizlWords),
             hiddenWordId: hiddenWordId
         }
 
-        await quizGameQueriesApi.create(game);
+        if (!!props.quizlGame.length) {
+            await quizlGameQueriesApi.update(game);
+            return;
+        }
+
+        await quizlGameQueriesApi.create(game);
     }
+
+   
     return (
         <Dialog
             fullScreen={fullScreen}
             open={isOpen}
-            onClose={() => setIsOpen(false)}
+            onClose={() => {
+                props.setOnClose()
+                setIsOpen(false)
+            }}
             aria-labelledby="responsive-dialog-title"
             sx={{
                 "& .MuiDialog-container": {
@@ -161,22 +228,46 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
                 },
             }}
         >
-            <DialogContent >
+            <DialogContent>
+
+            <DialogContentText>Type sentence and select a word to hide it</DialogContentText>
+
                 <DialogContentText>
                     <Box display='flex' flexDirection='column' alignItems='center' width="100%">
-                        <TextField error={isSaveError} helperText={isSaveError ? "Please select a word" : ""} value={text} onChange={event => setText(event.target.value)}></TextField>
+
+                        <TextField
+                            error={isSaveError}
+                            variant='standard'
+                            fullWidth
+                            helperText={isSaveError ? "Please select a word" : ""}
+                            value={text}
+                            onChange={event => setText(event.target.value)}
+                        />
+
                         {isShowCreateNewWord
                             ? <Button onClick={props.onCreateNewWord} >Create new word</Button>
                             : null
                         }
+
                         <Grid container direction={"row"} justifyContent='center' sx={{ m: 1 }}>
                             {quizlWords.map((word, index) => (
-                                <Button sx={{ ml: 1 }} variant={word.isHidden ? 'text' : 'outlined'} onClick={() => onHideWord(index)}>
-                                    <Typography marginLeft={1}>{word.word}</Typography>
-                                </Button>
-                            ))}
+                                <Box>
+                                    {!allowesWords.find(aw => aw == word.wordId)
+                                        ? <Typography marginLeft={1} variant="h6">{word.word}</Typography>
+                                        : <Button
+                                            sx={{ ml: 1 }}
+                                            variant={word.isHidden ? 'text' : 'outlined'}
+                                            onClick={() => onHideWord(index)}
 
+                                        >
+                                            <Typography marginLeft={1}>{word.isHidden ? '_' : word.word}</Typography>
+                                        </Button>
+                                    }
+                                </Box>
+                            ))}
                         </Grid>
+
+                        <Typography color={isGameExist ? 'red' : ''}>{isGameExist ? "The game already exist" : ""}</Typography>
                     </Box>
                 </DialogContentText>
             </DialogContent>
@@ -184,7 +275,11 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
                 <Button onClick={onSave} autoFocus>
                     Save
                 </Button>
-                <Button onClick={() => setIsOpen(false)} autoFocus>
+                <Button onClick={() => {
+                    setIsOpen(false)
+                    props.setOnClose()
+                }
+                } autoFocus>
                     Close
                 </Button>
             </DialogActions>

@@ -40,34 +40,30 @@ export default function QuizleGameStatisticTableData(props: IVocabularyBlockStat
 
     useEffect(() => {
 
-        const statisticBtDate = props.quizlGameStatistics.filter(statistic => isDateSame(statistic.createdAt, props.selectedDate));
-        if (!statisticBtDate.length) {
+        const statisticByDate = props.quizlGameStatistics.filter(statistic => isDateSame(statistic.createdAt, props.selectedDate));
+        if (!statisticByDate.length) {
             setData(defaultData);
             return;
         }
-        const playedGameAnswers = props.quizlGameStatistics
+
+        const playedGameStatisticAnswersByQuizlGameId = props.quizlGameStatistics
             .filter(statistic => statistic.quizlGameId == props.quizleGame.id)
             .map((statistic) => statistic.answers)
             .flat()
         ;
 
-        var expectedWord = wordsState.find(ws => ws.id == props.quizleGame.hiddenWordId);
-        if (!expectedWord) {
-            return;
-        }
-
         var quizlWords: IQuizlWordModel[] =  JSON.parse(props.quizleGame.data);
 
         var hiddenWord = quizlWords.find(q => q.isHidden)
 
-        var matches = playedGameAnswers.filter(answer => answer == hiddenWord?.word);
+        var matches = playedGameStatisticAnswersByQuizlGameId.filter(answer => answer == hiddenWord?.word);
                 
         const correctAnswers = matches?.length ?? 0;
-        const answersLength = playedGameAnswers.length;
+        const answersLength = playedGameStatisticAnswersByQuizlGameId.length;
 
         const table: ITable = {
             quizlWords: quizlWords,
-            answers: playedGameAnswers,
+            answers: playedGameStatisticAnswersByQuizlGameId,
             hasCorrect: correctAnswers,
             hasUncorrect: answersLength - correctAnswers
         }

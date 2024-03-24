@@ -6,7 +6,7 @@ import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStude
 import Flashcard from '../FlashCards/Flashcard';
 import ICard from '../FlashCards/ICard';
 import { Grid, Typography } from '@mui/material';
-import VocabularyBlocakDataTabs from './VocabularyBlocakDataTabs';
+import VocabularyBlockDataTabs from './VocabularyBlocakDataTabs';
 import BuildWordGameTable from '../BuildWordStatisticTable/BuildWordStatisticTable';
 import QuizlGameStatisticTable from '../QuizleGameStatisticTable/QuizlGameStatisticTable';
 import TranslateWordGameTable from '../TranslateWordsGameStatisticTable/TranslateWordStatisticTable';
@@ -50,11 +50,10 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
     }
 
     function Cards() {
-
         return (
             <Box >
                 <WordsList onSelectWord={props.onEditCard} onAddWord={props.onUpdateVocabularyBlock} onCreateNewWord={() => props.setIsCreateCard(true)} />
-                <Grid container width='100%' sx={{ mt: 10 }}>
+                <Grid container width='100%' sx={{ mt: 10, justifyContent: 'center' }}>
                     {props.cards.map((data, index) => (
                         <Grid xs={2} item margin={1}>
                             <Flashcard
@@ -80,16 +79,12 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
 
         useEffect(() => {
             var expectedVocabularyBlock =  props.vocabularyBlocks.find(vb => vb.id == props.selectedVocabularyBlockIndex);
-            console.log(expectedVocabularyBlock);
-
 
             setCurrentVocabularyBlock(expectedVocabularyBlock);
 
             var actionsQuizleGame = expectedVocabularyBlock?.quizlGameStatistics ?? [];
             var actionsTranslateWordsGame = expectedVocabularyBlock?.translateWordsGameStatistics ?? [];
             var actionsbuildWordsGame = expectedVocabularyBlock?.buildWordsGameStatistics ?? [];
-
-
 
             var actions = [
                 actionsQuizleGame.map(statistic => statistic.createdAt),
@@ -147,7 +142,7 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
 
             </Box>
 
-            <VocabularyBlocakDataTabs cards={Cards()} gamesStatistics={GamesStatistics()} />
+            <VocabularyBlockDataTabs cards={Cards()} gamesStatistics={GamesStatistics()} />
         </Box>
     );
 }
