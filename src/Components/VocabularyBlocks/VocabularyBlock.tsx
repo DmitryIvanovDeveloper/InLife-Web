@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStudentVocabularyBlock';
-import { CircularProgress, IconButton, Typography } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import StudentCalendarActivity from '../Statistic/StudentDialogueStatistics/StudentCalendarActivity/StudentCalendarActivity';
 import { useEffect, useState } from 'react';
 import VocabularyCards from '../VocabuaryCard/VocabularyCards';
@@ -11,24 +11,11 @@ import useVocabularyBlockQueriesApi from '../../ThereGame.Api/Queries/Vocabulary
 import QuizlGameStatistic from './GameStatistic/QuizlGameStatistic';
 import BuildWordGameStatistic from './GameStatistic/BuildWordGameStatistic';
 import TranslateWordGameStatistic from './GameStatistic/TranslateWordGameStatistic';
-import { isDateSame, isOnRange } from '../../ThereGame.Infrastructure/Helpers/DatesCompare';
+import { isOnRange } from '../../ThereGame.Infrastructure/Helpers/DatesCompare';
 import WordsList from '../WordsList/WordsList';
 import LinarProgressCustom from '../CircularProgress';
 
-// export interface IVocabularyBlockTabsProps {
-//     vocabularyBlocks: IStudentVocabularyBlockModel[];
-//     selectedVocabularyBlockIndex: string;
-//     setSelectedVocabularyBlockIndex: (index: string) => void
-//     cards: ICard[]
-//     onEditCard: (id: string) => void;
-//     onDeleteCard: (id: string) => void;
-//     onCreateBlock: () => void;
-//     onDeleteBlock: () => void;
-//     isCardSideFront: boolean;
-//     onUpdateVocabularyBlock: (id: string) => void;
-//     setIsCreateCard: (isCreated: boolean) => void;
-//     studentId: string;
-// }
+
 
 export interface IVocabularyBlockTabsProps {
     studentId: string;

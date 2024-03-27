@@ -4,7 +4,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Grid, 
 import Box from "@mui/joy/Box";
 import WordModel from "../../ThereGame.Business/Models/IWordModel";
 import { SpeechPart } from "../../ThereGame.Business/Models/SpeechPart";
-import { IAuxiliaryVerbForms, IPlural, IVerbForms } from "../FlashCards/NewCard/NewCard";
+import { IArticle, IAuxiliaryVerbForms, IPlural, IVerbForms } from "../FlashCards/NewCard/NewCard";
 import { v4 as uuidv4 } from 'uuid';
 import IQuizleGameModel, { IQuizlWordModel } from "../../ThereGame.Business/Models/IQuizleWordModel";
 import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi";
@@ -18,7 +18,6 @@ export interface IQuizlBuilder {
 export default function QuizlBuilder(props: IQuizlBuilder) {
     const theme = useTheme();
 
-    console.log(props.quizlGame)
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const [wordsData] = useWordsState();
@@ -32,7 +31,7 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
     const [isSaveError, setIsSaveError] = useState<boolean>(false);
     const [allowesWords, setAllowesWords] = useState<string[]>([]);
     const [isGameExist, setIsGameExsit] = useState<boolean>(false);
-
+    const [unexisitngsWord, setUnexistingsWord] = useState<string>("");
 
     useEffect(() => {
         setHiddenWord(props.quizlGame.find(qg => qg.isHidden)?.wordId ?? "")
@@ -73,19 +72,22 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
             }
         })
 
+        var unexistingsWord = quizleWords.find(qw => !qw.wordId);
+        setUnexistingsWord(unexistingsWord?.word ?? "");
+
         setQuizlGame(quizleWords.filter(qw => !!qw.wordId));
 
     }, [text]);
 
     useEffect(() => {
         const allowedWords = quizlWords.map(qw => {
-            var a = wordsData.find(wordData => wordData.id == qw.wordId)
- 
-            return a?.speechParts.includes(SpeechPart.Verb) ||
-                a?.speechParts.includes(SpeechPart.Auxiliary)
-                ? a.id
+            var expectedWord = wordsData.find(wordData => wordData.id == qw.wordId)
+
+            return expectedWord?.speechParts.includes(SpeechPart.Verb) ||
+                expectedWord?.speechParts.includes(SpeechPart.Auxiliary)
+                ? expectedWord.id
                 : ""
-                ;
+            ;
         });
 
         var filtred = allowedWords.filter(data => data);
@@ -99,7 +101,8 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
         if (word.word == textedWord ||
             (word.speechParts.includes(SpeechPart.Verb) && isVerbForm(word, textedWord)) ||
             (word.speechParts.includes(SpeechPart.Auxiliary) && isAuxiliaryVerbForm(word, textedWord)) ||
-            word.speechParts.includes(SpeechPart.Noune) && isNouneForm(word, textedWord)
+            word.speechParts.includes(SpeechPart.Noune) && isNouneForm(word, textedWord) ||
+            word.speechParts.includes(SpeechPart.Article) && isArticlForm(word, textedWord)
         ) {
 
             return word;
@@ -146,6 +149,16 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
         return form.plural == textedWord;
     }
 
+    const isArticlForm = (word: WordModel, textedWord: string): boolean => {
+        if (!word.forms) {
+            return false;
+        }
+
+        var form: IArticle = JSON.parse(word.forms);
+
+        return form.nextVowels == textedWord;
+    }
+
     const removeTextPunctiation = (word: string): string => {
         return word.toLowerCase().replace(/[.,?\/#!$%\^&\*;:{}=\-_`~()]/g, "")
     }
@@ -172,19 +185,29 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
         setQuizlGame(updatedQuizleWords);
     }
 
-    const checkIsQuizleGameAlreadyExist = async () => {
-        const result = await quizlGameQueriesApi.getAllByWordId(hiddenWordId);
-        const existingData = result.find(game => JSON.stringify(quizlWords) == game.data);
+    const checkIsQuizleGameAlreadyExist = async (): Promise<boolean> => {
+        const createdGames = await quizlGameQueriesApi.getAllByWordId(hiddenWordId);
 
-        return existingData != null;
+        var matchedGames = createdGames.filter(a => a.hiddenWordId == hiddenWordId);
+
+        var hasSameGame =  matchedGames.some(game => {
+
+            var gamesWords: IQuizlWordModel[] = JSON.parse(game.data);
+            var wordsId = gamesWords.map(games => games.wordId);
+
+            var quizlWordsId = quizlWords.map(quizlWord => quizlWord.wordId)
+
+           return JSON.stringify(wordsId) == JSON.stringify(quizlWordsId);
+        });
+
+        return hasSameGame
     }
 
-    const onSave = async () => {
+    const onSave = async () => { 
         if (!hiddenWordId) {
             setIsSaveError(true)
             return;
         }
-
 
         const isAlreadyExist = await checkIsQuizleGameAlreadyExist();
         if (isAlreadyExist) {
@@ -209,7 +232,7 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
         await quizlGameQueriesApi.create(game);
     }
 
-   
+
     return (
         <Dialog
             fullScreen={fullScreen}
@@ -230,7 +253,7 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
         >
             <DialogContent>
 
-            <DialogContentText>Type sentence and select a word to hide it</DialogContentText>
+                <DialogContentText>Type sentence and select a word to hide it</DialogContentText>
 
                 <DialogContentText>
                     <Box display='flex' flexDirection='column' alignItems='center' width="100%">
@@ -244,7 +267,7 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
                             onChange={event => setText(event.target.value)}
                         />
 
-                        {isShowCreateNewWord
+                        {isShowCreateNewWord || unexisitngsWord
                             ? <Button onClick={props.onCreateNewWord} >Create new word</Button>
                             : null
                         }
@@ -268,6 +291,7 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
                         </Grid>
 
                         <Typography color={isGameExist ? 'red' : ''}>{isGameExist ? "The game already exist" : ""}</Typography>
+                        <Typography color={!!unexisitngsWord ? 'darkYellow' : ''}>{!!unexisitngsWord ? `The word ' ${unexisitngsWord.toUpperCase()} ' doesn't exist! Plase create the new word` : ""}</Typography>
                     </Box>
                 </DialogContentText>
             </DialogContent>

@@ -43,7 +43,6 @@ export default function Vocabularies(props: IFlashCardsProps) {
                 <DialogContent >
                     <DialogContentText>
                         <NewCard
-                            studentId={props.studentId}
                             cardData={wordsState.find(flashCard => flashCard.id == editCardId)}
                         />
                     </DialogContentText>

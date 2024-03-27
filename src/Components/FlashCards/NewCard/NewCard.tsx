@@ -65,9 +65,12 @@ export interface IAuxiliaryVerbForms {
 export interface IPlural {
     plural: string;
 }
+export interface IArticle {
+    nextVowels: string;
+}
+
 
 export interface INewCardProps {
-    studentId: string;
     cardData?: IWordModel | null | undefined;
 }
 
@@ -82,9 +85,8 @@ export default function NewCard(props: INewCardProps) {
     const [plural, setPlural] = useState<IPlural>({ plural: "" });
     const [auxiliaryVerbForms, setAxiliaryVerbForms] = useState<IAuxiliaryVerbForms>(defaultForms);
     const [phrasalVerbForms, setPhrasalVerbsForms] = useState<IPhrasalVerb>({ wordsId: [] });
+    const [articlesForms, setArticlesForms] = useState<IArticle>({ nextVowels: "" });
     const [isIrregular, setIsIrregular] = useState<boolean>(false);
-
-    const [wordsId, setWordsId] = useState<string[]>([])
 
     useEffect(() => {
         setIsIrregular(!!verbForms?.presentPerfect);
@@ -114,6 +116,10 @@ export default function NewCard(props: INewCardProps) {
             if (props.cardData.speechParts.includes(SpeechPart.PhrasalVerb) && !!props.cardData.forms) {
                 var phrasalVerbForms: IPhrasalVerb = JSON.parse(props.cardData.forms)
                 setPhrasalVerbsForms(phrasalVerbForms);
+            }
+            if (props.cardData.speechParts.includes(SpeechPart.Article) && !!props.cardData.forms) {
+                var articlesForms: IArticle = JSON.parse(props.cardData.forms)
+                setArticlesForms(articlesForms);
             }
 
             return;
@@ -179,12 +185,16 @@ export default function NewCard(props: INewCardProps) {
         if (props.cardData?.speechParts.includes(SpeechPart.PhrasalVerb)) {
             forms = JSON.stringify(phrasalVerbForms);
         }
+        if (props.cardData?.speechParts.includes(SpeechPart.Article)) {
+            forms = JSON.stringify(articlesForms);
+        }
 
+        console.log(forms)
         setWordData(prev => ({
             ...prev,
             forms
         }))
-    }, [verbForms, plural, auxiliaryVerbForms]);
+    }, [verbForms, plural, auxiliaryVerbForms, articlesForms]);
 
     const onAnswersChange = (answer: string, index: number) => {
 
@@ -278,7 +288,6 @@ export default function NewCard(props: INewCardProps) {
     }
 
     function VerbConstructor() {
-
         return (
             <Grid container>
                 <FormGroup>
@@ -475,6 +484,18 @@ export default function NewCard(props: INewCardProps) {
                                 onChange={(event) => setPlural({ plural: event.target.value })}
                                 sx={{ m: 1, }}
                                 label='Plural'>
+                            </TextField>
+                        </Grid>
+                        : null
+                    }
+
+                    {wordData.speechParts.includes(SpeechPart.Article)
+                        ? <Grid item>
+                            <TextField
+                                value={articlesForms.nextVowels}
+                                onChange={(event) => setArticlesForms({ nextVowels: event.target.value })}
+                                sx={{ m: 1, }}
+                                label='Next vowels'>
                             </TextField>
                         </Grid>
                         : null

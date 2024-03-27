@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi";
 import IQuizleGameModel, { IQuizlWordModel } from "../../ThereGame.Business/Models/IQuizleWordModel";
 import { useMediaQuery, Dialog, DialogContent, DialogContentText, DialogActions, useTheme, Button, Typography, CircularProgress, Box, Card, List, CardActions, CardActionArea, IconButton } from "@mui/material";
 import QuizlBuilder from "../QuizlBuilder/QuizlBuilder";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import NewCard from "../FlashCards/NewCard/NewCard";
 
 export interface IQuizlGameCard {
     id: string;
@@ -13,6 +14,7 @@ export interface IQuizlGameCard {
 export interface IQuizlGameProps {
     quizleGamesId: string[];
     onClose: () => void
+    onCreateNewWord: () => void;
 }
 export default function QuizlGamesPanel(props: IQuizlGameProps) {
     const theme = useTheme();
@@ -33,7 +35,6 @@ export default function QuizlGamesPanel(props: IQuizlGameProps) {
         quizlGameQueriesApi
             .get(props.quizleGamesId)
             .then(quizleGames => {
-
                 setQuizlGames(quizleGames);
                 setIsLoading(false);
             })
@@ -59,12 +60,17 @@ export default function QuizlGamesPanel(props: IQuizlGameProps) {
 
     const onDelete = async (id: string) => {
         await quizlGameQueriesApi.delete(id);
+        quizlGameQueriesApi
+        .get(props.quizleGamesId)
+        .then(quizleGames => {
+            setQuizlGames(quizleGames);
+        })
     }
 
 
     if (!!selectedCard) {
         return <QuizlBuilder
-            onCreateNewWord={() => { }}
+            onCreateNewWord={props.onCreateNewWord}
             setOnClose={() => setSelectedCard(null)}
             quizlGame={selectedCard.words}
         />
