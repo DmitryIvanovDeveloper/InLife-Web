@@ -6,7 +6,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import StudentDialogueStatistics from '../Statistic/StudentDialogueStatistics/StudentDialogueStatistics';
 import Flashcard from '../FlashCards/Flashcard';
-import FlashCards from '../FlashCards/FiashCards';
+import Vocabularies from '../FlashCards/Vocabularies';
 import { useTeacher } from '../../Data/useTeacher';
 import { useDialogueItemConstructor } from '../../Data/useDialogues';
 import QuizlBuilder from '../QuizlBuilder/QuizlBuilder';
@@ -28,7 +28,7 @@ export default function StudentInteractive(props: IStudentListProps) {
         setTab(newValue);
 
         if (newValue == "2") {
-            setConstructor(<FlashCards studentId={props.studentId} />);
+            setConstructor(<Vocabularies studentId={props.studentId} />);
             return;
         }
         setConstructor(null);
@@ -37,8 +37,6 @@ export default function StudentInteractive(props: IStudentListProps) {
     function Modal(): ReactElement {
         const theme = useTheme();
         const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-
 
         return (
             <Dialog

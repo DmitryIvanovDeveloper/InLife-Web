@@ -1,9 +1,6 @@
 import { Box, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Typography } from "@mui/material"
-import AppBarCustom from "../AppBarCustom"
-import StudentCalendarActivity from "../Statistic/StudentDialogueStatistics/StudentCalendarActivity/StudentCalendarActivity"
 import { useEffect, useState } from "react"
 import { useWordsState } from "../../Data/useWords"
-import { isDateSame } from "../../ThereGame.Infrastructure/Helpers/DatesCompare"
 import WordModel from "../../ThereGame.Business/Models/IWordModel"
 import IBuildWordsGameStatistic from "../../ThereGame.Business/Models/IBuildWordsGameStatistic"
 
@@ -25,7 +22,6 @@ export interface IAnswersData {
 
 export interface IBuildWordGameTableProps {
     buildWordsGameStatistics: IBuildWordsGameStatistic[]
-    selectedDate: Date;
 }
 
 export default function BuildWordGameTable(props: IBuildWordGameTableProps) {
@@ -33,13 +29,11 @@ export default function BuildWordGameTable(props: IBuildWordGameTableProps) {
     const [wordsState] = useWordsState();
 
     const [compactStatistics, setCompactStatistic] = useState<ICompactStatistic[]>([]);
-
+    
     useEffect(() => {
         
         //TODO: Refactoring
-        const uniqueWordsGameIds = [...new Set(props.buildWordsGameStatistics
-            .filter(statistic => isDateSame(statistic.createdAt, props.selectedDate))
-            .map(item => item.wordId))]
+        const uniqueWordsGameIds = [...new Set(props.buildWordsGameStatistics.map(item => item.wordId))]
 
         var compactStatistics: ICompactStatistic[] = uniqueWordsGameIds.map(uniqueWordId => {
 
@@ -58,7 +52,7 @@ export default function BuildWordGameTable(props: IBuildWordGameTableProps) {
                 const answersLength = statistic?.answers.length
 
                 return {
-                    answers: statistic.answers,
+                    answers: statistic.answers.map(answer => JSON.parse(answer).Answer),
                     hasCorrect: correctAnswers,
                     hasUncorrect:  answersLength - correctAnswers
                 }
@@ -82,7 +76,7 @@ export default function BuildWordGameTable(props: IBuildWordGameTableProps) {
         })
 
         setCompactStatistic(compactStatistics);
-    }, [props.selectedDate, props]);
+    }, [props]);
     
     return (
         <Box width='100%' display='flex' justifyContent='center'>

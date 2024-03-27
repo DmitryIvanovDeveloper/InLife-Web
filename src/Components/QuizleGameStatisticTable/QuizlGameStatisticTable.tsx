@@ -3,13 +3,10 @@ import { useEffect, useState } from "react";
 import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi";
 import IQuizleGameStatisticModel from "../../ThereGame.Business/Models/IQuizleGameStatistic";
 import IQuizleGameModel from "../../ThereGame.Business/Models/IQuizleWordModel";
-import AppBarCustom from "../AppBarCustom";
-import { isDateSame } from "../../ThereGame.Infrastructure/Helpers/DatesCompare";
 import QuizleGameStatisticTableData from "./QuizleGameStatisticTableData";
 
 export interface IVocabularyBlockStatisticsProps {
     quizlGameStatistics: IQuizleGameStatisticModel[];
-    selectedDate: Date;
 }
 
 
@@ -26,7 +23,6 @@ export default function QuizlGameStatisticTable(props: IVocabularyBlockStatistic
 
         const uniqueQuizlGameIds = [
             ...new Set(props.quizlGameStatistics
-                .filter(statistic => isDateSame(statistic.createdAt, props.selectedDate))
                 .map(item => item.quizlGameId))
             ];
         
@@ -41,7 +37,7 @@ export default function QuizlGameStatisticTable(props: IVocabularyBlockStatistic
             })
         ;
 
-    }, [props.quizlGameStatistics, props.selectedDate]);
+    }, [props.quizlGameStatistics]);
 
     return (
         <Box width='100%' display='flex' justifyContent='center'>
@@ -61,7 +57,6 @@ export default function QuizlGameStatisticTable(props: IVocabularyBlockStatistic
                             <QuizleGameStatisticTableData
                                 quizleGame={quizleGame}
                                 quizlGameStatistics={props.quizlGameStatistics}
-                                selectedDate={props.selectedDate}
                             />
                         ))}
 

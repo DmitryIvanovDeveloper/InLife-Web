@@ -1,10 +1,9 @@
 import { Box, Grid, TableBody, TableCell, TableRow, Typography } from "@mui/material";
-import { useWordsState } from "../../Data/useWords";
 import IQuizleGameModel, { IQuizlWordModel } from "../../ThereGame.Business/Models/IQuizleWordModel"
 import { useEffect, useState } from "react";
 import IQuizleGameStatisticModel from "../../ThereGame.Business/Models/IQuizleGameStatistic";
 import { v4 as uuidv4 } from 'uuid';
-import { isDateSame } from "../../ThereGame.Infrastructure/Helpers/DatesCompare";
+import React from "react";
 
 
 const defaultData: ITable = {
@@ -28,24 +27,12 @@ export interface ICompactStatisticData {
 export interface IVocabularyBlockStatisticProps {
     quizleGame: IQuizleGameModel
     quizlGameStatistics: IQuizleGameStatisticModel[]
-    selectedDate: Date;
 }
 
-
-
 export default function QuizleGameStatisticTableData(props: IVocabularyBlockStatisticProps) {
-    const [wordsState] = useWordsState();
-
     const [data, setData] = useState<ITable>(defaultData);
 
     useEffect(() => {
-
-        const statisticByDate = props.quizlGameStatistics.filter(statistic => isDateSame(statistic.createdAt, props.selectedDate));
-        if (!statisticByDate.length) {
-            setData(defaultData);
-            return;
-        }
-
         const playedGameStatisticAnswersByQuizlGameId = props.quizlGameStatistics
             .filter(statistic => statistic.quizlGameId == props.quizleGame.id)
             .map((statistic) => statistic.answers)
@@ -56,9 +43,10 @@ export default function QuizleGameStatisticTableData(props: IVocabularyBlockStat
 
         var hiddenWord = quizlWords.find(q => q.isHidden)
 
-        var matches = playedGameStatisticAnswersByQuizlGameId.filter(answer => answer == hiddenWord?.word);
+        var matches = playedGameStatisticAnswersByQuizlGameId.filter(answer => JSON.parse(answer).Answer == hiddenWord?.word);
                 
         const correctAnswers = matches?.length ?? 0;
+
         const answersLength = playedGameStatisticAnswersByQuizlGameId.length;
 
         const table: ITable = {
@@ -71,7 +59,7 @@ export default function QuizleGameStatisticTableData(props: IVocabularyBlockStat
         setData(table);
 
            
-    }, [props.quizleGame, props.quizlGameStatistics, props.selectedDate]);
+    }, [props.quizleGame, props.quizlGameStatistics]);
 
 
 
@@ -90,7 +78,7 @@ export default function QuizleGameStatisticTableData(props: IVocabularyBlockStat
                     </TableCell>
 
                     <TableCell>{data?.answers.map(answer => (
-                        <Typography>{answer}</Typography>
+                        <Typography>{JSON.parse(answer).Answer}</Typography>
                     ))}</TableCell>
 
                     <TableCell >{data?.hasCorrect}</TableCell>

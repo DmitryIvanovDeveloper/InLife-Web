@@ -23,7 +23,6 @@ export interface IAnswersData {
 
 export interface ITranslateWordGameTableProps {
     translateWordsGameStatistics: ITranslateWordsGameStatistic[]
-    selectedDate: Date;
 }
 
 export default function TranslateWordGameTable(props: ITranslateWordGameTableProps) {
@@ -31,14 +30,13 @@ export default function TranslateWordGameTable(props: ITranslateWordGameTablePro
     const [wordsState] = useWordsState();
 
     const [compactStatistics, setCompactStatistic] = useState<ICompactStatistic[]>([]);
+    const [correctAnswers, setCorrectAnswera] = useState<number>(0);
 
 
     useEffect(() => {
         
         //TODO: Refactoring
-        const uniqueWordsGameIds = [...new Set(props.translateWordsGameStatistics
-            .filter(statistic => isDateSame(statistic.createdAt, props.selectedDate))
-            .map(item => item.wordId))]
+        const uniqueWordsGameIds = [...new Set(props.translateWordsGameStatistics.map(item => item.wordId))]
 
         var compactStatistics: ICompactStatistic[] = uniqueWordsGameIds.map(uniqueWordId => {
 
@@ -55,9 +53,10 @@ export default function TranslateWordGameTable(props: ITranslateWordGameTablePro
                 
                 const correctAnswers = matches?.length ?? 0;
                 const answersLength = statistic?.answers.length
-
-                return {
-                    answers: statistic.answers,
+                
+                console.log(statistic.answers);
+                return {    
+                    answers: statistic.answers.map(answer => JSON.parse(answer).Answer),
                     hasCorrect: correctAnswers,
                     hasUncorrect:  answersLength - correctAnswers
                 }
@@ -105,7 +104,7 @@ export default function TranslateWordGameTable(props: ITranslateWordGameTablePro
                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                          >
                              <TableCell align="right">
-                                    <Typography  sx={{ m: 0.2 }}>{compactStatistic.word?.wordTranslates[0].translates[0]}</Typography>
+                                    <Typography  sx={{ m: 0.2 }}>{compactStatistic.word?.word}</Typography>
                              </TableCell>
          
                              <TableCell align="right">

@@ -73,7 +73,7 @@ export interface INewCardProps {
 
 export default function NewCard(props: INewCardProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isSpecidicWord, setIsSpecificWord] = useState<boolean>(false);
+    const [isSpecificWord, setIsSpecificWord] = useState<boolean>(false);
     const [wordData, setWordData] = useState<IWordModel>(defaultWordModel);
     const [wordsData] = useWordsState();
     const [matchedWordData, setMatchedWordData] = useState<IWordModel[]>([]);
@@ -81,7 +81,7 @@ export default function NewCard(props: INewCardProps) {
     const [verbForms, setVerbForms] = useState<IVerbForms>(verbDefaultForms);
     const [plural, setPlural] = useState<IPlural>({ plural: "" });
     const [auxiliaryVerbForms, setAxiliaryVerbForms] = useState<IAuxiliaryVerbForms>(defaultForms);
-    const [phrasalVerbForms, setPhrasalVerbsForms] = useState<IPhrasalVerb>({wordsId: []});
+    const [phrasalVerbForms, setPhrasalVerbsForms] = useState<IPhrasalVerb>({ wordsId: [] });
     const [isIrregular, setIsIrregular] = useState<boolean>(false);
 
     const [wordsId, setWordsId] = useState<string[]>([])
@@ -142,7 +142,6 @@ export default function NewCard(props: INewCardProps) {
 
         if (wordData.speechParts.includes(SpeechPart.Verb) ||
             wordData.speechParts.includes(SpeechPart.Auxiliary) ||
-            wordData.speechParts.includes(SpeechPart.Noune) ||
             wordData.speechParts.includes(SpeechPart.PhrasalVerb)
         ) {
             setIsSpecificWord(true);
@@ -279,13 +278,20 @@ export default function NewCard(props: INewCardProps) {
     }
 
     function VerbConstructor() {
-    
+
         return (
             <Grid container>
                 <FormGroup>
-                    <FormControlLabel checked={isIrregular} onChange={handleCheck} control={<Checkbox defaultChecked />} label="Irregular" />
+                    <FormControlLabel
+                        checked={isIrregular}
+                        onChange={handleCheck}
+                        control={<Checkbox defaultChecked />}
+                        label="Irregular" 
+                    />
                 </FormGroup>
+
                 <Grid item>
+
                     <TextField
                         value={wordData.word}
                         onChange={(event) => onWordChange(event.target.value)}
@@ -299,6 +305,7 @@ export default function NewCard(props: INewCardProps) {
                         sx={{ m: 1, }}
                         label='Past Simple'>
                     </TextField>
+
                     {isIrregular
                         ? <TextField
                             value={verbForms.presentPerfect}
@@ -327,9 +334,6 @@ export default function NewCard(props: INewCardProps) {
             </Grid>
         )
     }
-
- 
-
 
     function AuxiliaryVerbConstructor() {
 
@@ -384,6 +388,7 @@ export default function NewCard(props: INewCardProps) {
                         sx={{ m: 1, }}
                         label='First Person'>
                     </TextField>
+
                     <TextField
                         value={auxiliaryVerbForms.secondPerson}
                         onChange={(event) => setAxiliaryVerbForms(prev => ({ ...prev, secondPerson: event.target.value }))}
@@ -445,7 +450,7 @@ export default function NewCard(props: INewCardProps) {
                 <SpeechPartSelect setSelectedSpeechParts={onChangeSpeechParts} selectedSpeechParts={wordData.speechParts} />
 
                 <Grid container>
-                    {isSpecidicWord
+                    {isSpecificWord
                         ? null
                         : <Grid item>
                             <TextField
@@ -480,14 +485,14 @@ export default function NewCard(props: INewCardProps) {
                         : null
                     }
                     {wordData.speechParts.includes(SpeechPart.PhrasalVerb)
-                        ? <PhrazalVerb 
-                            word={wordData.word} 
+                        ? <PhrazalVerb
+                            word={wordData.word}
                             setPhrasalVerbsForms={setPhrasalVerbsForms}
                             onWordChange={onWordChange}
                         />
                         : null
                     }
-                    
+
 
                 </Grid>
 

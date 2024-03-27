@@ -8,7 +8,7 @@ export default interface IStudentVocabularyBlockModel {
     name: string;
     createdAt: Date,
     wordsId: string[]
-    quizlGameStatistics?: IQuizleGameStatisticModel[]
-    translateWordsGameStatistics?: ITranslateWordsGameStatistic[]
-    buildWordsGameStatistics?: IBuildWordsGameStatistic[]
+    quizlGameStatistics: IQuizleGameStatisticModel[]
+    translateWordsGameStatistics: ITranslateWordsGameStatistic[]
+    buildWordsGameStatistics: IBuildWordsGameStatistic[]
 }

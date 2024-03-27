@@ -46,14 +46,9 @@ export default function Flashcard(props: IFlashcardProps) {
         return () => window.removeEventListener('resize', setMaxHeight)
     }, [])
 
-    const onShowQuizleGame = async () => {
-
-    }
-
-
-
     return (
         <Card sx={{ maxWidth: "300px" }}>
+            
             {isShowQuizleGames
                 ? <QuizlGamesPanel
                     quizleGamesId={props.flashcard.quizleGamesId}
