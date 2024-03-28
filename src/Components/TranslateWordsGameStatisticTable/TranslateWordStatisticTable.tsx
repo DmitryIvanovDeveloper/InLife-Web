@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useWordsState } from "../../Data/useWords"
 import { isDateSame } from "../../ThereGame.Infrastructure/Helpers/DatesCompare"
 import WordModel from "../../ThereGame.Business/Models/IWordModel"
+import { LanguageType } from "../../Data/LanguageType"
 
 
 export interface ICompactStatistic{
@@ -104,7 +105,9 @@ export default function TranslateWordGameTable(props: ITranslateWordGameTablePro
                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                          >
                              <TableCell align="right">
-                                    <Typography  sx={{ m: 0.2 }}>{compactStatistic.word?.word}</Typography>
+                                    <Typography  sx={{ m: 0.2 }}>
+                                        {compactStatistic.word?.wordTranslates.find(t => t.language == LanguageType.Russian)?.translates[0]}
+                                        </Typography>
                              </TableCell>
          
                              <TableCell align="right">

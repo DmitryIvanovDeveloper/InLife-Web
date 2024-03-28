@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import IWordModel from "../../ThereGame.Business/Models/IWordModel";
 import useWordsQueriesApi from "../../ThereGame.Api/Queries/WordsQueriesApi";
 import LinarProgressCustom from "../CircularProgress";
+
 export interface IWordsList {
     onSelectWord: (id: string) => void;
     onAddWord: (id: string) => void;
@@ -62,7 +63,7 @@ export default function WordsList(props: IWordsList) {
                 : null
             }
             <List
-                sx={{ overflow: 'auto', display: 'flex', flexDirection: 'row', alignItems: 'center', width: '90%', ml: 3 }}
+                sx={{ overflow: 'auto', display: 'flex', flexDirection: 'row', alignItems: 'center', width: '90%', ml: 3, backgroundColor: '#80cbc4', boxShadow: "rgba(0, 0, 0, 0.06) 0px 2px 4px 0px inset;", borderRadius: '5px'  }}
             >
                 {matchedWordData.map(card => (
                     <CardActionArea onClick={() => props.onAddWord(card.id)} sx={{ width: '100px', m: 1 }}>
@@ -73,7 +74,7 @@ export default function WordsList(props: IWordsList) {
                             alignItems: 'center',
                             justifyContent: "center",
                             flexDirection: 'row',
-                            minWidth: "80px"
+                            minWidth: "80px",
                         }}>
                             <Typography
                                 display='flex'
@@ -81,6 +82,8 @@ export default function WordsList(props: IWordsList) {
                                 alignItems='center'
                                 align="center"
                                 variant="h6"
+                                color="#616161"
+                                fontWeight={600}
                             >
                                 {card.word}
                             </Typography>

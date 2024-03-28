@@ -67,12 +67,16 @@ export default class VocabularyBlockService implements IVocabularyBlockService {
             if (response.status == 401) {
                 return new TypedResult<Status>(Status.Unauthorized);
             }
+            if (response.status == 204) {
+                return new TypedResult<Status>(Status.NoContent);
+            }
             
             var data = await response.json();
           
             return new TypedResult<Status>(Status.OK, data);
         }
         catch (error) {
+            console.log(error)
             return new TypedResult<Status>(Status.InternalServerError);
         }
     }

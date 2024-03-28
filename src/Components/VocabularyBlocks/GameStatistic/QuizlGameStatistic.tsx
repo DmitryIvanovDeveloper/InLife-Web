@@ -1,5 +1,5 @@
 import ExtensionIcon from '@mui/icons-material/Extension';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Grid, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Button, Card, CardActionArea, Dialog, DialogActions, DialogContent, DialogContentText, Grid, IconButton, Typography, useMediaQuery, useTheme } from '@mui/material';
 import IQuizleGameStatisticModel from '../../../ThereGame.Business/Models/IQuizleGameStatistic';
 import { useEffect, useState } from 'react';
 import QuizlGameStatisticTable from '../../QuizleGameStatisticTable/QuizlGameStatisticTable';
@@ -11,7 +11,7 @@ export interface IQuizlGameStatisticProps {
 export default function QuizlGameStatistic(props: IQuizlGameStatisticProps) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    
+
     const [correctAnswers, setCorrectAnswera] = useState<number>(0);
     const [isOpenStatisticTable, setIsOpenStatisticTable] = useState<boolean>(false);
 
@@ -31,7 +31,7 @@ export default function QuizlGameStatistic(props: IQuizlGameStatisticProps) {
     }, [props.quizlGameStatistics]);
 
     function Modal() {
-      
+
         return (
             <Dialog
                 fullScreen={fullScreen}
@@ -62,35 +62,40 @@ export default function QuizlGameStatistic(props: IQuizlGameStatisticProps) {
     }
 
     return (
-        <Grid container alignItems='center' justifyContent='center'>
-            <Grid item >
-                <Typography >Quizl Game</Typography>
-            </Grid>
-            <Grid container alignItems='center'  justifyContent='center' >
-
-                <Grid item >
-                    <IconButton onClick={() => setIsOpenStatisticTable(true)}>
-                        <Typography fontWeight={600}>Quizl</Typography>
-                    </IconButton>
-                </Grid>
-
-                <Grid item >
-                    <Typography fontWeight={600}>{props.quizlGameStatistics.length}</Typography>
-                </Grid>
-
-                <Grid item display='flex'>
-                    <Typography sx={{ ml: 0.5 }}>{`(`}</Typography>
-                    <Typography sx={{ ml: 0.5 }} color='green'>{correctAnswers}</Typography>
-                    <Typography sx={{ ml: 0.5 }}>{`/`}</Typography>
-                    <Typography sx={{ ml: 0.5 }} color='red'>{props.quizlGameStatistics.length - correctAnswers}</Typography>
-                    <Typography sx={{ ml: 0.5 }}>{`)`}</Typography>
-                </Grid>
-            </Grid>
-
+        <Card sx={{width: '350px', m: 1}}>
             {isOpenStatisticTable
                 ? Modal()
                 : null
-        }
-        </Grid>
+            }
+            <CardActionArea onClick={() => setIsOpenStatisticTable(true)}>
+
+                <Grid container alignItems='center' justifyContent='center'>
+                    <Grid item >
+                        <Typography >Quizl Game</Typography>
+                    </Grid>
+                    <Grid container alignItems='center' justifyContent='center' >
+
+                        <Grid item >
+                            <Typography color="grey" fontWeight={600}>Quizl</Typography>
+                        </Grid>
+
+                        <Grid item >
+                            <Typography sx={{ml: 1}} fontWeight={600}>{props.quizlGameStatistics.length}</Typography>
+                        </Grid>
+
+                        <Grid item display='flex'>
+                            <Typography sx={{ ml: 0.5 }}>{`(`}</Typography>
+                            <Typography sx={{ ml: 0.5 }} color='green'>{correctAnswers}</Typography>
+                            <Typography sx={{ ml: 0.5 }}>{`/`}</Typography>
+                            <Typography sx={{ ml: 0.5 }} color='red'>{props.quizlGameStatistics.length - correctAnswers}</Typography>
+                            <Typography sx={{ ml: 0.5 }}>{`)`}</Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </CardActionArea>
+
+        </Card>
+
+
     )
 }

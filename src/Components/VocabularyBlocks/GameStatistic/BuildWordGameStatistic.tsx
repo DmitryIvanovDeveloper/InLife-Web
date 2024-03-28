@@ -1,4 +1,4 @@
-import { Grid, Typography, IconButton, Modal, Button, Dialog, DialogActions, DialogContent, DialogContentText, useMediaQuery, useTheme } from "@mui/material";
+import { Grid, Typography, IconButton, Modal, Button, Dialog, DialogActions, DialogContent, DialogContentText, useMediaQuery, useTheme, Card, CardActionArea } from "@mui/material";
 import IBuildWordsGameStatistic from "../../../ThereGame.Business/Models/IBuildWordsGameStatistic";
 import { useState, useEffect } from "react";
 import BuildWordGameTable from "../../BuildWordStatisticTable/BuildWordStatisticTable";
@@ -11,7 +11,7 @@ export interface IBuildWordGameStatisticProps {
 export default function BuildWordGameStatistic(props: IBuildWordGameStatisticProps) {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    
+
     const [correctAnswers, setCorrectAnswera] = useState<number>(0);
     const [isOpenStatisticTable, setIsOpenStatisticTable] = useState<boolean>(false);
 
@@ -33,7 +33,7 @@ export default function BuildWordGameStatistic(props: IBuildWordGameStatisticPro
     }, [props.buildWordGamesStatistics]);
 
     function Modal() {
-      
+
         return (
             <Dialog
                 fullScreen={fullScreen}
@@ -65,38 +65,39 @@ export default function BuildWordGameStatistic(props: IBuildWordGameStatisticPro
 
 
     return (
-        <Grid container alignItems='center' justifyContent='center'>
-            
-        <Grid item >
-            <Typography>Build Words</Typography>
-        </Grid>
+        <Card sx={{ width: '350px', m: 1 }}>
+            {isOpenStatisticTable
+                ? Modal()
+                : null
+            }
+            <CardActionArea onClick={() => setIsOpenStatisticTable(true)}>
 
-        <Grid container alignItems='center'  justifyContent='center'>
+                <Grid container alignItems='center' justifyContent='center'>
 
-            <Grid item >
-                <IconButton onClick={() => setIsOpenStatisticTable(true)}>
-                    <ExtensionIcon />
-                </IconButton>
-            </Grid>
+                    <Grid item >
+                        <Typography>Build Words</Typography>
+                    </Grid>
 
-            <Grid item >
-                <Typography >{props.buildWordGamesStatistics.length}</Typography>
-            </Grid>
+                    <Grid container alignItems='center' justifyContent='center'>
 
-            <Grid item display='flex'>
-                <Typography sx={{ ml: 0.5 }}>{`(`}</Typography>
-                <Typography sx={{ ml: 0.5 }} color='green'>{correctAnswers}</Typography>
-                <Typography sx={{ ml: 0.5 }}>{`/`}</Typography>
-                <Typography sx={{ ml: 0.5 }} color='red'>{props.buildWordGamesStatistics.length - correctAnswers}</Typography>
-                <Typography sx={{ ml: 0.5 }}>{`)`}</Typography>
-            </Grid>
-        </Grid>
+                        <Grid item >
+                            <ExtensionIcon />
+                        </Grid>
 
-        {isOpenStatisticTable
-            ? Modal()
-            : null
-    }
+                        <Grid item >
+                            <Typography >{props.buildWordGamesStatistics.length}</Typography>
+                        </Grid>
 
-    </Grid>
+                        <Grid item display='flex'>
+                            <Typography sx={{ ml: 0.5 }}>{`(`}</Typography>
+                            <Typography sx={{ ml: 0.5 }} color='green'>{correctAnswers}</Typography>
+                            <Typography sx={{ ml: 0.5 }}>{`/`}</Typography>
+                            <Typography sx={{ ml: 0.5 }} color='red'>{props.buildWordGamesStatistics.length - correctAnswers}</Typography>
+                            <Typography sx={{ ml: 0.5 }}>{`)`}</Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </CardActionArea>
+        </Card>
     )
 }

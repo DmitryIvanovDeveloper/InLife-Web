@@ -6,49 +6,59 @@ import IStudentVocabularyBlockModel from "../../ThereGame.Business/Models/IStude
 import StudentVocabularyBlockMapping from "../Util/Mapping/StudentVocabularyBlockMapping";
 import ICreateStudentVocabularyBlockDto from "../../ThereGame.Infrastructure/Services/Dto/ICreateStudentVocabularyBlockDto";
 import { v4 as uuidv4 } from 'uuid';
+import { useVocabularyBlockState } from "../../Data/useVocabularyBlocks";
 
 export default function useVocabularyBlockQueriesApi() {
 
-    const wordsService = appContainer.get<IVocabularyBlockService>(TYPES.VocabularyBlockService);
+    const vocabularyBlockService = appContainer.get<IVocabularyBlockService>(TYPES.VocabularyBlockService);
 
-    const get = async (studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
+    const  [_, setVocabularyBlockState] = useVocabularyBlockState();
+
+    const get = async (studentId: string): Promise<void[]> => {
         var token = localStorage.getItem("Token");
         if (!token || !studentId) {
             return [];
         }
-        const result = await wordsService.get(token, studentId);
+
+        const result = await vocabularyBlockService.get(token, studentId);
+     
+
         if (result.status == Status.OK) {
-            return new StudentVocabularyBlockMapping().response(result.data);
+
+            const vocabularyBlocks = new StudentVocabularyBlockMapping().response(result.data);
+            setVocabularyBlockState(sortByDate(vocabularyBlocks));
+        }
+        if (result.status == Status.NoContent) {
+            setVocabularyBlockState([]);
         }
 
         return []
     }
 
     return {
-        update: async (studentVocabularyBlock: IStudentVocabularyBlockModel): Promise<IStudentVocabularyBlockModel[]> => {
+        update: async (studentVocabularyBlock: IStudentVocabularyBlockModel): Promise<void> => {
             var token = localStorage.getItem("Token");
             if (!token) {
-                return[];
+                return;
             }
 
 
             const studentVocabularyRequest = new StudentVocabularyBlockMapping().request(studentVocabularyBlock);
 
-            await wordsService.update(studentVocabularyRequest, token);
-            return await get(studentVocabularyBlock.studentId);
+            await vocabularyBlockService.update(studentVocabularyRequest, token);
+            await get(studentVocabularyBlock.studentId);
 
         },
 
-        get: async (studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
-            const vocabularyBlocks = await get(studentId);
-            return vocabularyBlocks;
+        get: async (studentId: string): Promise<void> => {
+            await get(studentId);
         },
 
-        create: async (studentId: string, blocksLength: number): Promise<IStudentVocabularyBlockModel[]> => {
+        create: async (studentId: string, blocksLength: number): Promise<void> => {
 
             var token = localStorage.getItem("Token");
             if (!token || !studentId) {
-                return [];
+                return;
             }
 
             const dto: ICreateStudentVocabularyBlockDto = {
@@ -58,19 +68,29 @@ export default function useVocabularyBlockQueriesApi() {
                 name: `Block ${blocksLength + 1}`
             }
 
-            await wordsService.create(dto, token);
+            await vocabularyBlockService.create(dto, token);
 
-            return await get(studentId);
+            await get(studentId);
         },
-        delete: async (vocabularyId: string, studentId: string): Promise<IStudentVocabularyBlockModel[]> => {
+        delete: async (vocabularyId: string, studentId: string): Promise<void> => {
 
             var token = localStorage.getItem("Token");
             if (!token || !vocabularyId) {
-                return [];
+                return;
             }
 
-            await wordsService.delete(vocabularyId, token);
-            return await get(studentId);
+            await vocabularyBlockService.delete(vocabularyId, token);
+            await get(studentId);
         }
     }
+}
+
+const sortByDate = (vocabularyBlocks: IStudentVocabularyBlockModel[]): IStudentVocabularyBlockModel[] => {
+    if (!vocabularyBlocks.length) {
+        return vocabularyBlocks;
+    }
+    return vocabularyBlocks.sort((a, b) => {
+        return new Date(a.createdAt).getTime() -
+            new Date(b.createdAt).getTime()
+    })
 }

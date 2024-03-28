@@ -1,4 +1,4 @@
-import { Grid, Typography, IconButton, Modal, Button, Dialog, DialogActions, DialogContent, DialogContentText, useMediaQuery, useTheme } from "@mui/material";
+import { Grid, Typography, IconButton, Modal, Button, Dialog, DialogActions, DialogContent, DialogContentText, useMediaQuery, useTheme, Card, CardActionArea } from "@mui/material";
 import IBuildWordsGameStatistic from "../../../ThereGame.Business/Models/IBuildWordsGameStatistic";
 import { useState, useEffect } from "react";
 import TranslateIcon from '@mui/icons-material/Translate';
@@ -12,7 +12,7 @@ export default function TranslateWordGameStatistic(props: ITranslateWordGameStat
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    
+
     const [correctAnswers, setCorrectAnswera] = useState<number>(0);
     const [uncorrectAnswers, setUncorrectAnswer] = useState<number>(0);
     const [isOpenStatisticTable, setIsOpenStatisticTable] = useState<boolean>(false);
@@ -38,7 +38,7 @@ export default function TranslateWordGameStatistic(props: ITranslateWordGameStat
     }, [props.translateWordGamesStatistics]);
 
     function Modal() {
-      
+
         return (
             <Dialog
                 fullScreen={fullScreen}
@@ -68,37 +68,38 @@ export default function TranslateWordGameStatistic(props: ITranslateWordGameStat
         )
     }
     return (
-        <Grid container alignItems='center' justifyContent='center'>
-        <Grid item >
-            <Typography>Translate Words</Typography>
-        </Grid>
+        <Card sx={{ width: '350px', m: 1 }}>
+            {isOpenStatisticTable
+                ? Modal()
+                : null
+            }
+            <CardActionArea onClick={() => setIsOpenStatisticTable(true)}>
 
-        <Grid container alignItems='center'  justifyContent='center'>
+                <Grid container alignItems='center' justifyContent='center'>
+                    <Grid item >
+                        <Typography>Translate Words</Typography>
+                    </Grid>
 
-            <Grid item >
-                <IconButton onClick={() => setIsOpenStatisticTable(true)}>
-                    <TranslateIcon />
-                </IconButton>
-            </Grid>
+                    <Grid container alignItems='center' justifyContent='center'>
 
-            <Grid item >
-                <Typography >{props.translateWordGamesStatistics.length}</Typography>
-            </Grid>
+                        <Grid item >
+                                <TranslateIcon />
+                        </Grid>
 
-            <Grid item display='flex'>
-                <Typography sx={{ ml: 0.5 }}>{`(`}</Typography>
-                <Typography sx={{ ml: 0.5 }} color='green'>{correctAnswers}</Typography>
-                <Typography sx={{ ml: 0.5 }}>{`/`}</Typography>
-                <Typography sx={{ ml: 0.5 }} color='red'>{uncorrectAnswers}</Typography>
-                <Typography sx={{ ml: 0.5 }}>{`)`}</Typography>
-            </Grid>
-        </Grid>
+                        <Grid item >
+                            <Typography >{props.translateWordGamesStatistics.length}</Typography>
+                        </Grid>
 
-        {isOpenStatisticTable
-            ? Modal()
-            : null
-    }
-
-    </Grid>
+                        <Grid item display='flex'>
+                            <Typography sx={{ ml: 0.5 }}>{`(`}</Typography>
+                            <Typography sx={{ ml: 0.5 }} color='green'>{correctAnswers}</Typography>
+                            <Typography sx={{ ml: 0.5 }}>{`/`}</Typography>
+                            <Typography sx={{ ml: 0.5 }} color='red'>{uncorrectAnswers}</Typography>
+                            <Typography sx={{ ml: 0.5 }}>{`)`}</Typography>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </CardActionArea>
+        </Card>
     )
 }

@@ -3,7 +3,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, T
 import NewCard from './NewCard/NewCard';
 import ICard from './ICard';
 import { useWordsState } from '../../Data/useWords';
-import VocabularyBlocks from '../VocabularyBlocks/VocabularyBlock';
+import VocabularyBlocks from '../VocabularyBlocks/VocabularyBlocks';
 import DevidedLabel from '../Headers/DevidedLabel';
 
 import './FlashCards.css'

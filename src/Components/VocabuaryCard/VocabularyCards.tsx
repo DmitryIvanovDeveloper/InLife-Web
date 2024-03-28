@@ -1,10 +1,9 @@
-import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, FormControlLabel, Grid, IconButton, Switch, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, FormControlLabel, Grid, IconButton, List, Switch, Typography, useMediaQuery, useTheme } from "@mui/material";
 import WordsList from "../WordsList/WordsList";
 import { useEffect, useState } from "react";
 import { useWordsState } from "../../Data/useWords";
 import IWordModel from "../../ThereGame.Business/Models/IWordModel";
-import DeleteIcon from '@mui/icons-material/DeleteOutlineSharp';
-import EditIcon from '@mui/icons-material/Edit';
+
 import IQuizleGameStatisticModel from "../../ThereGame.Business/Models/IQuizleGameStatistic";
 import QuizlGameStatisticTable from "../QuizleGameStatisticTable/QuizlGameStatisticTable";
 import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi";
@@ -13,6 +12,9 @@ import VocabularyCardQuizGameStaistics from "./VocabularyCardQuizlGameStatistic"
 import VocabularyCardBuildWordGamesStatistic from "./VocabularyCardBuildWordGamesStatistic";
 import VocabularyCardTranslateWordGameStatistic from "./VocabularyCardTranslateWordGameStatistic";
 import ITranslateWordsGameStatistic from "../../ThereGame.Business/Models/ITranslateWordsGameStatistic";
+import Draggable from "react-draggable";
+import VocabularyCard from "./VocabularyCard";
+import PopupSettings from "./PopupSettings";
 
 
 // export interface IVocabularyCardProps {
@@ -30,6 +32,7 @@ export interface IVocabularyCardProps {
     translateWordsGameStatistic: ITranslateWordsGameStatistic[];
     onEditCard: (id: string) => void;
     onDeleteCard: (id: string) => void;
+    onDeleteBlock: () => void;
 }
 
 export default function VocabularyCards(props: IVocabularyCardProps) {
@@ -82,79 +85,39 @@ export default function VocabularyCards(props: IVocabularyCardProps) {
     }
 
     return (
-        <Box width='100%'>
+
+        <Box display='flex' justifyContent='flex-start'>
 
             {isOpenStatisticTable
                 ? Modal()
                 : null
             }
 
-            <Box display='flex' justifyContent='flex-end' marginRight={10}>
-                <FormControlLabel
-                    labelPlacement="top"
-                    control={
-                        <Switch checked={isShowCardStatistics} onChange={(event) => setIsShowCardStatistics(event.target.checked)}></Switch>
-                    }
-                    label="Show card statistics"
-                />
-            </Box>
-            <Box display='flex' justifyContent='center' width='100%'>
+            <Box display='flex' width='1500px' flexDirection='column' justifyContent='flex--start' sx={{ backgroundColor: '#00897b', borderRadius: "10px", overflow: 'auto', height: '50vh', boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px" }}>
+                
+                <PopupSettings onDelete={props.onDeleteBlock} />
 
-                <Grid container width='100%' sx={{ ml: 10, mr: 10 }} >
-
+                <Box display='flex' justifyContent='space-between'>
+                    <Typography sx={{ml: 1}} color='white' fontWeight={600}>{`Cards (${vocabularyWords.length})`}</Typography>
+                    <FormControlLabel
+                        labelPlacement="top"
+                        control={
+                            <Switch checked={isShowCardStatistics} onChange={(event) => setIsShowCardStatistics(event.target.checked)}></Switch>
+                        }
+                        label={<Typography color='white' fontWeight={600}>Show card statistics</Typography>}
+                    />
+                </Box>
+                <Grid container justifyContent='center' width='100%' sx={{ overflow: 'auto' }} >
                     {vocabularyWords.map((word, index) => (
-                        <Grid item sx={{ m: 1 }}>
-                            <Box height="0px">
-
-                                {!isShowCardStatistics
-                                    ? <Box sx={{ m: 0, display: 'flex', justifyContent: 'space-between' }}>
-                                        <IconButton onClick={() => props.onEditCard(word.id)}>
-                                            <EditIcon />
-                                        </IconButton>
-
-                                        <IconButton  onClick={() => props.onDeleteCard(word.id)}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                     
-                                    </Box>
-                                    : <Grid container justifyContent='space-around' >
-                                        <Grid item>
-                                            <VocabularyCardQuizGameStaistics
-                                                quizlGamesStatistic={props.quizlGamesStatistics}
-                                                wordQuizlGamesId={word.quizlGamesId}
-                                            />
-                                        </Grid>
-
-                                        <Grid item>
-                                            <VocabularyCardBuildWordGamesStatistic
-                                                buildWordsGameStatistic={props.buildWordsGameStatistic}
-                                                wordId={word.id}
-                                            />
-                                        </Grid>
-
-                                        <Grid item>
-                                            <VocabularyCardTranslateWordGameStatistic
-                                                translateWordsGameStatistic={props.translateWordsGameStatistic}
-                                                wordId={word.id}
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                }
-                            </Box>
-                            <Card sx={{
-                                m: 0,
-                                p: 0,
-                                width: 300,
-                                height: 200,
-                                display: "flex",
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'space-around'
-                            }}>
-                                <Typography position='relative' color={'Dark Gray'} fontWeight={600} variant="h5">{word.word}</Typography>
-                            </Card>
-                        </Grid>
-
+                        <VocabularyCard
+                            onEditCard={props.onEditCard}
+                            onDeleteCard={props.onDeleteCard}
+                            quizlGamesStatistics={props.quizlGamesStatistics}
+                            buildWordsGameStatistic={props.buildWordsGameStatistic}
+                            translateWordsGameStatistic={props.translateWordsGameStatistic}
+                            isShowCardStatistics={isShowCardStatistics}
+                            word={word} 
+                        />
                     ))}
                 </Grid>
             </Box>

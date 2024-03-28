@@ -84,10 +84,11 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
             var expectedWord = wordsData.find(wordData => wordData.id == qw.wordId)
 
             return expectedWord?.speechParts.includes(SpeechPart.Verb) ||
-                expectedWord?.speechParts.includes(SpeechPart.Auxiliary)
-                ? expectedWord.id
-                : ""
-            ;
+                expectedWord?.speechParts.includes(SpeechPart.Auxiliary) ||
+                expectedWord?.speechParts.includes(SpeechPart.Article) 
+                    ? expectedWord.id
+                    : ""
+                ;
         });
 
         var filtred = allowedWords.filter(data => data);

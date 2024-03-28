@@ -145,7 +145,6 @@ export default function NewCard(props: INewCardProps) {
     }, []);
 
     useEffect(() => {
-
         if (wordData.speechParts.includes(SpeechPart.Verb) ||
             wordData.speechParts.includes(SpeechPart.Auxiliary) ||
             wordData.speechParts.includes(SpeechPart.PhrasalVerb)
@@ -189,7 +188,6 @@ export default function NewCard(props: INewCardProps) {
             forms = JSON.stringify(articlesForms);
         }
 
-        console.log(forms)
         setWordData(prev => ({
             ...prev,
             forms
@@ -263,7 +261,11 @@ export default function NewCard(props: INewCardProps) {
     }
 
     const isDoubleWord = (): boolean => {
-        return matchedWordData.length == 1 && matchedWordData[0].word == wordData.word
+        // if ( !matchedWordData.length) {
+        //     return true;
+        // }
+        // console.log( matchedWordData[0].word == wordData.word)
+        return matchedWordData.length >= 1 && matchedWordData[0].word == wordData.word
     }
 
     const onSelectWordData = (wordData: IWordModel) => {
