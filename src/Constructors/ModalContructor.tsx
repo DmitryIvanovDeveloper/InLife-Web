@@ -2,7 +2,6 @@ import { Dialog, DialogTitle, DialogActions, useMediaQuery, useTheme, Button, Di
 import React, { useState } from "react"
 import Instruction from "./Instruction";
 import { EditDialogueItemType } from "./models/EditType";
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useConstructorActionsState } from "../Data/useConstructorActionsState";
 import { Locations } from "../Data/Locations";
 

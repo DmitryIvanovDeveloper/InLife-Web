@@ -12,6 +12,12 @@ import TeacherService from "./ThereGame.Infrastructure/Services/TeacherService";
 import { TYPES } from "./types";
 import IStudentDialogueStatisticService from "./ThereGame.Business/Domain/Util/Services/IDialogueStatisticService";
 import StudentDialogueStatisticService from "./ThereGame.Infrastructure/Services/Dialogue/DialogueStatisticService";
+import IWordService from "./ThereGame.Business/Domain/Util/Services/IWordService";
+import WordService from "./ThereGame.Infrastructure/Services/WordsService";
+import IVocabularyBlockService from "./ThereGame.Business/Domain/Util/Services/IVocabularyBlockService";
+import VocabularyBlockService from "./ThereGame.Infrastructure/Services/VocabularyBlockService";
+import IQuizleGameService from "./ThereGame.Business/Domain/Util/Services/IQuizleGameService";
+import QuizlGameService from "./ThereGame.Infrastructure/Services/QuizleGameService";
 
 export const appContainer = new Container();
 
@@ -22,4 +28,7 @@ appContainer.bind<IAnswerService>(TYPES.AnswerService).to(AnswerService).inSingl
 appContainer.bind<IAuthenticationService>(TYPES.AuthenticationService).to(AuthenticationService).inSingletonScope();
 appContainer.bind<ITeacherService>(TYPES.TeacherService).to(TeacherService).inSingletonScope();
 appContainer.bind<IStudentDialogueStatisticService>(TYPES.DialogueStatisticService).to(StudentDialogueStatisticService).inSingletonScope();
+appContainer.bind<IWordService>(TYPES.WordsService).to(WordService).inSingletonScope();
+appContainer.bind<IVocabularyBlockService>(TYPES.VocabularyBlockService).to(VocabularyBlockService).inSingletonScope();
+appContainer.bind<IQuizleGameService>(TYPES.QuizlGameService).to(QuizlGameService).inSingletonScope();
 

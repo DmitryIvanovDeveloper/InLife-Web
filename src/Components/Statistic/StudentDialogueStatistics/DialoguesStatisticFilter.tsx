@@ -133,6 +133,7 @@ export default function DialoguesStatisticFilter(props: IDialoguesStatisticFilte
                     highlightDates={dialoguesStatistic.map(statistic => new Date(statistic.startDate))}
                     onChange={onChangeDate}
                     date={date ?? new Date()}
+                    label="date"
                 />
                 <DevidedLabel name="" />
 

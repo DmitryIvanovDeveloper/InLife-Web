@@ -10,6 +10,7 @@ import useDialogueStatisticApi from "../ThereGame.Api/Queries/DialogueStatisticA
 import { useDialogueItemConstructor } from "../Data/useDialogues";
 import { useActionData } from "react-router-dom";
 import useConstructorActions from "../Data/ConstructorActions";
+import StudentInteractive from "./Student/StudentInteractive";
 
 export default function StudentList() {
     const [teacher] = useTeacher();
@@ -94,7 +95,7 @@ export default function StudentList() {
             </ListItem>
 
             {selectedStudentId
-                ? <StudentDialogueStatistics studentId={selectedStudentId} />
+                ? <StudentInteractive studentId={selectedStudentId} />
                 : null
             }
 

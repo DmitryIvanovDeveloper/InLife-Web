@@ -1,7 +1,7 @@
 import { useDialogueItemConstructor } from "../Data/useDialogues";
 import Dialogues from "./Dialogues";
 import { Box, CircularProgress, Grid } from "@mui/material";
-import GameWebGLEditor from "../Components/GameWebGL/GameWebGLEditor";
+import GameInlifeWebGLEditor from "../Components/GameWebGL/GameInLifeWebGLEditor";
 import useTeacherQueriesApi from "../ThereGame.Api/Queries/TeacherQueriesApi";
 import { ReactElement, useEffect, useState } from "react";
 import { RoleType } from "../ThereGame.Business/Util/Role";
@@ -10,6 +10,7 @@ import { Routes as LocalRoutes } from '../Routes';
 import DialogueGraph from "../Components/GraphTree/DialogueGraph";
 import MiniDrawer from "../Components/Sidebar/SIdebar";
 import Constructor from "../Constructors/Constructor";
+import GameWebGLSettings from "../Components/GameWebGL/GameWebGLSettings";
 
 export default function Main() {
 
@@ -19,8 +20,6 @@ export default function Main() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // setGameWwebGL();
-
         var role = localStorage.getItem("Role");
         if (Number(role) == RoleType.Teacher) {
             teacherQueriesApi.getById().then(result => {
@@ -62,7 +61,7 @@ export default function Main() {
     return (
         <Box>
             <MiniDrawer barElements={<Dialogues setIsSelectedStudents={setIsSelectedStudents} />} elements={<Canvas />} />
-            <GameWebGLEditor />
+            {/* <GameWebGLEditor settings={new GameWebGLSettings().getInLifeSettings()} /> */}
         </Box>
     )
 }

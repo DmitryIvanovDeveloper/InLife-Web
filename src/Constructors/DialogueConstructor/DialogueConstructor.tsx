@@ -87,8 +87,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         localStorage.removeItem(props.id);
     }
 
-    console.log(props.id);
-
     // Componets
     function VoiceSettingsComponent() {
         return (

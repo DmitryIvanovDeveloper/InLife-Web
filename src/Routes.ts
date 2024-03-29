@@ -8,6 +8,10 @@ const RoutesAPI = {
     authSignIn: `${process.env.REACT_APP_SERVER}/api/auth/sign-in/me`,
     authSignUpTeacher: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/teachers`,
     authSignUpStudent: `${process.env.REACT_APP_SERVER}/api/auth/sign-up/students`,
+    words: `${process.env.REACT_APP_SERVER}/api/words`,
+    studentsVocabularyBlocks: `${process.env.REACT_APP_SERVER}/api/vocabularyBlocks`,
+    quizlGames: `${process.env.REACT_APP_SERVER}/api/quizlGames`,
+    quizlGamesWord: `${process.env.REACT_APP_SERVER}/api/quizlGames/word`,
     
     chatGPT: "https://api.openai.com/v1/chat/completions"
 }
