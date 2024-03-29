@@ -254,7 +254,7 @@ export default function QuizlBuilder(props: IQuizlBuilder) {
         >
             <DialogContent>
 
-                <DialogContentText>Type sentence and select a word to hide it</DialogContentText>
+                <DialogContentText>Enter a sentence and select a " verb / auxiliary verb " to hide it.</DialogContentText>
 
                 <DialogContentText>
                     <Box display='flex' flexDirection='column' alignItems='center' width="100%">

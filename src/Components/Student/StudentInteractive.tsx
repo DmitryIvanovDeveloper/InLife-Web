@@ -73,8 +73,8 @@ export default function StudentInteractive(props: IStudentListProps) {
     return (
         <TabContext value={tab}>
             {isCreateQuizlGame
-                ? <QuizlBuilder 
-                    onCreateNewWord={() => setIsCreateNewWord(true)} 
+                ? <QuizlBuilder
+                    onCreateNewWord={() => setIsCreateNewWord(true)}
                     setOnClose={() => setIsCreateQuizlGame(false)}
                     quizlGame={[]}
                 />
@@ -85,7 +85,7 @@ export default function StudentInteractive(props: IStudentListProps) {
                 : null
             }
             {isShowQuizlGames
-                ? <QuizlGamesPanel onCreateNewWord={() => setIsCreateNewWord(true)} quizleGamesId={[]} onClose={() => setIsShowQuizlGames(false)}/>
+                ? <QuizlGamesPanel onCreateNewWord={() => setIsCreateNewWord(true)} quizleGamesId={[]} onClose={() => setIsShowQuizlGames(false)} />
                 : null
             }
 
@@ -97,8 +97,11 @@ export default function StudentInteractive(props: IStudentListProps) {
             </Box>
             <TabPanel value="1"><StudentDialogueStatistics studentId={props.studentId} /></TabPanel>
             <TabPanel value="2">
-                <Button onClick={() => setIsCreateQuizlGame(true)}>Add Quizl Game</Button>
-                <Button onClick={() => setIsShowQuizlGames(true)}>Show Quizl Games</Button>
+                <Box display='flex' flexDirection='column' justifyContent='flex-start'>
+                    <Button onClick={() => setIsCreateQuizlGame(true)}>Add Quizl Game</Button>
+                    <Button onClick={() => setIsShowQuizlGames(true)}>Show Quizl Games</Button>
+                </Box>
+
 
             </TabPanel>
         </TabContext>

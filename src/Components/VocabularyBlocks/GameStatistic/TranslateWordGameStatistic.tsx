@@ -87,7 +87,7 @@ export default function TranslateWordGameStatistic(props: ITranslateWordGameStat
                         </Grid>
 
                         <Grid item >
-                            <Typography >{props.translateWordGamesStatistics.length}</Typography>
+                            <Typography fontWeight={600} sx={{ ml: 1 }}>{props.translateWordGamesStatistics.length}</Typography>
                         </Grid>
 
                         <Grid item display='flex'>

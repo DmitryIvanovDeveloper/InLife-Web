@@ -13,10 +13,13 @@ export default function BuildWordGameStatistic(props: IBuildWordGameStatisticPro
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const [correctAnswers, setCorrectAnswera] = useState<number>(0);
+    const [uncorrectAnswers, setUncorrectAnswera] = useState<number>(0);
+
     const [isOpenStatisticTable, setIsOpenStatisticTable] = useState<boolean>(false);
 
     useEffect(() => {
         let numCorrectAnswers = 0;
+        let uncorrectAnswers = 0;
 
         props.buildWordGamesStatistics.forEach(statistic => {
 
@@ -25,11 +28,14 @@ export default function BuildWordGameStatistic(props: IBuildWordGameStatisticPro
                 if (parsedAnswer.IsCorrect === true) {
                     numCorrectAnswers++;
                 }
+                else {
+                    uncorrectAnswers++;
+                }
             });
         });
 
         setCorrectAnswera(numCorrectAnswers);
-
+        setUncorrectAnswera(uncorrectAnswers);
     }, [props.buildWordGamesStatistics]);
 
     function Modal() {
@@ -85,14 +91,14 @@ export default function BuildWordGameStatistic(props: IBuildWordGameStatisticPro
                         </Grid>
 
                         <Grid item >
-                            <Typography >{props.buildWordGamesStatistics.length}</Typography>
+                            <Typography fontWeight={600} sx={{ ml: 1 }}>{props.buildWordGamesStatistics.length}</Typography>
                         </Grid>
 
                         <Grid item display='flex'>
                             <Typography sx={{ ml: 0.5 }}>{`(`}</Typography>
                             <Typography sx={{ ml: 0.5 }} color='green'>{correctAnswers}</Typography>
                             <Typography sx={{ ml: 0.5 }}>{`/`}</Typography>
-                            <Typography sx={{ ml: 0.5 }} color='red'>{props.buildWordGamesStatistics.length - correctAnswers}</Typography>
+                            <Typography sx={{ ml: 0.5 }} color='red'>{uncorrectAnswers}</Typography>
                             <Typography sx={{ ml: 0.5 }}>{`)`}</Typography>
                         </Grid>
                     </Grid>
