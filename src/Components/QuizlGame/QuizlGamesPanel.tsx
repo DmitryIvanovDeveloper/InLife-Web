@@ -1,10 +1,9 @@
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi";
 import IQuizleGameModel, { IQuizlWordModel } from "../../ThereGame.Business/Models/IQuizleWordModel";
 import { useMediaQuery, Dialog, DialogContent, DialogContentText, DialogActions, useTheme, Button, Typography, CircularProgress, Box, Card, List, CardActions, CardActionArea, IconButton } from "@mui/material";
 import QuizlBuilder from "../QuizlBuilder/QuizlBuilder";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import NewCard from "../FlashCards/NewCard/NewCard";
 
 export interface IQuizlGameCard {
     id: string;

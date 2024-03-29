@@ -1,4 +1,4 @@
-import { Box, Tabs, Tab, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { isOnRange } from "../../ThereGame.Infrastructure/Helpers/DatesCompare";
 import StudentCalendarActivity from "../Statistic/StudentDialogueStatistics/StudentCalendarActivity/StudentCalendarActivity";
 import VocabularyCards from "../VocabuaryCard/VocabularyCards";
@@ -19,18 +19,12 @@ export interface IVocabularyBlockTabsProps {
 }
 
 export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
-
-
     const vocabularyBlockQueriesApi = useVocabularyBlockQueriesApi();
 
-
-    const [selectedVcabularyBlockId, setSelectedVocabularyBlockId] = useState<string>("")
     const [playedGamesDate, setPlayedGamesdDate] = useState<Date[]>([]);
 
     const [selectedStartDate, setSelecetedStartDate] = useState<Date>(new Date());
     const [selectedEndDate, setSelecetedEndDate] = useState<Date>(new Date());
-
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const onDeleteBlock = async () => {
         await vocabularyBlockQueriesApi.delete(props.selectedVcabularyBlock.id, props.studentId);
@@ -87,7 +81,13 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
     }, [props.selectedVcabularyBlock])
 
     return (
-        <Box  sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ 
+            width: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center' 
+            }}
+        >
             <Box display='flex' justifyContent='flex-end' width='100%' marginRight={15}>
                 <StudentCalendarActivity onChange={setSelecetedStartDate} highlightDates={playedGamesDate} date={selectedStartDate} label="Start date" />
                 <StudentCalendarActivity onChange={setSelecetedEndDate} highlightDates={playedGamesDate} date={selectedEndDate} label="End date" />
@@ -119,7 +119,11 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
             />
 
             <Box sx={{ width: "90%", mr: 10 }}>
-                <WordsList onSelectWord={props.onEditCard} onAddWord={onUpdateVocabularyBlock} onCreateNewWord={props.onCreateNewWord} />
+                <WordsList 
+                    onSelectWord={props.onEditCard} 
+                    onAddWord={onUpdateVocabularyBlock} 
+                    onCreateNewWord={props.onCreateNewWord} 
+                />
             </Box>
         </Box>
     )

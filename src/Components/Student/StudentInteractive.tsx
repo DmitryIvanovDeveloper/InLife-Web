@@ -57,6 +57,7 @@ export default function StudentInteractive(props: IStudentListProps) {
                     <DialogContentText>
                         <NewCard
                             cardData={undefined}
+                            onClose={() => setIsCreateNewWord(false)}
                         />
                     </DialogContentText>
                 </DialogContent>

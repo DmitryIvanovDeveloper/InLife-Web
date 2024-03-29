@@ -24,17 +24,18 @@ export default function WordsList(props: IWordsList) {
 
 
     useEffect(() => {
+        if (!searchWord) {
+            setMatchedWordData(wordsState);
+            return;
+        }
+
         const matchedWordData = wordsState.filter(value => value.word.toLowerCase().includes(searchWord.toLowerCase()))
         if (!matchedWordData.length) {
             localStorage.setItem("new word", searchWord);
         }
+
         setMatchedWordData(matchedWordData);
-    }, [searchWord]);
-
-    useEffect(() => {
-        setMatchedWordData(wordsState);
-    }, [wordsState]);
-
+    }, [searchWord, wordsState]);
 
     if (!wordsState.length) {
         return (

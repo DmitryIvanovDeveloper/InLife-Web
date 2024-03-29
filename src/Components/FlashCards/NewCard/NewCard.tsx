@@ -1,5 +1,5 @@
 import { Box, Button, Card, Checkbox, FormControl, FormControlLabel, FormGroup, Grid, IconButton, ImageList, ImageListItem, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ActionButton from "../../Button/ActionButton";
 import Save from '@mui/icons-material/Save';
 import IWordModel, { IWordTrasnalteModel } from "../../../ThereGame.Business/Models/IWordModel";
@@ -72,6 +72,7 @@ export interface IArticle {
 
 export interface INewCardProps {
     cardData?: IWordModel | null | undefined;
+    onClose: () => void;
 }
 
 export default function NewCard(props: INewCardProps) {
@@ -88,9 +89,7 @@ export default function NewCard(props: INewCardProps) {
     const [articlesForms, setArticlesForms] = useState<IArticle>({ nextVowels: "" });
     const [isIrregular, setIsIrregular] = useState<boolean>(false);
 
-    useEffect(() => {
-        setIsIrregular(!!verbForms?.presentPerfect);
-    }, [verbForms]);
+
 
     const handleCheck = (event: any) => {
         setIsIrregular(event.target.checked)
@@ -169,22 +168,27 @@ export default function NewCard(props: INewCardProps) {
             word: word
         }))
     }
+
+    useEffect(() => {
+        setIsIrregular(!!verbForms?.presentPerfect);
+    }, [verbForms]);
+
     useEffect(() => {
         var forms = "";
 
-        if (props.cardData?.speechParts.includes(SpeechPart.Verb)) {
+        if (wordData?.speechParts.includes(SpeechPart.Verb)) {
             forms = JSON.stringify(verbForms);
         }
-        if (props.cardData?.speechParts.includes(SpeechPart.Noune)) {
+        if (wordData.speechParts.includes(SpeechPart.Noune)) {
             forms = JSON.stringify(plural);
         }
-        if (props.cardData?.speechParts.includes(SpeechPart.Auxiliary)) {
+        if (wordData.speechParts.includes(SpeechPart.Auxiliary)) {
             forms = JSON.stringify(auxiliaryVerbForms);
         }
-        if (props.cardData?.speechParts.includes(SpeechPart.PhrasalVerb)) {
+        if (wordData.speechParts.includes(SpeechPart.PhrasalVerb)) {
             forms = JSON.stringify(phrasalVerbForms);
         }
-        if (props.cardData?.speechParts.includes(SpeechPart.Article)) {
+        if (wordData.speechParts.includes(SpeechPart.Article)) {
             forms = JSON.stringify(articlesForms);
         }
 
@@ -192,7 +196,8 @@ export default function NewCard(props: INewCardProps) {
             ...prev,
             forms
         }))
-    }, [verbForms, plural, auxiliaryVerbForms, articlesForms]);
+
+    }, [verbForms, plural, auxiliaryVerbForms, articlesForms, phrasalVerbForms]);
 
     const onAnswersChange = (answer: string, index: number) => {
 
@@ -209,7 +214,7 @@ export default function NewCard(props: INewCardProps) {
             id: wordTranslate.id,
             wordId: wordTranslate.wordId,
             language: wordTranslate.language,
-            translates: updatedTranslate.filter(item => item)
+            translates: updatedTranslate,
         }
 
         const updatedWordTranslates = [...wordData.wordTranslates];
@@ -247,24 +252,25 @@ export default function NewCard(props: INewCardProps) {
         if (!wordData.word || !!props.cardData) {
             return;
         }
-        const matchedWordData = wordsData.filter(value => value.word.toLowerCase().includes(wordData.word.toLowerCase()))
+        const matchedWordData = wordsData.filter(value => value.word.toLowerCase().includes(wordData.word.toLowerCase()));
         setMatchedWordData(matchedWordData);
     }, [wordData.word]);
 
     const onUpdateVocabularyBlock = async () => {
+        console.log(wordData);
+
         localStorage.removeItem("new word");
         if (!props.cardData) {
             await wordQueriesApi.create(wordData);
             return;
         }
+
+
         await wordQueriesApi.update(wordData);
+        props.onClose();
     }
 
     const isDoubleWord = (): boolean => {
-        // if ( !matchedWordData.length) {
-        //     return true;
-        // }
-        // console.log( matchedWordData[0].word == wordData.word)
         return matchedWordData.length >= 1 && matchedWordData[0].word == wordData.word
     }
 
@@ -285,7 +291,7 @@ export default function NewCard(props: INewCardProps) {
     const onAddPicture = (picture: any) => {
         setWordData(prev => ({
             ...prev,
-            pictures: [...prev.pictures, picture.dfworata_url]
+            pictures: [...prev.pictures, picture]
         }));
     }
 
@@ -297,7 +303,7 @@ export default function NewCard(props: INewCardProps) {
                         checked={isIrregular}
                         onChange={handleCheck}
                         control={<Checkbox defaultChecked />}
-                        label="Irregular" 
+                        label="Irregular"
                     />
                 </FormGroup>
 
@@ -432,33 +438,49 @@ export default function NewCard(props: INewCardProps) {
                 ))}
 
             </Grid>
+
             <ImageLoader
                 setImage={onAddPicture}
             />
 
-
             <Card sx={{ display: 'flex', flexDirection: 'column' }}>
-                <ImageList variant="woven" sx={{ width: "100%", maxHeight: 300, minHeight: 150 }} cols={3} rowHeight={164}>
+                <ImageList
+                    variant="woven"
+                    sx={{
+                        width: "100%",
+                        maxHeight: 300,
+                        minHeight: 150,
+                        backgroundColor: "#f5f5f5",
+                        borderRadius: '5px'
+                    }}
+                    cols={3}
+                    rowHeight={164}
+                >
                     {wordData.pictures.map((picture, index) => (
-                        <Box>
-                            <IconButton onClick={() => onRemovePicture(index)}>
-                                <HighlightOffRoundedIcon />
-                            </IconButton>
+                        <ImageListItem key={uuidv4()}>
 
-                            <ImageListItem key={uuidv4()} >
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                    <IconButton onClick={() => onRemovePicture(index)}>
+                                        <HighlightOffRoundedIcon sx={{ color: "#bf360c" }} />
+                                    </IconButton>
+
+                                </Box>
+
                                 <img
-                                    style={{ width: 150, height: 150 }}
                                     srcSet={`${picture}`}
                                     src={`${picture}`}
-                                    loading="lazy"
                                 />
-                            </ImageListItem>
-                        </Box>
+                            </Box>
+                        </ImageListItem>
 
                     ))}
                 </ImageList>
 
-                <SpeechPartSelect setSelectedSpeechParts={onChangeSpeechParts} selectedSpeechParts={wordData.speechParts} />
+                <SpeechPartSelect
+                    setSelectedSpeechParts={onChangeSpeechParts}
+                    selectedSpeechParts={wordData.speechParts}
+                />
 
                 <Grid container>
                     {isSpecificWord
@@ -468,7 +490,7 @@ export default function NewCard(props: INewCardProps) {
                                 value={wordData.word}
                                 onChange={(event) => onWordChange(event.target.value)}
                                 sx={{ m: 1, }}
-                                label='word'>
+                                label='Word'>
                             </TextField>
                         </Grid>
                     }
@@ -523,7 +545,11 @@ export default function NewCard(props: INewCardProps) {
                     {!wordData.wordTranslates?.length
                         ? null
                         : wordData.wordTranslates[0]?.translates?.map((answer, index) => (
-                            <TextField value={answer} onChange={(event) => onAnswersChange(event.target.value, index)} sx={{ m: 1 }} label='answer'></TextField>
+                            <TextField 
+                                value={answer} 
+                                onChange={(event) => onAnswersChange(event.target.value, index)} 
+                                sx={{ m: 1 }} label='Translate' 
+                            />
                         ))}
                 </Box>
 

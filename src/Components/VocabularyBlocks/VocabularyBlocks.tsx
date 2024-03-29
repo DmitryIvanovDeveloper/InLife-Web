@@ -98,8 +98,8 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
 
-            <Button onClick={onCreateBlock}>
-                Create new Block
+            <Button variant='contained' sx={{ backgroundColor: "#009688", m: 1}} onClick={onCreateBlock}>
+              <Typography color="white">Create new block</Typography>
             </Button>
 
             <Box sx={{ borderBottom: 0, borderColor: 'divider', display: 'flex', justifyContent: 'center', minWidth: "100%" }}>

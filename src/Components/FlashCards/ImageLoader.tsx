@@ -8,8 +8,9 @@ export interface IImageCardUploaderProps {
 }
 export default function ImageCardUploader(props: IImageCardUploaderProps) {
 
-    const onChange = (imageList) => {
-        props.setImage(imageList[0]);
+    const onChange = (imageList: any) => {
+        console.log(imageList[0].data_url);
+        props.setImage(imageList[0].data_url);
     };
 
     return (

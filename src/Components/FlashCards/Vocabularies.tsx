@@ -1,7 +1,6 @@
 import React, { useState, useEffect, ReactElement } from 'react';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, Tab, Tabs, useMediaQuery, useTheme } from '@mui/material';
 import NewCard from './NewCard/NewCard';
-import ICard from './ICard';
 import { useWordsState } from '../../Data/useWords';
 import VocabularyBlocks from '../VocabularyBlocks/VocabularyBlocks';
 import DevidedLabel from '../Headers/DevidedLabel';
@@ -44,6 +43,7 @@ export default function Vocabularies(props: IFlashCardsProps) {
                     <DialogContentText>
                         <NewCard
                             cardData={wordsState.find(flashCard => flashCard.id == editCardId)}
+                            onClose={onCloseModel}
                         />
                     </DialogContentText>
                 </DialogContent>
