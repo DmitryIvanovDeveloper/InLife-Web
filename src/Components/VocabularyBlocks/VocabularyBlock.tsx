@@ -25,6 +25,8 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
 
     const [selectedStartDate, setSelecetedStartDate] = useState<Date>(new Date());
     const [selectedEndDate, setSelecetedEndDate] = useState<Date>(new Date());
+    const [isEditable, setIsEditable] = useState<boolean>(false);
+
 
     const onDeleteBlock = async () => {
         await vocabularyBlockQueriesApi.delete(props.selectedVcabularyBlock.id, props.studentId);
@@ -49,6 +51,7 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
             id: props.selectedVcabularyBlock.id,
             studentId: props.selectedVcabularyBlock.studentId,
             name: name ?? props.selectedVcabularyBlock.name,
+            dialogueId: props.selectedVcabularyBlock.dialogueId,
             wordsId: wordsId,
             createdAt: props.selectedVcabularyBlock.createdAt,
             quizlGameStatistics: props.selectedVcabularyBlock.quizlGameStatistics,
@@ -80,13 +83,22 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
 
     }, [props.selectedVcabularyBlock])
 
+
+    useEffect(() => {
+        if (!props.selectedVcabularyBlock) {
+            return;
+        }
+
+        setIsEditable(props.selectedVcabularyBlock.dialogueId == "00000000-0000-0000-0000-000000000000");
+
+    }, [props.selectedVcabularyBlock])
     return (
-        <Box sx={{ 
-            width: '100%', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            alignItems: 'center' 
-            }}
+        <Box sx={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+        }}
         >
             <Box display='flex' justifyContent='flex-end' width='100%' marginRight={15}>
                 <StudentCalendarActivity onChange={setSelecetedStartDate} highlightDates={playedGamesDate} date={selectedStartDate} label="Start date" />
@@ -109,6 +121,7 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
             </Box>
 
             <VocabularyCards
+                isEditable={isEditable}
                 wordsId={props.selectedVcabularyBlock?.wordsId ?? []}
                 quizlGamesStatistics={props.selectedVcabularyBlock?.quizlGameStatistics.filter(statistic => isOnRange(statistic.createdAt, selectedStartDate, selectedEndDate)) ?? []}
                 buildWordsGameStatistic={props.selectedVcabularyBlock?.buildWordsGameStatistics.filter(statistic => isOnRange(statistic.createdAt, selectedStartDate, selectedEndDate)) ?? []}
@@ -117,14 +130,18 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
                 onDeleteCard={deleteStudentCard}
                 onDeleteBlock={onDeleteBlock}
             />
+            
+            {isEditable
+                ? <Box sx={{ width: "90%", mr: 10 }}>
+                    <WordsList
+                        onSelectWord={props.onEditCard}
+                        onAddWord={onUpdateVocabularyBlock}
+                        onCreateNewWord={props.onCreateNewWord}
+                    />
+                </Box>
+                : null
+            }
 
-            <Box sx={{ width: "90%", mr: 10 }}>
-                <WordsList 
-                    onSelectWord={props.onEditCard} 
-                    onAddWord={onUpdateVocabularyBlock} 
-                    onCreateNewWord={props.onCreateNewWord} 
-                />
-            </Box>
         </Box>
     )
 }

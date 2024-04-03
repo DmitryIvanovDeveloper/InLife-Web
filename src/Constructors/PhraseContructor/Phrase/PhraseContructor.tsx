@@ -1,4 +1,4 @@
-import { Box, Button, IconButton } from "@mui/material";
+import { Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import { usePhrase, useDialogue } from "../../../Data/useDialogues";
 import usePhraseQueriesApi from "../../../ThereGame.Api/Queries/PhraseQueriesApi";
@@ -16,7 +16,6 @@ import { useConstructorActionsState } from "../../../Data/useConstructorActionsS
 import useConstructorActions from "../../../Data/ConstructorActions";
 import { useDialogueItemState } from "../../../Data/useDialogueitemState";
 import ModalConstructor from "../../ModalContructor";
-import useAnswerQueriesApi from "../../../ThereGame.Api/Queries/AnswerQueriesApi";
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -34,25 +33,28 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     const constructorActions = useConstructorActions();
     const phraseRecoil = usePhrase(props.dialogueId, props.id);
     const dialogueRecoil = useDialogue(props.dialogueId);
+    const actions = useConstructorActions();
     const [sessionPhraseData, setSessionPhraseData] = useState<IPhraseModel>(phraseRecoil);
     const [isEdited, setIsEdited] = useState(true);
     const [dialogueItemState, setDialogueItemState] = useDialogueItemState();
-    const actions = useConstructorActions();
     const [isPhraseInstructionOpen, setIsPhraseInstructionOpen] = useState<boolean>(false);
     const [isSaveInstructionOpen, setIsGenerationPhraseOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
-
-    const answerQueriesApi = useAnswerQueriesApi();
+    const [vocabularyWordsId, setVocabularyWordsId] = useState<string[]>(dialogueRecoil.vocabularyWordsId);
     const phraseQueriesApi = usePhraseQueriesApi();
+
     // QueryApi
     const onSave = async () => {
+
         const updatedsessionPhraseData = JSON.parse(JSON.stringify(sessionPhraseData));
 
         updatedsessionPhraseData.audioSettings = getSettings();
         setIsGenerationPhraseOpen(true);
 
         var status = await phraseQueriesApi.update(updatedsessionPhraseData);
+
         props.setStatus(status);
+
         if (status == Status.OK) {
             localStorage.removeItem(props.id);
             constructorActions.setIsSavePhrase(false);
@@ -60,6 +62,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
         setIsEdited(true);
 
         actions.setIsScenarioUpdated(true);
+
     }
 
     const onDelete = async () => {
@@ -110,6 +113,8 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 onChangeText={onChangeText}
                 setIsClickedOnDelete={onDelete}
                 hasDeleteButton={dialogueRecoil?.phrase.id != sessionPhraseData?.id}
+                setVocabularyWordsId={setVocabularyWordsId}
+                vocabularyWordsId={vocabularyWordsId}
             />
         )
     }
@@ -141,6 +146,14 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     }, [sessionPhraseData]);
 
     useEffect(() => {
+        if (!dialogueRecoil) {
+            return;
+        }
+
+        setVocabularyWordsId(dialogueRecoil.vocabularyWordsId);
+    }, [dialogueRecoil]);
+
+    useEffect(() => {
         var data = localStorage.getItem(props.id);
         if (!data) {
             setSessionPhraseData(phraseRecoil);
@@ -154,6 +167,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
     }, [phraseRecoil])
 
     const onLastInstructionDone = () => {
+     
         if (sessionPhraseData.text != phraseRecoil.text) {
             onSave();
         }
@@ -199,12 +213,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
     }, [sessionPhraseData]);
 
-    // useEffect(() => {
-    //     props.onEditedDialogueItemType(EditDialogueItemType.Phrase, sessionPhraseData?.text != phraseRecoil?.text);
-    //     props.onEditedDialogueItemType(EditDialogueItemType.Comments, sessionPhraseData?.comments != phraseRecoil?.comments);
-    //     props.onEditedDialogueItemType(EditDialogueItemType.PhraseTenseses, JSON.stringify(sessionPhraseData?.tensesList) != JSON.stringify(phraseRecoil?.tensesList));
-    // }, [sessionPhraseData?.tensesList, sessionPhraseData?.comments, sessionPhraseData?.text]);
-
     useEffect(() => {
         if (isEdited) {
             setDialogueItemState(DialogueItemStateType.NoErrors)
@@ -244,7 +252,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             !!dialogueRecoil.voiceSettings &&
             !!dialogueRecoil.name &&
             !!constructorActionsState.selectedNpc.scenarioId
-            ;
+        ;
 
         setIsPhraseInstructionOpen(isOpen);
     }, [phraseRecoil]);
@@ -288,7 +296,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
             element={<div></div>}
             isOpen={true}
             editDialogueItemType={EditDialogueItemType.Phrase}
-            onClose={() => {}}
+            onClose={() => { }}
             description='It took me so long to learn this...! I need time to forget this'
         />
     }
@@ -317,8 +325,6 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
                 description=" Maybe I’m using something special in my phrase, and the student needs to pay more attention to it!
                 Write about it here."
             />
-
-
         </Box>
     )
 }

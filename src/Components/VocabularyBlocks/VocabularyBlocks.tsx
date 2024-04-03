@@ -3,12 +3,13 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import IStudentVocabularyBlockModel from '../../ThereGame.Business/Models/IStudentVocabularyBlock';
-import { Button, IconButton, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import useVocabularyBlockQueriesApi from '../../ThereGame.Api/Queries/VocabularyBlockQueriesApi';
 import LinarProgressCustom from '../CircularProgress';
 import VocabularyBlock from './VocabularyBlock';
 import { useVocabularyBlockState as useVocabularyBlocksState } from '../../Data/useVocabularyBlocks';
+import { useDialogues } from '../../Data/useDialogues';
 
 export interface IVocabularyBlockTabsProps {
     studentId: string;
@@ -20,8 +21,9 @@ export interface IVocabularyBlockTabsProps {
 export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
 
     const vocabularyBlockQueriesApi = useVocabularyBlockQueriesApi();
+    const [dialoguesRecoil] = useDialogues();
 
-    const [vocabularyBlocks, setVocabularyBlocks] = useVocabularyBlocksState();
+    const [vocabularyBlocks] = useVocabularyBlocksState();
 
     const [selectedVcabularyBlockId, setSelectedVocabularyBlockId] = useState<string>("")
     const [selectedVcabularyBlock, setSelectedVocabularyBlock] = useState<IStudentVocabularyBlockModel | null>();
@@ -48,10 +50,17 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
     // Quieries API
     const onCreateBlock = async () => {
         await vocabularyBlockQueriesApi.create(props.studentId, vocabularyBlocks.length);
-
     }
 
     // UseEffects
+
+    useEffect(() => {
+        var dialogueStudentHasAccess = dialoguesRecoil
+            .filter(dialogue => dialogue.studentsId.some(studentId => studentId == props.studentId))
+            .filter(dialogue => dialogue.vocabularyWordsId.length != 0)
+        ;
+
+    }, [dialoguesRecoil]);
 
     useEffect(() => {
         vocabularyBlockQueriesApi.get(props.studentId)

@@ -9,6 +9,7 @@ export default class StudentVocabularyBlockMapping {
         return {
             id: studentVocabularyBlock.id,
             studentId: studentVocabularyBlock.studentId,
+            dialogueId: studentVocabularyBlock.dialogueId,
             name: studentVocabularyBlock.name,
             wordsId: studentVocabularyBlock.wordsId,
             createdAt: studentVocabularyBlock.createdAt,
@@ -20,6 +21,7 @@ export default class StudentVocabularyBlockMapping {
                 id: sv.id,
                 studentId: sv.studentId,
                 name: sv.name,
+                dialogueId: sv.dialogueId,
                 wordsId: sv.wordsId,
                 createdAt: sv.createdAt,
                 quizlGameStatistics: this.mapQuizlGameStatistic(sv.quizlGameStatistics ?? []),

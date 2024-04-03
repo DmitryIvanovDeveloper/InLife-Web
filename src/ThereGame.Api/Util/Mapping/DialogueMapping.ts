@@ -14,7 +14,8 @@ export default class DialogueMapping {
             teacherId: dialogue.teacherId,
             name: dialogue.name,
             phrase: new PhraseMapping().response(dialogue.phrase),
-            studentsId: dialogue.studentsId
+            studentsId: dialogue.studentsId,
+            vocabularyWordsId: dialogue.vocabularyWordsId,
         }
     }
 
@@ -31,7 +32,8 @@ export default class DialogueMapping {
             teacherId: dialogue.teacherId,
             isPublished: dialogue.isPublished,
             phrase: new PhraseMapping().request(dialogue.phrase),
-            studentsId: dialogue.studentsId
+            studentsId: dialogue.studentsId,
+            vocabularyWordsId: dialogue.vocabularyWordsId,
         }
     }
 
@@ -45,7 +47,8 @@ export default class DialogueMapping {
             isPublished: dialogue.isPublished,
             voiceSettings: dialogue.voiceSettings,
             phrase: new PhraseMapping().request(dialogue.phrase),
-            studentsId: dialogue.studentsId
+            studentsId: dialogue.studentsId,
+            vocabularyWordsId: dialogue.vocabularyWordsId,
         }
     }
     
@@ -58,7 +61,8 @@ export default class DialogueMapping {
             teacherId: dialogue.teacherId,
             isPublished: dialogue.isPublished,
             phraseId: dialogue.phrase.id,
-            studentsId: dialogue.studentsId
+            studentsId: dialogue.studentsId,
+            vocabularyWordsId: dialogue.vocabularyWordsId,
         }
     }
 }

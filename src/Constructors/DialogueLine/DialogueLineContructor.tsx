@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { LanguageType } from "../../Data/LanguageType";
-import { useAnswer } from "../../Data/useDialogues";
+import { useAnswer, useDialogue } from "../../Data/useDialogues";
 import useAnswerQueriesApi from "../../ThereGame.Api/Queries/AnswerQueriesApi";
 import IAnswerModel from "../../ThereGame.Business/Models/IAnswerModel";
 import ITranslateModel from "../../ThereGame.Business/Models/ITranslateModel";
@@ -19,6 +19,10 @@ import { useConstructorActionsState } from "../../Data/useConstructorActionsStat
 import { useDialogueItemState } from "../../Data/useDialogueitemState";
 import DialogueLineAnswersConstructor from "./Constructor/DialogueLineAnswersConstructor";
 import ModalConstructor from "../ModalContructor";
+import useVocabularyBlockQueriesApi from "../../ThereGame.Api/Queries/VocabularyBlockQueriesApi";
+import { useVocabularyBlockState } from "../../Data/useVocabularyBlocks";
+import { IDialogueModel } from "../../ThereGame.Business/Models/IDialogueModel";
+import useDialogueQueriesApi from "../../ThereGame.Api/Queries/DialogueQueriesApi";
 
 export interface IAnswerContructor {
     dialogueId: string,
@@ -36,7 +40,7 @@ export interface IAnswerContructor {
 export default function DialogueLineContructor(props: IAnswerContructor): JSX.Element | null {
     const [constructorActionsState] = useConstructorActionsState();
     const constructorActions = useConstructorActions();
-
+    const dialogueRecoil = useDialogue(props.dialogueId);
     const answerRecoil = useAnswer(props.dialogueId, props.id);
 
     const answerQueriesApi = useAnswerQueriesApi();
@@ -50,7 +54,7 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
 
     const [isDialogueLineInstructionOpen, setIsDialogueLineInstructionOpen] = useState<boolean>(false);
     const [isSaveInstructionOpen, setIsSaveInstructionOpen] = useState<boolean>(false);
-
+   
     const onPossibleWordsChange = (wordsToUse: string) => {
         setSessionAnswerData(prev => ({
             ...prev,
@@ -296,14 +300,6 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
         setDialogueItemState(DialogueItemStateType.UnsavedChanges)
     }, [isEdited]);
 
-
-    useEffect(() => {
-        // props.onEditedDialogueItemType(EditDialogueItemType.Answers, JSON.stringify(sessionDialogueLine?.texts) != JSON.stringify(answerRecoil?.texts));
-        // props.onEditedDialogueItemType(EditDialogueItemType.Translates, JSON.stringify(sessionDialogueLine?.translates) != JSON.stringify(answerRecoil?.translates));
-        // props.onEditedDialogueItemType(EditDialogueItemType.AnswersTenseses, JSON.stringify(sessionDialogueLine?.tensesList) != JSON.stringify(answerRecoil?.tensesList));
-        // props.onEditedDialogueItemType(EditDialogueItemType.PossibleWords, sessionDialogueLine?.wordsToUse != answerRecoil?.wordsToUse);
-    }, [sessionDialogueLine]);
-
     useEffect(() => {
         if (!answerRecoil) {
             return;
@@ -320,7 +316,6 @@ export default function DialogueLineContructor(props: IAnswerContructor): JSX.El
         props.onEditDialogueItemType(props.editDialogueItemType);
         setIsDialogueLineInstructionOpen(false);
     }
-
 
     if (!sessionDialogueLine) {
         return null;

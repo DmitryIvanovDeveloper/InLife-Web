@@ -1,6 +1,7 @@
 export default interface IStudentVocabularyRequestDto {
     id: string;
     studentId: string,
+    dialogueId: string,
     name: string;
     wordsId: string[];
     createdAt: Date;

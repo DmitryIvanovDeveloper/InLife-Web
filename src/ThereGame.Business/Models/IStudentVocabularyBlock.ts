@@ -5,6 +5,7 @@ import ITranslateWordsGameStatistic from "./ITranslateWordsGameStatistic";
 export default interface IStudentVocabularyBlockModel {
     id: string;
     studentId: string;
+    dialogueId: string;
     name: string;
     createdAt: Date,
     wordsId: string[]

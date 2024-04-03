@@ -61,6 +61,7 @@ export default function useDialogueQueriesApi() {
                 phrase: phrase,
                 teacherId: teacher?.id,
                 studentsId: [],
+                vocabularyWordsId: []
             }
 
             var requestData = new DialogueMapping().requestToCreateDialogue(dialogue);

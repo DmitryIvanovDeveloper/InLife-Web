@@ -23,7 +23,6 @@ export default function AcessStudentList(props: IStudentListProps) {
         var studentsList = selectedStudentsId.filter(button => button != event.target.value)
         setSelectedStudentsId(studentsList);
         props.setAccessStudentList(studentsList);
-
     }
 
     useEffect(() => {

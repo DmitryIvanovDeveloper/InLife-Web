@@ -10,8 +10,6 @@ export interface IAccessSettingsInfoProps {
     isPublished: boolean;
 }
 export default function AccessSettingsInfo(props: IAccessSettingsInfoProps) {
-
-
     return (
         <Box>
             <Box sx={{ mt: 3 }}>
@@ -31,7 +29,5 @@ export default function AccessSettingsInfo(props: IAccessSettingsInfoProps) {
                 </Box>
             </Box>
         </Box>
-
-
     )
 }

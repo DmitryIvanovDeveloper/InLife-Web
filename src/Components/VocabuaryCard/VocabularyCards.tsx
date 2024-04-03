@@ -1,31 +1,17 @@
 import { Box, Button, Card, Dialog, DialogActions, DialogContent, DialogContentText, FormControlLabel, Grid, IconButton, List, Switch, Typography, useMediaQuery, useTheme } from "@mui/material";
-import WordsList from "../WordsList/WordsList";
 import { useEffect, useState } from "react";
 import { useWordsState } from "../../Data/useWords";
 import IWordModel from "../../ThereGame.Business/Models/IWordModel";
 
 import IQuizleGameStatisticModel from "../../ThereGame.Business/Models/IQuizleGameStatistic";
 import QuizlGameStatisticTable from "../QuizleGameStatisticTable/QuizlGameStatisticTable";
-import useQuizlQueriesApi from "../../ThereGame.Api/Queries/QuizlGameQueriesApi";
 import IBuildWordsGameStatistic from "../../ThereGame.Business/Models/IBuildWordsGameStatistic";
-import VocabularyCardQuizGameStaistics from "./VocabularyCardQuizlGameStatistic";
-import VocabularyCardBuildWordGamesStatistic from "./VocabularyCardBuildWordGamesStatistic";
-import VocabularyCardTranslateWordGameStatistic from "./VocabularyCardTranslateWordGameStatistic";
 import ITranslateWordsGameStatistic from "../../ThereGame.Business/Models/ITranslateWordsGameStatistic";
-import Draggable from "react-draggable";
-import VocabularyCard from "./VocabularyCard";
 import PopupSettings from "./PopupSettings";
-
-
-// export interface IVocabularyCardProps {
-//     onEditCard: (id: string) => void;
-//     onUpdateVocabularyBlock: (id: string) => void;
-//     setIsCreateCard: () => void;
-//     cards: ICard[];
-//     onDeleteCard: (id: string) => void;
-// }
+import VocabularyCard from "./VocabularyCard";
 
 export interface IVocabularyCardProps {
+    isEditable: boolean;
     wordsId: string[];
     quizlGamesStatistics: IQuizleGameStatisticModel[];
     buildWordsGameStatistic: IBuildWordsGameStatistic[]
@@ -110,6 +96,7 @@ export default function VocabularyCards(props: IVocabularyCardProps) {
                 <Grid container justifyContent='center' width='100%' sx={{ overflow: 'auto' }} >
                     {vocabularyWords.map((word, index) => (
                         <VocabularyCard
+                            isEditable={props.isEditable}
                             onEditCard={props.onEditCard}
                             onDeleteCard={props.onDeleteCard}
                             quizlGamesStatistics={props.quizlGamesStatistics}

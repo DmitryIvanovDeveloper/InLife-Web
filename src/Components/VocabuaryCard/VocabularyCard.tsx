@@ -19,6 +19,7 @@ export interface IVocabularyCardProps {
     translateWordsGameStatistic: ITranslateWordsGameStatistic[];
     isShowCardStatistics: boolean;
     word: IWordModel;
+    isEditable: boolean;
 }
 
 export default function VocabularyCard(props: IVocabularyCardProps) {
@@ -33,11 +34,12 @@ export default function VocabularyCard(props: IVocabularyCardProps) {
                         <IconButton onClick={() => props.onEditCard(props.word.id)}>
                             <EditIcon />
                         </IconButton>
-
-                        <IconButton sx={{ color: "#b71c1c" }} onClick={() => props.onDeleteCard(props.word.id)}>
-                            <DeleteIcon />
-                        </IconButton>
-
+                        {props.isEditable
+                            ? <IconButton sx={{ color: "#b71c1c" }} onClick={() => props.onDeleteCard(props.word.id)}>
+                                <DeleteIcon />
+                            </IconButton>
+                            : null
+                        }
                     </Box>
                     : <Grid container justifyContent='space-around' >
                         <Grid item>

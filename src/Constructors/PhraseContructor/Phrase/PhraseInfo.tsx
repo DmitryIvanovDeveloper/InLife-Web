@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import { Box, Button, IconButton, TextField } from "@mui/material";
-import DeleteDialogueItemButton from "../../../Components/Button/DeleteDialogueItemButton";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ModalConstructor from "../../ModalContructor";
+import VocabularyBlockWordsContext from "../../../Components/VocabularyBlockWordsContext/VocabularyBlockWordsContext";
 
 export interface IPhraseInfoProps {
     phrase: string;
     onChangeText: (phrase: string) => void;
     setIsClickedOnDelete: () => void;
+    setVocabularyWordsId: (vocabularyWords: string[]) => void;
+    vocabularyWordsId: string[];
     hasDeleteButton: boolean;
 }
 
 export default function PhraseInfo(props: IPhraseInfoProps) {
+
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     return (
@@ -32,6 +35,7 @@ export default function PhraseInfo(props: IPhraseInfoProps) {
                 placeholder="Hey! Hello! Today is a great day for fitness!"
                 fullWidth
             />
+
             {!props.hasDeleteButton
                 ? null
                 : <IconButton onClick={() => setIsOpen(true)} sx={{ color: '#c62828' }}>

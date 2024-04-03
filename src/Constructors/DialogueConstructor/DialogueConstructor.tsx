@@ -16,6 +16,8 @@ import { EditDialogueItemType } from '../models/EditType';
 import ModalConstructor from '../ModalContructor';
 import Instruction from '../Instruction';
 import SaveIcon from '@mui/icons-material/Save';
+import useVocabularyBlockQueriesApi from '../../ThereGame.Api/Queries/VocabularyBlockQueriesApi';
+import { useVocabularyBlockState } from '../../Data/useVocabularyBlocks';
 
 export interface IDialogueConstructor {
     id: string;
@@ -37,13 +39,35 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
 
     const dialogueQueriesApi = useDialogueQueriesApi();
     const [isOpen, setIsOpen] = useState<boolean>(false);
-
+    const vocabularyBlockQueriesApi = useVocabularyBlockQueriesApi();
+    const [vocabularyBlocks] = useVocabularyBlockState();
 
     const save = async () => {
+
+        studentVocabularyHandler();
+        
         setIsLoading(true);
         await dialogueQueriesApi.update(dialogue);
         setIsLoading(false);
         setIsEdited(true);
+    }
+
+    const studentVocabularyHandler = () =>{
+        dialogue.studentsId.forEach(id => {
+            var expectedVocabularyBock = vocabularyBlocks.find(vb => vb.dialogueId == dialogue.id);
+            if (!expectedVocabularyBock) {
+                vocabularyBlockQueriesApi.create(id, 0, dialogue.id, dialogue.vocabularyWordsId);
+            }
+        })
+
+        const exludedStudentsId = dialogueRecoil.studentsId.filter(studentId => !dialogue.studentsId.includes(studentId));
+
+        exludedStudentsId.forEach(id => {
+            const expectedVocabularyBlock = vocabularyBlocks.find(vb => vb.dialogueId == dialogue.id);
+            if (!!expectedVocabularyBlock) {
+                vocabularyBlockQueriesApi.delete(expectedVocabularyBlock.id, id);
+            }
+        })
     }
 
     const onChangeName = (name: string) => {
@@ -291,14 +315,6 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
                 />
                 : null
             }
-
-            {/* {!isEdited
-                ? <Box>
-                    <Alert severity="warning">The constructor has unsaved changes</Alert>
-                    <Button onClick={reset}>reset all changes</Button>
-                </Box>
-                : <Alert severity="success">The constructor is saved!</Alert>
-            } */}
         </Box >
     )
 }

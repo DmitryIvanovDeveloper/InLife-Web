@@ -1,9 +1,12 @@
 import { Dialog, DialogTitle, DialogActions, useMediaQuery, useTheme, Button, DialogContent, DialogContentText, IconButton, Typography, Box, Avatar } from "@mui/material"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Instruction from "./Instruction";
 import { EditDialogueItemType } from "./models/EditType";
 import { useConstructorActionsState } from "../Data/useConstructorActionsState";
 import { Locations } from "../Data/Locations";
+import ContextMenu from "../Components/ContextMenu/ContextMenu";
+import IWordModel from "../ThereGame.Business/Models/IWordModel";
+import { useWordsState } from "../Data/useWords";
 
 export interface IInstructionProps {
     element: React.ReactElement;
@@ -16,6 +19,7 @@ export interface IInstructionProps {
 }
 export default function ModalConstructor(props: IInstructionProps) {
     const theme = useTheme();
+
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [isInstructionOpen, setIsInstructionOpen] = useState<boolean>(false);
     const [actionsState] = useConstructorActionsState();
@@ -35,17 +39,17 @@ export default function ModalConstructor(props: IInstructionProps) {
                 },
             }}
         >
-                <Box sx={{ml: 3, mt: 3, mr: 3}} display='flex' justifyContent='space-between'>
-                    <Box display='flex' justifyContent='flex-start' alignItems='center'>
-                        <Avatar sx={{ width: '100px', height: '100px' }} src={Locations.find(npc => npc.id == actionsState.selectedNpc.id)?.avatar} />
-                        <Typography sx={{ ml: 1, mr: 1 }} variant="h6">{props.description}</Typography>
-                    </Box>
+            <Box sx={{ ml: 3, mt: 3, mr: 3 }} display='flex' justifyContent='space-between'>
+                <Box display='flex' justifyContent='flex-start' alignItems='center'>
+                    <Avatar sx={{ width: '100px', height: '100px' }} src={Locations.find(npc => npc.id == actionsState.selectedNpc.id)?.avatar} />
+                    <Typography sx={{ ml: 1, mr: 1 }} variant="h6">{props.description}</Typography>
                 </Box>
-                <Instruction
-                    editDialogueItemType={props.editDialogueItemType}
-                    isOpen={isInstructionOpen}
-                    onClose={() => setIsInstructionOpen(false)}
-                />
+            </Box>
+            <Instruction
+                editDialogueItemType={props.editDialogueItemType}
+                isOpen={isInstructionOpen}
+                onClose={() => setIsInstructionOpen(false)}
+            />
             <DialogContent >
                 <DialogContentText>
                     {props.element}

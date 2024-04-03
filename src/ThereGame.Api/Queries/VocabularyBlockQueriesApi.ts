@@ -42,7 +42,6 @@ export default function useVocabularyBlockQueriesApi() {
                 return;
             }
 
-
             const studentVocabularyRequest = new StudentVocabularyBlockMapping().request(studentVocabularyBlock);
 
             await vocabularyBlockService.update(studentVocabularyRequest, token);
@@ -54,8 +53,7 @@ export default function useVocabularyBlockQueriesApi() {
             await get(studentId);
         },
 
-        create: async (studentId: string, blocksLength: number): Promise<void> => {
-
+        create: async (studentId: string, blocksLength?: number, dialogueId?: string, wordsId?: string[]): Promise<void> => {
             var token = localStorage.getItem("Token");
             if (!token || !studentId) {
                 return;
@@ -64,8 +62,10 @@ export default function useVocabularyBlockQueriesApi() {
             const dto: ICreateStudentVocabularyBlockDto = {
                 id: uuidv4(),
                 studentId: studentId,
-                order: blocksLength + 1,
-                name: `Block ${blocksLength + 1}`
+                dialogueId: dialogueId ?? '00000000-0000-0000-0000-000000000000',
+                order: 0,
+                name: `Block ${blocksLength ?? 0 + 1}`,
+                wordsId: wordsId ?? []
             }
 
             await vocabularyBlockService.create(dto, token);

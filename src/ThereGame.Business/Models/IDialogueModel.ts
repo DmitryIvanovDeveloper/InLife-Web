@@ -9,4 +9,5 @@ export interface IDialogueModel {
     name: string;
     phrase: IPhraseModel;
     studentsId: string[];
+    vocabularyWordsId: string[];
 }

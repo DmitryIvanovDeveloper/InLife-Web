@@ -9,4 +9,5 @@ export interface IDialogueResponseDto {
     name: string;
     phrase: IPhraseResponseDto;
     studentsId: string[];
+    vocabularyWordsId: string[];
 }

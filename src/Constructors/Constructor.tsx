@@ -26,6 +26,7 @@ import { useDialogueItemColorsMap } from '../Data/useDialogueItemColors';
 import { useConstructorActionsState } from '../Data/useConstructorActionsState';
 import Hint from '../Components/Hints/Hint';
 import Notebook from '../Images/Notebook.png';
+import VocabularyBlockWordsContext from '../Components/VocabularyBlockWordsContext/VocabularyBlockWordsContext';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -264,7 +265,9 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 display: 'flex',
                 width: '650px',
             }}>
-
+            
+            <VocabularyBlockWordsContext dialogueId={dialogueRecoil.id} />
+            
             <Slide
                 direction='left'
                 in={checked} container={containerRef.current}

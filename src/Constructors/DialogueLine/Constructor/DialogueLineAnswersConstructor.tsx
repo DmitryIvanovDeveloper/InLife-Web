@@ -2,6 +2,7 @@ import { Box, Button, Chip, CircularProgress, Grid, Stack, TextField } from "@mu
 import { useEffect, useState } from "react";
 import { useTeacher } from "../../../Data/useTeacher";
 
+
 export interface EquivalentTextConstructorProps {
     texts: string[];
     chatGpt: (sentence: string) => void;
@@ -20,7 +21,6 @@ export default function DialogueLineAnswersConstructor(props: EquivalentTextCons
         text: ''
     });
     const [isUpdate, setIsUpdate] = useState<boolean>()
-
 
     const onChange = (text: any, id: number) => {
         setSelectedTextId({ text: text, id: id });
@@ -45,6 +45,7 @@ export default function DialogueLineAnswersConstructor(props: EquivalentTextCons
 
     return (
         <Box sx={{ width: "100%" }} >
+
             <TextField
                 placeholder="Yes, today is a greate day!"
                 value={selectedTextId.text}

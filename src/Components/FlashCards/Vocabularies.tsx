@@ -6,6 +6,7 @@ import VocabularyBlocks from '../VocabularyBlocks/VocabularyBlocks';
 import DevidedLabel from '../Headers/DevidedLabel';
 
 import './FlashCards.css'
+import CreateNewCardModal from './NewCard/CreateNewCardModal';
 
 export interface IFlashCardsProps {
     studentId: string;
@@ -19,42 +20,7 @@ export default function Vocabularies(props: IFlashCardsProps) {
     const [isCreateCard, setIsCreateCard] = useState<boolean>(false);
 
     //TODO: Move to VocabularyCards
-    
-    function Modal(): ReactElement {
-        const theme = useTheme();
-        const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-        
-        return (
-            <Dialog
-                fullScreen={fullScreen}
-                open={true}
-                onClose={onCloseModel}
-                aria-labelledby="responsive-dialog-title"
-                sx={{
-                    "& .MuiDialog-container": {
-                        "& .MuiPaper-root": {
-                            width: "100%",
-                            maxWidth: "900px",  // Set your width here
-                        },
-                    },
-                }}
-            >
-                <DialogContent >
-                    <DialogContentText>
-                        <NewCard
-                            cardData={wordsState.find(flashCard => flashCard.id == editCardId)}
-                            onClose={onCloseModel}
-                        />
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={onCloseModel} autoFocus>
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        )
-    }
+
 
     const onCloseModel = () => {
         setEditCardId("");
@@ -69,7 +35,7 @@ export default function Vocabularies(props: IFlashCardsProps) {
 
         >
             {!!editCardId || isCreateCard
-                ? <Modal />
+                ? <CreateNewCardModal onClose={onCloseModel} editCardId={editCardId} />
                 : null
             }
 
