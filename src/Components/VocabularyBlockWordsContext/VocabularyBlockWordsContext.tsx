@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useWordsState } from "../../Data/useWords";
 import IWordModel from "../../ThereGame.Business/Models/IWordModel";
 import ContextMenu from "../ContextMenu/ContextMenu";
@@ -26,10 +26,11 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
     const vocabularyBlockQueriesApi = useVocabularyBlockQueriesApi();
     const [vocabularyWordsId, setVocabularyWordsId] = useState<string[]>(dialogueRecoil.vocabularyWordsId);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    
+
     document.onmouseup = () => {
-        const word = window.getSelection()?.toString();
-        if (!word) {
+
+        const word = window.getSelection()?.toString().trim();
+        if (!word || !/^[a-zA-Z]+$/.test(word)) {
             setUnexpectedWord("");
             setSelectedWord(undefined);
             return;
@@ -41,9 +42,7 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
         }
         setSelectedWord(expectedWordState);
     };
-;
 
-    
     const findWord = (word: string): IWordModel | undefined => {
         return wordsState.find(wordState => wordState.word == word.toLowerCase().trim());
     }
@@ -58,7 +57,7 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
     }
 
     const onAddVocabularyWord = () => {
-        if (!selectedWord?.id) {
+        if (!selectedWord?.id || isLoading) {
             return;
         }
 
@@ -106,7 +105,7 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
         if (!dialogueRecoil) {
             return;
         }
-       setVocabularyWordsId(dialogueRecoil.vocabularyWordsId);
+        setVocabularyWordsId(dialogueRecoil.vocabularyWordsId);
     }, [vocabularyWordsId])
 
     useEffect(() => {

@@ -10,7 +10,6 @@ import { useState, useEffect } from "react";
 import useVocabularyBlockQueriesApi from "../../ThereGame.Api/Queries/VocabularyBlockQueriesApi";
 import IStudentVocabularyBlockModel from "../../ThereGame.Business/Models/IStudentVocabularyBlock";
 
-
 export interface IVocabularyBlockTabsProps {
     studentId: string;
     onEditCard: (id: string) => void;
@@ -22,11 +21,9 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
     const vocabularyBlockQueriesApi = useVocabularyBlockQueriesApi();
 
     const [playedGamesDate, setPlayedGamesdDate] = useState<Date[]>([]);
-
     const [selectedStartDate, setSelecetedStartDate] = useState<Date>(new Date());
     const [selectedEndDate, setSelecetedEndDate] = useState<Date>(new Date());
     const [isEditable, setIsEditable] = useState<boolean>(false);
-
 
     const onDeleteBlock = async () => {
         await vocabularyBlockQueriesApi.delete(props.selectedVcabularyBlock.id, props.studentId);
@@ -99,7 +96,7 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
             flexDirection: 'column',
             alignItems: 'center'
         }}
-        >
+    >
             <Box display='flex' justifyContent='flex-end' width='100%' marginRight={15}>
                 <StudentCalendarActivity onChange={setSelecetedStartDate} highlightDates={playedGamesDate} date={selectedStartDate} label="Start date" />
                 <StudentCalendarActivity onChange={setSelecetedEndDate} highlightDates={playedGamesDate} date={selectedEndDate} label="End date" />
@@ -130,7 +127,7 @@ export default function VocabularyBlock(props: IVocabularyBlockTabsProps) {
                 onDeleteCard={deleteStudentCard}
                 onDeleteBlock={onDeleteBlock}
             />
-            
+
             {isEditable
                 ? <Box sx={{ width: "90%", mr: 10 }}>
                     <WordsList

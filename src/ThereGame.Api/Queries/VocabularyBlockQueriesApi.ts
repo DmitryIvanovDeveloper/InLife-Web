@@ -53,7 +53,7 @@ export default function useVocabularyBlockQueriesApi() {
             await get(studentId);
         },
 
-        create: async (studentId: string, blocksLength?: number, dialogueId?: string, wordsId?: string[]): Promise<void> => {
+        create: async (studentId: string, blocksLength?: number, dialogueId?: string, wordsId?: string[], name?: string): Promise<void> => {
             var token = localStorage.getItem("Token");
             if (!token || !studentId) {
                 return;
@@ -64,7 +64,7 @@ export default function useVocabularyBlockQueriesApi() {
                 studentId: studentId,
                 dialogueId: dialogueId ?? '00000000-0000-0000-0000-000000000000',
                 order: 0,
-                name: `Block ${blocksLength ?? 0 + 1}`,
+                name:! name ? `Block ${blocksLength ?? 0 + 1}` : name,
                 wordsId: wordsId ?? []
             }
 

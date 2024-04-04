@@ -4,9 +4,8 @@ import Instruction from "./Instruction";
 import { EditDialogueItemType } from "./models/EditType";
 import { useConstructorActionsState } from "../Data/useConstructorActionsState";
 import { Locations } from "../Data/Locations";
-import ContextMenu from "../Components/ContextMenu/ContextMenu";
-import IWordModel from "../ThereGame.Business/Models/IWordModel";
-import { useWordsState } from "../Data/useWords";
+import useConstructorActions from "../Data/ConstructorActions";
+import VocabularyBlockWordsContext from "../Components/VocabularyBlockWordsContext/VocabularyBlockWordsContext";
 
 export interface IInstructionProps {
     element: React.ReactElement;
@@ -23,7 +22,7 @@ export default function ModalConstructor(props: IInstructionProps) {
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [isInstructionOpen, setIsInstructionOpen] = useState<boolean>(false);
     const [actionsState] = useConstructorActionsState();
-
+    
     return (
         <Dialog
             fullScreen={fullScreen}
@@ -39,6 +38,8 @@ export default function ModalConstructor(props: IInstructionProps) {
                 },
             }}
         >
+            <VocabularyBlockWordsContext dialogueId={actionsState.selectedNpc.scenarioId} />
+            
             <Box sx={{ ml: 3, mt: 3, mr: 3 }} display='flex' justifyContent='space-between'>
                 <Box display='flex' justifyContent='flex-start' alignItems='center'>
                     <Avatar sx={{ width: '100px', height: '100px' }} src={Locations.find(npc => npc.id == actionsState.selectedNpc.id)?.avatar} />

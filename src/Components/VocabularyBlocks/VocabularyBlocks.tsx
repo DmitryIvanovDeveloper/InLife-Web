@@ -10,6 +10,7 @@ import LinarProgressCustom from '../CircularProgress';
 import VocabularyBlock from './VocabularyBlock';
 import { useVocabularyBlockState as useVocabularyBlocksState } from '../../Data/useVocabularyBlocks';
 import { useDialogues } from '../../Data/useDialogues';
+import VocabularyBlockTab from './VocabularyBlockTab';
 
 export interface IVocabularyBlockTabsProps {
     studentId: string;
@@ -54,13 +55,6 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
 
     // UseEffects
 
-    useEffect(() => {
-        var dialogueStudentHasAccess = dialoguesRecoil
-            .filter(dialogue => dialogue.studentsId.some(studentId => studentId == props.studentId))
-            .filter(dialogue => dialogue.vocabularyWordsId.length != 0)
-        ;
-
-    }, [dialoguesRecoil]);
 
     useEffect(() => {
         vocabularyBlockQueriesApi.get(props.studentId)
@@ -69,19 +63,19 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
             });
     }, []);
 
-    
+
     useEffect(() => {
         if (!vocabularyBlocks.length) {
             return;
         }
-       const lastSelectedVocabularyBlockId = localStorage.getItem("last vb");
-       if (!lastSelectedVocabularyBlockId) {
+        const lastSelectedVocabularyBlockId = localStorage.getItem("last vb");
+        if (!lastSelectedVocabularyBlockId) {
 
-        setSelectedVocabularyBlockId(vocabularyBlocks[0].id);
+            setSelectedVocabularyBlockId(vocabularyBlocks[0].id);
             return;
-       }
+        }
 
-       setSelectedVocabularyBlockId(lastSelectedVocabularyBlockId);
+        setSelectedVocabularyBlockId(lastSelectedVocabularyBlockId);
     }, [vocabularyBlocks]);
 
 
@@ -107,8 +101,8 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
 
-            <Button variant='contained' sx={{ backgroundColor: "#009688", m: 1}} onClick={onCreateBlock}>
-              <Typography color="white">Create new block</Typography>
+            <Button variant='contained' sx={{ backgroundColor: "#009688", m: 1 }} onClick={onCreateBlock}>
+                <Typography color="white">Create new block</Typography>
             </Button>
 
             <Box sx={{ borderBottom: 0, borderColor: 'divider', display: 'flex', justifyContent: 'center', minWidth: "100%" }}>
@@ -121,10 +115,13 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
                     aria-label="scrollable auto tabs example"
                 >
                     {vocabularyBlocks.map((vb, index) => (
-                        <Tab
-                            label={BlockName(vb.name, vb.createdAt)}
+                        <VocabularyBlockTab
+                            dialogueId={vb.dialogueId}
                             value={vb.id}
+                            name={vb.name}
+                            createdAt={vb.createdAt}
                         />
+
                     ))}
                 </Tabs>
             </Box>

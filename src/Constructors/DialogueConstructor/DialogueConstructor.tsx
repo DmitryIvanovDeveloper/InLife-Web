@@ -56,7 +56,7 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
         dialogue.studentsId.forEach(id => {
             var expectedVocabularyBock = vocabularyBlocks.find(vb => vb.dialogueId == dialogue.id);
             if (!expectedVocabularyBock) {
-                vocabularyBlockQueriesApi.create(id, 0, dialogue.id, dialogue.vocabularyWordsId);
+                vocabularyBlockQueriesApi.create(id, 0, dialogue.id, dialogue.vocabularyWordsId, dialogue.name);
             }
         })
 

@@ -4,10 +4,10 @@ import MenuList from '@mui/material/MenuList';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ContentCut from '@mui/icons-material/ContentCut';
+import ContentCut from '@mui/icons-material/ContentPaste';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export interface IMousePosition {
     x: number;
@@ -24,56 +24,103 @@ export interface IContextMenuProps {
 
 export default function ContextMenu(props: IContextMenuProps) {
 
-    const [mousePos, setMousePos] = useState<IMousePosition>({ x: 0, y: 0 });
+    const [mousePosition, setMousePosition] = useState<IMousePosition>({ x: 0, y: 0 });
 
-    const handleMouseMove = (event: MouseEvent) => {
-        setMousePos({ x: event.offsetX, y: event.offsetY });
-        console.log(event);
-    };
+    const handleContextMenu = ((event: MouseEvent) => {
+        event.preventDefault();
+
+        const leftBoundary = window.innerWidth - event.offsetX;
+        const topBoundary = window.innerHeight - event.offsetY;
+
+        let left = event.clientX;
+        if (left > leftBoundary) left = leftBoundary + 150;
+
+        let top = event.clientY;
+        if (top > topBoundary) top = topBoundary;
+
+
+        setMousePosition({ x: left, y: top });
+    })
 
     useEffect(() => {
-        window.addEventListener('click', handleMouseMove);
-       
+        window.addEventListener('click', handleContextMenu);
+
         return () => {
             window.removeEventListener(
                 'click',
-                handleMouseMove
+                handleContextMenu
             );
         };
     }, []);
 
     return (
-        <div style={{
-            position: 'absolute',
-            top: mousePos.y, 
-            left: mousePos.x,
-        }}>
-            <Paper sx={{ width: 350, maxWidth: '100%' }} >
+        <Box
+            sx={{
+                left: mousePosition.x,
+                top: mousePosition.y,
+                position: "fixed",
+                borderRadius: "5px",
+                padding: "10px",
+                zIndex: 999,
+
+            }}
+        >
+            <Paper sx={{
+                maxWidth: '100%',
+                backdropFilter: "blur(3px)",
+                backgroundColor: 'rgba(0,0,30,0.4)',
+                color: 'white',
+            }}
+            >
                 <MenuList>
                     {props.isWordExist
-                        ? <MenuItem onClick={props.onAddWord} disabled={props.isLoading}>
-                            <ListItemIcon >
-                                <ContentCut fontSize="small" />
+                        ? <MenuItem onClick={props.onAddWord}>
+                            <ListItemIcon sx={{ color: 'white' }}>
+                                <PostAddIcon fontSize="small" />
                             </ListItemIcon>
                             {props.isLoading
 
-                                ? <Box display='flex' justifyContent='center'>
-                                    <Typography>{props.isSelectedWordExistInVocabularyWords ? `Deleting '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word` : `Adding '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`}</Typography>
-                                    <CircularProgress size={25} />
+                                ? <Box display='flex' justifyContent='center' alignItems='center' >
+                                    <Typography
+                                        sx={{
+                                            color: 'white',
+                                            fontWeight: 600
+                                        }}
+                                    >{props.isSelectedWordExistInVocabularyWords
+                                        ? `Deleting '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
+                                        : `Adding '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
+                                        }
+                                    </Typography>
+                                    <CircularProgress size={25}  sx={{color: 'orange', ml: 1,}}/>
+
                                 </Box>
-                                : <ListItemText>{props.isSelectedWordExistInVocabularyWords ? `Remove '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word` : `Add '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`}</ListItemText>
+                                : <ListItemText
+                                    sx={{
+                                        color: 'white',
+                                        fontWeight: 600
+                                    }}>
+                                    {props.isSelectedWordExistInVocabularyWords
+                                        ? `Remove '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
+                                        : `Add '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
+                                    }
+                                </ListItemText>
                             }
 
                         </MenuItem>
                         : <MenuItem onClick={props.onCreateWord} >
-                            <ListItemIcon>
+                            <ListItemIcon sx={{ color: 'white' }}>
                                 <ContentCut fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText> Create word</ListItemText>
+                            <ListItemText
+                                sx={{
+                                    fontWeight: 600
+                                }}>
+                                Create word
+                            </ListItemText>
                         </MenuItem>
                     }
                 </MenuList>
             </Paper>
-        </div>
+        </Box>
     );
 }

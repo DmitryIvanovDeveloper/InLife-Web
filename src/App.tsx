@@ -8,10 +8,8 @@ import SignUpStudent from './Components/Authentication/SignUpStudent';
 import SignUpTeacher from './Components/Authentication/SignUpTeacher';
 import ProfileEditor from './Components/Profile/ProfileEditor';
 import StudentProfile from './Components/Student/Profile/StudentProfile';
-import useTeacherQueriesApi from './ThereGame.Api/Queries/TeacherQueriesApi';
 import { Box, CircularProgress } from '@mui/material';
 import { RoleType } from './ThereGame.Business/Util/Role';
-import Vocabularies from './Components/FlashCards/Vocabularies';
 
 export function App() {
     const navigate = useNavigate();

@@ -16,6 +16,7 @@ import { useConstructorActionsState } from "../../../Data/useConstructorActionsS
 import useConstructorActions from "../../../Data/ConstructorActions";
 import { useDialogueItemState } from "../../../Data/useDialogueitemState";
 import ModalConstructor from "../../ModalContructor";
+import VocabularyBlockWordsContext from "../../../Components/VocabularyBlockWordsContext/VocabularyBlockWordsContext";
 
 export interface IPhraseConstructor {
     dialogueId: string;
@@ -303,6 +304,7 @@ export default function PhraseContructor(props: IPhraseConstructor): JSX.Element
 
     return (
         <Box>
+
             <ModalConstructor
                 element={PhraseComponent()}
                 onClose={() => onLastInstructionDone()}

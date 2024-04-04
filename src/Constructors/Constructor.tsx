@@ -6,7 +6,6 @@ import { useSelectDialogueLine } from "../Data/useDialogueItemSelection";
 import { DialogueItemStateType } from "../ThereGame.Business/Util/DialogueItemStateType";
 import { Status } from "../ThereGame.Infrastructure/Statuses/Status";
 import PhraseConstructor from './PhraseContructor/Phrase/PhraseContructor';
-import Message from '../Components/ChatElement/Message';
 import { EditDialogueItemType } from './models/EditType';
 import DialogueLineContructor from './DialogueLine/DialogueLineContructor';
 import { IDialogueItemEditState } from './models/IPhraseSettingsState';
@@ -17,16 +16,14 @@ import Instruction from './Instruction';
 import { useDialogueItemState } from '../Data/useDialogueitemState';
 import useConstructorActions from '../Data/ConstructorActions';
 import DialogueLinesTabSettings from './PhraseContructor/Phrase/DialogueLinesTabSettings';
-import DeleteDialogueItemButton from '../Components/Button/DeleteDialogueItemButton';
 import { Locations } from '../Data/Locations';
-import MapsUgcIcon from '@mui/icons-material/MapsUgc';
-import usePhraseQueriesApi from '../ThereGame.Api/Queries/PhraseQueriesApi';
 import { keyframes } from '@mui/system';
 import { useDialogueItemColorsMap } from '../Data/useDialogueItemColors';
 import { useConstructorActionsState } from '../Data/useConstructorActionsState';
 import Hint from '../Components/Hints/Hint';
 import Notebook from '../Images/Notebook.png';
 import VocabularyBlockWordsContext from '../Components/VocabularyBlockWordsContext/VocabularyBlockWordsContext';
+import useWordsQueriesApi from '../ThereGame.Api/Queries/WordsQueriesApi';
 
 const defaultDialogueItemState: IDialogueItemEditState = {
     isPhraseEdited: false,
@@ -61,13 +58,13 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
     const [selectDialogueLine, setSelectDialogueLine] = useSelectDialogueLine();
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [dialogueItemState] = useDialogueItemState();
-    const [isPhraseCreating, setIsPhraseCreating] = useState<boolean>(false);
     const [dialogueItemColorsMap] = useDialogueItemColorsMap();
     const [hint, setHint] = useState<ReactElement | null>(null)
     const [checked, setChecked] = React.useState(false);
+    const wordsQueriesApi = useWordsQueriesApi();
 
     const containerRef = React.useRef<HTMLElement>(null);
-    
+
     //TODO: Refactor
     const [dialogueItemEditState, setDialogueItemEditState] = useState<IDialogueItemEditState>(() => {
         var data = localStorage.getItem(`${actionState.selectedNpc.specificPhraseId} Constructor-Edit-State`);
@@ -158,7 +155,13 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
 
     }, [selectDialogueLine]);
 
+
     useEffect(() => {
+        wordsQueriesApi.get();
+    }, []);
+
+    useEffect(() => {
+        
         if (!actionState.selectedNpc.scenarioId || !!actionState.selectedNpc.specificPhraseId) {
             return;
         }
@@ -248,11 +251,12 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
         }
     }, []);
 
-    if (!dialogueRecoil || !dialogueRecoil?.name || !dialogueRecoil?.voiceSettings) {
+    if (!dialogueRecoil ||
+        !dialogueRecoil?.name ||
+        !dialogueRecoil?.voiceSettings) {
         return null;
     }
 
-    
     return (
         <Box
             ref={containerRef}
@@ -265,9 +269,9 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 display: 'flex',
                 width: '650px',
             }}>
-            
+
             <VocabularyBlockWordsContext dialogueId={dialogueRecoil.id} />
-            
+
             <Slide
                 direction='left'
                 in={checked} container={containerRef.current}
@@ -379,5 +383,6 @@ export default function Constructor(props: IPhraseConstructor): JSX.Element | nu
                 </Box>
             </Slide>
         </Box >
+
     )
 }
