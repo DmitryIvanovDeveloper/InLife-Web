@@ -76,12 +76,15 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
     const studentVocabularyHandler = async (newVocabularyWordsId: string[]) => {
         setIsLoading(true);
 
-        dialogueRecoil.studentsId.map(id => {
+        dialogueRecoil.studentsId.forEach(id => {
             var expectedVocabularyBlock = vocabularyBlocks.find(vb => vb.dialogueId == dialogueRecoil.id && vb.studentId == id);
-            if (expectedVocabularyBlock) {
+            if (!!expectedVocabularyBlock) {
                 var updatedVocabularyBlock = JSON.parse(JSON.stringify(expectedVocabularyBlock));
                 updatedVocabularyBlock.wordsId = newVocabularyWordsId;
                 vocabularyBlockQueriesApi.update(updatedVocabularyBlock);
+            }
+            else  {
+                vocabularyBlockQueriesApi.create(id, 0, dialogueRecoil.id, newVocabularyWordsId, dialogueRecoil.name);
             }
         })
         const updatedDialogue: IDialogueModel = JSON.parse(JSON.stringify(dialogueRecoil));
