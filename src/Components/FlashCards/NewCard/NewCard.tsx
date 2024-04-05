@@ -90,7 +90,6 @@ export default function NewCard(props: INewCardProps) {
     const [isIrregular, setIsIrregular] = useState<boolean>(false);
 
 
-
     const handleCheck = (event: any) => {
         setIsIrregular(event.target.checked)
     }
@@ -257,11 +256,12 @@ export default function NewCard(props: INewCardProps) {
     }, [wordData.word]);
 
     const onUpdateVocabularyBlock = async () => {
-        console.log(wordData);
-
+        setIsLoading(true);
         localStorage.removeItem("new word");
         if (!props.cardData) {
             await wordQueriesApi.create(wordData);
+            setIsLoading(false);
+            props.onClose();
             return;
         }
 
@@ -554,7 +554,12 @@ export default function NewCard(props: INewCardProps) {
                 </Box>
 
                 <Button onClick={onAddAnswer}>Add translate</Button>
-                <ActionButton icon={<Save />} onClick={onUpdateVocabularyBlock} isLoading={isLoading} isDisabled={isDoubleWord()} />
+                <ActionButton 
+                    icon={<Save />}
+                    onClick={onUpdateVocabularyBlock} 
+                    isLoading={isLoading} 
+                    isDisabled={isDoubleWord()} 
+                />
             </Card>
         </Box>
 

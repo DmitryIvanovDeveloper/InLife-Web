@@ -25,6 +25,7 @@ export interface IContextMenuProps {
 export default function ContextMenu(props: IContextMenuProps) {
 
     const [mousePosition, setMousePosition] = useState<IMousePosition>({ x: 0, y: 0 });
+    const [isMouseOverContext, setIsMouseOverContext] = useState<boolean>(false);
 
     const handleContextMenu = ((event: MouseEvent) => {
         event.preventDefault();
@@ -72,7 +73,7 @@ export default function ContextMenu(props: IContextMenuProps) {
                 color: 'white',
             }}
             >
-                <MenuList>
+                <MenuList >
                     {props.isWordExist
                         ? <MenuItem onClick={props.onAddWord}>
                             <ListItemIcon sx={{ color: 'white' }}>
@@ -82,10 +83,6 @@ export default function ContextMenu(props: IContextMenuProps) {
 
                                 ? <Box display='flex' justifyContent='center' alignItems='center' >
                                     <Typography
-                                        sx={{
-                                            color: 'white',
-                                            fontWeight: 600
-                                        }}
                                     >{props.isSelectedWordExistInVocabularyWords
                                         ? `Deleting '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
                                         : `Adding '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
@@ -95,10 +92,9 @@ export default function ContextMenu(props: IContextMenuProps) {
 
                                 </Box>
                                 : <ListItemText
-                                    sx={{
-                                        color: 'white',
-                                        fontWeight: 600
-                                    }}>
+                                        onPointerOver={() => setIsMouseOverContext(true)}
+                                        onPointerCancel={() => setIsMouseOverContext(false)}
+                                    >
                                     {props.isSelectedWordExistInVocabularyWords
                                         ? `Remove '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
                                         : `Add '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
