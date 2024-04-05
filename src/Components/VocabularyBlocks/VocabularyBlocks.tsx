@@ -93,7 +93,7 @@ export default function VocabularyBlocks(props: IVocabularyBlockTabsProps) {
     if (isLoading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <LinarProgressCustom name={'Loading...! Please wait'} />
+                <LinarProgressCustom name={'Loading...'} />
             </Box>
         )
     }

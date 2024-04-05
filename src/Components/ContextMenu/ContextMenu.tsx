@@ -7,7 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ContentCut from '@mui/icons-material/ContentPaste';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import { Box, CircularProgress, Typography } from '@mui/material';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface IMousePosition {
     x: number;
@@ -86,7 +86,7 @@ export default function ContextMenu(props: IContextMenuProps) {
                                     >{props.isSelectedWordExistInVocabularyWords
                                         ? `Deleting '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
                                         : `Adding '${props.selecetedWord.toLocaleUpperCase()}' as vocabulary word`
-                                        }
+                                    }
                                     </Typography>
                                     <CircularProgress size={25}  sx={{color: 'orange', ml: 1,}}/>
 

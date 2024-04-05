@@ -25,12 +25,15 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
     const [vocabularyBlocks] = useVocabularyBlockState();
     const vocabularyBlockQueriesApi = useVocabularyBlockQueriesApi();
     const [vocabularyWordsId, setVocabularyWordsId] = useState<string[]>(dialogueRecoil.vocabularyWordsId);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isSaving, setIsSaving] = useState<boolean>(false);
 
     document.onmouseup = () => {
 
         const word = window.getSelection()?.toString().trim();
-        if (!word || !/^[a-zA-Z]+$/.test(word)) {
+        if (!word || 
+            !/^[a-zA-Z]+$/.test(word) && 
+            !isSaving
+        ) {
             setUnexpectedWord("");
             setSelectedWord(undefined);
             return;
@@ -57,7 +60,7 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
     }
 
     const onAddVocabularyWord = () => {
-        if (!selectedWord?.id || isLoading) {
+        if (!selectedWord?.id || isSaving) {
             return;
         }
 
@@ -69,12 +72,10 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
         }
 
         studentVocabularyHandler([...vocabularyWordsId, selectedWord.id]);
-        setSelectedWord(undefined);
-        setUnexpectedWord("");
     }
 
     const studentVocabularyHandler = async (newVocabularyWordsId: string[]) => {
-        setIsLoading(true);
+        setIsSaving(true);
 
         dialogueRecoil.studentsId.forEach(id => {
             var expectedVocabularyBlock = vocabularyBlocks.find(vb => vb.dialogueId == dialogueRecoil.id && vb.studentId == id);
@@ -93,7 +94,7 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
 
         await dialogueQueriesApi.update(updatedDialogue);
 
-        setIsLoading(false);
+        setIsSaving(false);
     }
 
     useEffect(() => {
@@ -128,7 +129,7 @@ export default function VocabularyBlockWordsContext(props: IVocabularyBlockWords
                     onAddWord={onAddVocabularyWord}
                     onCreateWord={onCreateNewWord}
                     selecetedWord={selectedWord?.word ?? ""}
-                    isLoading={isLoading}
+                    isLoading={isSaving}
                 />
             }
 
