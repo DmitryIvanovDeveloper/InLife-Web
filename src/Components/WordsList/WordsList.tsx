@@ -40,7 +40,7 @@ export default function WordsList(props: IWordsList) {
     if (!wordsState.length) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                <LinarProgressCustom name={'Laoding words! Please wait'} />
+                <LinarProgressCustom name={'Loading words! Please wait...'} />
             </Box>
         )
     }
