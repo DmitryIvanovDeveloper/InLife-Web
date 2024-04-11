@@ -14,3 +14,14 @@ export default function BuildPrompt(sentence: string): string {
         }
     `
 }
+
+export function BuildPromptGeneratePhrase(sentence: string, words: string[]): string {
+    return `
+        Sentence: ${sentence},
+        Words to use: ${words}.
+        
+        1) Give answer on the sentence. If 'sentence is empty' start a dialogue as npc
+        2) Use some words from 'Words to use' if possible
+        
+    `
+}

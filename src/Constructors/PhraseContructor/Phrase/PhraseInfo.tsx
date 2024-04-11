@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Box, Button, IconButton, TextField } from "@mui/material";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import ModalConstructor from "../../ModalContructor";
-import VocabularyBlockWordsContext from "../../../Components/VocabularyBlockWordsContext/VocabularyBlockWordsContext";
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import ChatGptService from "../../../ThereGame.Infrastructure/Services/ChatGpt/ChatGptService";
 
 export interface IPhraseInfoProps {
     phrase: string;
@@ -13,9 +14,16 @@ export interface IPhraseInfoProps {
     hasDeleteButton: boolean;
 }
 
-export default function PhraseInfo(props: IPhraseInfoProps) {
 
+
+export default function PhraseInfo(props: IPhraseInfoProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const generatePhrase = async () => {
+        const chatGpt = await new ChatGptService().generatePhrase("", []);
+        console.log(chatGpt);
+    }
+
 
     return (
         <Box
@@ -23,18 +31,25 @@ export default function PhraseInfo(props: IPhraseInfoProps) {
             justifyContent='center'
             alignItems='center'
             flexDirection='column'
+            width="100%"
         >
-            <TextField
-                sx={{ m: 3, position: "relative", border: "none !important" }}
-                InputLabelProps={{ shrink: true }}
-                value={props.phrase}
-                id="outlined-basic"
-                variant='standard'
-                onChange={(event) => props.onChangeText(event.target.value)}
-                required={true}
-                placeholder="Hey! Hello! Today is a great day for fitness!"
-                fullWidth
-            />
+            <Box sx={{ width: '100%', display: 'flex', alignItems: 'center'}}>
+                <TextField
+                    sx={{ m: 3, position: "relative", border: "none !important",  }}
+                    InputLabelProps={{ shrink: true }}
+                    value={props.phrase}
+                    id="outlined-basic"
+                    variant='standard'
+                    onChange={(event) => props.onChangeText(event.target.value)}
+                    required={true}
+                    placeholder="Hey! Hello! Today is a great day for fitness!"
+                    fullWidth
+                />
+                <IconButton onClick={generatePhrase}>
+                    <SmartToyIcon />
+                </IconButton>
+            </Box>
+
 
             {!props.hasDeleteButton
                 ? null
