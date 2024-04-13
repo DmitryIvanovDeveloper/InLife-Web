@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dd97ad5e-1706-4d06-adbf-3e14d01f404c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/Constructors/DialogueLine/Constructor/DialogueLineAnswersConstructor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constructors/DialogueLine/Constructor/DialogueLineAnswersConstructor.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Constructors/DialogueLine/DialogueLineContructor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constructors/DialogueLine/DialogueLineContructor.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Constructors/ModalContructor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constructors/ModalContructor.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Constructors/PhraseContructor/Phrase/PhraseInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/Constructors/PhraseContructor/Phrase/PhraseInfo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ThereGame.Infrastructure/Services/ChatGpt/ChatGptService.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/ThereGame.Infrastructure/Services/ChatGpt/ChatGptService.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2exNTjg9GGP3Aj5HGRrSorkIeCj" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "feature/add-user-answer-select",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/dmitryivanov/Documents/Work/InLife Projects/InLife-Web",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.21403915",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "/Users/dmitryivanov/Documents/Work/InLife Projects/InLife-Web/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dd97ad5e-1706-4d06-adbf-3e14d01f404c" name="Changes" comment="" />
+      <created>1712842278292</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712842278292</updated>
+      <workItem from="1712842279813" duration="204000" />
+      <workItem from="1712842551537" duration="611000" />
+      <workItem from="1712843506720" duration="3124000" />
+      <workItem from="1712851088470" duration="1534000" />
+      <workItem from="1712921251678" duration="788000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/Constructors/DialogueLine/TensesList/TensesListConstructor.tsx</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
