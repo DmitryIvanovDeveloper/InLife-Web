@@ -2,10 +2,10 @@ export default class GameWebGLSettings {
 
     public getInLifeSettings(): IGameWebGLSettings {
         return {
-            loaderUrl: "/unity/InLife/InLifeWebGl.loader.js",
-            dataUrl: "/unity/InLife/InLifeWebGl.data",
-            frameworkUrl: "/unity/InLife/InLifeWebGl.framework.js",
-            codeUrl: "/unity/InLife/InLifeWebGl.wasm",
+            loaderUrl: "/unity/InLife/InLifeWebGL.loader.js",
+            dataUrl: "/unity/InLife/InLifeWebGL.data",
+            frameworkUrl: "/unity/InLife/InLifeWebGL.framework.js",
+            codeUrl: "/unity/InLife/InLifeWebGL.wasm",
         }
     }
     public getBuilRandomLettersSettings(): IGameWebGLSettings {
