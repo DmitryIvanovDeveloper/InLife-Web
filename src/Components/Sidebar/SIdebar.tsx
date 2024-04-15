@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -15,8 +14,11 @@ import { ReactElement, useEffect, useState } from 'react';
 import UserMenuAppBar from '../AppBars/UserMenuAppBar';
 import { useConstructorActionsState } from '../../Data/useConstructorActionsState';
 import { useDialogueItemConstructor } from '../../Data/useDialogues';
+import { Button } from '@mui/material';
+import { Routes as LocalRoutes } from '../../Routes';
 
 const drawerWidth = 500;
+
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
@@ -121,7 +123,6 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
 
     return (
         <Box sx={{ overflow: 'hidden' }}>
-
             <AppBar sx={{ overflow: 'hidden' }} position="absolute" open={open} >
                 <Toolbar sx={{ overflow: 'hidden' }}>
                     <IconButton
@@ -137,11 +138,17 @@ export default function MiniDrawer(props: IMiniDrawerProps) {
 
                         <MenuIcon />
                     </IconButton>
+                  
 
                     <Box sx={{ overflow: 'hidden' }} width="100%" display='flex' flexDirection='row' alignItems='center' justifyContent='space-between'>
-                        <Typography variant="h6" noWrap>
-                            Scenario
-                        </Typography>
+                    <Button 
+                        onClick={() => window.open(LocalRoutes.studentProfile, '_blank', 'noopener,noreferrer')}
+                        sx={{
+                            color: 'white', 
+                            fontWeight: 600 
+                        }}>
+                            Game
+                        </Button>
                         <UserMenuAppBar />
                     </Box>
 
