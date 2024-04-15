@@ -19,7 +19,6 @@ import { Routes as LocalRoutes } from '../../Routes';
 
 const drawerWidth = 500;
 
-
 const openedMixin = (theme: Theme): CSSObject => ({
     width: drawerWidth,
     transition: theme.transitions.create('width', {
