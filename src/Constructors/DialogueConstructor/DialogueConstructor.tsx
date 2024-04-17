@@ -250,17 +250,18 @@ export default function DialogueConstructor(props: IDialogueConstructor): JSX.El
             />
         )
     }
-    if (isStudentAccessSettingsOpen) {
-        return (
-            <ModalConstructor
-                element={StudentAccessSettingsComponent()}
-                isOpen={isStudentAccessSettingsOpen}
-                editDialogueItemType={EditDialogueItemType.StudentsAccess}
-                onClose={() => onLastInstructionDone()}
-                description='Select students to access the scenario'
-            />
-        )
-    }
+
+    // if (isStudentAccessSettingsOpen) {
+    //     return (
+    //         <ModalConstructor
+    //             element={StudentAccessSettingsComponent()}
+    //             isOpen={isStudentAccessSettingsOpen}
+    //             editDialogueItemType={EditDialogueItemType.StudentsAccess}
+    //             onClose={() => onLastInstructionDone()}
+    //             description='Select students to access the scenario'
+    //         />
+    //     )
+    // }
 
     return (
         <Box
